@@ -1,9 +1,0 @@
-/* Copied from templates/css/style.css (trimmed for brevity) */
-/* Core layout and utility rules used across the site. */
-:root{--primary:#FFD333;--secondary:#F5F5F5}
-body{font-family:"Roboto",sans-serif;background:#F5F5F5;color:#6C757D}
-.container{max-width:1140px;margin:0 auto;padding:0 15px}
-.btn-primary{background:#FFD333;color:#212529;border-color:#FFD333}
-.img-fluid{max-width:100%;height:auto}
-/* ...the full file exists in repo under templates/css/style.css; this file provides the site styles needed for signup page. */
-
