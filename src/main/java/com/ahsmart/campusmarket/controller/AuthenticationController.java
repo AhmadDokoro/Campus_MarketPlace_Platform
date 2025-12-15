@@ -1,10 +1,9 @@
 package com.ahsmart.campusmarket.controller;
 
+import com.ahsmart.campusmarket.model.enums.Role;
 import com.ahsmart.campusmarket.payloadDTOs.AuthenticationDTOs.LoginResult;
 import com.ahsmart.campusmarket.service.authentication.AuthenticationService;
-import com.ahsmart.campusmarket.model.enums.Role;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,73 +14,65 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class AuthenticationController {
 
+    // Authentication business logic service
     @Autowired
     private AuthenticationService authenticationService;
 
+    // landing page
     @GetMapping("/")
-    public String home(){
-        return "templates/index";
+    public String home() {
+        return "index";
     }
 
-
-
-    @PostMapping("/signup")
-    public String signUp(){
-        return "templates/auth/signup2";
+    // Display login page
+    @GetMapping("/signin")
+    public String signinPage() {
+        return "auth/login";
     }
 
-    @GetMapping("/signupSecondStep")
-    public String signSecondStep(){
-        return "templates/auth/signupstep1";
-    }
-
-
+    // Handle login form submission
     @PostMapping("/signin")
     public String signin(
-            @RequestParam(name = "username", required = false) String username,
-            @RequestParam(name = "password", required = false) String password,
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
             Model model,
-            HttpServletRequest httpServletRequest) {
-        // call the service to validate credentials
-        LoginResult result = authenticationService.userLogin(username, password);
+            HttpSession session
+    ) {
 
-        if (result == null) {
-            // defensive: if service returned null, show generic error
-            model.addAttribute("error", "Authentication service unavailable");
-            return "templates/auth/login";
-        }
+        // Delegate authentication to service
+        LoginResult result = authenticationService.userLogin(email, password);
 
+        // Handle failed authentication
         if (!result.isSuccess()) {
-            // failed login: check specific message for seller-not-verified
-            String msg = result.getMessage();
-            if (msg != null && msg.toLowerCase().contains("seller account not yet verified")) {
-                // redirect sellers who are not yet verified to a review pending page
-                return "templates/seller/reviewPendingPage";
+
+            // Special handling for unverified sellers
+            if ("Seller account not yet verified".equalsIgnoreCase(result.getMessage())) {
+                return "seller/reviewPendingPage";
             }
 
-            // otherwise re-show login page with error message under the form
-            model.addAttribute("error", msg != null ? msg : "Login failed");
-            return "templates/auth/login";
+            model.addAttribute("error", result.getMessage());
+            return "auth/login";
         }
 
-        // success: create a session and redirect by role
+        // Store minimal user info in session
+        session.setAttribute("userId", result.getUserId());
+        session.setAttribute("userName", result.getName());
+        session.setAttribute("role", result.getRole());
+
+        // Redirect user based on role
         Role role = result.getRole();
-        Long userId = result.getUserId();
 
-        HttpSession session = httpServletRequest.getSession(true);
-        session.setAttribute("user", result); // store the entire LoginResult object
-
-
-        // route by role
         if (role == Role.BUYER) {
-            return "redirect:/"; // index
-        } else if (role == Role.SELLER) {
-            return "redirect:/seller/dashboard.html"; // seller dashboard
-        } else if (role == Role.ADMIN) {
-            return "/templates/admin/dashboard"; // admin dashboard
+            return "redirect:/";
+        }
+        if (role == Role.SELLER) {
+            return "redirect:/seller/dashboard";
+        }
+        if (role == Role.ADMIN) {
+            return "redirect:/admin/dashboard";
         }
 
-        // default fallback
+        // Fallback redirect
         return "redirect:/";
     }
 }
