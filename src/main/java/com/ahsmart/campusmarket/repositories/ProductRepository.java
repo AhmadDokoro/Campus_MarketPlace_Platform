@@ -13,5 +13,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findByCategoryOrderByPriceAsc(Category category, Pageable pageDetail);
 
     // used in searchProductByKeyword() to get all the products that has the keyword anywhere in it name.
-    Page<Product> findByProductNameContainingIgnoreCase(String keyword, Pageable pageDetail);
+    Page<Product> findByTitleContainingIgnoreCase(String keyword, Pageable pageDetail);
 }

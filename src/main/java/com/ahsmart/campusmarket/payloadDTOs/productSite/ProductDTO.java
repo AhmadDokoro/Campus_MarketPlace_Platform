@@ -1,6 +1,6 @@
 package com.ahsmart.campusmarket.payloadDTOs.productSite;
 
-import com.ahsmart.campusmarket.model.ProductStatus;
+import com.ahsmart.campusmarket.model.enums.ProductStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,0 +1,228 @@
+/* authentication.css - shared styles for signup pages (step1 and step2)
+   Converted from previous Bootstrap/Tailwind markup into simple, self-contained CSS.
+*/
+
+:root{
+  /* Primary palette for authentication pages (yellow, brown, white) */
+  --bg-start: #fff8e6; /* soft warm yellow */
+  --bg-end: #ffffff; /* white */
+  --card: #ffffff; /* white card surface */
+  --muted: #7a5a44; /* muted brown for secondary text */
+  --primary: #5b3a29; /* dark brown primary text / elements */
+  --accent: #e0c007; /* warm yellow accent */
+  --accent-dark: #e6d000; /* slightly darker yellow for gradients */
+  --radius: 10px;
+
+  /* helper values */
+  --text-light: #fff9f6; /* near-white for text on dark brown */
+  --label-color: #f3e9d2; /* warm label color */
+  --input-bg: #fffdf7; /* input background */
+  --input-text: #2b1c15; /* dark text for inputs */
+  --focus-ring: rgba(224,192,7,0.12); /* soft yellow focus */
+  --card-dark-start: rgba(106, 94, 91, 0.98);
+  --card-dark-end: rgba(57, 50, 45, 0.95);
+  --card-overlay: rgba(255,255,255,0.03);
+}
+
+/* Login-page brand overrides moved from login.html */
+:root{ --brand-primary: #5b3a29; --brand-accent: #e0c007; }
+
+/* page layout */
+body.signup-body, body.seller-step2-body{
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+  margin:0;
+  padding:40px 16px;
+  color:var(--primary);
+}
+
+/* center wrapper */
+.signup-wrapper{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 80px);}
+.signup-card{width:100%;max-width:880px;background:var(--card);border-radius:var(--radius);box-shadow:0 6px 20px rgba(32,33,36,0.06);padding:28px}
+
+/* headers */
+.signup-header .signup-title{margin:0;font-size:1.65rem;color:var(--primary)}
+.seller-step2-header{max-width:880px;margin:0 auto 18px}
+.seller-step2-title{margin:0;font-size:1.5rem}
+.seller-step2-subtitle{margin:6px 0;color:var(--muted)}
+
+/* form grid utilities */
+.form-grid{display:flex;gap:12px;flex-wrap:wrap}
+.two-col .form-field{flex:1 1 48%}
+.three-col .form-field{flex:1 1 30%}
+.form-field{display:flex;flex-direction:column}
+.form-label{font-size:0.9rem;margin-bottom:8px;color:var(--muted)}
+.form-input, .form-select, .seller-step2-input{padding:10px 12px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:var(--card);font-size:0.95rem;color:var(--primary)}
+.form-select{appearance:none}
+
+/* section */
+.form-section{margin-bottom:18px}
+.section-title{font-size:1rem;margin-bottom:12px}
+.muted{color:var(--muted);font-size:0.9rem}
+
+/* actions */
+.form-actions{display:flex;justify-content:flex-end}
+.btn{padding:10px 16px;border-radius:8px;border:none;cursor:pointer}
+.btn-primary{background:var(--accent);color:var(--input-text)}
+
+/* seller step2 specific */
+.seller-step2-container{max-width:880px;margin:0 auto;background:var(--card);padding:22px;border-radius:10px;box-shadow:0 6px 18px rgba(32,33,36,0.06)}
+.seller-step2-section{margin-bottom:12px}
+.seller-step2-grid{display:flex;gap:12px;flex-wrap:wrap}
+.seller-step2-field{flex:1 1 48%}
+.seller-step2-upload{flex:1 1 48%;display:flex;flex-direction:column}
+.seller-step2-file{margin-top:6px}
+.seller-step2-upload-note{font-size:0.85rem;color:var(--muted);margin-top:6px}
+.seller-step2-actions{display:flex;justify-content:flex-end;margin-top:16px}
+.seller-step2-submit{background:var(--accent);color:var(--input-text);padding:10px 16px;border-radius:8px;border:none}
+
+/* Login styles */
+.login-body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.login-card {
+    width: 900px;
+    min-height: 420px;
+    display: flex;
+    background: linear-gradient(135deg, var(--card-dark-start), var(--card-dark-end));
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(91,58,41,0.18);
+}
+
+/* Left section */
+.login-form-section {
+    flex: 1;
+    padding: 60px 50px;
+    background: var(--card-overlay);
+}
+
+.login-title {
+    color: var(--text-light);
+    font-size: 28px;
+    margin-bottom: 40px;
+}
+
+.login-input-group {
+    margin-bottom: 25px;
+}
+
+.login-input-group label {
+    display: block;
+    color: var(--label-color);
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.login-input-group input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background: var(--input-bg);
+    color: var(--input-text);
+}
+
+.login-input-group input:focus {
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.login-button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    border-radius: 30px;
+    border: none;
+    background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+    color: var(--input-text);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    opacity: 0.95;
+}
+
+.login-signup-text {
+    margin-top: 25px;
+    font-size: 14px;
+    color: var(--label-color);
+    text-align: center;
+}
+
+.login-welcome-section {
+    flex: 1;
+    background: linear-gradient(135deg, rgba(224,192,7,0.12), rgba(255,255,255,0.02));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-light);
+    text-align: center;
+    padding: 40px;
+}
+
+/* responsive tweaks */
+@media (max-width:640px){
+  .two-col .form-field, .three-col .form-field{flex:1 1 100%}
+  .signup-card{padding:18px}
+}
+
+/* small helpers */
+.form-input:focus, .form-select:focus, .seller-step2-input:focus{outline:none;box-shadow:0 0 0 3px var(--focus-ring);border-color:rgba(224,192,7,0.6)}
+
+/* make the login card use the index brand brown gradient (override earlier instance) */
+.login-card{
+    min-height: 420px;
+    width: 900px;
+    display: flex;
+    background: linear-gradient(135deg, var(--card-dark-start), var(--card-dark-end));
+    box-shadow: 0 12px 40px rgba(91,58,41,0.15);
+}
+
+/* primary login button uses brand-accent */
+.login-button{
+    background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+    color: var(--input-text);
+    border-radius: 30px;
+    padding: 12px 18px;
+    border: none;
+    font-weight: 600;
+}
+
+/* signup button visibility improvements */
+.signup-button{
+    display:block;
+    width:100%;
+    max-width:330px;
+    text-align:center;
+    margin-top:12px;
+    background: var(--accent);
+    color:#071025; /* dark on yellow for contrast */
+    padding:10px 16px;
+    border-radius: 24px;
+    font-weight:700;
+    text-decoration:none;
+    box-shadow: 0 6px 18px rgba(224,192,7,0.18);
+}
+
+.signup-button:focus, .signup-button:hover{
+    opacity:0.95;
+    text-decoration:none;
+}
+
+/* ensure login area elements are visible above backgrounds */
+.login-form-section, .login-welcome-section{z-index:2}

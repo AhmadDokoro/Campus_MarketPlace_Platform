@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sales History - Campus Marketplace</title>
+  <link th:href="@{/css/style.css}" rel="stylesheet">
+  <link th:href="@{/css/base.css}" rel="stylesheet">
+  <link th:href="@{/css/components.css}" rel="stylesheet">
+  <link th:href="@{/css/layout.css}" rel="stylesheet">
+  <link th:href="@{/css/responsive.css}" rel="stylesheet">
+</head>
+<body>
+  <header class="py-3 bg-white border-bottom"><div class="container d-flex align-items-center justify-content-between"><a href="../index.html" class="logo text-dark h4 m-0">Campus <span class="text-primary">Market</span></a></div></header>
+  <main class="py-5">
+    <div class="container">
+      <h3>Sales History</h3>
+      <div class="card p-3">
+        <table class="table table-light">
+          <thead><tr><th>Date</th><th>Order</th><th>Amount</th><th>Buyer</th></tr></thead>
+          <tbody>
+            <tr><td>2025-11-20</td><td>#2001</td><td>RM 120.00</td><td>Jane Doe</td></tr>
+            <tr><td>2025-11-21</td><td>#2002</td><td>RM 260.00</td><td>Ahmad</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <footer class="py-4 bg-light"><div class="container text-center text-muted">© Campus Marketplace</div></footer>
+  <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

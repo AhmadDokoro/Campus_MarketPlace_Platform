@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 - Not Found</title>
+  <link th:href="@{/css/style.css}" rel="stylesheet">
+  <link th:href="@{/css/base.css}" rel="stylesheet">
+  <link th:href="@{/css/components.css}" rel="stylesheet">
+  <link th:href="@{/css/layout.css}" rel="stylesheet">
+</head>
+<body>
+  <main class="vh-100 d-flex align-items-center justify-content-center">
+    <div class="text-center">
+      <h1 class="display-4">404</h1>
+      <p class="lead">Page not found.</p>
+      <a th:href="@{/}" class="btn btn-primary">Return home</a>
+    </div>
+  </main>
+  <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

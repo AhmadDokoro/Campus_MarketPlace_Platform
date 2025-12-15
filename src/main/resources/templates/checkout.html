@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>MultiShop - Online Shop Website Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">  
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- ===============================================
+         TOPBAR SECTION - User account and language controls
+         Purpose: Quick access buttons for login, language/currency preferences
+         Implementation: Uses Bootstrap grid (col-lg-6) to divide into left (about links) and right (account menu)
+         Why: Improves UX by allowing users to quickly switch language/currency before browsing
+         =============================================== -->
+    <div class="container-fluid">
+        <div class="row bg-secondary py-1 px-xl-5">
+            <!-- Left side: Info links (hidden on mobile, shown on large screens with d-none d-lg-block) -->
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="d-inline-flex align-items-center h-100">
+                    <a class="text-body mr-3" href="">About</a>
+                    <a class="text-body mr-3" href="">Contact</a>
+                    <a class="text-body mr-3" href="">Help</a>
+                    <a class="text-body mr-3" href="">FAQs</a>
+                </div>
+            </div>
+            <!-- Right side: Login button for new visitors -->
+            <div class="col-lg-6 text-center text-lg-right">
+                <a href="auth/login.html" class="btn btn-sm btn-primary">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Login
+                </a>
+            </div>
+        </div>
+        
+        <!-- Logo and search bar section (hidden on mobile, shown on large screens) -->
+        <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
+            <!-- Logo: "Multi" (blue bg, dark text) + "Shop" (dark bg, blue text) for branding -->
+            <div class="col-lg-4">
+                <a href="" class="text-decoration-none d-inline-flex align-items-center">
+                    <span class="h3 text-uppercase text-primary bg-dark px-2 mb-0">CAMPUS</span>
+                    <span class="h3 text-uppercase text-dark bg-primary px-2 mb-0 ml-n1">MARKETPLACE</span>
+                </a>
+            </div>
+            <!-- Search Form - input field with icon button for product search -->
+            <div class="col-lg-4 col-6 text-left">
+                <form action="">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for products">
+                        <div class="input-group-append">
+                            <span class="input-group-text bg-transparent text-primary">
+                                <i class="fa fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Customer support contact info -->
+            <div class="col-lg-4 col-6 text-right">
+                <h4 class="m-0" style="color: #1e2b8d;"><span>AH</span><span style="color: #e0c007;">$</span><span>MART</span></h4>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+
+    <!-- ===============================================
+         NAVBAR SECTION - Main navigation and category menu
+         Purpose: Primary navigation menu, category dropdown, shopping cart access
+         Implementation: Bootstrap navbar (navbar-expand-lg) - collapses into hamburger on mobile
+         Why: Allows users to browse categories, search, and access key pages (shop, cart, checkout)
+         =============================================== -->
+    <div class="container-fluid bg-dark mb-30">
+        <div class="row px-xl-5">
+            <!-- Categories Dropdown Sidebar (hidden on mobile) -->
+            <div class="col-lg-3 d-none d-lg-block">
+                <!-- Categories Select Element -->
+                <select class="form-control d-flex align-items-center bg-primary text-dark" id="categories-select" style="height: 65px; padding: 0 30px; border: none; cursor: pointer; appearance: none; font-size: 18px; font-weight: 500;">
+                    <option value="">Category  ▼</option>
+                    <option value="smartphones">Smartphones</option>
+                    <option value="laptops">Laptops</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="cameras">Cameras</option>
+                    <option value="womens-wear">Women's Wear</option>
+                    <option value="mens-wear">Men's Wear</option>
+                    <option value="kids-wear">Kids' Wear</option>
+                    <option value="footwear">Footwear</option>
+                    <option value="furniture">Furniture</option>
+                    <option value="bedding">Bedding</option>
+                    <option value="kitchen">Kitchen</option>
+                    <option value="garden">Garden</option>
+                    <option value="sports-equipment">Sports Equipment</option>
+                    <option value="outdoor-gear">Outdoor Gear</option>
+                    <option value="cycling">Cycling</option>
+                    <option value="water-sports">Water Sports</option>
+                    <option value="books">Books</option>
+                    <option value="music">Music</option>
+                    <option value="movies">Movies</option>
+                    <option value="games">Games</option>
+                    <option value="beauty-health">Beauty & Health</option>
+                    <option value="toys-games">Toys & Games</option>
+                    <option value="automotive">Automotive</option>
+                    <option value="pet-supplies">Pet Supplies</option>
+                </select>
+            </div>
+            <!-- Main Navigation Bar -->
+            <div class="col-lg-9">
+                <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
+                    <!-- Mobile logo (shown only on small screens) -->
+                    <a href="" class="text-decoration-none d-block d-lg-none">
+                        <span class="h3 text-uppercase text-dark bg-light px-2">CAMPUS</span>
+                        <span class="h3 text-uppercase text-light bg-primary px-2 ml-n1">MARKETPLACE</span>
+                    </a>
+                    <!-- Hamburger menu toggle button for mobile (visible on screens smaller than lg) -->
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <!-- Collapsible navigation menu -->
+                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                        <!-- Primary navigation links (Home, Shop, Shop Detail, Pages dropdown, Contact) -->
+                        <div class="navbar-nav mr-auto py-0">
+                            <a href="index.html" class="nav-item nav-link active" style="color: aliceblue;">Home</a>
+                            <!-- Links to product listing page -->
+                            <a href="product/product-list.html" class="nav-item nav-link">Explore</a>
+                            <!-- Link to orders page -->
+                            <a href="buyer/orders.html" class="nav-item nav-link">Orders</a>
+                        </div>
+
+
+                        <!-- Right-aligned icons: Wishlist and Shopping Cart (hidden on mobile with d-none d-lg-block) -->
+                        <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
+                            <!-- Shopping cart icon with item count badge -->
+                            <a href="cart/cart.html" class="btn px-0 ml-3">
+                                <i class="fas fa-shopping-cart text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+
+
+    <!-- Checkout Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-lg-8">
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Billing Address</span></h5>
+                <div class="bg-light p-30 mb-5">
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label>First Name</label>
+                            <input class="form-control" type="text" placeholder="John">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Last Name</label>
+                            <input class="form-control" type="text" placeholder="Doe">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>E-mail</label>
+                            <input class="form-control" type="text" placeholder="example@email.com">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Mobile No</label>
+                            <input class="form-control" type="text" placeholder="+123 456 789">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Address Line 1</label>
+                            <input class="form-control" type="text" placeholder="123 Street">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Address Line 2</label>
+                            <input class="form-control" type="text" placeholder="123 Street">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Country</label>
+                            <select class="custom-select">
+                                <option selected>United States</option>
+                                <option>Afghanistan</option>
+                                <option>Albania</option>
+                                <option>Algeria</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>City</label>
+                            <input class="form-control" type="text" placeholder="New York">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>State</label>
+                            <input class="form-control" type="text" placeholder="New York">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>ZIP Code</label>
+                            <input class="form-control" type="text" placeholder="123">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="newaccount">
+                                <label class="custom-control-label" for="newaccount">Create an account</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="shipto">
+                                <label class="custom-control-label" for="shipto"  data-toggle="collapse" data-target="#shipping-address">Ship to different address</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="collapse mb-5" id="shipping-address">
+                    <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Shipping Address</span></h5>
+                    <div class="bg-light p-30">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label>First Name</label>
+                                <input class="form-control" type="text" placeholder="John">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Last Name</label>
+                                <input class="form-control" type="text" placeholder="Doe">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>E-mail</label>
+                                <input class="form-control" type="text" placeholder="example@email.com">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Mobile No</label>
+                                <input class="form-control" type="text" placeholder="+123 456 789">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Address Line 1</label>
+                                <input class="form-control" type="text" placeholder="123 Street">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Address Line 2</label>
+                                <input class="form-control" type="text" placeholder="123 Street">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Country</label>
+                                <select class="custom-select">
+                                    <option selected>United States</option>
+                                    <option>Afghanistan</option>
+                                    <option>Albania</option>
+                                    <option>Algeria</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>City</label>
+                                <input class="form-control" type="text" placeholder="New York">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>State</label>
+                                <input class="form-control" type="text" placeholder="New York">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>ZIP Code</label>
+                                <input class="form-control" type="text" placeholder="123">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Order Total</span></h5>
+                <div class="bg-light p-30 mb-5">
+                    <div class="border-bottom">
+                        <h6 class="mb-3">Products</h6>
+                        <div class="d-flex justify-content-between">
+                            <p>Product Name 1</p>
+                            <p>$150</p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p>Product Name 2</p>
+                            <p>$150</p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p>Product Name 3</p>
+                            <p>$150</p>
+                        </div>
+                    </div>
+                    <div class="border-bottom pt-3 pb-2">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h6>Subtotal</h6>
+                            <h6>$150</h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">Shipping</h6>
+                            <h6 class="font-weight-medium">$10</h6>
+                        </div>
+                    </div>
+                    <div class="pt-2">
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5>Total</h5>
+                            <h5>$160</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Payment</span></h5>
+                    <div class="bg-light p-30">
+                        <!-- Tayyib payment integration placeholder
+                             Notes for developer:
+                             - Replace these placeholders with server-driven values.
+                             - Your backend will create a payment session with Tayyib and return a payment URL or token.
+                             - Do NOT place secret keys in frontend code.
+                             - The example JS below demonstrates the client -> server flow.
+                        -->
+
+                        <!-- Choose payment method (Tayyib highlighted) -->
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" name="payment" id="tayyib" checked>
+                                <label class="custom-control-label font-weight-bold" for="tayyib">Pay with Tayyib (Malaysian gateway)</label>
+                            </div>
+                        </div>
+
+                        <!-- Developer visible configuration (readonly) -->
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Environment</label>
+                                <select id="tayyibEnv" class="form-control">
+                                    <option value="sandbox">Sandbox</option>
+                                    <option value="live">Live</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Merchant ID</label>
+                                <input id="tayyibMerchant" class="form-control" type="text" value="MERCHANT_PLACEHOLDER" readonly>
+                            </div>
+                        </div>
+
+                        <!-- Customer contact (gateway often needs customer email/phone) -->
+                        <div class="form-group">
+                            <label>Contact Email</label>
+                            <input id="customerEmail" type="email" class="form-control" placeholder="you@example.com">
+                        </div>
+
+                        <!-- Order summary shown again near payment CTA -->
+                        <div class="border rounded p-3 mb-3 bg-white">
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted">Subtotal</small>
+                                <strong id="summarySubtotal">$150</strong>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted">Shipping</small>
+                                <strong id="summaryShipping">$10</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mt-2">
+                                <h6>Total</h6>
+                                <h6 id="summaryTotal">$160</h6>
+                            </div>
+                        </div>
+
+                        <!-- Pay button (calls your backend to create a Tayyib payment session) -->
+                        <button id="payWithTayyib" class="btn btn-block btn-warning font-weight-bold py-3">Pay with Tayyib</button>
+
+                        <!-- Status / messages area -->
+                        <div id="tayyibStatus" class="mt-3 text-center text-muted small"></div>
+
+                        <!-- Guidance for backend implementation -->
+                        <div class="mt-3 small text-muted">
+                            <strong>Integration notes:</strong>
+                            <ul>
+                                <li>Your server should accept a POST with order items, amount and customer info then call Tayyib's API to create a payment session.</li>
+                                <li>Server returns a payment URL or payment token to the client; client then redirects user to the gateway or opens the checkout widget.</li>
+                                <li>After payment, Tayyib will call your callback/notify URL — record payment verification server-side and update the order status.</li>
+                                <li>Do not embed API secrets in the frontend. Store them on your server (environment variables) and use server-to-server calls.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Checkout End -->
+
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-secondary mt-5 pt-5">
+        <div class="row px-xl-5 pt-5">
+            <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
+                <h5 class="text-secondary text-uppercase mb-4">Get In Touch</h5>
+                <p class="mb-4">No dolore ipsum accusam no lorem. Invidunt sed clita kasd clita et et dolor sed dolor. Rebum tempor no vero est magna amet no</p>
+                <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
+                <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
+                <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="row">
+                    <div class="col-md-4 mb-5">
+                        <h5 class="text-secondary text-uppercase mb-4">Quick Shop</h5>
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
+                            <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <h5 class="text-secondary text-uppercase mb-4">My Account</h5>
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
+                            <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <h5 class="text-secondary text-uppercase mb-4">Newsletter</h5>
+                        <p>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
+                        <form action="">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Your Email Address">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary">Sign Up</button>
+                                </div>
+                            </div>
+                        </form>
+                        <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
+                        <div class="d-flex">
+                            <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row border-top mx-xl-5 py-4" style="border-color: rgba(256, 256, 256, .1) !important;">
+            <div class="col-md-6 px-xl-0">
+                <p class="mb-md-0 text-center text-md-left text-secondary">
+                    &copy; <a class="text-primary" href="#">Domain</a>. All Rights Reserved. Designed
+                    by
+                    <a class="text-primary" href="https://htmlcodex.com">HTML Codex</a>
+                    <br>Distributed By: <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+                </p>
+            </div>
+            <div class="col-md-6 px-xl-0 text-center text-md-right">
+                <img class="img-fluid" src="img/payments.png" alt="">
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <!-- JavaScript removed for layout-only repo.
+         Add behavior scripts in your Spring Boot app as needed. -->
+    <script>
+        // Example client-side flow for Tayyib integration (FRONTEND PLACEHOLDER)
+        // Implementation summary:
+        // 1) Client collects minimal data (customer email, order total)
+        // 2) Client POSTs to your server endpoint (e.g. /api/payments/tayyib/create) with order details
+        // 3) Server calls Tayyib API using secure keys and returns a payment URL or token
+        // 4) Client redirects browser to payment URL or opens gateway widget
+        // 5) Tayyib calls your server notify/callback URL once payment completes — verify and update order server-side
+
+        document.addEventListener('DOMContentLoaded', function(){
+            const payBtn = document.getElementById('payWithTayyib');
+            const statusEl = document.getElementById('tayyibStatus');
+
+            if(!payBtn) return;
+
+            payBtn.addEventListener('click', async function(){
+                const email = document.getElementById('customerEmail').value;
+                const env = document.getElementById('tayyibEnv').value;
+                // Basic validation
+                if(!email){
+                    statusEl.textContent = 'Please enter a contact email before proceeding.';
+                    return;
+                }
+
+                statusEl.textContent = 'Creating payment session...';
+                payBtn.disabled = true;
+
+                try{
+                    // Example: POST to your server. Replace URL with your real API endpoint.
+                    const resp = await fetch('/api/payments/tayyib/create', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            amount: document.getElementById('summaryTotal').textContent.replace(/[^0-9.-]+/g,""),
+                            email: email,
+                            environment: env,
+                            items: [ /* optionally include items */ ]
+                        })
+                    });
+
+                    if(!resp.ok) throw new Error('Server error creating payment');
+                    const data = await resp.json();
+
+                    // Expected server response example:
+                    // { success: true, paymentUrl: 'https://tayyibgateway.example/checkout/..' }
+                    if(data && data.paymentUrl){
+                        statusEl.textContent = 'Redirecting to payment gateway...';
+                        // Redirect user to the gateway page returned by server
+                        window.location.href = data.paymentUrl;
+                        return;
+                    }
+
+                    if(data && data.token){
+                        // Some gateways return a token for client-side widget; handle accordingly
+                        statusEl.textContent = 'Opening payment widget...';
+                        // TODO: call widget with token
+                        return;
+                    }
+
+                    throw new Error('Unexpected server response');
+
+                }catch(err){
+                    console.error(err);
+                    statusEl.textContent = 'Failed to create payment. Check console for details.';
+                }finally{
+                    payBtn.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

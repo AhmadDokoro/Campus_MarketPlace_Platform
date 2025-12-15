@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Sign Up – Step 2</title>
+    <link href="/css/authentication.css" rel="stylesheet" />
+</head>
+<body class="seller-step2-body">
+
+<div class="seller-step2-container">
+
+    <header class="seller-step2-header">
+        <h1 class="seller-step2-title">Seller Verification</h1>
+        <p class="seller-step2-subtitle">Step 2 — Complete seller verification</p>
+    </header>
+
+    <form class="seller-step2-form" action="/signupSecondStep" method="post" enctype="multipart/form-data">
+
+        <section class="seller-step2-section">
+            <h2 class="seller-step2-section-title">Seller Profile</h2>
+            <div class="seller-step2-grid">
+                <div class="seller-step2-field">
+                    <label for="shopName" class="form-label">Shop / Display Name</label>
+                    <input id="shopName" name="shopName" type="text" placeholder="Shop name" class="seller-step2-input" />
+                </div>
+
+                <div class="seller-step2-field">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input id="phone" name="phone" type="text" placeholder="Phone" class="seller-step2-input" />
+                </div>
+            </div>
+        </section>
+
+        <section class="seller-step2-section">
+            <h2 class="seller-step2-section-title">Identity Verification</h2>
+            <p class="seller-step2-hint">Upload clear images</p>
+
+            <div class="seller-step2-grid">
+                <div class="seller-step2-upload">
+                    <label for="idCard" class="form-label">Student / Staff ID Card</label>
+                    <input id="idCard" name="idCard" type="file" accept="image/*" class="seller-step2-file" />
+                    <span class="seller-step2-upload-note">Accepted: JPG, PNG</span>
+                </div>
+
+                <div class="seller-step2-upload">
+                    <label for="profileScreenshot" class="form-label">Profile Screenshot</label>
+                    <input id="profileScreenshot" name="profileScreenshot" type="file" accept="image/*" class="seller-step2-file" />
+                    <span class="seller-step2-upload-note">Make sure the profile is readable</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="seller-step2-section">
+            <div>
+                <input id="declaration" name="declaration" type="checkbox" />
+                <label for="declaration">I confirm the information is correct</label>
+            </div>
+        </section>
+
+        <div class="seller-step2-actions">
+            <button type="submit" class="seller-step2-submit">Submit for Verification</button>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>
+

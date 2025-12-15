@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My Orders - Campus Marketplace</title>
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/base.css}" rel="stylesheet" />
+    <link th:href="@{/css/components.css}" rel="stylesheet" />
+    <link th:href="@{/css/layout.css}" rel="stylesheet" />
+    <link th:href="@{/css/responsive.css}" rel="stylesheet" />
+    <!-- Font Awesome for icons (lightweight CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+      .orders-hero { background: linear-gradient(90deg,#ffffff 0%, #f7f9fb 100%); border-bottom: 1px solid #e9eef3; }
+      .orders-summary .stat { border-radius: 8px; padding: 18px; background: #fff; box-shadow: 0 6px 18px rgba(36,59,85,0.04); }
+      .order-card { border: 1px solid #eef3f7; border-radius: 10px; overflow: hidden; }
+      .order-card .order-img { width: 110px; height: 110px; object-fit: cover; }
+      .order-actions .btn { min-width: 96px; }
+      @media (max-width: 991px) { .orders-columns { flex-direction: column; } }
+    </style>
+  </head>
+  <body>
+    <header class="py-3 bg-white border-bottom">
+      <div class="container d-flex align-items-center justify-content-between">
+        <a th:href="@{/}" class="logo text-dark h4 m-0">Campus <span class="text-primary">Market</span></a>
+        <nav>
+          <a th:href="@{/}" class="mr-3">Home</a>
+          <a th:href="@{/product/product-list}" class="mr-3">Shop</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="orders-hero py-4">
+      <div class="container">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <h2 class="mb-1">My Orders</h2>
+            <p class="text-muted mb-0">A clear view of your completed and in-progress orders.</p>
+          </div>
+          <div class="text-right d-none d-md-block">
+            <div class="orders-summary d-flex align-items-center">
+              <div class="stat mr-3 text-center">
+                <div class="h5 mb-0">24</div>
+                <small class="text-muted">Total Orders</small>
+              </div>
+              <div class="stat mr-3 text-center">
+                <div class="h5 mb-0 text-success">18</div>
+                <small class="text-muted">Completed</small>
+              </div>
+              <div class="stat text-center">
+                <div class="h5 mb-0 text-warning">6</div>
+                <small class="text-muted">Pending</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main class="py-5">
+      <div class="container">
+        <div class="d-flex orders-columns" style="gap:24px;">
+          <!-- Completed Orders Column -->
+          <div class="col px-0" style="flex:1 1 60%;">
+            <h4 class="mb-3">Completed Orders</h4>
+
+            <!-- Sample completed order -->
+            <div class="mb-3 order-card p-3 bg-white">
+              <div class="d-flex align-items-center">
+                <img th:src="@{/img/product-1.jpg}" alt="Math Textbook" class="order-img rounded mr-3" />
+                <div class="flex-fill">
+                  <div class="d-flex align-items-start justify-content-between">
+                    <div>
+                      <h5 class="mb-1">Order #1001 <small class="text-muted">• 2025-11-20</small></h5>
+                      <div class="text-muted">Math Textbook (Calculus I) — Qty: 1</div>
+                    </div>
+                    <div class="text-right">
+                      <div class="h5 mb-1">RM 85.00</div>
+                      <span class="badge badge-success">Delivered</span>
+                    </div>
+                  </div>
+                  <div class="mt-3 order-actions">
+                    <a class="btn btn-outline-dark btn-sm mr-2" href="#">View</a>
+                    <a class="btn btn-primary btn-sm" href="#">Reorder</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Another completed order -->
+            <div class="mb-3 order-card p-3 bg-white">
+              <div class="d-flex align-items-center">
+                <img th:src="@{/img/product-9.jpg}" alt="Campus Coffee Mug" class="order-img rounded mr-3" />
+                <div class="flex-fill">
+                  <div class="d-flex align-items-start justify-content-between">
+                    <div>
+                      <h5 class="mb-1">Order #1005 <small class="text-muted">• 2025-10-18</small></h5>
+                      <div class="text-muted">Campus Coffee Mug — Qty: 2</div>
+                    </div>
+                    <div class="text-right">
+                      <div class="h5 mb-1">RM 40.00</div>
+                      <span class="badge badge-success">Completed</span>
+                    </div>
+                  </div>
+                  <div class="mt-3 order-actions">
+                    <a class="btn btn-outline-dark btn-sm mr-2" href="#">View</a>
+                    <a class="btn btn-primary btn-sm" href="#">Buy Again</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Completed orders list fallback -->
+            <div class="mt-4 text-center text-muted">
+              <small>That's the recent completed orders. Older completed orders are available in your account history.</small>
+            </div>
+          </div>
+
+          <!-- Pending / In-Progress Orders Column -->
+          <aside class="col px-0" style="flex:1 1 40%;">
+            <h4 class="mb-3">Pending / In-Progress</h4>
+
+            <!-- Pending order card -->
+            <div class="mb-3 order-card p-3 bg-white">
+              <div class="d-flex align-items-center">
+                <img th:src="@{/img/product-3.jpg}" alt="Spiral Notebook" class="order-img rounded mr-3" />
+                <div class="flex-fill">
+                  <div class="d-flex align-items-start justify-content-between">
+                    <div>
+                      <h5 class="mb-1">Order #1018 <small class="text-muted">• 2025-12-02</small></h5>
+                      <div class="text-muted">Spiral Notebook - 200 pages — Qty: 3</div>
+                    </div>
+                    <div class="text-right">
+                      <div class="h5 mb-1">RM 27.00</div>
+                      <span class="badge badge-warning">Processing</span>
+                    </div>
+                  </div>
+                  <div class="mt-3 order-actions">
+                    <a class="btn btn-outline-dark btn-sm mr-2" href="#">View</a>
+                    <a class="btn btn-outline-secondary btn-sm" href="#">Cancel</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Another pending order card -->
+            <div class="mb-3 order-card p-3 bg-white">
+              <div class="d-flex align-items-center">
+                <img th:src="@{/img/product-4.jpg}" alt="Scientific Calculator" class="order-img rounded mr-3" />
+                <div class="flex-fill">
+                  <div class="d-flex align-items-start justify-content-between">
+                    <div>
+                      <h5 class="mb-1">Order #1020 <small class="text-muted">• 2025-12-04</small></h5>
+                      <div class="text-muted">Scientific Calculator (Used) — Qty: 1</div>
+                    </div>
+                    <div class="text-right">
+                      <div class="h5 mb-1">RM 55.00</div>
+                      <span class="badge badge-warning">Awaiting Pickup</span>
+                    </div>
+                  </div>
+                  <div class="mt-3 order-actions">
+                    <a class="btn btn-outline-dark btn-sm mr-2" href="#">View</a>
+                    <a class="btn btn-primary btn-sm" href="#">Contact Seller</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-3 text-center text-muted">
+              <small>Need help with an order? Visit the <a href="#">Help Center</a> or contact the seller directly.</small>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </main>
+
+    <footer class="py-4 bg-light">
+      <div class="container text-center text-muted">© Campus Marketplace</div>
+    </footer>
+
+    <script th:src="@{/js/main.js}"></script>
+  </body>
+</html>

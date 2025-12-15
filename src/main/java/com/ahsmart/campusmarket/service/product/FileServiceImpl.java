@@ -1,8 +1,6 @@
 package com.ahsmart.campusmarket.service.product;
 
 import com.ahsmart.campusmarket.exceptions.APIException;
-import com.ahsmart.campusmarket.model.Product;
-import com.ahsmart.campusmarket.model.ProductStatus;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Transformation;
 import com.cloudinary.utils.ObjectUtils;

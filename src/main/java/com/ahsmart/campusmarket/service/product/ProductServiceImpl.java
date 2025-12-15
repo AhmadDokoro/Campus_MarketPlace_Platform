@@ -48,7 +48,7 @@ public class ProductServiceImpl implements ProductService{
 
         // check if product exist
         boolean isNotAvailable = category.getProducts().stream()
-                .noneMatch(productValue -> productValue.getProductName().equals(productDTO.getProductName()) &&
+                .noneMatch(productValue -> productValue.getTitle().equals(productDTO.getProductName()) &&
                         productValue.getDescription ().equals(productDTO.getDescription())
                 );
 
@@ -62,10 +62,10 @@ public class ProductServiceImpl implements ProductService{
 
         // set the product's category
         product.setCategory(category);
-        product.setImage("Default.png");
+        //product.setImage("Default.png");
 
         // set it status and calculate special price.
-        helperService.updateProductStatus(product);
+        //helperService.updateProductStatus(product);
 
 
         //save it
@@ -173,7 +173,7 @@ public class ProductServiceImpl implements ProductService{
 
         // set our paging info by passing how the pages should be.
         Pageable pageDetail = PageRequest.of(pageNumber, pageSize,sortByAndOrder);
-        Page<Product> pagedProduct = productRepository.findByProductNameContainingIgnoreCase(keyword, pageDetail);
+        Page<Product> pagedProduct = productRepository.findByTitleContainingIgnoreCase(keyword, pageDetail);
 
 
         // get all the products
@@ -213,14 +213,14 @@ public class ProductServiceImpl implements ProductService{
         Product product = modelMapper.map(productDTO, Product.class);
 
         // update the product with the product gotten from requestBody
-        productFromDb.setProductName(product.getProductName()); // name
+        productFromDb.setTitle(product.getTitle()); // name
         productFromDb.setDescription(product.getDescription());// description
         productFromDb.setQuantity(product.getQuantity());
         productFromDb.setPrice(product.getPrice());
-        productFromDb.setDiscount(product.getDiscount());
+
 
         // set it status and calculate special price.
-        helperService.updateProductStatus(productFromDb);
+        // helperService.updateProductStatus(productFromDb);
 
         //save it back to Db and
         Product updatedProduct = productRepository.save(productFromDb);
@@ -255,7 +255,7 @@ public class ProductServiceImpl implements ProductService{
         String imageUrl = fileService.uploadImage(image);
 
         //set the url of the product image and save it back
-        product.setImage(imageUrl);
+        //product.setImage(imageUrl);
         Product updatedProduct = productRepository.save(product);
 
         return modelMapper.map(updatedProduct, ProductDTO.class);
