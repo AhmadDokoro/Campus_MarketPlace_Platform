@@ -35,14 +35,7 @@ public class AuthenticationController {
         return "templates/auth/signupstep1";
     }
 
-    /**
-     * Handle POST from login form. Receives username and password from the login.html form,
-     * delegates authentication to AuthenticationService.userLogin, and acts on the result:
-     * - on success: create a session attribute (userId and role) and redirect based on role
-     *   BUYER -> index, SELLER -> seller dashboard, ADMIN -> admin dashboard
-     * - if seller not yet verified -> redirect to seller review pending page
-     * - on error -> re-render login view with an error message placed in the model (key: "error")
-     */
+
     @PostMapping("/signin")
     public String signin(
             @RequestParam(name = "username", required = false) String username,
