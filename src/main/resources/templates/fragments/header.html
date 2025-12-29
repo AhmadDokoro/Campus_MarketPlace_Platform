@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header th:fragment="header">
+
+  <!-- Top Bar -->
+  <div class="container-fluid bg-dark text-secondary px-xl-5 py-2">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <small>Campus Marketplace Platform</small>
+      </div>
+      <div class="col-lg-6 text-right">
+
+        <!-- If NOT logged in -->
+        <div th:if="${session.userId == null}">
+          <a th:href="@{/signin}" class="text-secondary mr-3">Login</a>
+          <a th:href="@{/signup}" class="text-secondary">Register</a>
+        </div>
+
+        <!-- If logged in -->
+        <div th:if="${session.userId != null}">
+                    <span class="text-secondary mr-3">
+                        Welcome, <strong th:text="${session.userName}">User</strong>
+                    </span>
+          <a th:href="@{/logout}" class="text-secondary">Logout</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navbar -->
+  <div class="container-fluid bg-light mb-4">
+    <div class="row px-xl-5">
+      <div class="col-lg-12">
+        <nav class="navbar navbar-expand-lg navbar-light py-3 px-0">
+
+          <!-- Logo -->
+          <a th:href="@{/}" class="navbar-brand">
+            <h2 class="m-0 text-primary">CampusMarket</h2>
+          </a>
+
+          <!-- Menu -->
+          <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+
+              <li class="nav-item">
+                <a th:href="@{/}" class="nav-link">Home</a>
+              </li>
+
+              <li class="nav-item">
+                <a th:href="@{/products}" class="nav-link">Shop</a>
+              </li>
+
+              <!-- Buyer only -->
+              <li class="nav-item" th:if="${session.role == T(com.ahsmart.campusmarket.model.enums.Role).BUYER}">
+                <a th:href="@{/cart}" class="nav-link">My Cart</a>
+              </li>
+
+              <!-- Seller only -->
+              <li class="nav-item dropdown"
+                  th:if="${session.role == T(com.ahsmart.campusmarket.model.enums.Role).SELLER}">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown">Seller</a>
+                <div class="dropdown-menu">
+                  <a th:href="@{/seller/dashboard}" class="dropdown-item">Dashboard</a>
+                  <a th:href="@{/seller/products}" class="dropdown-item">My Products</a>
+                  <a th:href="@{/seller/add-product}" class="dropdown-item">Add Product</a>
+                </div>
+              </li>
+
+            </ul>
+          </div>
+
+        </nav>
+      </div>
+    </div>
+  </div>
+
+</header>
+
+</body>
+</html>
