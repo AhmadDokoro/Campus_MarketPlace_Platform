@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -14,6 +16,15 @@ import java.io.StringWriter;
 public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    // Handle multipart size exceptions specifically and redirect back to the verification page
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public RedirectView handleMaxUpload(MaxUploadSizeExceededException ex) {
+        logger.warn("Upload exceeded maximum size", ex);
+        // Redirect with explicit query parameter so the template can display the error (safer than relying on model exposure)
+        String message = "File upload exceeded maximum size (5MB). Please resize and try again.";
+        return new RedirectView("/auth/requestVerification?error=" + java.net.URLEncoder.encode(message, java.nio.charset.StandardCharsets.UTF_8));
+    }
 
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<String> handleAll(Throwable ex) {

@@ -14,11 +14,13 @@
             <p class="muted">Upload your school ID and your Mynemo profile image so the admin can verify your seller account.</p>
         </div>
 
-        <!-- Enhanced error display -->
-        <div th:if="${error}" style="color:#a33;padding:12px;background:#fee;border-radius:8px;margin-bottom:12px;">
+        <!-- Enhanced error display: prefer model error, fall back to query param -->
+        <div th:if="${error != null or param.error != null}" style="color:#a33;padding:12px;background:#fee;border-radius:8px;margin-bottom:12px;">
             <strong>Error</strong>
-            <div th:text="${error}" style="margin-top:6px;"></div>
+            <div th:text="${error != null ? error : param.error}" style="margin-top:6px;"></div>
         </div>
+
+        <p style="font-size:0.95rem;color:#6b7280;margin-bottom:10px">Each file must be 5MB or smaller. Accepted formats: JPG, PNG.</p>
 
         <form th:action="@{/auth/requestVerification}" method="post" enctype="multipart/form-data">
 

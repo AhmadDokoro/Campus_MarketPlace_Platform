@@ -116,6 +116,23 @@
       color: #9c8c7c;
     }
 
+    /* OK button styling */
+    .actions { margin-top: 22px; display:flex; justify-content:center; }
+    .btn-ok {
+      background: linear-gradient(90deg, var(--secondary), #ffd89b);
+      color: var(--text-dark);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(245,193,108,0.12);
+      transition: transform .12s ease, box-shadow .12s ease;
+      text-decoration: none;
+      display: inline-flex; align-items:center; gap:8px;
+    }
+    .btn-ok:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(245,193,108,0.16); }
+
     /* Animations */
     @keyframes fadeUp {
       from {
@@ -186,6 +203,11 @@
 
   <div class="footer-note">
     You’ll be notified once your account is approved. Thank you for your patience 🤍
+  </div>
+
+  <!-- OK button that navigates back to home (keeps UX simple) -->
+  <div class="actions">
+    <a th:href="@{/}" class="btn-ok">OK</a>
   </div>
 </div>
 

@@ -60,7 +60,7 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
             return LoginResult.failed("Invalid email or password");
         }
 
-        // Additional verification check for sellers
+        // Additional verification check for sellers: use helper isSellerApproved
         if (user.getRole() == Role.SELLER) {
 
             Optional<Seller> optionalSeller = sellerRepository.findByUser(user);
@@ -86,7 +86,11 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
         );
     }
 
-
+    @Override
+    public Optional<Users> findUserByEmail(String email) {
+        // Delegate to UsersRepository to find user by email
+        return usersRepository.findByEmail(email);
+    }
 
 
     @Override
@@ -187,5 +191,15 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
         }
     }
 
-}
+    @Override
+    public boolean isSellerApproved(Long userId) {
+        // Look up user by id and determine if there's an approved seller record
+        Optional<Users> opt = usersRepository.findById(userId); // find user
+        if (opt.isEmpty()) return false; // no user -> not approved
+        Users user = opt.get();
+        // Check repository for seller and ensure status == APPROVED
+        Optional<Seller> sellerOpt = sellerRepository.findByUser(user);
+        return sellerOpt.isPresent() && sellerOpt.get().getStatus() == SellerStatus.APPROVED; // true only when approved
+    }
 
+}

@@ -18,40 +18,45 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 public class AuthenticationController {
 
-    // Authentication business logic service
+    // Authentication business logic service (constructor/field injection used)
     @Autowired
     private AuthenticationService authenticationService;
 
     // landing page
     @GetMapping("/")
     public String home() {
-        return "index";
+        return "index"; // return index template
     }
 
     // Display login page
     @GetMapping("/signin")
     public String signinPage() {
-        return "auth/login";
+        return "auth/login"; // login template
     }
-
-
 
     // Display registration form
     @GetMapping("/registerUser")
     public String registerForm(Model model) {
-        model.addAttribute("userForm", new Users());
+        model.addAttribute("userForm", new Users()); // populate empty form model
         return "auth/usersRegister";
     }
 
-    // Display registration form for seller step2 (now request verification)
+    // Display registration form for seller step2 (request verification)
     @GetMapping("/auth/requestVerification")
-    public String requestVerificationForm() {
-        return "auth/requestVerification";
+    public String requestVerificationForm(HttpSession session, Model model) {
+        // If pendingSellerUserId is not in session but the user is already authenticated (userId present),
+        // use it as the pending seller id so the form can be submitted without forcing a re-register.
+        Object pendingObj = session.getAttribute("pendingSellerUserId");
+        if (pendingObj == null) {
+            Object userIdObj = session.getAttribute("userId");
+            if (userIdObj != null) {
+                // copy authenticated user id into pending flow so POST has an id to work with
+                session.setAttribute("pendingSellerUserId", userIdObj);
+                session.setAttribute("pendingSeller", true);
+            }
+        }
+        return "auth/requestVerification"; // render the upload form
     }
-
-
-
-
 
     // Handle login form submission
     @PostMapping("/signin")
@@ -75,6 +80,12 @@ public class AuthenticationController {
 
             // If seller has no profile yet, show a helpful page with CTA to request verification
             if ("Seller profile not found".equalsIgnoreCase(result.getMessage())) {
+                // Ensure the pending seller flow is recorded in session so the upload page knows who the user is.
+                // Find user by email and set session pending attributes so requestVerification can proceed.
+                authenticationService.findUserByEmail(email).ifPresent(u -> {
+                    session.setAttribute("pendingSellerUserId", u.getUserId()); // pending id for upload
+                    session.setAttribute("pendingSeller", true); // flag for pending seller
+                });
                 return "seller/noSellerProfile"; // page instructing user to request verification
             }
 
@@ -83,19 +94,21 @@ public class AuthenticationController {
         }
 
         // Store minimal user info in session
-        session.setAttribute("userId", result.getUserId());
-        session.setAttribute("userName", result.getName());
+        session.setAttribute("userId", result.getUserId()); // always store userId
+        session.setAttribute("userName", result.getName()); // store name for UI greeting
+
+        // Important: only set ROLE in session for non-seller accounts here.
+        // For SELLER role we rely on AuthenticationService.userLogin to only succeed for APPROVED sellers.
         session.setAttribute("role", result.getRole());
 
-        // Redirect user based on role
+        // Redirect user based on role — admin goes to admin dashboard
         Role role = result.getRole();
 
-
         if (role == Role.ADMIN) {
-            return "redirect:/admin/dashboard";
+            return "redirect:/admin/dashboard"; // explicit redirect to controller mapping
         }
 
-        // Fallback redirect
+        // Fallback redirect to home
         return "redirect:/";
     }
 
@@ -103,13 +116,10 @@ public class AuthenticationController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         if (session != null) {
-            session.invalidate();
+            session.invalidate(); // clear session on logout
         }
-        return "redirect:/";
+        return "redirect:/"; // go home
     }
-
-
-
 
     // Handle registration submission
     @PostMapping("/registerUser")
@@ -117,14 +127,16 @@ public class AuthenticationController {
                                Model model,
                                HttpSession session) {
         try {
-            Users saved = authenticationService.registerUser(userForm);
+            Users saved = authenticationService.registerUser(userForm); // save user to DB
 
             // Redirect based on role
             if (saved.getRole() == Role.SELLER) {
-                // For sellers store user id in session so step2 can reference it, then redirect
-                session.setAttribute("userId", saved.getUserId());
-                session.setAttribute("role", saved.getRole());
-                return "redirect:/auth/requestVerification";
+                // IMPORTANT: Do NOT grant full SELLER role in session until admin approval.
+                // Instead, mark a pending seller flow in session so user can continue to upload verification docs.
+                session.setAttribute("pendingSellerUserId", saved.getUserId()); // store pending user id
+                session.setAttribute("pendingSeller", true); // flag that this user is in pending flow
+                // do not set session role to SELLER here
+                return "redirect:/auth/requestVerification"; // go to upload page
             }
 
             // For buyers: redirect to signin (do not auto-login)
@@ -133,40 +145,63 @@ public class AuthenticationController {
         } catch (IllegalArgumentException ex) {
             model.addAttribute("error", ex.getMessage());
             model.addAttribute("userForm", userForm);
-            return "auth/usersRegister";
+            return "auth/usersRegister"; // show registration form with error
         }
     }
 
-
-
     // Handle seller request verification submission: upload two images and create Seller row
     @PostMapping("/auth/requestVerification")
-     public String requestVerification(
+    public String requestVerification(
             @RequestPart("idCardFile") MultipartFile idCardFile, // id card file
             @RequestPart("mynemoFile") MultipartFile mynemoFile, // mynemo profile file
             Model model,
             HttpSession session
     ) {
-        // ensure user is logged in
-        Object userIdObj = session.getAttribute("userId");
+        // ensure user is logged in in the pending flow; fall back to authenticated userId if available
+        Object userIdObj = session.getAttribute("pendingSellerUserId"); // check pending user id
         if (userIdObj == null) {
-            // not logged in → redirect to user register page
+            // fallback: maybe user is authenticated (userId in session) but pending flag wasn't set
+            userIdObj = session.getAttribute("userId");
+        }
+        if (userIdObj == null) {
+            // still missing → redirect to register so they can create an account
             return "redirect:/registerUser";
         }
 
-        Long userId = (Long) userIdObj;
+        Long userId = (Long) userIdObj; // cast saved user id (from pending or authenticated session)
+
+        // Server-side file size validation (limit per-file to 5MB as configured)
+        long maxBytes = 5L * 1024L * 1024L; // 5MB
+        if (idCardFile == null || idCardFile.isEmpty()) {
+            model.addAttribute("error", "ID card image is required.");
+            return "auth/requestVerification"; // show form with error
+        }
+        if (mynemoFile == null || mynemoFile.isEmpty()) {
+            model.addAttribute("error", "Mynemo profile image is required.");
+            return "auth/requestVerification"; // show form with error
+        }
+        // Validate sizes before attempting upload to avoid Tomcat MaxUploadSize exceptions
+        if (idCardFile.getSize() > maxBytes || mynemoFile.getSize() > maxBytes) {
+            model.addAttribute("error", "Each file must be 5MB or smaller. Please resize and try again.");
+            return "auth/requestVerification"; // feedback to user
+        }
 
         try {
-            // request verification using service
+            // request verification using service (uploads images inside the service)
             authenticationService.requestVerification(userId, idCardFile, mynemoFile);
-            // on success redirect to pending review page
-            return "/seller/reviewPendingPage";
+
+            // on success clear pending flags from session (user will wait for admin)
+            session.removeAttribute("pendingSeller");
+            session.removeAttribute("pendingSellerUserId");
+
+            // on success show a friendly pending review page
+            return "seller/reviewPendingPage";
 
         } catch (IllegalArgumentException ex) {
             // add enhanced error list to model for display
             model.addAttribute("error", ex.getMessage());
-            return "auth/requestVerification";
+            return "auth/requestVerification"; // show form with error message
         }
-     }
+    }
 
- }
+}
