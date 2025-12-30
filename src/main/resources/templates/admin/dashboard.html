@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Dashboard — Campus Marketplace</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../../static/css/admin.css">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+
+</head>
+<body>
+  <div class="admin-app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo-square">CM</div>
+        <div class="brand-text">
+          <div class="title">Campus</div>
+          <div class="subtitle">Marketplace</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a class="nav-item active" href="#overview"><span class="icon">🏠</span> Overview</a>
+        <a class="nav-item" href="#analytics"><span class="icon">📈</span> Analytics</a>
+        <a class="nav-item" th:href="@{/admin/pendingSellers}"><span class="icon">📝</span> Seller Verification</a>
+        <a class="nav-item" th:href="@{/admin/flaggedProducts}"><span class="icon">🚩</span> Flagged Products</a>
+        <a class="nav-item" href="#categories"><span class="icon">🗂️</span> Categories</a>
+        <div class="nav-spacer"></div>
+        <a class="nav-item danger" href="#logout"><span class="icon">🔒</span> Logout</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div>Version 1.0</div>
+        <div class="small muted">UMT • Campus Marketplace</div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="topbar-actions">
+          <div class="notification">
+            <button title="Notifications" class="icon-btn">🔔<span class="badge">3</span></button>
+          </div>
+          <div class="profile">
+            <div class="admin-avatar">A</div>
+            <div class="admin-meta">
+              <div class="admin-name">SEO Admin</div>
+              <div class="admin-role">Student Entrepreneurship Officer</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <section class="content">
+        <!-- Overview Row -->
+        <section id="overview" class="section overview">
+          <div class="overview-header">
+            <h1>Admin Dashboard</h1>
+            <p class="muted">Overview of system health, flagged products, and pending verifications.</p>
+          </div>
+
+          <div class="cards-grid">
+            <div class="card stat-card">
+              <div class="stat-title">Total Users</div>
+              <div class="stat-value" id="statUsers">0</div>
+              <div class="stat-sub muted">Registered students</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="stat-title">Total Sellers</div>
+              <div class="stat-value" id="statSellers">0</div>
+              <div class="stat-sub muted">All seller accounts</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="stat-title">Verified Sellers</div>
+              <div class="stat-value" id="statVerified">0</div>
+              <div class="stat-sub muted">Accounts approved</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="stat-title">Active Listings</div>
+              <div class="stat-value" id="statListings">0</div>
+              <div class="stat-sub muted">Products live</div>
+            </div>
+
+            <div class="card stat-card warn">
+              <div class="stat-title">Flagged Listings</div>
+              <div class="stat-value" id="statFlagged">0</div>
+              <div class="stat-sub muted">Pending review</div>
+            </div>
+
+            <div class="card stat-card success">
+              <div class="stat-title">Total Sales</div>
+              <div class="stat-value" id="statSales">0</div>
+              <div class="stat-sub muted">Completed transactions</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Analytics Row -->
+        <section id="analytics" class="section analytics">
+          <div class="panel panel-wide">
+            <div class="panel-header">
+              <h3>Monthly Listings</h3>
+              <div class="panel-actions">
+                <button class="btn small">Export CSV</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <canvas id="chartListings" height="120"></canvas>
+            </div>
+          </div>
+
+          <div class="side-panels">
+            <div class="panel">
+              <div class="panel-header">
+                <h4>Verification Status</h4>
+              </div>
+              <div class="panel-body">
+                <canvas id="chartVerification" height="160"></canvas>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <h4>Top Categories</h4>
+              </div>
+              <div class="panel-body">
+                <ul class="category-list" id="topCategories">
+                  <li>Books <span class="muted">— 410 listings</span></li>
+                  <li>Electronics <span class="muted">— 320 listings</span></li>
+                  <li>Fashion <span class="muted">— 220 listings</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Verification Queue -->
+        <section id="verify-sellers" class="section queue">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Seller Verification Queue</h3>
+              <div class="panel-actions">
+                <input id="verifySearch" type="search" placeholder="Search name or student ID" />
+              </div>
+            </div>
+            <div class="panel-body">
+              <table class="table" id="verificationTable">
+                <thead>
+                  <tr>
+                    <th>Submitted</th>
+                    <th>Name</th>
+                    <th>Student ID</th>
+                    <th>Document</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- rows populated by JS -->
+                </tbody>
+              </table>
+              <div class="muted small">Approve only valid student IDs. Rejected sellers can re-apply.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Flagged Products -->
+        <section id="flagged" class="section flagged">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>AI-Flagged Product Listings</h3>
+              <div class="panel-actions">
+                <button class="btn outline">Bulk Approve</button>
+                <button class="btn danger">Bulk Delete</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <table class="table table-img" id="flaggedTable">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Product</th>
+                    <th>Seller</th>
+                    <th>AI Score</th>
+                    <th>Reason</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Categories -->
+        <section id="categories" class="section categories">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Category Management</h3>
+              <div class="panel-actions">
+                <button class="btn primary" id="addCategoryBtn">+ Add Category</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="category-grid" id="categoryGrid">
+                <!-- JS will render categories -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Manage Sellers -->
+        <section id="manage-sellers" class="section manage-sellers">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Manage Sellers</h3>
+            </div>
+            <div class="panel-body">
+              <table class="table" id="sellersTable">
+                <thead>
+                  <tr>
+                    <th>Seller</th>
+                    <th>Joined</th>
+                    <th>Listings</th>
+                    <th>Verified</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Sample Seller</td><td>2025-02-10</td><td>12</td><td><span class="pill success">Yes</span></td><td><button class="btn small">View</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+      </section> <!-- end content -->
+    </main> <!-- end main -->
+  </div>
+
+  <!-- Modal placeholders (hidden, will be toggled by JS) -->
+  <div id="modalRoot"></div>
+
+  <!-- JS -->
+  <script src="/js/admin.js"></script>
+  <script th:src="@{/js/admin.js}"></script>
+</body>
+</html>

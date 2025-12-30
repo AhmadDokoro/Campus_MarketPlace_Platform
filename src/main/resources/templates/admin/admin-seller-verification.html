@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Seller – Campus Marketplace</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #f1c40f;
+      --dark: #2d3436;
+      --muted: #6b7280;
+      --radius: 14px;
+
+      --shadow-sm: 0 2px 6px rgba(0,0,0,0.1);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.1);
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, sans-serif;
+      background: #f5f6fa;
+      padding: 40px;
+    }
+
+    h1 {
+      margin: 0 0 5px;
+      font-size: 32px;
+      font-weight: 800;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* Container */
+    .verify-container {
+      background: white;
+      border-radius: var(--radius);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-top: 25px;
+    }
+
+    /* Top Bar */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .back-btn {
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.08);
+    }
+
+    /* Header */
+    .seller-header {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .seller-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: var(--radius);
+      object-fit: cover;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .seller-header .name {
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    /* Info Grid */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    .info-card {
+      background: #f9fafb;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .info-card h4 {
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .info-card .value {
+      margin-top: 6px;
+      font-size: 17px;
+      font-weight: 700;
+      color: #111827;
+      word-break: break-word;
+    }
+
+    .info-card .value a {
+      color: #1e40af;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .info-card .value a:hover {
+      text-decoration: underline;
+    }
+
+    /* Documents */
+    .docs-section {
+      margin-top: 35px;
+    }
+
+    .docs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .doc-card {
+      background: white;
+      padding: 12px;
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .doc-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .doc-card .label {
+      margin-top: 10px;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    /* Actions */
+    .action-buttons {
+      margin-top: 32px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-approve {
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      color: #fff;
+    }
+
+    .btn-reject {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    @media (max-width:800px){
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      .docs-grid {
+        grid-template-columns: 1fr;
+      }
+      .seller-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+
+</head>
+<body>
+
+  <div class="container">
+    <div class="topbar">
+      <div>
+        <h1 style="margin:0">Seller Verification</h1>
+        <div class="muted" style="margin-top:6px">Review the seller’s academic and identity information before approval.</div>
+      </div>
+      <a th:href="@{/admin/dashboard}" class="back-btn">← Back to Dashboard</a>
+    </div>
+
+    <div class="verify-container">
+
+      <!-- Seller Header: show mynemo profile image if available, else show id card as thumbnail -->
+      <div class="seller-header">
+        <a th:if="${seller.mynemoProfileUrl != null}" th:href="${seller.mynemoProfileUrl}" target="_blank">
+          <img th:src="${seller.mynemoProfileUrl}" class="seller-photo" alt="Seller Photo" />
+        </a>
+        <a th:if="${seller.mynemoProfileUrl == null}" th:href="${seller.idCardImageUrl}" target="_blank">
+          <img th:src="${seller.idCardImageUrl}" class="seller-photo" alt="Seller Photo" />
+        </a>
+
+        <div>
+          <!-- display user's full name -->
+          <div class="name" th:text="${seller.user.firstName} + ' ' + ${seller.user.lastName}"></div>
+          <!-- show role and current seller status -->
+          <div class="muted" th:text="${seller.user.role} + ' – ' + ${seller.status}"></div>
+        </div>
+      </div>
+
+      <!-- Info Grid: populate fields from the linked Users entity -->
+      <div class="info-grid">
+
+        <div class="info-card">
+          <h4>Full Name</h4>
+          <div class="value" th:text="${seller.user.firstName} + ' ' + ${seller.user.lastName}"></div>
+        </div>
+
+        <div class="info-card">
+          <h4>Student ID</h4>
+          <div class="value" th:text="${seller.user.academicId}"></div>
+        </div>
+
+        <div class="info-card">
+          <h4>Level</h4>
+          <div class="value" th:text="${seller.user.level}"></div>
+        </div>
+
+        <div class="info-card">
+          <h4>Phone</h4>
+          <div class="value" th:text="${seller.user.phone}"></div>
+        </div>
+
+        <div class="info-card">
+          <h4>University Email</h4>
+          <div class="value">
+            <a th:href="${'mailto:' + seller.user.email}" th:text="${seller.user.email}"></a>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <h4>Mentor</h4>
+          <div class="value" th:text="${seller.user.mentorName}"></div>
+        </div>
+
+        <div class="info-card">
+          <h4>Submitted At</h4>
+          <div class="value" th:text="${seller.submittedAt != null ? #temporals.format(seller.submittedAt,'dd MMM yyyy HH:mm') : '—'}"></div>
+        </div>
+
+        <div class="info-card">
+          <h4>User ID</h4>
+          <div class="value" th:text="${seller.user.userId}"></div>
+        </div>
+
+        <div class="info-card">
+          <h4>Seller ID</h4>
+          <div class="value" th:text="${seller.sellerId}"></div>
+        </div>
+
+        <div class="info-card">
+          <h4>Account Created</h4>
+          <div class="value" th:text="${#temporals.format(seller.user.createdAt,'dd MMM yyyy')}"></div>
+        </div>
+
+      </div>
+
+      <!-- Documents: link images so admin can click to view full-size in new tab -->
+      <div class="docs-section">
+        <h2 style="margin-top:22px">Uploaded Identification</h2>
+        <p class="muted">Ensure these documents match the student’s identity.</p>
+
+        <div class="docs-grid">
+          <div class="doc-card">
+            <!-- ID card image clickable to open full image -->
+            <a th:href="${seller.idCardImageUrl}" target="_blank">
+              <img th:src="${seller.idCardImageUrl}" alt="Student id card" />
+            </a>
+            <div class="label">Student id card</div>
+          </div>
+
+
+          <div class="doc-card">
+            <!-- Mynemo profile image clickable to open full image -->
+            <a th:href="${seller.mynemoProfileUrl}" target="_blank">
+              <img th:src="${seller.mynemoProfileUrl}" alt="Mynemo Profile" />
+            </a>
+            <div class="label">Mynemo Profile</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons: forms that call admin endpoints to approve/reject -->
+      <div class="action-buttons">
+        <form th:action="@{/admin/seller/{id}/reject(id=${seller.sellerId})}" method="post" th:object="${seller}">
+          <button type="submit" class="btn btn-reject">Reject Application</button>
+        </form>
+
+        <form th:action="@{/admin/seller/{id}/approve(id=${seller.sellerId})}" method="post" th:object="${seller}">
+          <button type="submit" class="btn btn-approve">Approve Seller</button>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

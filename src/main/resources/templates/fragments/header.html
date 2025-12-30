@@ -1,83 +1,141 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<body>
-
 <header th:fragment="header">
-
-  <!-- Top Bar -->
-  <div class="container-fluid bg-dark text-secondary px-xl-5 py-2">
-    <div class="row align-items-center">
-      <div class="col-lg-6">
-        <small>Campus Marketplace Platform</small>
-      </div>
-      <div class="col-lg-6 text-right">
-
-        <!-- If NOT logged in -->
-        <div th:if="${session.userId == null}">
-          <a th:href="@{/signin}" class="text-secondary mr-3">Login</a>
-          <a th:href="@{/signup}" class="text-secondary">Register</a>
-        </div>
-
-        <!-- If logged in -->
-        <div th:if="${session.userId != null}">
-                    <span class="text-secondary mr-3">
-                        Welcome, <strong th:text="${session.userName}">User</strong>
-                    </span>
-          <a th:href="@{/logout}" class="text-secondary">Logout</a>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- Main Navbar -->
-  <div class="container-fluid bg-light mb-4">
-    <div class="row px-xl-5">
-      <div class="col-lg-12">
-        <nav class="navbar navbar-expand-lg navbar-light py-3 px-0">
-
-          <!-- Logo -->
-          <a th:href="@{/}" class="navbar-brand">
-            <h2 class="m-0 text-primary">CampusMarket</h2>
-          </a>
-
-          <!-- Menu -->
-          <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-
-              <li class="nav-item">
-                <a th:href="@{/}" class="nav-link">Home</a>
-              </li>
-
-              <li class="nav-item">
-                <a th:href="@{/products}" class="nav-link">Shop</a>
-              </li>
-
-              <!-- Buyer only -->
-              <li class="nav-item" th:if="${session.role == T(com.ahsmart.campusmarket.model.enums.Role).BUYER}">
-                <a th:href="@{/cart}" class="nav-link">My Cart</a>
-              </li>
-
-              <!-- Seller only -->
-              <li class="nav-item dropdown"
-                  th:if="${session.role == T(com.ahsmart.campusmarket.model.enums.Role).SELLER}">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown">Seller</a>
-                <div class="dropdown-menu">
-                  <a th:href="@{/seller/dashboard}" class="dropdown-item">Dashboard</a>
-                  <a th:href="@{/seller/products}" class="dropdown-item">My Products</a>
-                  <a th:href="@{/seller/add-product}" class="dropdown-item">Add Product</a>
+    <div class="container-fluid">
+        <div class="row bg-secondary py-1 px-xl-5">
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="d-inline-flex align-items-center h-100">
+                    <a class="text-body mr-3" href="">About</a>
+                    <a class="text-body mr-3" href="">Contact</a>
+                    <a class="text-body mr-3" href="">Help</a>
+                    <a class="text-body mr-3" href="">FAQs</a>
                 </div>
-              </li>
+            </div>
 
-            </ul>
-          </div>
+            <!-- AUTH AREA: show user name + logout when logged in; login button otherwise -->
+            <div class="col-lg-6 text-center text-lg-right">
+                <!-- If user logged in (session.userId set) -->
+                <div th:if="${session.userId != null}" class="d-inline-flex align-items-center">
+                    <a th:href="@{/user/profile}" class="btn btn-sm btn-primary d-inline-flex align-items-center mr-2">
+                        <img th:src="@{https://i.pravatar.cc/150}" alt="User avatar" class="rounded-circle"
+                             style="width:28px;height:28px;object-fit:cover;margin-right:8px;">
+                        <span th:text="${session.userName}">User</span>
+                    </a>
 
-        </nav>
-      </div>
+                    <a th:href="@{/logout}" class="btn btn-sm btn-outline-danger d-inline-flex align-items-center">
+                        <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                    </a>
+                </div>
+
+                <!-- If not logged in -->
+                <div th:unless="${session.userId != null}">
+                    <a th:href="@{/signin}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Logo and search bar section -->
+        <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
+            <div class="col-lg-4">
+                <a th:href="@{/}" class="text-decoration-none d-inline-flex align-items-center">
+                    <span class="h3 text-uppercase text-primary bg-dark px-2 mb-0">CAMPUS</span>
+                    <span class="h3 text-uppercase text-dark bg-primary px-2 mb-0 ml-n1">MARKETPLACE</span>
+                </a>
+            </div>
+            <div class="col-lg-4 col-6 text-left">
+                <form action="">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for products" aria-label="Search for products">
+                        <div class="input-group-append">
+                                <span class="input-group-text bg-transparent text-primary">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-4 col-6 text-right">
+                <h4 class="m-0" style="color: #1e2b8d;"><span>AH</span><span style="color: #e0c007;">$</span><span>MART</span></h4>
+            </div>
+        </div>
+
     </div>
-  </div>
 
+    <div class="container-fluid bg-dark mb-30">
+        <div class="row px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <select class="form-control d-flex align-items-center bg-primary text-dark" id="categories-select" aria-label="Categories" style="height: 65px; padding: 0 30px; border: none; cursor: pointer; appearance: none; font-size: 18px; font-weight: 500;">
+                    <option value="">Category  ▼</option>
+                    <option value="smartphones">Smartphones</option>
+                    <option value="laptops">Laptops</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="cameras">Cameras</option>
+                    <option value="womens-wear">Women's Wear</option>
+                    <option value="mens-wear">Men's Wear</option>
+                    <option value="kids-wear">Kids' Wear</option>
+                    <option value="footwear">Footwear</option>
+                    <option value="furniture">Furniture</option>
+                    <option value="bedding">Bedding</option>
+                    <option value="kitchen">Kitchen</option>
+                    <option value="garden">Garden</option>
+                    <option value="sports-equipment">Sports Equipment</option>
+                    <option value="outdoor-gear">Outdoor Gear</option>
+                    <option value="cycling">Cycling</option>
+                    <option value="water-sports">Water Sports</option>
+                    <option value="books">Books</option>
+                    <option value="music">Music</option>
+                    <option value="movies">Movies</option>
+                    <option value="games">Games</option>
+                    <option value="beauty-health">Beauty & Health</option>
+                    <option value="toys-games">Toys & Games</option>
+                    <option value="automotive">Automotive</option>
+                    <option value="pet-supplies">Pet Supplies</option>
+                </select>
+            </div>
+            <div class="col-lg-9">
+                <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
+                    <a th:href="@{/}" class="text-decoration-none d-block d-lg-none">
+                        <span class="h3 text-uppercase text-dark bg-light px-2">CAMPUS</span>
+                        <span class="h3 text-uppercase text-light bg-primary px-2 ml-n1">MARKETPLACE</span>
+                    </a>
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+
+                        <!-- Buyer nav: shown for BUYER role only -->
+                        <div class="navbar-nav mr-auto py-0" th:if="${session.role == T(com.ahsmart.campusmarket.model.enums.Role).BUYER}">
+                            <a th:href="@{/}" class="nav-item nav-link active">Home</a>
+                            <a th:href="@{/product/product-list.html}" class="nav-item nav-link">Explore</a>
+                            <a th:href="@{/buyer/orders.html}" class="nav-item nav-link">Orders</a>
+                        </div>
+
+                        <!-- Seller nav: shown for SELLER role only (adds manage products & sales history) -->
+                        <div class="navbar-nav mr-auto py-0" th:if="${session.role == T(com.ahsmart.campusmarket.model.enums.Role).SELLER}">
+                            <a th:href="@{/}" class="nav-item nav-link active">Home</a>
+                            <a th:href="@{/product/product-list.html}" class="nav-item nav-link">Explore</a>
+                            <a th:href="@{/seller/products}" class="nav-item nav-link">Manage Products</a>
+                            <a th:href="@{/seller/sales-history}" class="nav-item nav-link">Sales History</a>
+                        </div>
+
+                        <!-- Public nav: when no user logged in, show generic public links -->
+                        <div class="navbar-nav mr-auto py-0" th:if="${session.userId == null}">
+                            <a th:href="@{/}" class="nav-item nav-link active">Home</a>
+                            <a th:href="@{/product/product-list.html}" class="nav-item nav-link">Explore</a>
+                            <a th:href="@{/contact}" class="nav-item nav-link">Contact</a>
+                        </div>
+
+                        <!-- Right-side utilities: cart visible only when logged in -->
+                        <div class="navbar-nav ml-auto py-0 d-none d-lg-block" th:if="${session.userId != null}">
+                            <a th:href="@{/cart/cart.html}" class="btn px-0 ml-3">
+                                <i class="fas fa-shopping-cart text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
 </header>
-
-</body>
-</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Request Verification</title>
+    <link th:href="@{/css/authentication.css}" rel="stylesheet" />
+</head>
+<body class="signup-body">
+
+<div class="signup-wrapper">
+    <div class="signup-card">
+        <div class="signup-header">
+            <h2 class="signup-title">Request Verification</h2>
+            <p class="muted">Upload your school ID and your Mynemo profile image so the admin can verify your seller account.</p>
+        </div>
+
+        <!-- Enhanced error display -->
+        <div th:if="${error}" style="color:#a33;padding:12px;background:#fee;border-radius:8px;margin-bottom:12px;">
+            <strong>Error</strong>
+            <div th:text="${error}" style="margin-top:6px;"></div>
+        </div>
+
+        <form th:action="@{/auth/requestVerification}" method="post" enctype="multipart/form-data">
+
+            <div class="form-grid two-col">
+                <div class="form-field">
+                    <label class="form-label" for="idCardFile">Student ID card image (front)</label>
+                    <input id="idCardFile" name="idCardFile" type="file" accept="image/*" class="form-input" required />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="mynemoFile">Mynemo profile image</label>
+                    <input id="mynemoFile" name="mynemoFile" type="file" accept="image/*" class="form-input" required />
+                </div>
+            </div>
+
+            <div style="margin-top:16px;display:flex;gap:12px;justify-content:flex-end;">
+                <a th:href="@{/}" class="btn btn-light">Cancel</a>
+                <button type="submit" class="btn btn-primary">Submit for verification</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
+

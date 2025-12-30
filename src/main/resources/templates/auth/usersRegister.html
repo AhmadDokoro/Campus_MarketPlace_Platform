@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link th:href="@{/css/authentication.css}" rel="stylesheet" />
+</head>
+<body class="signup-body">
+
+<div class="signup-wrapper">
+    <div class="signup-card">
+        <div class="signup-header">
+            <h2 class="signup-title">Create an account</h2>
+            <p class="muted">Please provide your details to register as buyer or seller.</p>
+        </div>
+
+        <form th:action="@{/registerUser}" method="post" th:object="${userForm}">
+
+            <div th:if="${error}" style="color:#a33;padding:8px;background:#fee;border-radius:6px;margin-bottom:12px;">
+                <p th:text="${error}"></p>
+            </div>
+
+            <div class="form-grid two-col">
+                <div class="form-field">
+                    <label class="form-label">First Name</label>
+                    <input class="form-input" type="text" th:field="*{firstName}" />
+                </div>
+                <div class="form-field">
+                    <label class="form-label">Last Name</label>
+                    <input class="form-input" type="text" th:field="*{lastName}" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Email</label>
+                    <input class="form-input" type="email" th:field="*{email}" />
+                </div>
+                <div class="form-field">
+                    <label class="form-label">Password</label>
+                    <input class="form-input" type="password" th:field="*{password}" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Phone</label>
+                    <input class="form-input" type="text" th:field="*{phone}" />
+                </div>
+                <div class="form-field">
+                    <label class="form-label">Academic ID</label>
+                    <input class="form-input" type="text" th:field="*{academicId}" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Level</label>
+                    <input class="form-input" type="text" th:field="*{level}" />
+                </div>
+                <div class="form-field">
+                    <label class="form-label">Role</label>
+                    <select class="form-select" th:field="*{role}">
+                        <option th:value="${T(com.ahsmart.campusmarket.model.enums.Role).BUYER}">Buyer</option>
+                        <option th:value="${T(com.ahsmart.campusmarket.model.enums.Role).SELLER}">Seller</option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Mentor Name</label>
+                    <input class="form-input" type="text" th:field="*{mentorName}" />
+                </div>
+                <div class="form-field">
+                    <label class="form-label">Mentor Email</label>
+                    <input class="form-input" type="email" th:field="*{mentorEmail}" />
+                </div>
+            </div>
+
+            <div class="form-actions" style="margin-top:16px">
+                <button class="btn btn-primary" type="submit">Register</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
+
