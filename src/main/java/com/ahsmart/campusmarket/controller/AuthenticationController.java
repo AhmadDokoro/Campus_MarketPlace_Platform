@@ -25,7 +25,16 @@ public class AuthenticationController {
     // landing page
     @GetMapping("/")
     public String home() {
-        return "index"; // return index template
+        return "splash"; // return index template
+    }
+
+    // Provide a direct mapping for "/index" so the splash page can redirect to it.
+    // We intentionally keep this simple: it returns the Thymeleaf `index` template located
+    // at src/main/resources/templates/index.html. The splash page's JS navigates to 'index'
+    // (a relative URL) which resolves to /index; without this mapping Spring returns 404.
+    @GetMapping("/index")
+    public String indexPage() {
+        return "index"; // render the main index template after splash
     }
 
     // Display login page

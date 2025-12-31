@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UMT Marketplace</title>
+
+    <style>
+        body{
+            margin:0;
+            height:100vh;
+            background: radial-gradient(circle at top, #f9f6ff, #ffffff);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-family: Inter, system-ui, sans-serif;
+            overflow:hidden;
+        }
+
+        .splash-container{
+            text-align:center;
+            transform: scale(1.05);
+            animation: zoomOut 2s ease forwards;
+        }
+
+        /* UMT LOGO */
+        .umt-logo{
+            width:120px;
+            opacity:0;
+            transform:translateY(-30px) scale(0.9);
+        }
+
+        /* PLATFORM NAME */
+        .platform-name span{
+            display:inline-block;
+            font-size:3.6rem;
+            font-weight:900;
+            letter-spacing:2px;
+            opacity:0;
+            transform:translateY(26px);
+            color:#4B2E83;
+        }
+
+        /* SUB BRAND */
+        .subbrand{
+            margin-top:14px;
+        }
+
+        .subbrand span{
+            display:inline-block;
+            font-size:1.2rem;
+            font-weight:700;
+            letter-spacing:2px;
+            opacity:0;
+            transform:translateY(10px);
+        }
+
+        .blue{ color:#4B2E83; }
+        .gold{ color:#F2B705; }
+
+        /* LIGHT SWEEP */
+        .shine{
+            position:absolute;
+            top:0;
+            left:-150%;
+            width:150%;
+            height:100%;
+            background: linear-gradient(
+                    120deg,
+                    transparent,
+                    rgba(242,183,5,0.15),
+                    transparent
+            );
+            animation: shineMove 1.8s ease forwards;
+            pointer-events:none;
+        }
+
+        /* ANIMATIONS */
+        @keyframes zoomOut{
+            0%{opacity:1; transform:scale(1.05);}
+            85%{opacity:1;}
+            100%{opacity:0; transform:scale(0.96);}
+        }
+
+        @keyframes shineMove{
+            to{ left:150%; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="shine"></div>
+
+<div class="splash-container">
+
+    <!-- UMT LOGO -->
+    <img src="/img/umtlogo.png" class="umt-logo" id="umtLogo"/>
+
+    <!-- PLATFORM NAME -->
+    <div class="platform-name" id="platform">
+        <span>U</span><span>M</span><span>T</span>
+        <span>&nbsp;</span>
+        <span>M</span><span>A</span><span>R</span><span>K</span><span>E</span>
+        <span>T</span><span>P</span><span>L</span><span>A</span><span>C</span><span>E</span>
+    </div>
+
+    <!-- SUB BRAND -->
+    <div class="subbrand" id="subbrand">
+        <span style="color:#6b7280;margin-right:6px;">by</span>
+        <span class="blue">A</span>
+        <span class="blue">H</span>
+        <span class="gold">$</span>
+        <span class="blue">M</span>
+        <span class="blue">A</span>
+        <span class="blue">R</span>
+        <span class="blue">T</span>
+    </div>
+
+</div>
+
+<script>
+    const logo = document.getElementById('umtLogo');
+    const platformLetters = document.querySelectorAll('#platform span');
+    const subbrandLetters = document.querySelectorAll('#subbrand span');
+
+    /* LOGO FIRST */
+    setTimeout(() => {
+        logo.style.transition = 'all 600ms cubic-bezier(.2,.9,.3,1)';
+        logo.style.opacity = '1';
+        logo.style.transform = 'translateY(0) scale(1)';
+    }, 150);
+
+    /* PLATFORM NAME */
+    platformLetters.forEach((el, i) => {
+        setTimeout(() => {
+            el.style.transition = 'all 420ms cubic-bezier(.2,.9,.3,1)';
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        }, 500 + i * 110);
+    });
+
+    /* SUB BRAND */
+    setTimeout(() => {
+        subbrandLetters.forEach((el, i) => {
+            setTimeout(() => {
+                el.style.transition = 'all 320ms ease';
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }, i * 65);
+        });
+    }, 450 + platformLetters.length * 85);
+
+    /* GOLD PULSE */
+    setTimeout(() => {
+        document.querySelector('.gold').style.textShadow =
+            '0 0 28px rgba(242,183,5,0.9)';
+    }, 900);
+
+    /* REDIRECT */
+    setTimeout(() => {
+        window.location.href = "/index";
+    }, 3500);
+</script>
+
+</body>
+</html>
