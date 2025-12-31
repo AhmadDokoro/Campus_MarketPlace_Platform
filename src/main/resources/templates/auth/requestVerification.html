@@ -15,7 +15,7 @@
         </div>
 
         <!-- Enhanced error display: prefer model error, fall back to query param -->
-        <div th:if="${error != null or param.error != null}" style="color:#a33;padding:12px;background:#fee;border-radius:8px;margin-bottom:12px;">
+        <div th:if="${error != null or param.error != null}" style="color:#ffffff;padding:12px;background:#C4161C;border-radius:8px;margin-bottom:12px;">
             <strong>Error</strong>
             <div th:text="${error != null ? error : param.error}" style="margin-top:6px;"></div>
         </div>

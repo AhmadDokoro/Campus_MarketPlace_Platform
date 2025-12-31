@@ -3,14 +3,14 @@
    Accent color follows your site: yellow (#f2c200) and dark header (#2f363a)
 */
 :root{
-  --primary: #f2c200;     /* yellow accent (tweak if your template uses slightly different) */
-  --nav-dark: #2f363a;    /* dark header/nav */
+  --primary: #F2B705;     /* UMT Accent Gold */
+  --nav-dark: #4B2E83;    /* UMT Primary used for dark nav */
   --bg: #f6f7fb;
   --card: #ffffff;
   --muted: #6b7280;
   --text: #111827;
-  --success: #16a34a;
-  --danger: #ef4444;
+  --success: #F2B705;
+  --danger: #C4161C;
   --glass: rgba(255,255,255,0.7);
   --radius: 12px;
   --shadow-sm: 0 4px 12px rgba(18,23,31,0.06);
@@ -41,7 +41,7 @@ body{
 /* Sidebar */
 .sidebar{
   width:260px;
-  background:linear-gradient(180deg,var(--nav-dark), #1f2426);
+  background:linear-gradient(180deg,var(--nav-dark), #341f5a);
   color:#fff;
   padding:26px 18px;
   display:flex;
@@ -74,7 +74,7 @@ body{
 .nav-item .icon{width:20px;text-align:center}
 .nav-item:hover{background:rgba(255,255,255,0.04);transform:translateX(4px)}
 .nav-item.active{background:var(--primary);color:#111}
-.nav-item.danger{margin-top:auto;background:transparent;color:#ffdddd}
+.nav-item.danger{margin-top:auto;background:transparent;color:#ffffff}
 
 /* Sidebar footer */
 .sidebar-footer{margin-top:auto;color:rgba(255,255,255,0.6);font-size:12px}
@@ -108,7 +108,7 @@ body{
 .stat-card .stat-title{font-size:12px;color:var(--muted);margin-bottom:8px}
 .stat-card .stat-value{font-size:22px;font-weight:800}
 .stat-sub{font-size:12px;color:var(--muted);margin-top:6px}
-.stat-card.warn{border-left:4px solid #f59e0b}
+.stat-card.warn{border-left:4px solid #F2B705}
 .stat-card.success{border-left:4px solid var(--success)}
 
 /* Panels */
@@ -136,7 +136,7 @@ body{
 /* pills */
 .pill{display:inline-block;padding:6px 8px;border-radius:999px;font-weight:700;font-size:12px}
 .pill.success{background:rgba(22,163,74,0.12);color:var(--success)}
-.pill.warn{background:rgba(245,158,11,0.12);color:#b45309}
+.pill.warn{background:rgba(242,183,5,0.12);color:#4B2E83}
 
 /* category grid */
 .category-grid{display:flex;flex-wrap:wrap;gap:10px}

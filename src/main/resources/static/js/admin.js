@@ -63,7 +63,7 @@ function renderFlaggedTable(){
       <td><input type="checkbox" /></td>
       <td><div style="display:flex;gap:12px;align-items:center"><img src="${p.image}" alt="${p.title}"><div><strong>${p.title}</strong><div class="muted small">ID: ${p.id}</div></div></div></td>
       <td>${p.seller}</td>
-      <td><div class="pill" style="background:rgba(255,199,0,0.12);color:#b45309">${(p.score*100).toFixed(0)}%</div></td>
+      <td><div class="pill" style="background:rgba(242,183,5,0.12);color:#4B2E83">${(p.score*100).toFixed(0)}%</div></td>
       <td>${p.reason}</td>
       <td class="actions">
         <button class="btn" onclick="approveListing(${p.id})">Approve</button>
@@ -145,7 +145,7 @@ function renderCharts(){
       labels:['Verified','Not Verified'],
       datasets:[{
         data:[verified, notVerified],
-        backgroundColor:[ 'rgba(34,197,94,0.9)','rgba(245,158,11,0.9)']
+        backgroundColor:[ 'rgba(75,46,131,0.9)','rgba(242,183,5,0.9)']
       }]
     },
     options:{plugins:{legend:{position:'bottom'}}}

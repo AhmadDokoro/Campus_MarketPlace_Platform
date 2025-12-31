@@ -5,17 +5,70 @@
     <title>Login</title>
     <link th:href="@{/css/authentication.css}" rel="stylesheet" />
 
-    <!-- Branding overrides moved to /static/css/authentication.css -->
+    <!-- Login-only styling (pure image left) -->
+    <style>
+        /* LEFT IMAGE PANEL (PURE IMAGE) */
+        .login-image-panel {
+            flex: 0 0 420px;
+            background:
+                    linear-gradient(
+                            180deg,
+                            rgba(0,0,0,0.25),
+                            rgba(0,0,0,0.35)
+                    ),
+                    url('/img/side.jpg') center/cover no-repeat;
+            animation: slideInLeft 600ms ease;
+        }
+
+        /* Animate form side */
+        .login-form-section {
+            animation: slideInRight 600ms ease;
+        }
+
+        /* Input focus enhancement */
+        .login-input-group input:focus {
+            box-shadow: 0 0 0 4px rgba(242,183,5,0.25);
+            border-color: rgba(242,183,5,0.6);
+        }
+
+        /* Button micro-interaction */
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 22px 50px rgba(242,183,5,0.28);
+        }
+
+        /* Animations */
+        @keyframes slideInLeft {
+            from { opacity:0; transform:translateX(-20px); }
+            to { opacity:1; transform:translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity:0; transform:translateX(20px); }
+            to { opacity:1; transform:translateX(0); }
+        }
+
+        /* Mobile: hide image panel */
+        @media (max-width:800px){
+            .login-image-panel {
+                display: none;
+            }
+        }
+    </style>
 </head>
+
 <body class="login-body">
 
 <div class="login-wrapper">
 
     <div class="login-card">
 
-        <!-- Left: Form -->
+        <!-- LEFT: PURE IMAGE -->
+        <div class="login-image-panel"></div>
+
+        <!-- RIGHT: LOGIN FORM -->
         <div class="login-form-section">
-            <h2 class="login-title">Login</h2>
+            <h2 class="login-title">Welcome Back</h2>
 
             <form method="post" th:action="@{/signin}" class="login-form">
 
@@ -29,25 +82,22 @@
                     <input id="password" type="password" name="password" required>
                 </div>
 
-                <!-- Error message block: only shown when controller adds 'error' to the model -->
-                <div th:if="${error}" class="login-error" style="color:#ffdddd;background:#6b1f1f;padding:10px;border-radius:6px;margin-bottom:12px;">
+                <!-- Error message -->
+                <div th:if="${error}"
+                     class="login-error"
+                     style="color:#ffffff;background:#C4161C;padding:10px;border-radius:6px;margin-bottom:12px;">
                     <p th:text="${error}" style="margin:0;font-weight:600;"></p>
                 </div>
 
                 <button type="submit" class="login-button">Login</button>
 
-                <!-- Sign up prompt: clear button-style link to the signup page -->
-                <div style="margin-top:12px;">
-                     <a th:href="@{/registerUser}" class="signup-button">Create an account</a>
+                <div style="margin-top:14px;">
+                    <a th:href="@{/registerUser}" class="signup-button">
+                        Create an account
+                    </a>
                 </div>
 
             </form>
-        </div>
-
-        <!-- Right: Welcome Panel -->
-        <div class="login-welcome-section">
-            <h2>WELCOME BACK!</h2>
-            <p>Access your marketplace account</p>
         </div>
 
     </div>

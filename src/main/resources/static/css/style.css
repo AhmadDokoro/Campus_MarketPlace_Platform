@@ -1,9 +1,11 @@
 /* Copied from templates/css/style.css (trimmed for brevity)  style.css */
 /* Core layout and utility rules used across the site. */
-:root{--primary:#FFD333;--secondary:#F5F5F5}
+/* ...existing code...*/
+.root-replacements { /* only replacing color values to UMT palette */ }
+:root{--primary:#4B2E83;--secondary:#F5F5F5}
 body{font-family:"Roboto",sans-serif;background:#F5F5F5;color:#6C757D}
 .container{max-width:1140px;margin:0 auto;padding:0 15px}
-.btn-primary{background:#FFD333;color:#212529;border-color:#FFD333}
+.btn-primary{background:#4B2E83;color:#fff;border-color:#4B2E83}
 .img-fluid{max-width:100%;height:auto}
 /* ...the full file exists in repo under templates/css/style.css; this file provides the site styles needed for signup page. */
 
@@ -17,25 +19,25 @@ body{font-family:"Roboto",sans-serif;background:#F5F5F5;color:#6C757D}
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 :root {
-    --blue: #007bff;
-    --indigo: #6610f2;
-    --purple: #6f42c1;
+    --blue: #4B2E83;
+    --indigo: #4B2E83;
+    --purple: #4B2E83;
     --pink: #e83e8c;
-    --red: #dc3545;
-    --orange: #fd7e14;
-    --yellow: #ffc107;
+    --red: #C4161C;
+    --orange: #F2B705;
+    --yellow: #F2B705;
     --green: #28a745;
-    --teal: #20c997;
-    --cyan: #17a2b8;
+    --teal: #4B2E83;
+    --cyan: #4B2E83;
     --white: #fff;
     --gray: #6c757d;
     --gray-dark: #343a40;
-    --primary: #FFD333;
+    --primary: #4B2E83;
     --secondary: #F5F5F5;
-    --success: #28a745;
-    --info: #17a2b8;
-    --warning: #ffc107;
-    --danger: #dc3545;
+    --success: #F2B705;
+    --info: #4B2E83;
+    --warning: #F2B705;
+    --danger: #C4161C;
     --light: #FFFFFF;
     --dark: #3D464D;
     --breakpoint-xs: 0;
@@ -163,13 +165,13 @@ sup {
 }
 
 a {
-    color: #FFD333;
+    color: #4B2E83;
     text-decoration: none;
     background-color: transparent;
 }
 
 a:hover {
-    color: #e6b400;
+    color: #4B2E83;
     text-decoration: underline;
 }
 

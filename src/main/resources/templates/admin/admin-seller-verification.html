@@ -9,7 +9,8 @@
 
   <style>
     :root {
-      --primary: #f1c40f;
+      --primary: #F2B705; /* UMT Accent (used for CTAs here) */
+      --accent: #4B2E83;  /* UMT Primary (used as complementary tone) */
       --dark: #2d3436;
       --muted: #6b7280;
       --radius: 14px;
@@ -63,7 +64,7 @@
       font-weight: 700;
       cursor: pointer;
       text-decoration: none;
-      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.08);
+      box-shadow: 0 8px 24px rgba(75,46,131,0.08);
     }
 
     /* Header */
@@ -117,7 +118,7 @@
     }
 
     .info-card .value a {
-      color: #1e40af;
+      color: var(--accent);
       text-decoration: none;
       font-weight: 700;
     }
@@ -181,7 +182,7 @@
     }
 
     .btn-reject {
-      background: #ef4444;
+      background: #C4161C; /* UMT Crimson for destructive action */
       color: #fff;
     }
 

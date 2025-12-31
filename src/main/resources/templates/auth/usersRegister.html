@@ -4,79 +4,193 @@
     <meta charset="UTF-8">
     <title>Register</title>
     <link th:href="@{/css/authentication.css}" rel="stylesheet" />
+
+    <!-- Register-only enhancements -->
+    <style>
+        /* step container */
+        .form-step { display: none; animation: fadeStep 300ms ease; }
+        .form-step.active { display: block; }
+
+        /* progress bar */
+        .progress-wrapper {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+        .progress-step {
+            flex: 1;
+            height: 6px;
+            border-radius: 6px;
+            background: rgba(0,0,0,0.08);
+        }
+        .progress-step.active {
+            background: linear-gradient(90deg,var(--accent),var(--accent-dark));
+        }
+
+        /* step title */
+        .step-title {
+            font-size: 1.1rem;
+            margin-bottom: 14px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* navigation buttons */
+        .step-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 22px;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(0,0,0,0.15);
+            color: var(--primary);
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        @keyframes fadeStep {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
+
 <body class="signup-body">
 
 <div class="signup-wrapper">
     <div class="signup-card">
+
         <div class="signup-header">
             <h2 class="signup-title">Create an account</h2>
-            <p class="muted">Please provide your details to register as buyer or seller.</p>
+            <p class="muted">Join the UMT Campus Marketplace in just a few steps.</p>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-wrapper">
+            <div class="progress-step active"></div>
+            <div class="progress-step"></div>
+            <div class="progress-step"></div>
         </div>
 
         <form th:action="@{/registerUser}" method="post" th:object="${userForm}">
 
-            <div th:if="${error}" style="color:#a33;padding:8px;background:#fee;border-radius:6px;margin-bottom:12px;">
+            <div th:if="${error}" style="color:#ffffff;padding:8px;background:#C4161C;border-radius:6px;margin-bottom:12px;">
                 <p th:text="${error}"></p>
             </div>
 
-            <div class="form-grid two-col">
-                <div class="form-field">
-                    <label class="form-label">First Name</label>
-                    <input class="form-input" type="text" th:field="*{firstName}" />
-                </div>
-                <div class="form-field">
-                    <label class="form-label">Last Name</label>
-                    <input class="form-input" type="text" th:field="*{lastName}" />
+            <!-- STEP 1 -->
+            <div class="form-step active">
+                <div class="step-title">Account Information</div>
+
+                <div class="form-grid two-col">
+                    <div class="form-field">
+                        <label class="form-label">First Name</label>
+                        <input class="form-input" type="text" th:field="*{firstName}" />
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Last Name</label>
+                        <input class="form-input" type="text" th:field="*{lastName}" />
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Email</label>
+                        <input class="form-input" type="email" th:field="*{email}" />
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Password</label>
+                        <input class="form-input" type="password" th:field="*{password}" />
+                    </div>
                 </div>
 
-                <div class="form-field">
-                    <label class="form-label">Email</label>
-                    <input class="form-input" type="email" th:field="*{email}" />
-                </div>
-                <div class="form-field">
-                    <label class="form-label">Password</label>
-                    <input class="form-input" type="password" th:field="*{password}" />
-                </div>
-
-                <div class="form-field">
-                    <label class="form-label">Phone</label>
-                    <input class="form-input" type="text" th:field="*{phone}" />
-                </div>
-                <div class="form-field">
-                    <label class="form-label">Academic ID</label>
-                    <input class="form-input" type="text" th:field="*{academicId}" />
-                </div>
-
-                <div class="form-field">
-                    <label class="form-label">Level</label>
-                    <input class="form-input" type="text" th:field="*{level}" />
-                </div>
-                <div class="form-field">
-                    <label class="form-label">Role</label>
-                    <select class="form-select" th:field="*{role}">
-                        <option th:value="${T(com.ahsmart.campusmarket.model.enums.Role).BUYER}">Buyer</option>
-                        <option th:value="${T(com.ahsmart.campusmarket.model.enums.Role).SELLER}">Seller</option>
-                    </select>
-                </div>
-
-                <div class="form-field">
-                    <label class="form-label">Mentor Name</label>
-                    <input class="form-input" type="text" th:field="*{mentorName}" />
-                </div>
-                <div class="form-field">
-                    <label class="form-label">Mentor Email</label>
-                    <input class="form-input" type="email" th:field="*{mentorEmail}" />
+                <div class="step-actions">
+                    <span></span>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
                 </div>
             </div>
 
-            <div class="form-actions" style="margin-top:16px">
-                <button class="btn btn-primary" type="submit">Register</button>
+            <!-- STEP 2 -->
+            <div class="form-step">
+                <div class="step-title">Academic Profile</div>
+
+                <div class="form-grid two-col">
+                    <div class="form-field">
+                        <label class="form-label">Phone</label>
+                        <input class="form-input" type="text" th:field="*{phone}" />
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Academic ID</label>
+                        <input class="form-input" type="text" th:field="*{academicId}" />
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Level</label>
+                        <input class="form-input" type="text" th:field="*{level}" />
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Role</label>
+                        <select class="form-select" th:field="*{role}">
+                            <option th:value="${T(com.ahsmart.campusmarket.model.enums.Role).BUYER}">Buyer</option>
+                            <option th:value="${T(com.ahsmart.campusmarket.model.enums.Role).SELLER}">Seller</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="step-actions">
+                    <button type="button" class="btn-secondary" onclick="prevStep()">Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
+                </div>
             </div>
+
+            <!-- STEP 3 -->
+            <div class="form-step">
+                <div class="step-title">Mentor Information</div>
+
+                <div class="form-grid two-col">
+                    <div class="form-field">
+                        <label class="form-label">Mentor Name</label>
+                        <input class="form-input" type="text" th:field="*{mentorName}" />
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Mentor Email</label>
+                        <input class="form-input" type="email" th:field="*{mentorEmail}" />
+                    </div>
+                </div>
+
+                <div class="step-actions">
+                    <button type="button" class="btn-secondary" onclick="prevStep()">Back</button>
+                    <button class="btn btn-primary" type="submit">Create Account</button>
+                </div>
+            </div>
+
         </form>
     </div>
 </div>
 
+<script>
+    let currentStep = 0;
+    const steps = document.querySelectorAll('.form-step');
+    const progress = document.querySelectorAll('.progress-step');
+
+    function showStep(index) {
+        steps.forEach((step, i) => step.classList.toggle('active', i === index));
+        progress.forEach((bar, i) => bar.classList.toggle('active', i <= index));
+    }
+
+    function nextStep() {
+        if (currentStep < steps.length - 1) {
+            currentStep++;
+            showStep(currentStep);
+        }
+    }
+
+    function prevStep() {
+        if (currentStep > 0) {
+            currentStep--;
+            showStep(currentStep);
+        }
+    }
+</script>
+
 </body>
 </html>
-
