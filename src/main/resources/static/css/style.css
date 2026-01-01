@@ -31,7 +31,7 @@ body{font-family:"Roboto",sans-serif;background:#F5F5F5;color:#6C757D}
     --cyan: #4B2E83;
     --white: #fff;
     --gray: #6c757d;
-    --gray-dark: #343a40;
+    --gray-dark: #5d14ae;
     --primary: #4B2E83;
     --secondary: #F5F5F5;
     --success: #F2B705;
@@ -6107,13 +6107,13 @@ a.close.disabled {
 }
 
 .bg-primary {
-    background-color: #FFD333 !important;
+    background-color: #4B2E83 !important;
 }
 
 a.bg-primary:hover, a.bg-primary:focus,
 button.bg-primary:hover,
 button.bg-primary:focus {
-    background-color: #ffc800 !important;
+    background-color: #4B2E83 !important;
 }
 
 .bg-secondary {
@@ -6177,13 +6177,13 @@ button.bg-light:focus {
 }
 
 .bg-dark {
-    background-color: #3D464D !important;
+    background-color: #4B2E83 !important; /* use UMT Purple for dark/nav backgrounds for strong brand presence */
 }
 
 a.bg-dark:hover, a.bg-dark:focus,
 button.bg-dark:hover,
 button.bg-dark:focus {
-    background-color: #262c31 !important;
+    background-color: #4B2E83 !important;
 }
 
 .bg-white {
@@ -9277,11 +9277,11 @@ button.bg-dark:focus {
 }
 
 .text-primary {
-    color: #FFD333 !important;
+    color: #4B2E83 !important;
 }
 
 a.text-primary:hover, a.text-primary:focus {
-    color: #e6b400 !important;
+    color: #4B2E83 !important;
 }
 
 .text-secondary {
@@ -9648,7 +9648,7 @@ a.text-dark:hover, a.text-dark:focus {
 
 .product-item .btn:hover {
     background-color: #3D464D !important;
-    color: #FFD333 !important;
+    color: rgba(193, 57, 57, 0.91) !important;
     border-color: #3D464D !important;
 }
 

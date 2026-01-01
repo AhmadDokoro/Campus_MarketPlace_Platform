@@ -76,6 +76,10 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
             if (seller.getStatus() == SellerStatus.PENDING) {
                 return LoginResult.failed("Seller account not yet verified");
             }
+            // If seller was explicitly rejected, return a clear failure message so UI can show rejection flow
+            if (seller.getStatus() == SellerStatus.REJECTED) {
+                return LoginResult.failed("Seller account rejected");
+            }
         }
 
         // Successful authentication result

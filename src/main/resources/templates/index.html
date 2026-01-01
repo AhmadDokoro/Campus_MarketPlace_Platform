@@ -35,6 +35,8 @@
 
     <!-- Custom Theme Stylesheet - project-specific colors, fonts, and component styles (brand colors: primary=blue, secondary=gray) -->
     <link th:href="@{/css/style.css}" rel="stylesheet">
+    <!-- Bootstrap 4 CSS (needed for carousel styling) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -811,6 +813,63 @@
 <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
 <!-- Keep JS includes if necessary (not modifying behavior scripts) -->
+
+<!-- Add required JS: jQuery, Popper.js, Bootstrap JS (CDN). These enable the Bootstrap carousel to function. -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
+
+<!-- Initialize the header carousel: 2000ms interval, use fade class already present for stylish cross-fade -->
+<script>
+    (function($){
+        function initCarousel(){
+            var $carousel = $('#header-carousel');
+            if($carousel.length && $.fn && $.fn.carousel){
+                $carousel.carousel({ interval: 4000, pause: false });
+                $carousel.carousel('cycle');
+                $carousel.find('.carousel-item').css({ 'transition': 'opacity 900ms cubic-bezier(.25,.8,.25,1)' });
+            }
+        }
+
+        // If jQuery or bootstrap didn't load (blocked), attempt to load fallbacks dynamically
+        function ensureDepsAndInit(){
+            // If jQuery missing, load it first
+            if(typeof window.jQuery === 'undefined'){
+                var jq = document.createElement('script');
+                jq.src = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js';
+                jq.onload = function(){
+                    // then load bootstrap bundle
+                    loadBootstrapAndInit();
+                };
+                document.head.appendChild(jq);
+                return;
+            }
+            // jQuery present; ensure bootstrap's carousel plugin exists
+            if(!(jQuery && jQuery.fn && jQuery.fn.carousel)){
+                loadBootstrapAndInit();
+                return;
+            }
+            // everything present
+            initCarousel();
+        }
+
+        function loadBootstrapAndInit(){
+            var bs = document.createElement('script');
+            bs.src = 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js';
+            bs.onload = function(){
+                try{ initCarousel(); }catch(e){ console.error('Failed to init carousel after loading bootstrap:', e); }
+            };
+            document.head.appendChild(bs);
+        }
+
+        // Run on DOM ready
+        if(document.readyState === 'loading'){
+            document.addEventListener('DOMContentLoaded', ensureDepsAndInit);
+        } else {
+            ensureDepsAndInit();
+        }
+    })(window.jQuery || {});
+ </script>
 </body>
 
 </html>

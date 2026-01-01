@@ -87,6 +87,15 @@ public class AuthenticationController {
                 return "seller/reviewPendingPage"; // show pending review page
             }
 
+            // If seller account was rejected, show a dedicated rejection page with CTA to re-register
+            if ("Seller account rejected".equalsIgnoreCase(result.getMessage())) {
+                // Optionally, clear any pending seller session flags to avoid confusion
+                session.removeAttribute("pendingSeller");
+                session.removeAttribute("pendingSellerUserId");
+                model.addAttribute("rejectionMessage", "Your seller application was rejected by the admin. ");
+                return "seller/rejectApprove"; // dedicated page to inform user and provide CTA
+            }
+
             // If seller has no profile yet, show a helpful page with CTA to request verification
             if ("Seller profile not found".equalsIgnoreCase(result.getMessage())) {
                 // Ensure the pending seller flow is recorded in session so the upload page knows who the user is.
@@ -127,7 +136,7 @@ public class AuthenticationController {
         if (session != null) {
             session.invalidate(); // clear session on logout
         }
-        return "redirect:/"; // go home
+        return "redirect:/index"; // go home
     }
 
     // Handle registration submission

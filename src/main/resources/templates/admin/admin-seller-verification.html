@@ -267,6 +267,14 @@
         </div>
 
         <div class="info-card">
+          <h4>Mentor Email</h4>
+          <div class="value">
+            <a th:if="${seller.user.mentorEmail != null}" th:href="${'mailto:' + seller.user.mentorEmail}" th:text="${seller.user.mentorEmail}"></a>
+            <span th:unless="${seller.user.mentorEmail != null}">—</span>
+          </div>
+        </div>
+
+        <div class="info-card">
           <h4>Submitted At</h4>
           <div class="value" th:text="${seller.submittedAt != null ? #temporals.format(seller.submittedAt,'dd MMM yyyy HH:mm') : '—'}"></div>
         </div>
