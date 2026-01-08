@@ -1,0 +1,5 @@
+I think the best think to start making the changes. but first i want to make sure you undertand the architecture and 
+flow of my system so that you won't do something that can break my system. 
+it is Controller → Service → Repository → DB. but any  new thing like the cloudinary we want to maintain them in one file not diferent distinct files so that it can be easy to refer(example all image upload related thing are in file service.) 
+next any new external thing we connect with should be put inside helper page and only one class, exaple payment gateway. so don't scatter my flow. Any tme we are planning to impement a feauture tell me the structure of how you will implement it, because i want to make sure it is in line with my architecture.
+we will keep using the existing fileService for our image upload and delete. even if we want another function for managing our images we will define it within the  file service class.
