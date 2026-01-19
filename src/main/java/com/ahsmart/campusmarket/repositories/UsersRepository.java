@@ -11,4 +11,7 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
     // find by academic id (for uniqueness check)
     Optional<Users> findByAcademicId(String academicId);
 
+    // used to prevent deleting mentors that are assigned to users
+    long countByMentorMentorId(Long mentorId);
+
 }

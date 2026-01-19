@@ -1,9 +1,13 @@
 package com.ahsmart.campusmarket.controller;
 
+import com.ahsmart.campusmarket.model.Mentor;
+import com.ahsmart.campusmarket.model.Seller;
 import com.ahsmart.campusmarket.model.Users;
 import com.ahsmart.campusmarket.model.enums.Role;
 import com.ahsmart.campusmarket.payloadDTOs.AuthenticationDTOs.LoginResult;
 import com.ahsmart.campusmarket.service.authentication.AuthenticationService;
+import com.ahsmart.campusmarket.service.mentor.MentorService;
+import com.ahsmart.campusmarket.repositories.SellerRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,12 +19,21 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Controller
 public class AuthenticationController {
 
     // Authentication business logic service (constructor/field injection used)
     @Autowired
     private AuthenticationService authenticationService;
+
+    // mentor service used to populate mentor dropdown during registration
+    @Autowired
+    private MentorService mentorService;
+
+    @Autowired
+    private SellerRepository sellerRepository;
 
     // landing page
     @GetMapping("/")
@@ -47,6 +60,8 @@ public class AuthenticationController {
     @GetMapping("/registerUser")
     public String registerForm(Model model) {
         model.addAttribute("userForm", new Users()); // populate empty form model
+        List<Mentor> mentors = mentorService.getAllMentors();
+        model.addAttribute("mentors", mentors);
         return "auth/usersRegister";
     }
 
@@ -87,13 +102,18 @@ public class AuthenticationController {
                 return "seller/reviewPendingPage"; // show pending review page
             }
 
-            // If seller account was rejected, show a dedicated rejection page with CTA to re-register
+            // If seller account was rejected, show a dedicated rejection page with persisted reason
             if ("Seller account rejected".equalsIgnoreCase(result.getMessage())) {
-                // Optionally, clear any pending seller session flags to avoid confusion
+                // Clear any pending seller session flags to avoid confusion
                 session.removeAttribute("pendingSeller");
                 session.removeAttribute("pendingSellerUserId");
-                model.addAttribute("rejectionMessage", "Your seller application was rejected by the admin. ");
-                return "seller/rejectApprove"; // dedicated page to inform user and provide CTA
+
+                // Try to load the stored rejection reason (best-effort)
+                authenticationService.findUserByEmail(email).ifPresent(u -> {
+                    sellerRepository.findByUser(u).ifPresent(s -> model.addAttribute("rejectionReason", s.getRejectionReason()));
+                });
+
+                return "seller/rejectApprove";
             }
 
             // If seller has no profile yet, show a helpful page with CTA to request verification
@@ -119,7 +139,7 @@ public class AuthenticationController {
         // For SELLER role we rely on AuthenticationService.userLogin to only succeed for APPROVED sellers.
         session.setAttribute("role", result.getRole());
 
-        // Redirect user based on role — admin goes to admin dashboard
+        // Redirect user based on role  admin goes to admin dashboard
         Role role = result.getRole();
 
         if (role == Role.ADMIN) {
@@ -127,7 +147,7 @@ public class AuthenticationController {
         }
 
         // Fallback redirect to home
-        return "redirect:/";
+        return "redirect:/index";
     }
 
     // New: Handle logout - invalidate the HTTP session and redirect to home
@@ -163,6 +183,8 @@ public class AuthenticationController {
         } catch (IllegalArgumentException ex) {
             model.addAttribute("error", ex.getMessage());
             model.addAttribute("userForm", userForm);
+            // repopulate mentors on validation error so the dropdown doesn't break
+            model.addAttribute("mentors", mentorService.getAllMentors());
             return "auth/usersRegister"; // show registration form with error
         }
     }

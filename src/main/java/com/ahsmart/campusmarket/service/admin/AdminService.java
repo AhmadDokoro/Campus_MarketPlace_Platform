@@ -15,5 +15,7 @@ public interface AdminService {
 
     // Review a seller: approve or reject and set reviewer id
     Seller reviewSeller(Long sellerId, SellerStatus status, Long reviewerId);
-}
 
+    // Reject seller with a required reason (<= 500 chars)
+    Seller rejectSeller(Long sellerId, Long reviewerId, String rejectionReason);
+}

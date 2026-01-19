@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Mentors  Admin</title>
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <style>
+        :root{--bg:#f4f6fb;--card:#ffffff;--muted:#6b7280;--accent:#F2B705;--accent-2:#4B2E83}
+        body{font-family:Inter,system-ui,Arial;background:var(--bg);margin:24px}
+        .wrap{max-width:1000px;margin:0 auto}
+        .header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+        .back-btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:10px 14px;border-radius:10px;border:none;font-weight:700;cursor:pointer;text-decoration:none}
+        .card{background:var(--card);padding:18px;border-radius:14px;box-shadow:0 10px 30px rgba(21,24,35,0.06)}
+        table{width:100%;border-collapse:collapse;margin-top:12px}
+        th,td{padding:10px;border-bottom:1px solid #eee;text-align:left}
+        .muted{color:var(--muted)}
+        .row{display:flex;gap:12px;flex-wrap:wrap}
+        .row input{padding:10px;border:1px solid #ddd;border-radius:10px;min-width:260px}
+        .btn{padding:10px 14px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
+        .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff}
+        .btn-danger{background:#C4161C;color:#fff}
+        .msg{margin-top:12px;padding:10px;border-radius:10px}
+        .msg-error{background:#fff3f2;color:#b45309}
+        .msg-success{background:#ecfdf5;color:#047857}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="header">
+        <div>
+            <h2 style="margin:0">Manage Mentors</h2>
+            <div class="muted" style="margin-top:6px">Add mentors and manage the mentor list used during registration.</div>
+        </div>
+        <a th:href="@{/admin/dashboard}" class="back-btn"> Back to Dashboard</a>
+    </div>
+
+    <div class="card">
+        <div th:if="${error}" class="msg msg-error" th:text="${error}"></div>
+        <div th:if="${success}" class="msg msg-success" th:text="${success}"></div>
+
+        <form th:action="@{/admin/mentors}" method="post">
+            <div class="row">
+                <input type="text" name="mentorName" placeholder="Mentor name" required />
+                <input type="email" name="mentorEmail" placeholder="Mentor email" required />
+                <button class="btn btn-primary" type="submit">Add Mentor</button>
+            </div>
+        </form>
+
+        <table>
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Mentor Name</th>
+                <th>Mentor Email</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="mentor, iter : ${mentors}">
+                <td th:text="${iter.count}"></td>
+                <td th:text="${mentor.mentorName}"></td>
+                <td th:text="${mentor.mentorEmail}"></td>
+                <td>
+                    <form th:action="@{/admin/mentors/{id}/delete(id=${mentor.mentorId})}" method="post" style="margin:0">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(mentors)}">
+                <td colspan="4" class="muted" style="padding:18px;text-align:center">No mentors added yet</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="muted" style="margin-top:12px;font-size:0.95rem">
+            Note: mentors cannot be deleted if they are assigned to any user.
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

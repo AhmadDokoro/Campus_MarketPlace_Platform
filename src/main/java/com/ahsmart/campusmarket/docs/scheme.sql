@@ -2,6 +2,13 @@ CREATE DATABASE campus_marketplace;
 USE campus_marketplace;
 
 
+CREATE TABLE mentors (
+    mentor_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    mentor_name VARCHAR(150) NOT NULL,
+    mentor_email VARCHAR(255) NOT NULL UNIQUE
+);
+
+
 CREATE TABLE users (
     user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -11,10 +18,12 @@ CREATE TABLE users (
     phone VARCHAR(20),
     academic_id VARCHAR(50) NOT NULL UNIQUE,
     `level` VARCHAR(50),
-    mentor_name VARCHAR(100),
-    mentor_email VARCHAR(255),
+    mentor_id BIGINT,
     role ENUM('BUYER', 'SELLER', 'ADMIN') NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_user_mentor
+        FOREIGN KEY (mentor_id) REFERENCES mentors(mentor_id)
 );
 
 
@@ -215,16 +224,5 @@ CREATE TABLE reviews (
     CONSTRAINT fk_review_order
         FOREIGN KEY (order_id) REFERENCES orders(order_id)
 );
-
-
-
-
-
-
-
-
-
-
-
 
 

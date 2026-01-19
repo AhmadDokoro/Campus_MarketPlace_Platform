@@ -15,7 +15,9 @@
     .actions{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:18px}
     .btn-primary{background:var(--primary);color:#fff;padding:10px 18px;border-radius:10px;border:none;font-weight:700;text-decoration:none}
     .btn-ghost{background:transparent;border:1px solid rgba(15,23,42,0.06);padding:9px 14px;border-radius:10px}
-    .reason{margin-top:10px;color:#C4161C;font-weight:700}
+    .reason-box{margin-top:12px;text-align:left;background:#fff7f7;border:1px solid rgba(196,22,28,0.18);border-radius:12px;padding:14px 14px}
+    .reason-title{color:#111827;font-weight:800;font-size:14px;margin:0 0 8px}
+    .reason-text{color:#C4161C;font-weight:700;margin:0;white-space:pre-wrap}
     .logo-small{height:36px;display:block;margin:0 auto 12px}
     @media (max-width:720px){.panel{padding:20px}}
   </style>
@@ -25,12 +27,15 @@
     <div class="panel">
       <img th:src="@{/img/umtlogo.png}" alt="UMT" class="logo-small" />
       <h2>Application Rejected</h2>
-      <p th:text="${rejectionMessage != null} ? ${rejectionMessage} : 'Your seller application was rejected by the admin. If you believe this is a mistake, please re-register.'"></p>
+      <p>Your seller application was rejected by the admin.</p>
 
-      <div class="reason">If you received an email, check it for the rejection reason.</div>
+      <!-- Show stored rejection reason if present -->
+      <div class="reason-box" th:if="${rejectionReason != null and !#strings.isEmpty(rejectionReason)}">
+        <div class="reason-title">Reason from admin</div>
+        <p class="reason-text" th:text="${rejectionReason}"></p>
+      </div>
 
       <div class="actions">
-        <!-- OK: send user to registration page as requested -->
         <a th:href="@{/registerUser}" class="btn-primary">OK - Re-register</a>
         <a th:href="@{/signin}" class="btn-ghost">Back to login</a>
       </div>

@@ -1,10 +1,12 @@
 package com.ahsmart.campusmarket.service.authentication;
 
+import com.ahsmart.campusmarket.model.Mentor;
 import com.ahsmart.campusmarket.model.Seller;
 import com.ahsmart.campusmarket.model.Users;
 import com.ahsmart.campusmarket.model.enums.Role;
 import com.ahsmart.campusmarket.model.enums.SellerStatus;
 import com.ahsmart.campusmarket.payloadDTOs.AuthenticationDTOs.LoginResult;
+import com.ahsmart.campusmarket.repositories.MentorRepository;
 import com.ahsmart.campusmarket.repositories.SellerRepository;
 import com.ahsmart.campusmarket.repositories.UsersRepository;
 import com.ahsmart.campusmarket.service.product.FileService;
@@ -25,6 +27,9 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
     // Repository for seller verification data
     private final SellerRepository sellerRepository;
 
+    // Mentor repository for mentor selection during registration
+    private final MentorRepository mentorRepository;
+
     // Service to upload files (Cloudinary)
     private final FileService fileService;
 
@@ -32,10 +37,12 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationServiceImpl(
             UsersRepository usersRepository,
             SellerRepository sellerRepository,
+            MentorRepository mentorRepository,
             FileService fileService
     ) {
         this.usersRepository = usersRepository;
         this.sellerRepository = sellerRepository;
+        this.mentorRepository = mentorRepository;
         this.fileService = fileService;
     }
 
@@ -120,6 +127,17 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
         if (user.getAcademicId() != null && usersRepository.findByAcademicId(user.getAcademicId()).isPresent()) {
             throw new IllegalArgumentException("Academic ID already registered");
         }
+
+        // If mentorId selected from UI, resolve it to Mentor (mentor selection is nullable)
+        if (user.getMentorId() != null) {
+            Mentor mentor = mentorRepository.findById(user.getMentorId())
+                    .orElseThrow(() -> new IllegalArgumentException("Selected mentor not found"));
+            user.setMentor(mentor);
+        } else {
+            user.setMentor(null);
+        }
+        // Avoid accidentally persisting mentorId anywhere else
+        user.setMentorId(null);
 
         // Set defaults
         if (user.getRole() == null) {

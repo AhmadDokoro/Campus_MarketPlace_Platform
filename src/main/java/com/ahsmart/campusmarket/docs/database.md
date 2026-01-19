@@ -8,6 +8,18 @@ Normalization Level: Third Normal Form (3NF)
 
 ---
 
+## mentors
+
+Stores the mentor list used during registration.
+
+| Column | Type | Constraints |
+|------|------|------------|
+| mentor_id | BIGINT | PK, Auto Increment |
+| mentor_name | VARCHAR(150) | NOT NULL |
+| mentor_email | VARCHAR(255) | UNIQUE, NOT NULL |
+
+---
+
 ## users
 
 Stores all system users (Buyer, Seller, Admin).
@@ -22,8 +34,7 @@ Stores all system users (Buyer, Seller, Admin).
 | phone | VARCHAR(20) | Nullable |
 | academic_id | VARCHAR(50) | UNIQUE, NOT NULL |
 | level | VARCHAR(50) | Nullable |
-| mentor_name | VARCHAR(100) | Nullable |
-| mentor_email | VARCHAR(255) | Nullable |
+| mentor_id | BIGINT | FK → mentors.mentor_id, Nullable |
 | role | ENUM | BUYER, SELLER, ADMIN |
 | created_at | TIMESTAMP | Default CURRENT_TIMESTAMP |
 

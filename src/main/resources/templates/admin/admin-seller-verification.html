@@ -217,7 +217,7 @@
       <!-- Seller Header: show mynemo profile image if available, else show id card as thumbnail -->
       <div class="seller-header">
         <a th:if="${seller.mynemoProfileUrl != null}" th:href="${seller.mynemoProfileUrl}" target="_blank">
-          <img th:src="${seller.mynemoProfileUrl}" class="seller-photo" alt="Seller Photo" />
+          <img th:src="@{/img/profile-image-placeholder.jpg}" class="seller-photo" alt="Seller Photo" />
         </a>
         <a th:if="${seller.mynemoProfileUrl == null}" th:href="${seller.idCardImageUrl}" target="_blank">
           <img th:src="${seller.idCardImageUrl}" class="seller-photo" alt="Seller Photo" />
@@ -245,7 +245,7 @@
         </div>
 
         <div class="info-card">
-          <h4>Level</h4>
+          <h4>Year</h4>
           <div class="value" th:text="${seller.user.level}"></div>
         </div>
 
@@ -263,14 +263,14 @@
 
         <div class="info-card">
           <h4>Mentor</h4>
-          <div class="value" th:text="${seller.user.mentorName}"></div>
+          <div class="value" th:text="${seller.user.mentor != null ? seller.user.mentor.mentorName : '—'}"></div>
         </div>
 
         <div class="info-card">
           <h4>Mentor Email</h4>
           <div class="value">
-            <a th:if="${seller.user.mentorEmail != null}" th:href="${'mailto:' + seller.user.mentorEmail}" th:text="${seller.user.mentorEmail}"></a>
-            <span th:unless="${seller.user.mentorEmail != null}">—</span>
+            <a th:if="${seller.user.mentor != null}" th:href="${'mailto:' + seller.user.mentor.mentorEmail}" th:text="${seller.user.mentor.mentorEmail}"></a>
+            <span th:unless="${seller.user.mentor != null}">—</span>
           </div>
         </div>
 
@@ -279,20 +279,6 @@
           <div class="value" th:text="${seller.submittedAt != null ? #temporals.format(seller.submittedAt,'dd MMM yyyy HH:mm') : '—'}"></div>
         </div>
 
-        <div class="info-card">
-          <h4>User ID</h4>
-          <div class="value" th:text="${seller.user.userId}"></div>
-        </div>
-
-        <div class="info-card">
-          <h4>Seller ID</h4>
-          <div class="value" th:text="${seller.sellerId}"></div>
-        </div>
-
-        <div class="info-card">
-          <h4>Account Created</h4>
-          <div class="value" th:text="${#temporals.format(seller.user.createdAt,'dd MMM yyyy')}"></div>
-        </div>
 
       </div>
 
@@ -323,9 +309,8 @@
 
       <!-- Action Buttons: forms that call admin endpoints to approve/reject -->
       <div class="action-buttons">
-        <form th:action="@{/admin/seller/{id}/reject(id=${seller.sellerId})}" method="post" th:object="${seller}">
-          <button type="submit" class="btn btn-reject">Reject Application</button>
-        </form>
+        <!-- Reject now goes to a required reason form -->
+        <a th:href="@{/admin/seller/{id}/rejectReason(id=${seller.sellerId})}" class="btn btn-reject" style="text-decoration:none;display:inline-flex;align-items:center;">Reject Application</a>
 
         <form th:action="@{/admin/seller/{id}/approve(id=${seller.sellerId})}" method="post" th:object="${seller}">
           <button type="submit" class="btn btn-approve">Approve Seller</button>

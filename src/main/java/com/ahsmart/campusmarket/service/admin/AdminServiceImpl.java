@@ -30,27 +30,49 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Seller getSellerForReview(Long sellerId) {
-        // fetch seller by id or throw IllegalArgumentException
-        Optional<Seller> optional = sellerRepository.findById(sellerId);
+        // fetch seller by id with user + mentor loaded
+        Optional<Seller> optional = sellerRepository.findByIdWithUserAndMentor(sellerId);
         return optional.orElseThrow(() -> new IllegalArgumentException("Seller not found"));
     }
 
     @Override
     @Transactional
     public Seller reviewSeller(Long sellerId, SellerStatus status, Long reviewerId) {
-        // fetch seller
-        Seller seller = getSellerForReview(sellerId); // reuse method
-        // set status
+        Seller seller = getSellerForReview(sellerId);
         seller.setStatus(status);
-        // if reviewerId provided, load reviewer user and set
+
         if (reviewerId != null) {
             Optional<Users> reviewerOpt = usersRepository.findById(reviewerId);
             reviewerOpt.ifPresent(seller::setReviewer);
         }
-        // persist
+
+        // Keep rejectionReason ONLY for rejected sellers.
+        if (status == SellerStatus.APPROVED) {
+            seller.setRejectionReason(null);
+        }
+
+        return sellerRepository.save(seller);
+    }
+
+    @Override
+    @Transactional
+    public Seller rejectSeller(Long sellerId, Long reviewerId, String rejectionReason) {
+        if (rejectionReason == null || rejectionReason.isBlank()) {
+            throw new IllegalArgumentException("Rejection reason is required");
+        }
+        String trimmed = rejectionReason.trim();
+        if (trimmed.length() > 500) {
+            throw new IllegalArgumentException("Rejection reason must be 500 characters or less");
+        }
+
+        Seller seller = getSellerForReview(sellerId);
+        seller.setStatus(SellerStatus.REJECTED);
+        seller.setRejectionReason(trimmed);
+
+        if (reviewerId != null) {
+            usersRepository.findById(reviewerId).ifPresent(seller::setReviewer);
+        }
+
         return sellerRepository.save(seller);
     }
 }
-
-
-

@@ -1,9 +1,11 @@
 package com.ahsmart.campusmarket.controller;
 
+import com.ahsmart.campusmarket.model.Mentor;
 import com.ahsmart.campusmarket.model.Seller;
 import com.ahsmart.campusmarket.model.enums.SellerStatus;
 import com.ahsmart.campusmarket.model.enums.Role;
 import com.ahsmart.campusmarket.service.admin.AdminService;
+import com.ahsmart.campusmarket.service.mentor.MentorService;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,72 +25,148 @@ public class AdminController {
     @Autowired
     private AdminService adminService; // admin service
 
+    @Autowired
+    private MentorService mentorService;
+
+    private boolean isAdmin(HttpSession session) {
+        Object roleObj = session.getAttribute("role");
+        return (roleObj instanceof Role) && Role.ADMIN.equals(roleObj);
+    }
+
     // Show admin dashboard
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session) {
-        // ensure only admins can view
-        Object roleObj = session.getAttribute("role");
-        if (!(roleObj instanceof Role) || !Role.ADMIN.equals(roleObj)) {
+        if (!isAdmin(session)) {
             return "redirect:/signin";
         }
-        // optionally populate model with summary stats later
         return "admin/dashboard";
     }
 
     // Show a page with pending sellers
     @GetMapping("/pendingSellers")
     public String pendingSellersPage(Model model, HttpSession session) {
-         // check role in session
-        Object roleObj = session.getAttribute("role");
-        if (!(roleObj instanceof Role) || !Role.ADMIN.equals(roleObj)) {
-            return "redirect:/signin"; // not authorized
+        if (!isAdmin(session)) {
+            return "redirect:/signin";
         }
         try {
-            // fetch pending sellers and add to model
             List<Seller> sellers = adminService.getPendingSellers();
             model.addAttribute("sellers", sellers);
         } catch (Exception ex) {
-            // log the exception with stacktrace for debugging
             logger.error("Failed to load pending sellers", ex);
-            // on any error show a friendly message instead of throwing
             model.addAttribute("error", "Unable to load pending sellers: " + ex.getMessage());
             model.addAttribute("sellers", java.util.Collections.emptyList());
         }
-        return "admin/pendingSellerList"; // render template
+        return "admin/pendingSellerList";
     }
 
     // Return details for a seller (AJAX or server-side render)
     @GetMapping("/getSellerDetailsForReview")
     public String getSellerDetailsForReview(@RequestParam("sellerId") Long sellerId, Model model, HttpSession session) {
-        // session role check
-        Object roleObj = session.getAttribute("role");
-        if (!(roleObj instanceof Role) || !Role.ADMIN.equals(roleObj)) {
-            return "redirect:/signin"; // not authorized
+        if (!isAdmin(session)) {
+            return "redirect:/signin";
         }
-        // fetch seller and add to model
         Seller seller = adminService.getSellerForReview(sellerId);
         model.addAttribute("seller", seller);
-        return "admin/admin-seller-verification"; // existing template path
+        return "admin/admin-seller-verification";
     }
 
     // Approve seller
     @PostMapping("/seller/{id}/approve")
     public String approveSeller(@PathVariable("id") Long sellerId, HttpSession session) {
+        if (!isAdmin(session)) {
+            return "redirect:/signin";
+        }
         // get reviewer id from session
         Object userIdObj = session.getAttribute("userId");
         Long reviewerId = userIdObj == null ? null : (Long) userIdObj;
-        // perform review
+        // perform review (also clears rejection reason)
         adminService.reviewSeller(sellerId, SellerStatus.APPROVED, reviewerId);
         return "redirect:/admin/pendingSellers";
     }
 
-    // Reject seller
+    // -------- Reject flow with required reason --------
+
+    // Show reject reason form
+    @GetMapping("/seller/{id}/rejectReason")
+    public String showRejectReasonForm(@PathVariable("id") Long sellerId, Model model, HttpSession session) {
+        if (!isAdmin(session)) {
+            return "redirect:/signin";
+        }
+        Seller seller = adminService.getSellerForReview(sellerId);
+        model.addAttribute("seller", seller);
+        return "admin/rejectReason";
+    }
+
+    // Submit rejection with reason
     @PostMapping("/seller/{id}/reject")
-    public String rejectSeller(@PathVariable("id") Long sellerId, HttpSession session) {
+    public String rejectSeller(@PathVariable("id") Long sellerId,
+                               @RequestParam("rejectionReason") String rejectionReason,
+                               Model model,
+                               HttpSession session) {
+        if (!isAdmin(session)) {
+            return "redirect:/signin";
+        }
+
         Object userIdObj = session.getAttribute("userId");
         Long reviewerId = userIdObj == null ? null : (Long) userIdObj;
-        adminService.reviewSeller(sellerId, SellerStatus.REJECTED, reviewerId);
-        return "redirect:/admin/pendingSellers";
+
+        try {
+            adminService.rejectSeller(sellerId, reviewerId, rejectionReason);
+            return "redirect:/admin/pendingSellers";
+        } catch (IllegalArgumentException ex) {
+            // keep the seller context so the form can re-render with error
+            Seller seller = adminService.getSellerForReview(sellerId);
+            model.addAttribute("seller", seller);
+            model.addAttribute("error", ex.getMessage());
+            model.addAttribute("rejectionReason", rejectionReason);
+            return "admin/rejectReason";
+        }
+    }
+
+    // ------------------- Manage Mentors -------------------
+
+    @GetMapping("/mentors")
+    public String manageMentors(Model model, HttpSession session) {
+        if (!isAdmin(session)) {
+            return "redirect:/signin";
+        }
+        List<Mentor> mentors = mentorService.getAllMentors();
+        model.addAttribute("mentors", mentors);
+        return "admin/manageMentors";
+    }
+
+    @PostMapping("/mentors")
+    public String addMentor(@RequestParam("mentorName") String mentorName,
+                            @RequestParam("mentorEmail") String mentorEmail,
+                            Model model,
+                            HttpSession session) {
+        if (!isAdmin(session)) {
+            return "redirect:/signin";
+        }
+        try {
+            mentorService.addMentor(mentorName, mentorEmail);
+            return "redirect:/admin/mentors";
+        } catch (IllegalArgumentException ex) {
+            model.addAttribute("error", ex.getMessage());
+            model.addAttribute("mentors", mentorService.getAllMentors());
+            return "admin/manageMentors";
+        }
+    }
+
+    @PostMapping("/mentors/{id}/delete")
+    public String deleteMentor(@PathVariable("id") Long mentorId,
+                               Model model,
+                               HttpSession session) {
+        if (!isAdmin(session)) {
+            return "redirect:/signin";
+        }
+        try {
+            mentorService.deleteMentor(mentorId);
+            return "redirect:/admin/mentors";
+        } catch (IllegalArgumentException ex) {
+            model.addAttribute("error", ex.getMessage());
+            model.addAttribute("mentors", mentorService.getAllMentors());
+            return "admin/manageMentors";
+        }
     }
 }
-

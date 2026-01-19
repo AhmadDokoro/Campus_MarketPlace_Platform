@@ -39,11 +39,16 @@ public class Users {
     private String academicId;
     private String level;
 
-    @Column(name = "mentor_name")
-    private String mentorName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mentor_id")
+    private Mentor mentor;
 
-    @Column(name = "mentor_email")
-    private String mentorEmail;
+    /**
+     * Helper-only field to bind mentor selection from Thymeleaf forms.
+     * @Transient in JPA means: this field exists only in Java (and for the UI), but Hibernate must ignore it when saving/loading from the database.
+     */
+    @Transient
+    private Long mentorId;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -52,4 +57,3 @@ public class Users {
     private LocalDateTime createdAt;
 
 }
-

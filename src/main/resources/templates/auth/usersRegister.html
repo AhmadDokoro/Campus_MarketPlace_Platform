@@ -125,7 +125,14 @@
                     </div>
                     <div class="form-field">
                         <label class="form-label">Year</label>
-                        <input class="form-input" type="text" th:field="*{level}" />
+                        <select class="form-select" th:field="*{level}">
+                            <option value="">Select your current year</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
                     </div>
                     <div class="form-field">
                         <label class="form-label">Role</label>
@@ -147,13 +154,12 @@
                 <div class="step-title">Mentor Information</div>
 
                 <div class="form-grid two-col">
-                    <div class="form-field">
-                        <label class="form-label">Mentor Name</label>
-                        <input class="form-input" type="text" th:field="*{mentorName}" />
-                    </div>
-                    <div class="form-field">
-                        <label class="form-label">Mentor Email</label>
-                        <input class="form-input" type="email" th:field="*{mentorEmail}" />
+                    <div class="form-field" style="grid-column: 1 / -1;">
+                        <label class="form-label">Mentor</label>
+                        <select class="form-select" th:field="*{mentorId}">
+                            <option value="">Select mentor</option>
+                            <option th:each="m : ${mentors}" th:value="${m.mentorId}" th:text="${m.mentorName + ' — ' + m.mentorEmail}"></option>
+                        </select>
                     </div>
                 </div>
 

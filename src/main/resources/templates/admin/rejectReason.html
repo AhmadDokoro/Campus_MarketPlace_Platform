@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reject Seller  Provide Reason</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:#f4f6fb;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --primary:#4B2E83;
+      --accent:#F2B705;
+      --danger:#C4161C;
+      --radius:14px;
+      --shadow:0 10px 30px rgba(21,24,35,0.08);
+    }
+
+    body{margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);padding:28px}
+    .wrap{max-width:920px;margin:0 auto}
+
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+    .title h1{margin:0;font-size:22px;letter-spacing:-0.2px}
+    .title .sub{margin-top:6px;color:var(--muted);font-size:0.95rem}
+
+    .back-btn{background:linear-gradient(90deg,var(--accent),var(--primary));color:#fff;padding:10px 14px;border-radius:10px;border:none;font-weight:700;cursor:pointer;text-decoration:none;box-shadow:0 8px 24px rgba(75,46,131,0.08);transition:transform .12s ease}
+    .back-btn:hover{transform:translateY(-2px)}
+
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+
+    .seller-line{display:flex;flex-wrap:wrap;gap:10px;align-items:center;color:#111827;font-weight:700}
+    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(75,46,131,0.12);background:#fbfaff;color:#4B2E83;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800}
+
+    label{display:block;margin-top:16px;margin-bottom:8px;font-weight:800;color:#111827}
+    textarea{width:100%;min-height:140px;border-radius:12px;border:1px solid rgba(15,23,42,0.12);padding:12px 14px;font-family:inherit;font-size:14px;resize:vertical;outline:none}
+    textarea:focus{border-color:rgba(75,46,131,0.45);box-shadow:0 0 0 4px rgba(75,46,131,0.10)}
+
+    .hint{margin-top:8px;color:var(--muted);font-size:13px}
+
+    .error{margin-top:12px;background:#fff3f2;color:#b45309;padding:10px 12px;border-radius:10px;border:1px solid rgba(196,22,28,0.18)}
+
+    .actions{display:flex;justify-content:flex-end;gap:12px;margin-top:18px}
+    .btn{padding:10px 14px;border-radius:10px;border:none;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+    .btn-cancel{background:transparent;border:1px solid rgba(15,23,42,0.10);color:#111827}
+    .btn-reject{background:var(--danger);color:#fff}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="topbar">
+      <div class="title">
+        <h1>Reject Seller Application</h1>
+        <div class="sub">Provide a clear reason. The seller will see this message on their rejection page.</div>
+      </div>
+      <a class="back-btn" th:href="@{/admin/getSellerDetailsForReview(sellerId=${seller.sellerId})}"> Back to Review</a>
+    </div>
+
+    <div class="card">
+      <div class="seller-line">
+        <span th:text="${seller.user.firstName + ' ' + seller.user.lastName}"></span>
+        <span class="pill" th:text="${seller.user.academicId}"></span>
+        <span class="pill" th:text="${seller.user.email}"></span>
+      </div>
+
+      <div th:if="${error}" class="error" th:text="${error}"></div>
+
+      <form th:action="@{/admin/seller/{id}/reject(id=${seller.sellerId})}" method="post">
+        <label for="rejectionReason">Rejection reason</label>
+        <textarea id="rejectionReason"
+                  name="rejectionReason"
+                  maxlength="500"
+                  required
+                  placeholder="Write the reason here..."
+                  th:text="${rejectionReason}"></textarea>
+        <div class="hint">Maximum 500 characters. This is required.</div>
+
+        <div class="actions">
+          <a class="btn btn-cancel" th:href="@{/admin/getSellerDetailsForReview(sellerId=${seller.sellerId})}">Cancel</a>
+          <button type="submit" class="btn btn-reject">Reject Seller</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</body>
+</html>
+

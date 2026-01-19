@@ -38,6 +38,10 @@ public class Seller {
     @JoinColumn(name = "reviewer_id")
     private Users reviewer;
 
+    // Filled only when status == REJECTED. Cleared when approved.
+    @Column(name = "rejection_reason", length = 500)
+    private String rejectionReason;
+
     @Column(name = "submitted_at", updatable = false)
     private LocalDateTime submittedAt;
 
