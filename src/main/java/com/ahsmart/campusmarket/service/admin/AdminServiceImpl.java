@@ -1,5 +1,6 @@
 package com.ahsmart.campusmarket.service.admin;
 
+import com.ahsmart.campusmarket.helper.EmailHelper;
 import com.ahsmart.campusmarket.model.Seller;
 import com.ahsmart.campusmarket.model.Users;
 import com.ahsmart.campusmarket.model.enums.SellerStatus;
@@ -14,12 +15,14 @@ import java.util.Optional;
 @Service
 public class AdminServiceImpl implements AdminService {
 
-    private final SellerRepository sellerRepository; // ...existing code...
-    private final UsersRepository usersRepository; // ...existing code...
+    private final SellerRepository sellerRepository;
+    private final UsersRepository usersRepository;
+    private final EmailHelper emailHelper;
 
-    public AdminServiceImpl(SellerRepository sellerRepository, UsersRepository usersRepository) {
+    public AdminServiceImpl(SellerRepository sellerRepository, UsersRepository usersRepository, EmailHelper emailHelper) {
         this.sellerRepository = sellerRepository; // assign seller repo
         this.usersRepository = usersRepository; // assign users repo
+        this.emailHelper = emailHelper;
     }
 
     @Override
@@ -49,6 +52,14 @@ public class AdminServiceImpl implements AdminService {
         // Keep rejectionReason ONLY for rejected sellers.
         if (status == SellerStatus.APPROVED) {
             seller.setRejectionReason(null);
+            emailHelper.sendEmail(
+                seller.getUser().getEmail(),
+                "Seller Verification Approved – Campus Marketplace Platform",
+                "Dear " + seller.getUser().getFirstName() + ",\n\n" +
+                "Congratulations! Your seller verification request has been approved.\n" +
+                "You can now list products and start selling on the Campus Marketplace Platform.\n\n" +
+                "Best regards,\nCampus Marketplace Platform"
+            );
         }
 
         return sellerRepository.save(seller);
@@ -72,6 +83,16 @@ public class AdminServiceImpl implements AdminService {
         if (reviewerId != null) {
             usersRepository.findById(reviewerId).ifPresent(seller::setReviewer);
         }
+
+        emailHelper.sendEmail(
+            seller.getUser().getEmail(),
+            "Seller Verification Rejected – Campus Marketplace Platform",
+            "Dear " + seller.getUser().getFirstName() + ",\n\n" +
+            "Your seller verification request has been rejected for the following reason:\n" +
+            rejectionReason + "\n\n" +
+            "You may correct the issue and reapply.\n\n" +
+            "Best regards,\nCampus Marketplace Platform"
+        );
 
         return sellerRepository.save(seller);
     }
