@@ -1,7 +1,10 @@
 package com.ahsmart.campusmarket.controller;
 
 import com.ahsmart.campusmarket.model.Product;
+import com.ahsmart.campusmarket.model.UserAddress;
 import com.ahsmart.campusmarket.model.enums.Condition;
+import com.ahsmart.campusmarket.model.enums.DeliveryStatus;
+import com.ahsmart.campusmarket.payloadDTOs.order.SellerOrderItemDTO;
 import com.ahsmart.campusmarket.service.category.CategoryService;
 import com.ahsmart.campusmarket.service.order.OrderService;
 import com.ahsmart.campusmarket.service.product.ProductService;
@@ -34,21 +37,80 @@ public class ProductController {
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session, Model model) {
         // Renders seller dashboard with live product stats.
-        Object userIdObj = session.getAttribute("userId");
-        if (userIdObj == null) {
+        Long userId = resolveUserId(session);
+        if (userId == null) {
             return "redirect:/signin";
         }
-        Long userId = (userIdObj instanceof Long l) ? l : Long.valueOf(String.valueOf(userIdObj));
 
-        List<Product> products = productService.getProductsForSeller(userId);
-        model.addAttribute("products", products);
-        model.addAttribute("activeListingsCount", productService.countActiveListings(userId));
+        try {
+            List<Product> products = productService.getProductsForSeller(userId);
+            model.addAttribute("products", products);
+            model.addAttribute("activeListingsCount", productService.countActiveListings(userId));
 
-        Long sellerId = productService.getSellerIdForUser(userId);
-        model.addAttribute("pendingOrdersCount", orderService.countPendingOrdersForSeller(sellerId));
-        model.addAttribute("deliveredOrdersCount", orderService.countDeliveredOrdersForSeller(sellerId));
+            Long sellerId = productService.getSellerIdForUser(userId);
+            populateSellerOrdersModel(model, sellerId);
+            return "seller/dashboard";
+        } catch (IllegalArgumentException ex) {
+            return "redirect:/user/start-selling";
+        }
+    }
 
-        return "seller/dashboard";
+    @GetMapping("/orders")
+    public String sellerOrders(HttpSession session, Model model) {
+        Long userId = resolveUserId(session);
+        if (userId == null) {
+            return "redirect:/signin";
+        }
+
+        try {
+            Long sellerId = productService.getSellerIdForUser(userId);
+            populateSellerOrdersModel(model, sellerId);
+            return "seller/orders";
+        } catch (IllegalArgumentException ex) {
+            return "redirect:/user/start-selling";
+        }
+    }
+
+    @GetMapping("/address/{orderItemId}")
+    public String buyerAddress(@PathVariable("orderItemId") Long orderItemId,
+                               HttpSession session,
+                               Model model) {
+        Long userId = resolveUserId(session);
+        if (userId == null) {
+            return "redirect:/signin";
+        }
+        model.addAttribute("orderItemId", orderItemId);
+
+        try {
+            Long sellerId = productService.getSellerIdForUser(userId);
+            UserAddress buyerAddress = orderService.getBuyerAddress(orderItemId, sellerId);
+            model.addAttribute("buyerAddress", buyerAddress);
+            return "seller/buyer-address";
+        } catch (IllegalArgumentException ex) {
+            model.addAttribute("error", ex.getMessage());
+            return "seller/buyer-address";
+        }
+    }
+
+    @PostMapping("/orders/update-status")
+    public String updateSellerOrderStatus(HttpSession session,
+                                          @RequestParam("orderItemId") Long orderItemId,
+                                          @RequestParam("newStatus") DeliveryStatus newStatus,
+                                          RedirectAttributes redirectAttributes) {
+        Long userId = resolveUserId(session);
+        if (userId == null) {
+            return "redirect:/signin";
+        }
+
+        try {
+            Long sellerId = productService.getSellerIdForUser(userId);
+            orderService.updateDeliveryStatus(orderItemId, sellerId, newStatus);
+            redirectAttributes.addFlashAttribute("success", "Delivery status updated successfully.");
+        } catch (IllegalArgumentException ex) {
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+        }
+
+        return "redirect:/seller/orders";
     }
 
     @GetMapping("/products/new")
@@ -77,12 +139,10 @@ public class ProductController {
                                 @RequestParam("image") MultipartFile image,
                                 RedirectAttributes redirectAttributes) {
         // Persists a new product and redirects back to the form.
-        Object userIdObj = session.getAttribute("userId");
-        if (userIdObj == null) {
+        Long userId = resolveUserId(session);
+        if (userId == null) {
             return "redirect:/signin";
         }
-
-        Long userId = (userIdObj instanceof Long l) ? l : Long.valueOf(String.valueOf(userIdObj));
 
         try {
             productService.createProduct(userId, categoryId, title, description, price, quantity, condition, image);
@@ -100,11 +160,10 @@ public class ProductController {
                                   @RequestParam(value = "success", required = false) String success,
                                   @PathVariable("productId") Long productId) {
         // Shows the edit-product form for the seller.
-        Object userIdObj = session.getAttribute("userId");
-        if (userIdObj == null) {
+        Long userId = resolveUserId(session);
+        if (userId == null) {
             return "redirect:/signin";
         }
-        Long userId = (userIdObj instanceof Long l) ? l : Long.valueOf(String.valueOf(userIdObj));
 
         Product product = productService.getProductForEdit(userId, productId);
         model.addAttribute("product", product);
@@ -129,11 +188,10 @@ public class ProductController {
                                 @RequestParam(value = "image", required = false) MultipartFile image,
                                 RedirectAttributes redirectAttributes) {
         // Updates a product and redirects back to edit form.
-        Object userIdObj = session.getAttribute("userId");
-        if (userIdObj == null) {
+        Long userId = resolveUserId(session);
+        if (userId == null) {
             return "redirect:/signin";
         }
-        Long userId = (userIdObj instanceof Long l) ? l : Long.valueOf(String.valueOf(userIdObj));
 
         try {
             productService.updateProduct(userId, productId, categoryId, title, description, price, quantity, condition, image);
@@ -153,11 +211,10 @@ public class ProductController {
                                 @PathVariable("productId") Long productId,
                                 RedirectAttributes redirectAttributes) {
         // Deletes a product if it has no active orders.
-        Object userIdObj = session.getAttribute("userId");
-        if (userIdObj == null) {
+        Long userId = resolveUserId(session);
+        if (userId == null) {
             return "redirect:/signin";
         }
-        Long userId = (userIdObj instanceof Long l) ? l : Long.valueOf(String.valueOf(userIdObj));
 
         try {
             productService.deleteProduct(userId, productId);
@@ -167,5 +224,20 @@ public class ProductController {
         }
 
         return "redirect:/seller/dashboard";
+    }
+
+    private Long resolveUserId(HttpSession session) {
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return null;
+        }
+        return (userIdObj instanceof Long l) ? l : Long.valueOf(String.valueOf(userIdObj));
+    }
+
+    private void populateSellerOrdersModel(Model model, Long sellerId) {
+        List<SellerOrderItemDTO> sellerOrderItems = orderService.getSellerOrderItems(sellerId);
+        model.addAttribute("sellerOrderItems", sellerOrderItems);
+        model.addAttribute("pendingOrdersCount", orderService.countPendingOrdersForSeller(sellerId));
+        model.addAttribute("deliveredOrdersCount", orderService.countDeliveredOrdersForSeller(sellerId));
     }
 }

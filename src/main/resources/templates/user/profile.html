@@ -57,6 +57,8 @@
         .steps{display:flex;align-items:flex-start;justify-content:space-between;gap:0;flex-wrap:nowrap}
         .step{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;text-decoration:none;color:inherit;padding:8px 4px;border-radius:14px;transition:background .2s}
         .step:hover{background:rgba(75,46,131,0.04);text-decoration:none;color:inherit}
+        button.step{background:none;border:none;width:100%;cursor:pointer}
+        .step-active{background:rgba(75,46,131,0.08)}
         .node{width:48px;height:48px;border-radius:999px;display:flex;align-items:center;justify-content:center;position:relative;transition:transform .2s}
         .step:hover .node{transform:scale(1.08)}
         .node i{font-size:22px}
@@ -94,6 +96,23 @@
         .chev{opacity:.4;font-size:18px}
 
         .note{margin-top:12px;color:var(--muted);font-size:12px}
+        .products-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+        .products-state{display:none}
+        .products-state.active{display:block}
+        .product-stack{display:flex;flex-direction:column;gap:12px}
+        .product-card{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px;border:1px solid rgba(15,23,42,0.08);border-radius:16px;background:rgba(255,255,255,0.72)}
+        .product-main{min-width:0}
+        .product-eyebrow{font-size:12px;color:var(--muted);margin-bottom:6px}
+        .product-title{font-size:16px;font-weight:700;color:#111827;margin-bottom:4px}
+        .product-sub{font-size:13px;color:var(--muted)}
+        .product-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+        .status-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;font-size:12px;font-weight:700}
+        .status-pill-placed{background:rgba(75,46,131,0.10);color:#4B2E83}
+        .status-pill-campus{background:rgba(59,130,246,0.12);color:#2563eb}
+        .status-pill-delivered{background:rgba(40,167,69,0.12);color:#28a745}
+        .status-pill-pending{background:rgba(255,149,0,0.14);color:#e6930a}
+        .chat-btn{display:inline-flex;align-items:center;gap:6px}
+        .empty-products{border:1px dashed rgba(15,23,42,0.12);border-radius:16px;padding:24px;text-align:center;color:var(--muted)}
 
         @media (max-width:600px){
             .steps{gap:0}
@@ -101,6 +120,8 @@
             .node{width:40px;height:40px}
             .node i{font-size:18px}
             .step .name{font-size:11px}
+            .product-card{align-items:flex-start;flex-direction:column}
+            .product-actions{width:100%;justify-content:flex-start}
         }
     </style>
 </head>
@@ -157,50 +178,50 @@
                 <div class="steps" aria-label="Order tracking steps">
 
                     <!-- Step 0: Pending Payment -->
-                    <a class="step" th:href="@{/orders/history(filter='pending_payment')}">
+                    <button type="button" class="step" data-profile-tab="pending_payment">
                         <div class="node node-pending">
                             <i class="bi bi-hourglass-split"></i>
                             <span class="count-badge count-pending" th:if="${pendingPaymentCount > 0}" th:text="${pendingPaymentCount}">0</span>
                         </div>
                         <div class="name">Pending Payment</div>
                         <div class="desc">Complete your payment</div>
-                    </a>
+                    </button>
 
                     <div class="connector" aria-hidden="true"></div>
 
                     <!-- Step 1: Order Placed -->
-                    <a class="step" th:href="@{/orders/history(filter='placed')}">
+                    <button type="button" class="step" data-profile-tab="placed">
                         <div class="node node-placed">
                             <i class="bi bi-bag-check-fill"></i>
                             <span class="count-badge count-placed" th:if="${placedCount > 0}" th:text="${placedCount}">0</span>
                         </div>
                         <div class="name">Order Placed</div>
                         <div class="desc">Confirmed &amp; paid</div>
-                    </a>
+                    </button>
 
                     <div class="connector" aria-hidden="true"></div>
 
                     <!-- Step 2: In Campus -->
-                    <a class="step" th:href="@{/orders/history(filter='in_campus')}">
+                    <button type="button" class="step" data-profile-tab="in_campus">
                         <div class="node node-campus">
                             <i class="bi bi-building"></i>
                             <span class="count-badge count-campus" th:if="${inCampusCount > 0}" th:text="${inCampusCount}">0</span>
                         </div>
                         <div class="name">In Campus</div>
                         <div class="desc">On the way to you</div>
-                    </a>
+                    </button>
 
                     <div class="connector" aria-hidden="true"></div>
 
-                    <!-- Step 3: Delivered (last 3 days) -->
-                    <a class="step" th:href="@{/orders/history(filter='delivered')}">
+                    <!-- Step 3: Delivered -->
+                    <button type="button" class="step" data-profile-tab="delivered">
                         <div class="node node-delivered">
                             <i class="bi bi-check2-all"></i>
                             <span class="count-badge count-delivered" th:if="${deliveredCount > 0}" th:text="${deliveredCount}">0</span>
                         </div>
                         <div class="name">Delivered</div>
-                        <div class="desc">Last 3 days</div>
-                    </a>
+                        <div class="desc">All items delivered</div>
+                    </button>
 
                 </div>
             </div>
@@ -232,6 +253,103 @@
                 <div class="note"><i class="bi bi-info-circle" style="margin-right:4px"></i>Seller access requires verification. Clicking "Start selling" will guide you.</div>
             </div>
 
+            <div class="panel">
+                <div class="products-panel-head">
+                    <div class="tracker-title" style="margin-bottom:0">
+                        <h3><i class="bi bi-chat-dots" style="color:var(--accent);margin-right:6px"></i>Tracked Products</h3>
+                    </div>
+                    <a th:href="@{/orders/history}" class="muted" style="text-decoration:none">Open full order history <i class="bi bi-arrow-right"></i></a>
+                </div>
+
+                <div class="products-state" data-profile-state="pending_payment">
+                    <div class="empty-products">
+                        <div class="fw-bold mb-2">Pending payment items</div>
+                        <p class="mb-3">Use your existing order flow to complete payment before chat becomes available for each product.</p>
+                        <a class="btn btn-sm btn-outline-primary" th:href="@{/orders/history(filter='pending_payment')}">
+                            <i class="bi bi-credit-card mr-1"></i> View Pending Payment Orders
+                        </a>
+                    </div>
+                </div>
+
+                <div class="products-state" data-profile-state="placed">
+                    <div class="product-stack">
+                        <div class="product-card"
+                             th:each="item : ${buyerChatItems}"
+                             th:if="${item.deliveryStatus.name() == 'PENDING'}">
+                            <div class="product-main">
+                                <div class="product-eyebrow" th:text="'Order #' + ${item.orderId}">Order</div>
+                                <div class="product-title" th:text="${item.productTitle}">Product</div>
+                                <div class="product-sub" th:text="'Seller: ' + ${item.sellerName}">Seller</div>
+                            </div>
+                            <div class="product-actions">
+                                <span class="status-pill status-pill-placed">
+                                    <i class="bi bi-bag-check"></i> Order Placed
+                                </span>
+                                <a class="btn btn-sm btn-outline-dark chat-btn"
+                                   th:href="@{/chat/order-item/{orderItemId}/page(orderItemId=${item.orderItemId})}">
+                                    <i class="bi bi-chat-left-text"></i> Chat
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="empty-products" data-empty-state>
+                        No paid products are available for chat yet.
+                    </div>
+                </div>
+
+                <div class="products-state" data-profile-state="in_campus">
+                    <div class="product-stack">
+                        <div class="product-card"
+                             th:each="item : ${buyerChatItems}"
+                             th:if="${item.deliveryStatus.name() == 'IN_CAMPUS'}">
+                            <div class="product-main">
+                                <div class="product-eyebrow" th:text="'Order #' + ${item.orderId}">Order</div>
+                                <div class="product-title" th:text="${item.productTitle}">Product</div>
+                                <div class="product-sub" th:text="'Seller: ' + ${item.sellerName}">Seller</div>
+                            </div>
+                            <div class="product-actions">
+                                <span class="status-pill status-pill-campus">
+                                    <i class="bi bi-building"></i> In Campus
+                                </span>
+                                <a class="btn btn-sm btn-outline-dark chat-btn"
+                                   th:href="@{/chat/order-item/{orderItemId}/page(orderItemId=${item.orderItemId})}">
+                                    <i class="bi bi-chat-left-text"></i> Chat
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="empty-products" data-empty-state>
+                        No in-campus products right now.
+                    </div>
+                </div>
+
+                <div class="products-state" data-profile-state="delivered">
+                    <div class="product-stack">
+                        <div class="product-card"
+                             th:each="item : ${buyerChatItems}"
+                             th:if="${item.deliveryStatus.name() == 'DELIVERED'}">
+                            <div class="product-main">
+                                <div class="product-eyebrow" th:text="'Order #' + ${item.orderId}">Order</div>
+                                <div class="product-title" th:text="${item.productTitle}">Product</div>
+                                <div class="product-sub" th:text="'Seller: ' + ${item.sellerName}">Seller</div>
+                            </div>
+                            <div class="product-actions">
+                                <span class="status-pill status-pill-delivered">
+                                    <i class="bi bi-check2-all"></i> Delivered
+                                </span>
+                                <a class="btn btn-sm btn-outline-dark chat-btn"
+                                   th:href="@{/chat/order-item/{orderItemId}/page(orderItemId=${item.orderItemId})}">
+                                    <i class="bi bi-chat-left-text"></i> Chat
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="empty-products" data-empty-state>
+                        No delivered products yet.
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -256,6 +374,49 @@
         document.addEventListener('keydown', function(e){
             if(e.key === 'Escape') close();
         });
+    })();
+
+    (function(){
+        var tabButtons = Array.from(document.querySelectorAll('[data-profile-tab]'));
+        var states = Array.from(document.querySelectorAll('[data-profile-state]'));
+        if(!tabButtons.length || !states.length) return;
+
+        function setActiveTab(tab){
+            tabButtons.forEach(function(button){
+                button.classList.toggle('step-active', button.getAttribute('data-profile-tab') === tab);
+            });
+            states.forEach(function(state){
+                var isActive = state.getAttribute('data-profile-state') === tab;
+                state.classList.toggle('active', isActive);
+                if (!isActive) return;
+
+                var emptyState = state.querySelector('[data-empty-state]');
+                if (!emptyState) return;
+
+                var cards = Array.from(state.querySelectorAll('.product-card'));
+                emptyState.style.display = cards.length === 0 ? 'block' : 'none';
+            });
+            try {
+                localStorage.setItem('buyerProfileTab', tab);
+            } catch (e) {
+                // ignore storage failures
+            }
+        }
+
+        var savedTab = 'placed';
+        try {
+            savedTab = localStorage.getItem('buyerProfileTab') || 'placed';
+        } catch (e) {
+            savedTab = 'placed';
+        }
+
+        tabButtons.forEach(function(button){
+            button.addEventListener('click', function(){
+                setActiveTab(button.getAttribute('data-profile-tab'));
+            });
+        });
+
+        setActiveTab(savedTab);
     })();
 </script>
 

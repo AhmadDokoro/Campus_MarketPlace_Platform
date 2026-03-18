@@ -70,9 +70,9 @@
     </div>
 
     <nav class="nav flex-column gap-1">
-      <a class="nav-link" href="#"><i class="bi bi-speedometer2"></i> Dashboard</a>
-      <a class="nav-link active" href="#"><i class="bi bi-box-seam"></i> Manage Listings</a>
-      <a class="nav-link" href="#"><i class="bi bi-receipt"></i> Orders</a>
+      <a class="nav-link active" th:href="@{/seller/dashboard}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a class="nav-link" th:href="@{/seller/dashboard}"><i class="bi bi-box-seam"></i> Manage Listings</a>
+      <a class="nav-link" th:href="@{/seller/orders}"><i class="bi bi-receipt"></i> Orders</a>
       <a class="nav-link" href="#"><i class="bi bi-truck"></i> Delivery Status</a>
       <a class="nav-link" href="#"><i class="bi bi-chat-dots"></i> Chat</a>
       <a class="nav-link" href="#"><i class="bi bi-graph-up"></i> Sales History</a>
@@ -123,7 +123,7 @@
               <div class="card-elevated p-3 h-100">
                 <div class="d-flex align-items-center justify-content-between">
                   <div>
-                    <div class="text-muted small">Pending Orders</div>
+                    <div class="text-muted small">Pending Items</div>
                     <div class="fs-4 fw-bold" th:text="${pendingOrdersCount}">0</div>
                   </div>
                   <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
@@ -134,7 +134,7 @@
               <div class="card-elevated p-3 h-100">
                 <div class="d-flex align-items-center justify-content-between">
                   <div>
-                    <div class="text-muted small">Delivered Orders</div>
+                    <div class="text-muted small">Delivered Items</div>
                     <div class="fs-4 fw-bold" th:text="${deliveredOrdersCount}">0</div>
                   </div>
                   <div class="stat-icon"><i class="bi bi-check2-circle"></i></div>
@@ -227,6 +227,51 @@
               <a class="btn btn-accent" th:href="@{/seller/products/new}"><i class="bi bi-plus-circle me-1"></i> Add New Product</a>
             </div>
           </div>
+
+          <div class="card-elevated p-3 p-md-4">
+            <div class="d-flex align-items-start align-items-md-center justify-content-between flex-wrap gap-2 mb-3">
+              <div>
+                <h5 class="fw-bold mb-1">Seller Order Items</h5>
+                <div class="text-muted small">Paid order items for your products. Each item is tracked independently.</div>
+              </div>
+              <a class="btn btn-outline-secondary" th:href="@{/seller/orders}">
+                <i class="bi bi-receipt me-1"></i> View All Orders
+              </a>
+            </div>
+
+            <div class="table-responsive" th:if="${sellerOrderItems != null and !#lists.isEmpty(sellerOrderItems)}">
+              <table class="table table-hover table-striped align-middle">
+                <thead>
+                <tr>
+                  <th>Order Item ID</th>
+                  <th>Order ID</th>
+                  <th>Product</th>
+                  <th>Buyer</th>
+                  <th>Quantity</th>
+                  <th>Unit Price</th>
+                  <th>Delivery Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${sellerOrderItems}">
+                  <td th:text="${item.orderItemId}">1</td>
+                  <td th:text="${item.orderId}">1</td>
+                  <td th:text="${item.productTitle}">Product</td>
+                  <td th:text="${item.buyerName}">Buyer</td>
+                  <td th:text="${item.quantity}">1</td>
+                  <td th:text="${#numbers.formatDecimal(item.unitPrice, 1, 2)}">0.00</td>
+                  <td><span class="badge badge-soft" th:text="${item.deliveryStatus}">PENDING</span></td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="empty-state mt-3" th:if="${sellerOrderItems == null or #lists.isEmpty(sellerOrderItems)}">
+              <div class="icon"><i class="bi bi-receipt"></i></div>
+              <h6 class="fw-bold mt-2">No paid order items yet</h6>
+              <p class="text-muted mb-0">When buyers pay for your products, the individual order items will appear here.</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -241,9 +286,9 @@
   </div>
   <div class="offcanvas-body">
     <nav class="nav flex-column gap-1">
-      <a class="nav-link" href="#"><i class="bi bi-speedometer2"></i> Dashboard</a>
-      <a class="nav-link active" href="#"><i class="bi bi-box-seam"></i> Manage Listings</a>
-      <a class="nav-link" href="#"><i class="bi bi-receipt"></i> Orders</a>
+      <a class="nav-link active" th:href="@{/seller/dashboard}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a class="nav-link" th:href="@{/seller/dashboard}"><i class="bi bi-box-seam"></i> Manage Listings</a>
+      <a class="nav-link" th:href="@{/seller/orders}"><i class="bi bi-receipt"></i> Orders</a>
       <a class="nav-link" href="#"><i class="bi bi-truck"></i> Delivery Status</a>
       <a class="nav-link" href="#"><i class="bi bi-chat-dots"></i> Chat</a>
       <a class="nav-link" href="#"><i class="bi bi-graph-up"></i> Sales History</a>

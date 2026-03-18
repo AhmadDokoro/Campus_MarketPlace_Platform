@@ -6,6 +6,7 @@ import com.ahsmart.campusmarket.model.enums.OrderStatus;
 import com.ahsmart.campusmarket.model.enums.PaymentStatus;
 import com.ahsmart.campusmarket.repositories.OrderRepository;
 import com.ahsmart.campusmarket.repositories.PaymentRepository;
+import com.ahsmart.campusmarket.service.chat.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
     private final MockToyyibPayService mockToyyibPay;
+    private final ChatService chatService;
 
     // Creates or resets a PENDING payment record for the given order before redirecting to the gateway.
     @Transactional
@@ -83,6 +85,9 @@ public class PaymentService {
             Order order = payment.getOrder();
             order.setStatus(OrderStatus.PAID);
             orderRepository.save(order);
+
+            // Each paid order item gets exactly one chat anchored on order_item_id.
+            order.getOrderItems().forEach(chatService::createChatForOrderItem);
         } else {
             // Payment failed — mark payment as failed, keep order as PENDING_PAYMENT.
             payment.setStatus(PaymentStatus.FAILED);

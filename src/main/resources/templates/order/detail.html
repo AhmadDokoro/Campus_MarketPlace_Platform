@@ -93,17 +93,17 @@
                     </div>
                     <!-- Step 2: In Campus -->
                     <div class="timeline-step">
-                        <div th:classappend="${order.deliveryStatus.name() == 'IN_CAMPUS' or order.deliveryStatus.name() == 'DELIVERED'} ? 'timeline-dot-done' : 'timeline-dot-inactive'" class="timeline-dot">
+                        <div th:classappend="${order.effectiveDeliveryStatus.name() == 'IN_CAMPUS' or order.effectiveDeliveryStatus.name() == 'DELIVERED'} ? 'timeline-dot-done' : 'timeline-dot-inactive'" class="timeline-dot">
                             <i class="bi bi-building"></i>
                         </div>
-                        <span th:classappend="${order.deliveryStatus.name() == 'IN_CAMPUS' or order.deliveryStatus.name() == 'DELIVERED'} ? 'timeline-label-active' : ''" class="timeline-label">In Campus</span>
+                        <span th:classappend="${order.effectiveDeliveryStatus.name() == 'IN_CAMPUS' or order.effectiveDeliveryStatus.name() == 'DELIVERED'} ? 'timeline-label-active' : ''" class="timeline-label">In Campus</span>
                     </div>
                     <!-- Step 3: Delivered -->
                     <div class="timeline-step">
-                        <div th:classappend="${order.deliveryStatus.name() == 'DELIVERED'} ? 'timeline-dot-done' : 'timeline-dot-inactive'" class="timeline-dot">
+                        <div th:classappend="${order.effectiveDeliveryStatus.name() == 'DELIVERED'} ? 'timeline-dot-done' : 'timeline-dot-inactive'" class="timeline-dot">
                             <i class="bi bi-check2-all"></i>
                         </div>
-                        <span th:classappend="${order.deliveryStatus.name() == 'DELIVERED'} ? 'timeline-label-active' : ''" class="timeline-label">Delivered</span>
+                        <span th:classappend="${order.effectiveDeliveryStatus.name() == 'DELIVERED'} ? 'timeline-label-active' : ''" class="timeline-label">Delivered</span>
                     </div>
                 </div>
             </div>
@@ -120,6 +120,7 @@
                     </div>
                     <div>
                         <div class="od-item-title" th:text="${item.product.title}">Product</div>
+                        <div class="od-item-meta" th:text="'Delivery: ' + ${item.deliveryStatus}">Delivery</div>
                         <div class="od-item-meta" th:text="'Qty: ' + ${item.quantity} + ' × RM ' + ${#numbers.formatDecimal(item.unitPrice, 1, 2)}">Qty</div>
                     </div>
                     <div class="od-item-price" th:text="'RM ' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}">RM 0.00</div>

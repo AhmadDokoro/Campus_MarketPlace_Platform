@@ -1,7 +1,11 @@
 package com.ahsmart.campusmarket.service.order;
 
 import com.ahsmart.campusmarket.model.Order;
+import com.ahsmart.campusmarket.model.UserAddress;
 import com.ahsmart.campusmarket.model.enums.PaymentMethod;
+import com.ahsmart.campusmarket.payloadDTOs.order.BuyerOrderItemChatDTO;
+import com.ahsmart.campusmarket.payloadDTOs.order.BuyerOrderTrackingSummaryDTO;
+import com.ahsmart.campusmarket.payloadDTOs.order.SellerOrderItemDTO;
 
 import java.util.List;
 
@@ -13,6 +17,16 @@ public interface OrderService {
     long countPendingOrdersForSeller(Long sellerId);
 
     long countDeliveredOrdersForSeller(Long sellerId);
+
+    List<SellerOrderItemDTO> getSellerOrderItems(Long sellerId);
+
+    List<BuyerOrderItemChatDTO> getBuyerOrderItemsForChat(Long buyerUserId);
+
+    BuyerOrderTrackingSummaryDTO getBuyerTrackingSummary(Long buyerUserId);
+
+    void updateDeliveryStatus(Long orderItemId, Long sellerId, com.ahsmart.campusmarket.model.enums.DeliveryStatus newStatus);
+
+    UserAddress getBuyerAddress(Long orderItemId, Long sellerId);
 
     // Creates a new order from the buyer's cart items and returns the saved order.
     Order createOrderFromCart(Long userId, PaymentMethod paymentMethod);
@@ -32,7 +46,7 @@ public interface OrderService {
     // Counts buyer's orders with delivery status IN_CAMPUS.
     long countInCampusForBuyer(Long userId);
 
-    // Counts buyer's orders delivered in the last 3 days.
+    // Counts buyer's PAID orders whose order items are all DELIVERED.
     long countRecentDeliveredForBuyer(Long userId);
 
     // Loads a single order with full details (items, products, images) for the order detail page.

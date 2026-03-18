@@ -1,6 +1,7 @@
 package com.ahsmart.campusmarket.controller;
 
 import com.ahsmart.campusmarket.model.enums.SellerStatus;
+import com.ahsmart.campusmarket.payloadDTOs.order.BuyerOrderTrackingSummaryDTO;
 import com.ahsmart.campusmarket.service.order.OrderService;
 import com.ahsmart.campusmarket.service.user.StartSellingDecision;
 import com.ahsmart.campusmarket.service.user.UserService;
@@ -28,11 +29,12 @@ public class UserController {
         Long userId = resolveUserId(session);
         if (userId == null) return "redirect:/signin";
 
-        // Fetch order tracking counts for the profile dashboard.
-        model.addAttribute("pendingPaymentCount", orderService.countPendingPaymentForBuyer(userId));
-        model.addAttribute("placedCount", orderService.countPlacedForBuyer(userId));
-        model.addAttribute("inCampusCount", orderService.countInCampusForBuyer(userId));
-        model.addAttribute("deliveredCount", orderService.countRecentDeliveredForBuyer(userId));
+        BuyerOrderTrackingSummaryDTO trackingSummary = orderService.getBuyerTrackingSummary(userId);
+        model.addAttribute("pendingPaymentCount", trackingSummary.getPendingPaymentCount());
+        model.addAttribute("placedCount", trackingSummary.getPlacedCount());
+        model.addAttribute("inCampusCount", trackingSummary.getInCampusCount());
+        model.addAttribute("deliveredCount", trackingSummary.getDeliveredCount());
+        model.addAttribute("buyerChatItems", orderService.getBuyerOrderItemsForChat(userId));
 
         return "user/profile";
     }

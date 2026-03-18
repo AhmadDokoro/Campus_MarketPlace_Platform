@@ -54,5 +54,44 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    // Delivery is now tracked per order item; this derives an order-level summary for buyer screens.
+    public DeliveryStatus getEffectiveDeliveryStatus() {
+        if (orderItems == null || orderItems.isEmpty()) {
+            return DeliveryStatus.PENDING;
+        }
+
+        boolean allDelivered = orderItems.stream()
+                .allMatch(item -> item.getDeliveryStatus() == DeliveryStatus.DELIVERED);
+        if (allDelivered) {
+            return DeliveryStatus.DELIVERED;
+        }
+
+        boolean anyBeyondPending = orderItems.stream()
+                .anyMatch(item -> item.getDeliveryStatus() == DeliveryStatus.IN_CAMPUS
+                        || item.getDeliveryStatus() == DeliveryStatus.DELIVERED);
+        return anyBeyondPending ? DeliveryStatus.IN_CAMPUS : DeliveryStatus.PENDING;
+    }
+
+    public long getPendingItemCount() {
+        return countItemsByStatus(DeliveryStatus.PENDING);
+    }
+
+    public long getInCampusItemCount() {
+        return countItemsByStatus(DeliveryStatus.IN_CAMPUS);
+    }
+
+    public long getDeliveredItemCount() {
+        return countItemsByStatus(DeliveryStatus.DELIVERED);
+    }
+
+    private long countItemsByStatus(DeliveryStatus status) {
+        if (orderItems == null || orderItems.isEmpty()) {
+            return 0;
+        }
+        return orderItems.stream()
+                .filter(item -> item.getDeliveryStatus() == status)
+                .count();
+    }
 }
 

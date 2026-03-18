@@ -104,10 +104,10 @@
                         <span class="ob ob-pending" th:if="${order.status.name() == 'PENDING_PAYMENT'}"><i class="bi bi-hourglass-split mr-1"></i>Pending Payment</span>
                         <span class="ob ob-cancelled" th:if="${order.status.name() == 'CANCELLED'}"><i class="bi bi-x-circle mr-1"></i>Cancelled</span>
                         <span class="ob ob-refunded" th:if="${order.status.name() == 'REFUNDED'}"><i class="bi bi-arrow-counterclockwise mr-1"></i>Refunded</span>
-                        <!-- Delivery Status -->
-                        <span class="ob ob-del-pending" th:if="${order.deliveryStatus.name() == 'PENDING'}"><i class="bi bi-clock mr-1"></i>Awaiting Delivery</span>
-                        <span class="ob ob-del-campus" th:if="${order.deliveryStatus.name() == 'IN_CAMPUS'}"><i class="bi bi-truck mr-1"></i>In Campus</span>
-                        <span class="ob ob-del-delivered" th:if="${order.deliveryStatus.name() == 'DELIVERED'}"><i class="bi bi-check2-all mr-1"></i>Delivered</span>
+                        <!-- Delivery Status derived from order items -->
+                        <span class="ob ob-del-pending" th:if="${order.effectiveDeliveryStatus.name() == 'PENDING'}"><i class="bi bi-clock mr-1"></i>Awaiting Delivery</span>
+                        <span class="ob ob-del-campus" th:if="${order.effectiveDeliveryStatus.name() == 'IN_CAMPUS'}"><i class="bi bi-truck mr-1"></i>In Campus</span>
+                        <span class="ob ob-del-delivered" th:if="${order.effectiveDeliveryStatus.name() == 'DELIVERED'}"><i class="bi bi-check2-all mr-1"></i>Delivered</span>
                     </div>
                 </div>
 
@@ -115,6 +115,10 @@
                     <div>
                         <span class="order-total" th:text="'RM ' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}">RM 0.00</span>
                         <span class="order-items-count ml-2" th:text="'(' + ${#lists.size(order.orderItems)} + ' items)'"></span>
+                        <div class="order-items-count mt-1"
+                             th:text="${order.pendingItemCount} + ' pending • ' + ${order.inCampusItemCount} + ' in campus • ' + ${order.deliveredItemCount} + ' delivered'">
+                            Delivery item summary
+                        </div>
                     </div>
                     <span class="order-view-link">View Details <i class="bi bi-arrow-right"></i></span>
                 </div>

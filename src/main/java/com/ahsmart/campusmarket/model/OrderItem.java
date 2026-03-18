@@ -1,5 +1,6 @@
 package com.ahsmart.campusmarket.model;
 
+import com.ahsmart.campusmarket.model.enums.DeliveryStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,5 +40,9 @@ public class OrderItem {
 
     @Column(name = "subtotal", precision = 10, scale = 2, nullable = false)
     private BigDecimal subtotal;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "delivery_status", nullable = false)
+    private DeliveryStatus deliveryStatus = DeliveryStatus.PENDING;
 }
 
