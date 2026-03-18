@@ -22,7 +22,7 @@
 
     <!-- Google Web Fonts - loads Roboto font family in 3 weights (400, 500, 700) for consistent typography -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Font Awesome Icons - provides 5,000+ icons for buttons, navigation, and UI elements -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -33,13 +33,65 @@
     <!-- Owl Carousel - jQuery carousel library for product image sliders and testimonials -->
     <link th:href="@{/lib/owlcarousel/owl.carousel.min.css}" rel="stylesheet">
 
-    <!-- Custom Theme Stylesheet - project-specific colors, fonts, and component styles (brand colors: primary=blue, secondary=gray) -->
-    <link th:href="@{/css/style.css}" rel="stylesheet">
     <!-- Bootstrap 4 CSS (needed for carousel styling) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css">
+
+    <!-- Custom Theme Stylesheet - project-specific colors, fonts, and component styles (brand colors: primary=blue, secondary=gray) -->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <style>
+        .home-market-bg{
+            background:
+                radial-gradient(circle at 10% 20%, rgba(255,214,102,0.25), transparent 40%),
+                radial-gradient(circle at 90% 10%, rgba(75,46,131,0.18), transparent 45%),
+                linear-gradient(180deg, #f9fafb 0%, #ffffff 45%, #f6f3ff 100%);
+        }
+        .category-scroll{display:flex;gap:16px;overflow-x:auto;padding:6px 0 16px;scroll-snap-type:x mandatory}
+        .category-scroll::-webkit-scrollbar{height:8px}
+        .category-scroll::-webkit-scrollbar-thumb{background:#c9ccd1;border-radius:999px}
+        .category-scroll::-webkit-scrollbar-track{background:#f3f4f6;border-radius:999px}
+        .category-card{min-width:220px;scroll-snap-align:start;transition:transform .2s ease, box-shadow .2s ease}
+        .category-card:hover{transform:translateY(-4px);box-shadow:0 14px 24px rgba(76,29,149,0.18)}
+        .category-pill{
+            background:linear-gradient(135deg, rgba(75,46,131,0.12), rgba(255,214,102,0.14), rgba(255,159,67,0.16));
+            border-radius:16px;
+            padding:16px 18px;
+            border:1px solid rgba(75,46,131,0.18);
+            box-shadow:0 10px 22px rgba(76,29,149,0.12);
+            position:relative;
+            overflow:hidden;
+        }
+        .category-pill::before{
+            content:"\f02b";
+            font-family:"Font Awesome 5 Free";
+            font-weight:900;
+            position:absolute;
+            left:16px;top:14px;
+            color:rgba(75,46,131,0.35);
+        }
+        .category-name{padding-left:22px;font-weight:700;color:#2c2543;margin-bottom:4px;font-family:'Poppins',sans-serif}
+        .category-count{color:#5f5c6b;font-size:13px}
+
+         .home-products .product-grid{display:grid;grid-template-columns:repeat(5, minmax(0,1fr));gap:20px}
+        .home-products .product-card-col{padding:0}
+        .section-icon{color:#ffb347;margin-right:8px}
+
+
+        @media (max-width: 1200px){
+            .home-products .product-grid{grid-template-columns:repeat(4, minmax(0,1fr))}
+        }
+        @media (max-width: 992px){
+            .home-products .product-grid{grid-template-columns:repeat(3, minmax(0,1fr))}
+        }
+        @media (max-width: 768px){
+            .home-products .product-grid{grid-template-columns:repeat(2, minmax(0,1fr))}
+        }
+        @media (max-width: 576px){
+            .home-products .product-grid{grid-template-columns:1fr}
+        }
+    </style>
 </head>
 
-<body>
+<body class="home-market-bg">
 
 <!-- Include header fragment -->
 <div th:replace="fragments/header :: header"></div>
@@ -66,7 +118,7 @@
                                 <p class="mx-md-5 px-5 animate__animated animate__bounceIn" style="line-height: 1.7; text-shadow: 0 6px 18px rgba(0,0,0,.45);">
                                     A trusted campus marketplace built for UMT academic life—simple listings, clear information, and smoother student-to-student exchange.
                                 </p>
-                                <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="#">Explore</a>
+                                <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" th:href="@{/products}">Explore</a>
                             </div>
                         </div>
                     </div>
@@ -78,7 +130,7 @@
                                 <p class="mx-md-5 px-5 animate__animated animate__bounceIn" style="line-height: 1.7; text-shadow: 0 6px 18px rgba(0,0,0,.45);">
                                     Designed around academic routines—profiles, review flow, and consistent details that make agreements faster and misunderstandings rare.
                                 </p>
-                                <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="#">Explore</a>
+                                <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" th:href="@{/products}">Explore</a>
                             </div>
                         </div>
                     </div>
@@ -90,7 +142,7 @@
                                 <p class="mx-md-5 px-5 animate__animated animate__bounceIn" style="line-height: 1.7; text-shadow: 0 6px 18px rgba(0,0,0,.45);">
                                     Built with accountability in mind—mentor-linked registration and admin verification help keep trading professional and campus-safe.
                                 </p>
-                                <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="#">Explore</a>
+                                <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" th:href="@{/products}">Explore</a>
                             </div>
                         </div>
                     </div>
@@ -103,7 +155,7 @@
                 <div class="offer-text">
                     <h6 class="text-white text-uppercase">Academic trading, made simple</h6>
                     <h3 class="text-white mb-3">Campus Deals</h3>
-                    <a th:href="@{/product/product-list.html}" class="btn btn-primary">Explore</a>
+                    <a th:href="@{/products}" class="btn btn-primary">Explore</a>
                 </div>
             </div>
             <div class="product-offer mb-30" style="height: 200px;">
@@ -111,7 +163,7 @@
                 <div class="offer-text">
                     <h6 class="text-white text-uppercase">Trusted flow, clearer listings</h6>
                     <h3 class="text-white mb-3">Verified Marketplace</h3>
-                    <a th:href="@{/product/product-list.html}" class="btn btn-primary">Explore</a>
+                    <a th:href="@{/products}" class="btn btn-primary">Explore</a>
                 </div>
             </div>
         </div>
@@ -119,61 +171,13 @@
 </div>
 
 <div class="container-fluid pt-5">
-    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Categories</span></h2>
-    <div class="row px-xl-5 pb-3">
-        <!-- Category card template repeated 12 times -->
-        <!-- Each card: image (100x100), category name, product count -->
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <a class="text-decoration-none" href="">
-                <div class="cat-item d-flex align-items-center mb-4">
-                    <div class="overflow-hidden" style="width: 100px; height: 100px;">
-                        <img class="img-fluid" th:src="@{/img/cat1.jpg}" alt="">
-                    </div>
-                    <div class="flex-fill pl-3">
-                        <h6>Category Name</h6>
-                        <small class="text-body">100 Products</small>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <!-- Additional category items omitted for brevity (follows same pattern) -->
-        <!-- 11 more category cards... -->
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <a class="text-decoration-none" href="">
-                <div class="cat-item img-zoom d-flex align-items-center mb-4">
-                    <div class="overflow-hidden" style="width: 100px; height: 100px;">
-                        <img class="img-fluid" th:src="@{/img/cat2.png}" alt="">
-                    </div>
-                    <div class="flex-fill pl-3">
-                        <h6>Category Name</h6>
-                        <small class="text-body">100 Products</small>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <a class="text-decoration-none" href="">
-                <div class="cat-item img-zoom d-flex align-items-center mb-4">
-                    <div class="overflow-hidden" style="width: 100px; height: 100px;">
-                        <img class="img-fluid" th:src="@{/img/cat3.png}" alt="">
-                    </div>
-                    <div class="flex-fill pl-3">
-                        <h6>Category Name</h6>
-                        <small class="text-body">100 Products</small>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <a class="text-decoration-none" href="">
-                <div class="cat-item img-zoom d-flex align-items-center mb-4">
-                    <div class="overflow-hidden" style="width: 100px; height: 100px;">
-                        <img class="img-fluid" th:src="@{/img/cat-2.jpg}" alt="">
-                    </div>
-                    <div class="flex-fill pl-3">
-                        <h6>Category Name</h6>
-                        <small class="text-body">100 Products</small>
-                    </div>
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3"><i class="fas fa-tags section-icon"></i>Categories</span></h2>
+    <div class="category-scroll px-xl-5">
+        <div class="category-card" th:each="cat : ${topCategories}">
+            <a class="text-decoration-none" th:href="@{'/products/category/' + ${cat.categoryId}}">
+                <div class="category-pill">
+                    <div class="category-name" th:text="${cat.categoryName}">Category</div>
+                    <div class="category-count" th:text="${categoryCounts[cat.categoryId]} + ' Products'">0 Products</div>
                 </div>
             </a>
         </div>
@@ -181,536 +185,43 @@
 </div>
 <!-- Categories End -->
 
-
-
-<div class="container-fluid pt-5 pb-3">
-    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Featured Products</span></h2>
-    <div class="row px-xl-5">
-        <!-- Product card 1 - 8 cards total with static HTML (no JavaScript rendering) -->
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <a th:href="@{/product/detail.html}" class="text-decoration-none">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" th:src="@{/img/cmp-p1.jpg}" alt="" style="cursor: pointer;">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                </a>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" th:href="@{/product/detail.html}">Math Textbook (Calculus I)</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small>(99)</small>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-3" style="cursor: pointer;"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
-                </div>
-            </div>
-        </div>
-        <!-- Products 2-8: Same structure, different images and star ratings -->
-        <!-- Showing 7 more product cards (abbreviated for space)... -->
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <a th:href="@{/product/detail.html}" class="text-decoration-none">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" th:src="@{/img/cmp-p2.jpg}" alt="" style="cursor: pointer;">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                </a>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" th:href="@{/product/detail.html}">Campus Coffee Mug</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star-half-alt text-primary mr-1"></small>
-                        <small>(99)</small>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-3" style="cursor: pointer;"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <a th:href="@{/product/detail.html}" class="text-decoration-none">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" th:src="@{/img/cmp-p3.jpg}" alt="" style="cursor: pointer;">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                </a>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" th:href="@{/product/detail.html}">Spiral Notebook - 200 pages</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star-half-alt text-primary mr-1"></small>
-                        <small class="far fa-star text-primary mr-1"></small>
-                        <small>(99)</small>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-3" style="cursor: pointer;"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <a th:href="@{/product/detail.html}" class="text-decoration-none">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" th:src="@{/img/cmp-p4.jpg}" alt="" style="cursor: pointer;">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                </a>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" th:href="@{/product/detail.html}">Scientific Calculator (Used)</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="far fa-star text-primary mr-1"></small>
-                        <small class="far fa-star text-primary mr-1"></small>
-                        <small>(99)</small>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-3" style="cursor: pointer;"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <a th:href="@{/product/detail.html}" class="text-decoration-none">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" th:src="@{/img/cmp-p5.jpg}" alt="" style="cursor: pointer;">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                </a>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" th:href="@{/product/detail.html}">Durable Campus Backpack</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small>(99)</small>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-3" style="cursor: pointer;"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <a th:href="@{/product/detail.html}" class="text-decoration-none">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" th:src="@{/img/cmp-p6.jpg}" alt="" style="cursor: pointer;">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                </a>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" th:href="@{/product/detail.html}">USB Flash Drive 64GB</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star-half-alt text-primary mr-1"></small>
-                        <small>(99)</small>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-3" style="cursor: pointer;"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <a th:href="@{/product/detail.html}" class="text-decoration-none">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" th:src="@{/img/cmp-p7.jpg}" alt="" style="cursor: pointer;">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                </a>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" th:href="@{/product/detail.html}">Noise-Cancelling Headphones</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star-half-alt text-primary mr-1"></small>
-                        <small class="far fa-star text-primary mr-1"></small>
-                        <small>(99)</small>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-3" style="cursor: pointer;"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <a th:href="@{/product/detail.html}" class="text-decoration-none">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" th:src="@{/img/cmp-p8.jpg}" alt="" style="cursor: pointer;">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                </a>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" th:href="@{/product/detail.html}">Insulated Water Bottle</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="far fa-star text-primary mr-1"></small>
-                        <small class="far fa-star text-primary mr-1"></small>
-                        <small>(99)</small>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-3" style="cursor: pointer;"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
-                </div>
-            </div>
+<div class="container-fluid pt-5 pb-3 home-products">
+    <div class="d-flex align-items-center justify-content-between mx-xl-5 mb-4">
+        <h2 class="section-title position-relative text-uppercase mb-0"><span class="bg-secondary pr-3"><i class="fas fa-fire section-icon"></i>Products</span></h2>
+        <a class="btn btn-outline-primary" th:href="@{/products}"><i class="fas fa-store mr-2"></i>View all</a>
+    </div>
+    <div class="row px-xl-5 product-grid">
+        <div class="product-card-col" th:each="p : ${featuredProducts}">
+            <div th:replace="fragments/product-card :: card(${p})"></div>
         </div>
     </div>
 </div>
 <!-- Products End -->
 
-
-<div class="container-fluid pt-5 pb-3">
+<div class="container-fluid pt-4 pb-5">
     <div class="row px-xl-5">
-        <!-- First promotional banner -->
         <div class="col-md-6">
-            <div class="product-offer mb-30" style="height: 300px;">
-                <img class="img-fluid" th:src="@{/img/productplaceholder.png}" alt="">
+            <div class="product-offer mb-30" style="height: 260px;">
+                <img class="img-fluid" th:src="@{/img/main1.jpg}" alt="">
                 <div class="offer-text">
-                    <h6 class="text-white text-uppercase">Focused on academic life</h6>
-                    <h3 class="text-white mb-3">Quick Campus Exchange</h3>
-                    <a th:href="@{/product/product-list.html}" class="btn btn-primary">Explore</a>
+                    <h6 class="text-white text-uppercase">Popular campus picks</h6>
+                    <h3 class="text-white mb-3">Student Favorites</h3>
+                    <a th:href="@{/products}" class="btn btn-primary">Explore</a>
                 </div>
             </div>
         </div>
-        <!-- Second promotional banner -->
         <div class="col-md-6">
-            <div class="product-offer mb-30" style="height: 300px;">
-                <img class="img-fluid" th:src="@{/img/productplaceholder.png}" alt="">
+            <div class="product-offer mb-30" style="height: 260px;">
+                <img class="img-fluid" th:src="@{/img/side.jpg}" alt="">
                 <div class="offer-text">
-                    <h6 class="text-white text-uppercase">Clear process, better trust</h6>
-                    <h3 class="text-white mb-3">Review & Verification</h3>
-                    <a th:href="@{/product/product-list.html}" class="btn btn-primary">Explore</a>
+                    <h6 class="text-white text-uppercase">Handpicked for UMT</h6>
+                    <h3 class="text-white mb-3">Marketplace Highlights</h3>
+                    <a th:href="@{/products}" class="btn btn-primary">Explore</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- Offer End -->
-
-
-
-<div class="container-fluid pt-5 pb-3">
-    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Recent Products</span></h2>
-    <div class="row px-xl-5">
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <a th:href="@{/product/detail.html}" class="text-decoration-none">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" th:src="@{/img/cmp-p9.jpg}" alt="" style="cursor: pointer;">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                </a>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" th:href="@{/product/detail.html}">Organic Instant Coffee Pack</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small>(99)</small>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-3" style="cursor: pointer;"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <a th:href="@{/product/detail.html}" class="text-decoration-none">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" th:src="@{/img/productplaceholder.png}" alt="" style="cursor: pointer;">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                </a>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" th:href="@{/product/detail.html}">Used Physics Textbook (Mechanics)</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star-half-alt text-primary mr-1"></small>
-                        <small>(99)</small>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-3" style="cursor: pointer;"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <a th:href="@{/product/detail.html}" class="text-decoration-none">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" th:src="@{/img/cmp-p10.jpg}" alt="" style="cursor: pointer;">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                </a>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" th:href="@{/product/detail.html}">Adjustable Laptop Stand</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star-half-alt text-primary mr-1"></small>
-                        <small class="far fa-star text-primary mr-1"></small>
-                        <small>(99)</small>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-3" style="cursor: pointer;"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <a th:href="@{/product/detail.html}" class="text-decoration-none">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" th:src="@{/img/productplaceholder.png}" alt="" style="cursor: pointer;">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                </a>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" th:href="@{/product/detail.html}">Dorm Desk Lamp (LED)</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="far fa-star text-primary mr-1"></small>
-                        <small class="far fa-star text-primary mr-1"></small>
-                        <small>(99)</small>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-3" style="cursor: pointer;"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <a th:href="@{/product/detail.html}" class="text-decoration-none">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" th:src="@{/img/productplaceholder.png}" alt="" style="cursor: pointer;">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                </a>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" th:href="@{/product/detail.html}">Graphing Calculator (TI Series)</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small>(99)</small>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-3" style="cursor: pointer;"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <a th:href="@{/product/detail.html}" class="text-decoration-none">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" th:src="@{/img/productplaceholder.png}" alt="" style="cursor: pointer;">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                </a>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" th:href="@{/product/detail.html}">Campus Hoodie (Medium)</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star-half-alt text-primary mr-1"></small>
-                        <small>(99)</small>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-3" style="cursor: pointer;"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <a th:href="@{/product/detail.html}" class="text-decoration-none">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" th:src="@{/img/productplaceholder.png}" alt="" style="cursor: pointer;">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                </a>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" th:href="@{/product/detail.html}">Reusable Meal Container Set</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star-half-alt text-primary mr-1"></small>
-                        <small class="far fa-star text-primary mr-1"></small>
-                        <small>(99)</small>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-3" style="cursor: pointer;"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <a th:href="@{/product/detail.html}" class="text-decoration-none">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" th:src="@{/img/productplaceholder.png}" alt="" style="cursor: pointer;">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                </a>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" th:href="@{/product/detail.html}">Portable Bluetooth Speaker</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="far fa-star text-primary mr-1"></small>
-                        <small class="far fa-star text-primary mr-1"></small>
-                        <small>(99)</small>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-3" style="cursor: pointer;"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Products End -->
-
 
 <!-- Include footer fragment -->
 <div th:replace="fragments/footer :: footer"></div>

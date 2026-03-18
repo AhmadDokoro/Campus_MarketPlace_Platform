@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders — Campus Marketplace</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        body{background:linear-gradient(180deg,#f9fafb 0%,#fff 45%,#f6f3ff 100%);font-family:'Poppins',sans-serif}
+        .breadcrumb-area{background:rgba(75,46,131,0.04);border-bottom:1px solid rgba(75,46,131,0.08)}
+        .breadcrumb-area a{color:#4B2E83;font-weight:500}
+        .page-title{font-size:28px;font-weight:700;color:#2b2b37}
+        .page-title i{color:#ffb347}
+
+        .order-card{background:#fff;border-radius:16px;padding:22px 26px;box-shadow:0 6px 22px rgba(17,24,39,0.06);
+            margin-bottom:16px;transition:transform .2s ease,box-shadow .2s ease;cursor:pointer;text-decoration:none;display:block;color:inherit}
+        .order-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(75,46,131,0.12);text-decoration:none;color:inherit}
+
+        .order-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+        .order-id{font-weight:700;font-size:16px;color:#2b2b37}
+        .order-date{font-size:12px;color:#999}
+
+        .order-badges{display:flex;gap:8px;flex-wrap:wrap}
+        .ob{padding:4px 12px;border-radius:999px;font-size:11px;font-weight:600}
+        .ob-paid{background:rgba(40,167,69,0.12);color:#28a745}
+        .ob-pending{background:rgba(255,179,71,0.15);color:#e6930a}
+        .ob-cancelled{background:rgba(196,22,28,0.1);color:#C4161C}
+        .ob-refunded{background:rgba(75,46,131,0.1);color:#4B2E83}
+        .ob-del-pending{background:rgba(108,117,125,0.1);color:#6c757d}
+        .ob-del-campus{background:rgba(59,130,246,0.1);color:#3b82f6}
+        .ob-del-delivered{background:rgba(40,167,69,0.1);color:#28a745}
+
+        .order-total{font-weight:800;color:#4B2E83;font-size:18px}
+        .order-items-count{font-size:13px;color:#888}
+        .order-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid rgba(75,46,131,0.05)}
+        .order-view-link{font-size:13px;font-weight:600;color:#4B2E83}
+
+        .empty-orders{text-align:center;padding:80px 20px}
+        .empty-orders-icon{font-size:80px;color:rgba(75,46,131,0.15);margin-bottom:20px}
+        .empty-orders h4{font-weight:700;color:#2b2b37;margin-bottom:8px}
+        .empty-orders p{color:#999;font-size:15px;margin-bottom:24px}
+        .btn-shop{background:linear-gradient(135deg,#4B2E83,#ffb347);color:#fff;border:none;padding:12px 32px;border-radius:999px;
+            font-weight:600;font-size:15px;text-decoration:none;display:inline-block;transition:transform .2s,box-shadow .2s;box-shadow:0 8px 20px rgba(75,46,131,0.2)}
+        .btn-shop:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(75,46,131,0.3);color:#fff;text-decoration:none}
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="breadcrumb-area py-3">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent mb-0 px-0">
+                <li class="breadcrumb-item"><a th:href="@{/index}"><i class="fas fa-home mr-1"></i>Home</a></li>
+                <li class="breadcrumb-item active">My Orders</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="page-title mb-0"><i class="bi bi-list-check mr-2"></i>My Orders
+            <!-- Show active filter label -->
+            <span th:if="${currentFilter == 'pending_payment'}" style="font-size:14px;color:#e6930a;font-weight:600;margin-left:8px">— Pending Payment</span>
+            <span th:if="${currentFilter == 'placed'}" style="font-size:14px;color:#4B2E83;font-weight:600;margin-left:8px">— Order Placed</span>
+            <span th:if="${currentFilter == 'in_campus'}" style="font-size:14px;color:#3b82f6;font-weight:600;margin-left:8px">— In Campus</span>
+            <span th:if="${currentFilter == 'delivered'}" style="font-size:14px;color:#28a745;font-weight:600;margin-left:8px">— Recently Delivered</span>
+        </h2>
+        <!-- Show "View All" link when a filter is active -->
+        <a th:if="${currentFilter != null}" th:href="@{/orders/history}" style="color:#4B2E83;font-weight:600;font-size:14px;text-decoration:none">
+            <i class="fas fa-arrow-left mr-1"></i>View All Orders
+        </a>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-orders" th:if="${#lists.isEmpty(orders)}">
+        <div class="empty-orders-icon"><i class="bi bi-bag-x"></i></div>
+        <h4 th:if="${currentFilter == null}">No orders yet</h4>
+        <h4 th:if="${currentFilter != null}">No orders found</h4>
+        <p th:if="${currentFilter == null}">You haven't placed any orders. Start exploring products!</p>
+        <p th:if="${currentFilter != null}">No orders match this filter.</p>
+        <a th:if="${currentFilter == null}" th:href="@{/products}" class="btn-shop"><i class="fas fa-store mr-2"></i>Start Shopping</a>
+        <a th:if="${currentFilter != null}" th:href="@{/orders/history}" class="btn-shop"><i class="fas fa-arrow-left mr-2"></i>View All Orders</a>
+    </div>
+
+    <!-- Order List -->
+    <div th:unless="${#lists.isEmpty(orders)}">
+        <div th:each="order : ${orders}" class="order-card" style="position:relative">
+            <a th:href="@{/orders/{id}(id=${order.orderId})}" style="text-decoration:none;color:inherit;display:block">
+
+                <div class="order-top">
+                    <div>
+                        <span class="order-id">Order #<span th:text="${order.orderId}">0</span></span>
+                        <span class="order-date ml-3" th:text="${#temporals.format(order.createdAt, 'dd MMM yyyy, hh:mm a')}">Date</span>
+                    </div>
+                    <div class="order-badges">
+                        <!-- Payment Status -->
+                        <span class="ob ob-paid" th:if="${order.status.name() == 'PAID'}"><i class="bi bi-check-circle mr-1"></i>Paid</span>
+                        <span class="ob ob-pending" th:if="${order.status.name() == 'PENDING_PAYMENT'}"><i class="bi bi-hourglass-split mr-1"></i>Pending Payment</span>
+                        <span class="ob ob-cancelled" th:if="${order.status.name() == 'CANCELLED'}"><i class="bi bi-x-circle mr-1"></i>Cancelled</span>
+                        <span class="ob ob-refunded" th:if="${order.status.name() == 'REFUNDED'}"><i class="bi bi-arrow-counterclockwise mr-1"></i>Refunded</span>
+                        <!-- Delivery Status -->
+                        <span class="ob ob-del-pending" th:if="${order.deliveryStatus.name() == 'PENDING'}"><i class="bi bi-clock mr-1"></i>Awaiting Delivery</span>
+                        <span class="ob ob-del-campus" th:if="${order.deliveryStatus.name() == 'IN_CAMPUS'}"><i class="bi bi-truck mr-1"></i>In Campus</span>
+                        <span class="ob ob-del-delivered" th:if="${order.deliveryStatus.name() == 'DELIVERED'}"><i class="bi bi-check2-all mr-1"></i>Delivered</span>
+                    </div>
+                </div>
+
+                <div class="order-bottom">
+                    <div>
+                        <span class="order-total" th:text="'RM ' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}">RM 0.00</span>
+                        <span class="order-items-count ml-2" th:text="'(' + ${#lists.size(order.orderItems)} + ' items)'"></span>
+                    </div>
+                    <span class="order-view-link">View Details <i class="bi bi-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <!-- Pay Now button for pending payment orders — allows buyer to complete gateway payment -->
+            <a th:if="${order.status.name() == 'PENDING_PAYMENT'}"
+               th:href="@{/orders/pay/{id}(id=${order.orderId})}"
+               style="position:absolute;bottom:18px;right:18px;background:linear-gradient(135deg,#ff9500,#e6930a);color:#fff;
+                      padding:6px 18px;border-radius:999px;font-size:12px;font-weight:700;text-decoration:none;
+                      box-shadow:0 4px 12px rgba(255,149,0,0.3);transition:transform .2s,box-shadow .2s;z-index:5"
+               onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 16px rgba(255,149,0,0.4)'"
+               onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 12px rgba(255,149,0,0.3)'">
+                <i class="bi bi-credit-card mr-1"></i>Pay Now
+            </a>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+

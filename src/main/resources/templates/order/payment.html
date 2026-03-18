@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToyyibPay — Secure Payment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;
+            background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%)}
+
+        /* ── Gateway Header Bar ── */
+        .gw-header{background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.08);padding:16px 0}
+        .gw-header-inner{max-width:600px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+        .gw-logo{display:flex;align-items:center;gap:10px;color:#fff;font-weight:800;font-size:20px;text-decoration:none}
+        .gw-logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#10b981,#059669);
+            display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff}
+        .gw-secure{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,0.5);font-size:12px;font-weight:500}
+        .gw-secure i{color:#10b981}
+
+        /* ── Main Card ── */
+        .gw-container{max-width:520px;margin:40px auto;padding:0 20px;flex:1}
+        .gw-card{background:rgba(255,255,255,0.06);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);
+            border-radius:24px;padding:36px;box-shadow:0 25px 60px rgba(0,0,0,0.3)}
+
+        /* ── Order Summary ── */
+        .gw-order-summary{background:rgba(255,255,255,0.04);border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid rgba(255,255,255,0.06)}
+        .gw-merchant{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:4px}
+        .gw-order-ref{font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:12px}
+        .gw-amount{font-size:36px;font-weight:800;color:#fff;letter-spacing:-1px}
+        .gw-amount-currency{font-size:16px;font-weight:600;color:rgba(255,255,255,0.5);margin-right:4px}
+
+        /* ── Form Fields ── */
+        .gw-label{display:block;font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;
+            letter-spacing:.8px;margin-bottom:8px}
+        .gw-input{width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);
+            border-radius:12px;padding:14px 16px;color:#fff;font-size:15px;font-weight:500;
+            transition:border-color .2s ease,box-shadow .2s ease;outline:none}
+        .gw-input:focus{border-color:rgba(16,185,129,0.6);box-shadow:0 0 0 3px rgba(16,185,129,0.15)}
+        .gw-input::placeholder{color:rgba(255,255,255,0.25)}
+        .gw-row{display:flex;gap:14px;margin-bottom:20px}
+        .gw-field{flex:1;margin-bottom:0}
+        .gw-field-full{margin-bottom:20px}
+
+        /* ── Card Type Icons ── */
+        .gw-card-icons{display:flex;gap:8px;margin-bottom:20px}
+        .gw-card-icon{width:48px;height:30px;border-radius:6px;background:rgba(255,255,255,0.08);
+            display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(255,255,255,0.4);
+            font-weight:700;border:1px solid rgba(255,255,255,0.06)}
+
+        /* ── Pay Button ── */
+        .gw-pay-btn{width:100%;padding:16px;border:none;border-radius:14px;font-weight:700;font-size:16px;
+            color:#fff;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;
+            background:linear-gradient(135deg,#10b981 0%,#059669 100%);
+            box-shadow:0 12px 30px rgba(16,185,129,0.3)}
+        .gw-pay-btn:hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(16,185,129,0.4)}
+        .gw-pay-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+        /* ── Cancel Link ── */
+        .gw-cancel{display:block;text-align:center;margin-top:16px;color:rgba(255,255,255,0.4);
+            font-size:13px;font-weight:500;text-decoration:none;transition:color .2s}
+        .gw-cancel:hover{color:rgba(255,255,255,0.7);text-decoration:none}
+
+        /* ── Error Alert ── */
+        .gw-error{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:12px;
+            padding:14px 18px;color:#fca5a5;font-size:13px;font-weight:500;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+        .gw-error i{font-size:18px;color:#ef4444}
+
+        /* ── Test Card Info ── */
+        .gw-test-info{background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:12px;
+            padding:14px 18px;margin-bottom:24px;font-size:12px;color:rgba(147,197,253,0.9);line-height:1.6}
+        .gw-test-info strong{color:#93c5fd}
+        .gw-test-info code{background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:11px}
+
+        /* ── Footer ── */
+        .gw-footer{text-align:center;padding:20px;color:rgba(255,255,255,0.2);font-size:11px}
+
+        /* ── Spinner ── */
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .gw-spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);
+            border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;margin-right:8px;vertical-align:middle}
+    </style>
+</head>
+<body>
+
+<!-- Gateway Header -->
+<div class="gw-header">
+    <div class="gw-header-inner">
+        <div class="gw-logo">
+            <div class="gw-logo-icon"><i class="bi bi-shield-lock-fill"></i></div>
+            <span>ToyyibPay</span>
+        </div>
+        <div class="gw-secure"><i class="bi bi-lock-fill"></i> 256-bit SSL Encrypted</div>
+    </div>
+</div>
+
+<!-- Main Payment Card -->
+<div class="gw-container">
+    <div class="gw-card">
+
+        <!-- Order Summary -->
+        <div class="gw-order-summary">
+            <div class="gw-merchant"><i class="bi bi-shop mr-1"></i>Campus Marketplace</div>
+            <div class="gw-order-ref">Order #<span th:text="${order.orderId}">0</span></div>
+            <div class="gw-amount">
+                <span class="gw-amount-currency">RM</span>
+                <span th:text="${#numbers.formatDecimal(order.totalAmount, 1, 2)}">0.00</span>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <div class="gw-error" th:if="${error}">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span th:text="${error}">Error message</span>
+        </div>
+
+        <!-- Test Card Info Banner -->
+        <div class="gw-test-info">
+            <strong><i class="bi bi-info-circle mr-1"></i>Test Mode</strong><br>
+            Use <code>4242 4242 4242 4242</code> for success<br>
+            Use <code>4000 0000 0000 0002</code> for decline<br>
+            Any future expiry &amp; 3-digit CVV
+        </div>
+
+        <!-- Accepted Cards -->
+        <div class="gw-card-icons">
+            <div class="gw-card-icon">VISA</div>
+            <div class="gw-card-icon">MC</div>
+            <div class="gw-card-icon">FPX</div>
+        </div>
+
+        <!-- Payment Form -->
+        <form method="post" th:action="@{/orders/pay/{id}(id=${order.orderId})}" id="pay-form">
+
+            <!-- Cardholder Name -->
+            <div class="gw-field-full">
+                <label class="gw-label">Cardholder Name</label>
+                <input class="gw-input" type="text" name="cardHolder" placeholder="Ahmad Bin Ali" required autocomplete="cc-name">
+            </div>
+
+            <!-- Card Number -->
+            <div class="gw-field-full">
+                <label class="gw-label">Card Number</label>
+                <input class="gw-input" type="text" name="cardNumber" id="cardNumber"
+                       placeholder="4242 4242 4242 4242" required maxlength="19" autocomplete="cc-number"
+                       oninput="formatCardNumber(this)">
+            </div>
+
+            <!-- Expiry + CVV Row -->
+            <div class="gw-row">
+                <div class="gw-field">
+                    <label class="gw-label">Expiry Month</label>
+                    <input class="gw-input" type="text" name="expiryMonth" placeholder="MM" required maxlength="2" autocomplete="cc-exp-month">
+                </div>
+                <div class="gw-field">
+                    <label class="gw-label">Expiry Year</label>
+                    <input class="gw-input" type="text" name="expiryYear" placeholder="YY" required maxlength="4" autocomplete="cc-exp-year">
+                </div>
+                <div class="gw-field">
+                    <label class="gw-label">CVV</label>
+                    <input class="gw-input" type="password" name="cvv" placeholder="•••" required maxlength="4" autocomplete="cc-csc">
+                </div>
+            </div>
+
+            <!-- Pay Button -->
+            <button type="submit" class="gw-pay-btn" id="pay-btn">
+                <i class="bi bi-lock-fill mr-2"></i>Pay RM <span th:text="${#numbers.formatDecimal(order.totalAmount, 1, 2)}">0.00</span>
+            </button>
+        </form>
+
+        <!-- Cancel Link -->
+        <a th:href="@{/orders/history}" class="gw-cancel">Cancel and return to marketplace</a>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="gw-footer">
+    <i class="bi bi-shield-check mr-1"></i> Secured by ToyyibPay (Test Environment) &copy; 2026
+</div>
+
+<script>
+    // Formats the card number with spaces every 4 digits as the user types.
+    function formatCardNumber(input) {
+        var value = input.value.replace(/\D/g, '').substring(0, 16);
+        var formatted = value.replace(/(.{4})/g, '$1 ').trim();
+        input.value = formatted;
+    }
+
+    // Shows a loading spinner on the pay button when the form is submitted.
+    document.getElementById('pay-form').addEventListener('submit', function() {
+        // Strip spaces from card number before sending to server.
+        var cardInput = document.getElementById('cardNumber');
+        cardInput.value = cardInput.value.replace(/\s/g, '');
+
+        var btn = document.getElementById('pay-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="gw-spinner"></span>Processing payment...';
+    });
+</script>
+</body>
+</html>
+

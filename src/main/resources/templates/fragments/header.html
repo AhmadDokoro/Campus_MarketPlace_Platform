@@ -45,14 +45,14 @@
         <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
             <div class="col-lg-4">
                 <a th:href="@{/index}" class="text-decoration-none d-inline-flex align-items-center">
-                    <span class="h3 text-uppercase text-primary bg-dark px-2 mb-0">CAMPUS</span>
-                    <span class="h3 text-uppercase text-dark bg-primary px-2 mb-0 ml-n1">MARKETPLACE</span>
+                    <span class="h3 text-uppercase text-white bg-dark px-2 mb-0">CAMPUS</span>
+                    <span class="h3 text-uppercase text-white bg-primary px-2 mb-0 ml-n1">MARKETPLACE</span>
                 </a>
             </div>
-            <div class="col-lg-4 col-6 text-left">
+            <div class="col-lg-4 col-6 text-left header-search-wrap">
                 <form action="">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for products" aria-label="Search for products">
+                        <input type="text" class="form-control" placeholder="Search for products" aria-label="Search for products" id="header-search-input" autocomplete="off">
                         <div class="input-group-append">
                                 <span class="input-group-text bg-transparent text-primary">
                                     <i class="fa fa-search"></i>
@@ -60,6 +60,7 @@
                         </div>
                     </div>
                 </form>
+                <div id="header-search-results" class="search-results shadow-sm"></div>
             </div>
             <div class="col-lg-4 col-6 text-right">
                 <!-- Replace text-brand with UMT logo image. Keep it small so it fits the header without affecting layout -->
@@ -74,7 +75,7 @@
     <div class="container-fluid bg-dark mb-30">
         <div class="row px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
-                <select class="form-control d-flex align-items-center bg-primary text-dark"  id="categories-select" aria-label="Categories" style="height: 65px; padding: 0 30px; border: none; cursor: pointer; appearance: none; font-size: 18px; font-weight: 500;">
+                <select class="form-control d-flex align-items-center text-white" id="categories-select" aria-label="Categories" style="height: 65px; padding: 0 30px; background-color: #4B2E83; border: 1px solid #FFD333; cursor: pointer; appearance: none; font-size: 18px; font-weight: 500;">
                     <option value="">Category  ▼</option>
                     <option value="smartphones">Smartphones</option>
                     <option value="kitchen">Kitchen</option>
@@ -95,33 +96,25 @@
                     </button>
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
 
-                        <!-- Buyer nav: shown for BUYER role only -->
-                        <div class="navbar-nav mr-auto py-0" th:if="${session.role == T(com.ahsmart.campusmarket.model.enums.Role).BUYER}">
+                        <!-- Logged-in nav: common links for all authenticated users -->
+                        <div class="navbar-nav mr-auto py-0" th:if="${session.userId != null}">
                             <a th:href="@{/index}" class="nav-item nav-link active">Home</a>
-                            <a th:href="@{/product/product-list.html}" class="nav-item nav-link">Explore</a>
-                            <a th:href="@{/buyer/orders.html}" class="nav-item nav-link">Orders</a>
-                        </div>
-
-                        <!-- Seller nav: shown for SELLER role only (adds manage products & sales history) -->
-                        <div class="navbar-nav mr-auto py-0" th:if="${session.role == T(com.ahsmart.campusmarket.model.enums.Role).SELLER}">
-                            <a th:href="@{/index}" class="nav-item nav-link active">Home</a>
-                            <a th:href="@{/product/product-list.html}" class="nav-item nav-link">Explore</a>
-                            <a th:href="@{/seller/products}" class="nav-item nav-link">Manage Products</a>
-                            <a th:href="@{/seller/sales-history}" class="nav-item nav-link">Sales History</a>
+                            <a th:href="@{/products}" class="nav-item nav-link">Explore</a>
+                            <a th:href="@{/user/profile}" class="nav-item nav-link">Profile</a>
                         </div>
 
                         <!-- Public nav: when no user logged in, show generic public links -->
                         <div class="navbar-nav mr-auto py-0" th:if="${session.userId == null}">
                             <a th:href="@{/index}" class="nav-item nav-link active">Home</a>
-                            <a th:href="@{/product/product-list.html}" class="nav-item nav-link">Explore</a>
+                            <a th:href="@{/products}" class="nav-item nav-link">Explore</a>
                             <a th:href="@{/contact}" class="nav-item nav-link">Contact</a>
                         </div>
 
                         <!-- Right-side utilities: cart visible only when logged in -->
                         <div class="navbar-nav ml-auto py-0 d-none d-lg-block" th:if="${session.userId != null}">
-                            <a th:href="@{/cart/cart.html}" class="btn px-0 ml-3">
-                                <i class="fas fa-shopping-cart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                            <a th:href="@{/cart}" class="btn px-0 ml-3">
+                                <i class="fas fa-shopping-cart" style="color:#c88914;"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle cart-badge-count" style="padding-bottom: 2px;">0</span>
                             </a>
                         </div>
                     </div>
@@ -129,4 +122,125 @@
             </div>
         </div>
     </div>
+
+
+    <style>
+        .header-search-wrap{position:relative}
+        .search-results{display:none;position:absolute;top:100%;left:0;z-index:1050;width:100%;background:#fff;border-radius:12px;border:1px solid rgba(15,23,42,0.08);margin-top:6px;max-height:320px;overflow:auto}
+        .search-item{display:flex;gap:10px;align-items:center;padding:10px 12px;text-decoration:none;color:#111827;border-bottom:1px solid rgba(15,23,42,0.06)}
+        .search-item:last-child{border-bottom:none}
+        .search-item:hover{background:rgba(255,214,102,0.15)}
+        .search-thumb{width:40px;height:40px;border-radius:8px;object-fit:cover;background:#f3f4f6}
+        .search-title{font-weight:600;font-size:13px;margin-bottom:2px}
+        .search-price{font-size:12px;color:#4B2E83}
+        .search-empty{padding:12px;color:#6b7280;font-size:13px}
+    </style>
+
+    <script>
+        function setupHeaderSearch(){
+            var results = document.getElementById('header-search-results');
+            if(!results){return;}
+
+            var debounceTimer;
+            function clearResults(){
+                results.innerHTML = '';
+                results.style.display = 'none';
+            }
+
+            function renderResults(items){
+                if(!items || items.length === 0){
+                    results.innerHTML = '<div class="search-empty">No products found.</div>';
+                    results.style.display = 'block';
+                    return;
+                }
+                results.innerHTML = items.map(function(item){
+                    var image = item.imageUrl ? item.imageUrl : '/img/productplaceholder.png';
+                    var price = item.price != null ? ('RM ' + Number(item.price).toFixed(2)) : 'RM 0.00';
+                    var href = '/products?searchText=' + encodeURIComponent(item.title || '');
+                    return '<a class="search-item" href="' + href + '">' +
+                        '<img class="search-thumb" src="' + image + '" alt="">' +
+                        '<div>' +
+                        '<div class="search-title">' + (item.title || '') + '</div>' +
+                        '<div class="search-price">' + price + '</div>' +
+                        '</div></a>';
+                }).join('');
+                results.style.display = 'block';
+            }
+
+            function renderError(){
+                results.innerHTML = '<div class="search-empty">Search error. Please try again.</div>';
+                results.style.display = 'block';
+            }
+
+            function runSearch(inputEl){
+                var searchText = inputEl.value.trim();
+                if(debounceTimer){clearTimeout(debounceTimer);}
+                if(searchText.length < 2){
+                    clearResults();
+                    return;
+                }
+                results.innerHTML = '<div class="search-empty">Searching...</div>';
+                results.style.display = 'block';
+                debounceTimer = setTimeout(function(){
+                    fetch('/products/search?searchText=' + encodeURIComponent(searchText))
+                        .then(function(res){
+                            if(!res.ok){throw new Error('Search failed');}
+                            return res.json();
+                        })
+                        .then(function(data){ renderResults(data); })
+                        .catch(function(){ renderError(); });
+                }, 200);
+            }
+
+            document.addEventListener('input', function(e){
+                if(e.target && e.target.id === 'header-search-input'){
+                    runSearch(e.target);
+                }
+            });
+
+            document.addEventListener('keyup', function(e){
+                if(e.target && e.target.id === 'header-search-input'){
+                    runSearch(e.target);
+                }
+            });
+
+            document.addEventListener('focusin', function(e){
+                if(e.target && e.target.id === 'header-search-input'){
+                    if(e.target.value.trim().length >= 2){
+                        runSearch(e.target);
+                    }
+                }
+            });
+
+            document.addEventListener('click', function(e){
+                if(!results.contains(e.target) && e.target.id !== 'header-search-input'){
+                    clearResults();
+                }
+            });
+        }
+
+        if(document.readyState === 'loading'){
+            document.addEventListener('DOMContentLoaded', setupHeaderSearch);
+        } else {
+            setupHeaderSearch();
+        }
+    </script>
+
+    <!-- Fetches current cart count on page load to keep the header badge in sync. -->
+    <script>
+        function loadCartBadge(){
+            fetch('/cart/count')
+                .then(function(res){ return res.json(); })
+                .then(function(data){
+                    var badges = document.querySelectorAll('.cart-badge-count');
+                    badges.forEach(function(b){ b.textContent = data.count || 0; });
+                })
+                .catch(function(){});
+        }
+        if(document.readyState === 'loading'){
+            document.addEventListener('DOMContentLoaded', loadCartBadge);
+        } else {
+            loadCartBadge();
+        }
+    </script>
 </header>

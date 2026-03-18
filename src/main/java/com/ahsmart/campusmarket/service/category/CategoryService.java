@@ -1,16 +1,25 @@
 package com.ahsmart.campusmarket.service.category;
 
-import com.ahsmart.campusmarket.payloadDTOs.CategoryDTO;
-import com.ahsmart.campusmarket.payloadDTOs.CategoryResponseDTO;
+import com.ahsmart.campusmarket.model.Category;
 
+import java.util.List;
+import java.util.Optional;
 
 public interface CategoryService {
 
-    CategoryDTO createCategory(CategoryDTO categoryDTO);
+    List<Category> findAll();
 
-    CategoryResponseDTO getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+    Optional<Category> findById(Long id);
 
-    CategoryDTO updateCategory(CategoryDTO categoryDTO, Long categoryId);
+    Category create(String name, String description);
 
-    CategoryDTO deleteCategory(Long id);
+    Category update(Long id, String name, String description);
+
+    /**
+     * Deletes a category only if it has no products.
+     */
+    void deleteIfNoProducts(Long id);
+
+    // Fetches the most recently created categories for the homepage.
+    List<Category> getTopCategories(int limit);
 }

@@ -1,0 +1,224 @@
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- Product Card Fragment — self-contained, used on every page   -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+
+<div th:fragment="card(p)">
+
+    <!-- Card styles (Thymeleaf will inject these with the fragment; browser deduplicates) -->
+    <style>
+        /* ── Card Shell ── */
+        .pc-card{position:relative;border-radius:18px;overflow:hidden;background:#fff;
+            box-shadow:0 4px 20px rgba(75,46,131,0.07);transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s cubic-bezier(.22,1,.36,1)}
+        .pc-card:hover{transform:translateY(-8px);box-shadow:0 22px 44px rgba(75,46,131,0.16),0 0 0 1px rgba(255,179,71,0.15)}
+
+        /* ── Shimmer border on hover ── */
+        .pc-card::before{content:'';position:absolute;inset:-2px;border-radius:20px;
+            background:linear-gradient(135deg,rgba(75,46,131,0.4),rgba(255,179,71,0.5),rgba(75,46,131,0.4));
+            opacity:0;transition:opacity .4s ease;z-index:0;filter:blur(1px)}
+        .pc-card:hover::before{opacity:1}
+        .pc-card-inner{position:relative;z-index:1;border-radius:18px;overflow:hidden;background:#fff}
+
+        /* ── Image Area ── */
+        .pc-img-wrap{position:relative;overflow:hidden;height:190px;background:#f5f3ff}
+        .pc-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .5s cubic-bezier(.22,1,.36,1),filter .4s ease}
+        .pc-card:hover .pc-img-wrap img{transform:scale(1.08);filter:brightness(1.03)}
+
+        /* ── Floating Badges over image ── */
+        .pc-badge-row{position:absolute;top:12px;left:12px;display:flex;gap:6px;z-index:3}
+        .pc-badge{padding:4px 10px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+            backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+        .pc-badge-new{background:rgba(75,46,131,0.85);color:#fff}
+        .pc-badge-used{background:rgba(255,179,71,0.9);color:#2b2b37}
+
+        /* ── Wishlist Heart ── */
+        .pc-heart{position:absolute;top:12px;right:12px;z-index:3;width:34px;height:34px;border-radius:50%;
+            background:rgba(255,255,255,0.85);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+            display:flex;align-items:center;justify-content:center;cursor:pointer;
+            border:none;transition:transform .25s ease,background .25s ease;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+        .pc-heart:hover{transform:scale(1.2);background:rgba(255,255,255,1)}
+        .pc-heart i{font-size:15px;color:#C4161C;transition:transform .3s ease}
+        .pc-heart:active i{transform:scale(1.4)}
+
+        /* ── Quick-view overlay on hover ── */
+        .pc-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+            background:linear-gradient(180deg,rgba(75,46,131,0) 40%,rgba(75,46,131,0.55) 100%);
+            opacity:0;transition:opacity .35s ease;z-index:2}
+        .pc-card:hover .pc-overlay{opacity:1}
+        .pc-view-btn{padding:8px 20px;border-radius:999px;border:2px solid rgba(255,255,255,0.9);
+            color:#fff;font-weight:600;font-size:12px;letter-spacing:.5px;text-decoration:none;
+            backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+            transform:translateY(12px);transition:transform .35s ease,background .25s ease}
+        .pc-card:hover .pc-view-btn{transform:translateY(0)}
+        .pc-view-btn:hover{background:rgba(255,255,255,0.2);color:#fff;text-decoration:none}
+
+        /* ── Card Body ── */
+        .pc-body{padding:16px 18px 18px}
+
+        /* ── Category Tag ── */
+        .pc-category{display:inline-block;font-size:10px;font-weight:600;color:#4B2E83;text-transform:uppercase;
+            letter-spacing:.6px;margin-bottom:6px;opacity:.7}
+
+        /* ── Title ── */
+        .pc-title{display:block;font-family:'Poppins',sans-serif;font-weight:600;font-size:14px;color:#2b2b37;
+            text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+            transition:color .2s ease;line-height:1.4}
+        .pc-title:hover{color:#4B2E83;text-decoration:none}
+
+        /* ── Price + Cart Row ── */
+        .pc-price-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+        .pc-price{font-family:'Poppins',sans-serif;font-weight:800;font-size:18px;color:#4B2E83;line-height:1}
+        .pc-price-currency{font-size:12px;font-weight:600;opacity:.7;margin-right:2px}
+
+        /* ── Rating Stars ── */
+        .pc-stars{display:flex;gap:2px;margin-top:8px}
+        .pc-stars i{font-size:11px;color:#ffb347;filter:drop-shadow(0 1px 2px rgba(255,179,71,0.4));
+            animation:pcStarPop 2.4s ease-in-out infinite}
+        .pc-stars i:nth-child(2){animation-delay:.15s}
+        .pc-stars i:nth-child(3){animation-delay:.3s}
+        .pc-stars i:nth-child(4){animation-delay:.45s}
+        .pc-stars i:nth-child(5){animation-delay:.6s}
+        @keyframes pcStarPop{0%,100%{transform:scale(1);filter:drop-shadow(0 1px 2px rgba(255,179,71,0.4))}
+            50%{transform:scale(1.15);filter:drop-shadow(0 2px 6px rgba(255,179,71,0.7))}}
+
+        /* ── Add to Cart Button ── */
+        .pc-cart-btn{width:38px;height:38px;border-radius:12px;border:none;cursor:pointer;
+            background:linear-gradient(135deg,#4B2E83 0%,#7c52c9 100%);color:#fff;
+            display:flex;align-items:center;justify-content:center;
+            box-shadow:0 4px 14px rgba(75,46,131,0.35);
+            transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s ease,background .25s ease;position:relative;overflow:hidden}
+        .pc-cart-btn:hover{transform:scale(1.12);box-shadow:0 8px 22px rgba(75,46,131,0.45);
+            background:linear-gradient(135deg,#ffb347 0%,#ff9500 100%)}
+        .pc-cart-btn:active{transform:scale(0.95)}
+        .pc-cart-btn i{font-size:15px;transition:transform .3s ease}
+        .pc-cart-btn:hover i{transform:rotate(-12deg) scale(1.1)}
+
+        /* ── Cart button ripple effect ── */
+        .pc-cart-btn::after{content:'';position:absolute;width:100%;height:100%;top:0;left:0;
+            background:radial-gradient(circle,rgba(255,255,255,0.3) 10%,transparent 70%);
+            transform:scale(0);transition:transform .4s ease;border-radius:12px}
+        .pc-cart-btn:active::after{transform:scale(2.5);transition:transform 0s}
+
+        /* ── Success state for cart button ── */
+        .pc-cart-btn.added{background:linear-gradient(135deg,#28a745 0%,#20c997 100%) !important;
+            box-shadow:0 4px 14px rgba(40,167,69,0.4) !important}
+
+        /* ── Stock Indicator Dot ── */
+        .pc-stock-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;flex-shrink:0}
+        .pc-stock-in{background:#28a745;box-shadow:0 0 6px rgba(40,167,69,0.5)}
+        .pc-stock-low{background:#ff9500;box-shadow:0 0 6px rgba(255,149,0,0.5)}
+        .pc-stock-out{background:#C4161C;box-shadow:0 0 6px rgba(196,22,28,0.5)}
+        .pc-stock{display:flex;align-items:center;font-size:10px;color:#888;font-weight:500;margin-top:6px}
+    </style>
+
+    <div class="pc-card">
+        <div class="pc-card-inner">
+
+            <!-- ── Image Section ── -->
+            <div class="pc-img-wrap">
+                <!-- Product image -->
+                <img th:if="${p.images != null and !#lists.isEmpty(p.images)}" th:src="${p.images.get(0).imageUrl}" alt="Product">
+                <img th:if="${p.images == null or #lists.isEmpty(p.images)}" th:src="@{/img/productplaceholder.png}" alt="Product">
+
+                <!-- Condition badge floating on top-left -->
+                <div class="pc-badge-row">
+                    <span class="pc-badge pc-badge-new" th:if="${p.condition != null and p.condition.name() == 'NEW'}">New</span>
+                    <span class="pc-badge pc-badge-used" th:if="${p.condition != null and p.condition.name() == 'USED'}">Used</span>
+                </div>
+
+                <!-- Wishlist heart floating on top-right -->
+                <button class="pc-heart" type="button" title="Save for later"><i class="fas fa-heart"></i></button>
+
+                <!-- Hover overlay with View Details link -->
+                <a class="pc-overlay" th:href="@{/products/{id}(id=${p.productId})}">
+                    <span class="pc-view-btn"><i class="fas fa-eye mr-1"></i> View Details</span>
+                </a>
+            </div>
+
+            <!-- ── Card Body ── -->
+            <div class="pc-body">
+                <!-- Category label -->
+                <span class="pc-category" th:if="${p.category != null}" th:text="${p.category.categoryName}">Category</span>
+
+                <!-- Product title — links to detail page -->
+                <a class="pc-title" th:href="@{/products/{id}(id=${p.productId})}" th:text="${p.title}">Product Title</a>
+
+                <!-- Rating stars -->
+                <div class="pc-stars" aria-label="Rating">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </div>
+
+                <!-- Price + Cart button row -->
+                <div class="pc-price-row">
+                    <span class="pc-price">
+                        <span class="pc-price-currency">RM</span>
+                        <span th:text="${#numbers.formatDecimal(p.price, 1, 2)}">0.00</span>
+                    </span>
+                    <button class="pc-cart-btn" type="button" title="Add to cart"
+                            th:data-product-id="${p.productId}"
+                            onclick="addToCartFromCard(this)">
+                        <i class="fas fa-shopping-bag"></i>
+                    </button>
+                </div>
+
+                <!-- Stock indicator -->
+                <div class="pc-stock" th:if="${p.quantity != null}">
+                    <span class="pc-stock-dot pc-stock-in" th:if="${p.quantity > 5}"></span>
+                    <span th:if="${p.quantity > 5}">In Stock</span>
+                    <span class="pc-stock-dot pc-stock-low" th:if="${p.quantity > 0 and p.quantity <= 5}"></span>
+                    <span th:if="${p.quantity > 0 and p.quantity <= 5}" th:text="'Only ' + ${p.quantity} + ' left'">Low Stock</span>
+                    <span class="pc-stock-dot pc-stock-out" th:if="${p.quantity == 0}"></span>
+                    <span th:if="${p.quantity == 0}">Out of Stock</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add to Cart AJAX handler (runs once) -->
+    <script>
+        if (!window._addToCartCardSetup) {
+            window._addToCartCardSetup = true;
+            window.addToCartFromCard = function(btn) {
+                var productId = btn.getAttribute('data-product-id');
+                // Disable button and show spinner.
+                btn.disabled = true;
+                var originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+                fetch('/cart/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'productId=' + productId + '&quantity=1'
+                })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        // Update header cart badge count everywhere.
+                        var badges = document.querySelectorAll('.cart-badge-count');
+                        badges.forEach(function(b) { b.textContent = data.cartCount; });
+                        // Show success checkmark with green glow.
+                        btn.classList.add('added');
+                        btn.innerHTML = '<i class="fas fa-check"></i>';
+                        setTimeout(function() {
+                            btn.innerHTML = originalHTML;
+                            btn.disabled = false;
+                            btn.classList.remove('added');
+                        }, 1800);
+                    } else if (data.redirect) {
+                        // Not logged in — go to login page.
+                        window.location.href = data.redirect;
+                    } else {
+                        alert(data.message || 'Could not add to cart.');
+                        btn.innerHTML = originalHTML;
+                        btn.disabled = false;
+                    }
+                })
+                .catch(function() {
+                    alert('Something went wrong. Please try again.');
+                    btn.innerHTML = originalHTML;
+                    btn.disabled = false;
+                });
+            };
+        }
+    </script>
+</div>

@@ -67,27 +67,6 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
             return LoginResult.failed("Invalid email or password");
         }
 
-        // Additional verification check for sellers: use helper isSellerApproved
-        if (user.getRole() == Role.SELLER) {
-
-            Optional<Seller> optionalSeller = sellerRepository.findByUser(user);
-
-            // Seller profile must exist
-            if (optionalSeller.isEmpty()) {
-                return LoginResult.failed("Seller profile not found");
-            }
-
-            Seller seller = optionalSeller.get();
-
-            // Seller must be approved by admin
-            if (seller.getStatus() == SellerStatus.PENDING) {
-                return LoginResult.failed("Seller account not yet verified");
-            }
-            // If seller was explicitly rejected, return a clear failure message so UI can show rejection flow
-            if (seller.getStatus() == SellerStatus.REJECTED) {
-                return LoginResult.failed("Seller account rejected");
-            }
-        }
 
         // Successful authentication result
         return LoginResult.success(
@@ -140,9 +119,8 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
         user.setMentorId(null);
 
         // Set defaults
-        if (user.getRole() == null) {
-            user.setRole(Role.BUYER);
-        }
+        // Registration no longer supports picking SELLER; everyone starts as a BUYER.
+        user.setRole(Role.BUYER);
         user.setCreatedAt(LocalDateTime.now());
 
         // Save user (no password hashing per request)
@@ -166,19 +144,18 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
         // Get user entity
         Users user = optionalUser.get(); // user entity
 
-
-        // Ensure user role is SELLER (or has selected seller role)
-        if (user.getRole() != Role.SELLER) {
-            // if user hasn't selected seller role, instruct to choose seller
-            throw new IllegalArgumentException("Your account is not set as a seller. Please choose Seller role during registration.");
+        // Buyer-first flow: user can request verification even if currently BUYER.
+        // If a seller profile exists:
+        // - PENDING/APPROVED => block duplicate submissions
+        // - REJECTED => allow resubmission by replacing docs and setting status back to PENDING
+        Optional<Seller> existingOpt = sellerRepository.findByUser(user);
+        if (existingOpt.isPresent()) {
+            Seller existing = existingOpt.get();
+            if (existing.getStatus() == SellerStatus.PENDING || existing.getStatus() == SellerStatus.APPROVED) {
+                throw new IllegalArgumentException("Seller profile already submitted and under review.");
+            }
+            // REJECTED flows into update/resubmission below.
         }
-
-        // Check if seller profile already exists for this user
-        if (sellerRepository.findByUser(user).isPresent()) {
-            // already submitted
-            throw new IllegalArgumentException("Seller profile already submitted and under review.");
-        }
-
 
         // Validate files
         if (idCardFile == null || idCardFile.isEmpty()) {
@@ -194,15 +171,32 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
             // Upload mynemo profile image to cloudinary and get URL
             String mynemoUrl = fileService.uploadImage(mynemoFile); // upload mynemo profile
 
-            // Build seller entity
-            Seller seller = new Seller(); // create seller object
-            seller.setUser(user); // associate user
-            seller.setIdCardImageUrl(idCardUrl); // set id card url
-            seller.setMynemoProfileUrl(mynemoUrl); // set mynemo url
-            seller.setStatus(SellerStatus.PENDING); // set pending status
+            Seller seller;
+            if (existingOpt.isPresent() && existingOpt.get().getStatus() == SellerStatus.REJECTED) {
+                // Resubmission: update existing seller record
+                seller = existingOpt.get();
+                seller.setIdCardImageUrl(idCardUrl);
+                seller.setMynemoProfileUrl(mynemoUrl);
+                seller.setStatus(SellerStatus.PENDING);
+                seller.setRejectionReason(null);
+            } else {
+                // New submission
+                seller = new Seller();
+                seller.setUser(user); // associate user
+                seller.setIdCardImageUrl(idCardUrl);
+                seller.setMynemoProfileUrl(mynemoUrl);
+                seller.setStatus(SellerStatus.PENDING);
+            }
+
+            // Mark account as SELLER once they request seller verification.
+            // They still can't access seller features until approved (handled elsewhere).
+            if (user.getRole() != Role.SELLER) {
+                user.setRole(Role.SELLER);
+                usersRepository.save(user);
+            }
 
             // Save seller to DB
-            return sellerRepository.save(seller); // persist and return seller
+            return sellerRepository.save(seller);
 
         } catch (DataIntegrityViolationException dive) {
             // translate DB uniqueness violation

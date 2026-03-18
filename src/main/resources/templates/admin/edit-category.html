@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edit Category — Admin</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link th:href="@{/css/admin.css}" rel="stylesheet" />
+
+    <style>
+        :root{
+            --umt-purple:#4B2E83;
+            --umt-orange:#F2B705;
+            --umt-blue:#2563eb;
+            --umt-red:#C4161C;
+            --bg:#f4f6fb;
+            --card:#ffffff;
+            --muted:#6b7280;
+            --shadow:0 10px 30px rgba(21,24,35,0.08);
+            --radius:16px;
+        }
+        body{margin:0;font-family:Inter,system-ui,Arial;background:var(--bg)}
+        .page{max-width:900px;margin:0 auto;padding:24px}
+
+        .top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+        .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(75,46,131,0.14);background:#fbfaff;color:var(--umt-purple);border-radius:999px;padding:7px 12px;font-weight:800;font-size:12px}
+        h1{margin:8px 0 0;font-size:22px;letter-spacing:-0.2px;color:#111827}
+        .muted{color:var(--muted);margin:6px 0 0}
+        .back a{color:var(--umt-blue);text-decoration:none;font-weight:900}
+        .back a:hover{text-decoration:underline}
+
+        .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(15,23,42,0.06)}
+        .card-body{padding:18px}
+
+        label{display:block;margin:10px 0 6px;font-weight:900;color:#111827;font-size:13px}
+        input, textarea{width:100%;border-radius:12px;border:1px solid rgba(15,23,42,0.12);padding:10px 12px;font-family:inherit;font-size:14px;outline:none;background:#fff}
+        textarea{min-height:130px;resize:vertical}
+        input:focus, textarea:focus{border-color:rgba(75,46,131,0.45);box-shadow:0 0 0 4px rgba(75,46,131,0.10)}
+
+        .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+        .btn{border:none;cursor:pointer;border-radius:12px;padding:10px 14px;font-weight:900;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+        .btn-primary{background:linear-gradient(90deg,var(--umt-orange),var(--umt-purple));color:#111827;box-shadow:0 10px 24px rgba(75,46,131,0.12)}
+        .btn-outline{background:transparent;border:1px solid rgba(15,23,42,0.12);color:#111827}
+
+        .alert{padding:10px 12px;border-radius:12px;border:1px solid rgba(196,22,28,0.25);background:rgba(196,22,28,0.08);margin-bottom:12px}
+        .alert b{margin-right:6px}
+    </style>
+</head>
+<body>
+
+<div class="page">
+    <div class="top">
+        <div>
+            <div class="pill">🗂️ Admin • Edit Category</div>
+            <h1 th:text="'Edit: ' + ${category.categoryName}">Edit category</h1>
+            <p class="muted">Update the category name or description, then save.</p>
+        </div>
+        <div class="back">
+            <a th:href="@{/admin/categories}">← Back to categories</a>
+        </div>
+    </div>
+
+    <div class="alert" th:if="${error != null}">
+        <b>Error:</b> <span th:text="${error}">Something went wrong</span>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form th:action="@{'/admin/categories/' + ${category.categoryId} + '/update'}" method="post">
+                <label for="categoryName">Category name</label>
+                <input id="categoryName" name="categoryName" type="text" th:value="${category.categoryName}" required />
+
+                <label for="description">Description</label>
+                <textarea id="description" name="description" th:text="${category.description}"></textarea>
+
+                <div class="actions">
+                    <a class="btn btn-outline" th:href="@{/admin/categories}">Cancel</a>
+                    <button class="btn btn-primary" type="submit">💾 Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body{background:linear-gradient(180deg, #f9fafb 0%, #ffffff 45%, #f6f3ff 100%);font-family:'Poppins',sans-serif}
+        .explore-title{display:flex;align-items:center;gap:10px}
+        .explore-title i{color:#ffb347}
+        .product-grid{display:grid;grid-template-columns:repeat(4, minmax(0,1fr));gap:20px}
+        @media (max-width: 1200px){.product-grid{grid-template-columns:repeat(3, minmax(0,1fr))}}
+        @media (max-width: 992px){.product-grid{grid-template-columns:repeat(2, minmax(0,1fr))}}
+        @media (max-width: 576px){.product-grid{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container-fluid pt-4 pb-5">
+    <div class="row px-xl-5">
+        <div class="col-12 d-flex align-items-center justify-content-between mb-3">
+            <h2 class="section-title text-uppercase mb-0 explore-title"><i class="fas fa-store"></i><span class="bg-secondary pr-3">Explore Products</span></h2>
+        </div>
+
+        <div class="col-12">
+            <div class="product-grid">
+                <div th:each="p : ${page.content}">
+                    <div th:replace="fragments/product-card :: card(${p})"></div>
+                </div>
+            </div>
+
+            <nav class="d-flex justify-content-center mt-4" th:if="${page.totalPages > 1}">
+                <ul class="pagination">
+                    <li class="page-item" th:classappend="${page.first} ? 'disabled'">
+                        <a class="page-link" th:href="@{/products(page=${page.number - 1}, size=${page.size})}">Prev</a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}" th:classappend="${i == page.number} ? 'active'">
+                        <a class="page-link" th:href="@{/products(page=${i}, size=${page.size})}" th:text="${i + 1}">1</a>
+                    </li>
+                    <li class="page-item" th:classappend="${page.last} ? 'disabled'">
+                        <a class="page-link" th:href="@{/products(page=${page.number + 1}, size=${page.size})}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
+</body>
+</html>

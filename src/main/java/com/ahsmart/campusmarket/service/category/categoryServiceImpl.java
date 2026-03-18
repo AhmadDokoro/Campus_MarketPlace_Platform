@@ -1,126 +1,124 @@
 package com.ahsmart.campusmarket.service.category;
 
-import com.ahsmart.campusmarket.exceptions.APIException;
-import com.ahsmart.campusmarket.exceptions.ResourceNotFoundException;
-import com.ahsmart.campusmarket.model.Category;
-import com.ahsmart.campusmarket.payloadDTOs.CategoryDTO;
-import com.ahsmart.campusmarket.payloadDTOs.CategoryResponseDTO;
-import com.ahsmart.campusmarket.repositories.CategoryRepository;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import com.ahsmart.campusmarket.model.Category;
+import com.ahsmart.campusmarket.repositories.CategoryRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
-public class categoryServiceImpl implements CategoryService{
+public class categoryServiceImpl implements CategoryService {
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    public categoryServiceImpl(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
-    //create category
     @Override
-    public CategoryDTO createCategory(CategoryDTO categoryDTO)
-    {
-        Category verifyCategoryExistence = categoryRepository.findByCategoryName(categoryDTO.getCategoryName());
-        //check it already exist
-        if(verifyCategoryExistence != null)
-        {
-            throw new APIException("Category with category name:   "+ categoryDTO.getCategoryName() +" already exist!!");
+    public List<Category> findAll() {
+        return categoryRepository.findAll(SortHelpers.byNameAsc());
+    }
+
+    @Override
+    public Optional<Category> findById(Long id) {
+        return categoryRepository.findById(id);
+    }
+
+    @Override
+    @Transactional
+    public Category create(String name, String description) {
+        String normalized = normalizeName(name);
+
+        if (categoryRepository.findByCategoryName(normalized) != null) {
+            throw new IllegalArgumentException("Category name already exists");
         }
 
-        // convert to entity type for saving
-        Category category = modelMapper.map(categoryDTO, Category.class);
-        Category savedCategory = categoryRepository.save(category);
+        Category c = new Category();
+        c.setCategoryName(normalized);
+        c.setDescription(normalizeDescription(description));
 
-        //convert to categoryDTO type for response
-        return modelMapper.map(savedCategory, CategoryDTO.class);
+        try {
+            return categoryRepository.save(c);
+        } catch (DataIntegrityViolationException dive) {
+            throw new IllegalArgumentException("Category name already exists");
+        }
     }
 
-
-
-    //get all category
     @Override
-    public CategoryResponseDTO getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder)
-    {
-        //define sorting object with the data
-        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")?
-                Sort.by(sortBy).ascending() //sort ascending
-                : Sort.by(sortBy).descending(); // sort descending
+    @Transactional
+    public Category update(Long id, String name, String description) {
+        Category existing = categoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
-        // set our paging info by passing how the pages should be.
-        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
-        Page<Category> pageOfData = categoryRepository.findAll(pageDetails); //will return a list of data based on the page setting. but of page category type
-
-        List<Category> categories = pageOfData.getContent(); // convert them to List of category.
-        // check if it's empty
-        if(categories.isEmpty())
-        {
-            throw new APIException("No category is found!!");
+        String normalized = normalizeName(name);
+        Category dup = categoryRepository.findByCategoryName(normalized);
+        if (dup != null && !dup.getCategoryId().equals(id)) {
+            throw new IllegalArgumentException("Category name already exists");
         }
 
-        // convert the list gotten into categoryDTO object
-        List<CategoryDTO> categoryDTO = categories.stream()
-            .map(category -> modelMapper.map(category, CategoryDTO.class))
-            .toList();
+        existing.setCategoryName(normalized);
+        existing.setDescription(normalizeDescription(description));
 
-        // create a responseDTO object and set it data
-        CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
-        categoryResponseDTO.setContents(categoryDTO);
-        categoryResponseDTO.setPageNumber(pageOfData.getNumber());
-        categoryResponseDTO.setPageSize(pageOfData.getSize());
-        categoryResponseDTO.setTotalPages(pageOfData.getTotalPages());
-        categoryResponseDTO.setTotalElements(pageOfData.getTotalElements());
-        categoryResponseDTO.setLastPage(pageOfData.isLast());
-
-
-        // return the Dto for response
-        return categoryResponseDTO;
+        try {
+            return categoryRepository.save(existing);
+        } catch (DataIntegrityViolationException dive) {
+            throw new IllegalArgumentException("Category name already exists");
+        }
     }
 
-
-
-    //update category
     @Override
-    public CategoryDTO updateCategory(CategoryDTO categoryDTO, Long categoryId)
-    {
-        //get the category using it id or throw exception if absent
-        Category savedCategory = categoryRepository.findById(categoryId)   //custom exception i defined
-                .orElseThrow(() -> new ResourceNotFoundException("Category","category name",categoryDTO.getCategoryName()));
+    @Transactional
+    public void deleteIfNoProducts(Long id) {
+        Category existing = categoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
-        // convert the DTO to main chategory for saving
-        Category category = modelMapper.map(categoryDTO, Category.class);
-        category.setCategoryId(categoryId); //set the id for updating purpose
+        // Safety: if referenced by products, don't delete.
+        if (existing.getProducts() != null && !existing.getProducts().isEmpty()) {
+            throw new IllegalArgumentException("This category has products. Remove/move products before deleting.");
+        }
 
-        //save and convert the updatedCategory object it returns to CategoryDTO for return.
-        return modelMapper.map(categoryRepository.save(category), CategoryDTO.class);
+        categoryRepository.delete(existing);
     }
 
-
-
-    //delete category
     @Override
-    public CategoryDTO deleteCategory(Long id)
-    {
-        //get the category using it id or throw exception if absent
-        Category categoryToDelete = categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Category", "Category id", id));
-
-        //delete the category
-        categoryRepository.delete(categoryToDelete);
-
-        // convert the categoryToDelete object into categoryDTO and return it.
-        return  modelMapper.map(categoryToDelete, CategoryDTO.class);
-
+    public List<Category> getTopCategories(int limit) {
+        // Get the most recent categories by id to keep the homepage fresh.
+        return categoryRepository.findAllByOrderByCategoryIdDesc(
+                org.springframework.data.domain.PageRequest.of(0, Math.max(1, limit))
+        );
     }
 
+    private String normalizeName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Category name is required");
+        }
+        String trimmed = name.trim();
+        if (trimmed.length() < 3 || trimmed.length() > 100) {
+            throw new IllegalArgumentException("Category name must be between 3 and 100 characters");
+        }
+        return trimmed;
+    }
+
+    private String normalizeDescription(String description) {
+        if (description == null) return null;
+        String trimmed = description.trim();
+        if (trimmed.isEmpty()) return null;
+        if (trimmed.length() > 255) {
+            throw new IllegalArgumentException("Description must be 255 characters or less");
+        }
+        return trimmed;
+    }
+
+    /** Small local helper to avoid touching wider style/utility code. */
+    private static final class SortHelpers {
+        private static org.springframework.data.domain.Sort byNameAsc() {
+            return org.springframework.data.domain.Sort.by("categoryName").ascending();
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.ahsmart.campusmarket.service.admin;
 import com.ahsmart.campusmarket.helper.EmailHelper;
 import com.ahsmart.campusmarket.model.Seller;
 import com.ahsmart.campusmarket.model.Users;
+import com.ahsmart.campusmarket.model.enums.Role;
 import com.ahsmart.campusmarket.model.enums.SellerStatus;
 import com.ahsmart.campusmarket.repositories.SellerRepository;
 import com.ahsmart.campusmarket.repositories.UsersRepository;
@@ -52,6 +53,14 @@ public class AdminServiceImpl implements AdminService {
         // Keep rejectionReason ONLY for rejected sellers.
         if (status == SellerStatus.APPROVED) {
             seller.setRejectionReason(null);
+
+            // IMPORTANT: when seller gets approved, promote the user role to SELLER.
+            Users u = seller.getUser();
+            if (u != null && u.getRole() != Role.SELLER) {
+                u.setRole(Role.SELLER);
+                usersRepository.save(u);
+            }
+
             emailHelper.sendEmail(
                 seller.getUser().getEmail(),
                 "Seller Verification Approved – Campus Marketplace Platform",

@@ -10,19 +10,20 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 @Table(name = "categories")
 public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
     private Long categoryId;
 
     @NotBlank
-    @Size(min = 3, max = 100, message = "category name must be between 3 and 100 characters")
+    @Size(min = 3, max = 100)
     @Column(name = "category_name", length = 100, nullable = false, unique = true)
     private String categoryName;
 
@@ -30,7 +31,7 @@ public class Category {
     @Column(name = "description", length = 255)
     private String description;
 
-    // relate with product one to many
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
 }
+

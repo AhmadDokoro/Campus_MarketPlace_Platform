@@ -33,4 +33,6 @@ build/
 .vscode/
 
 ### Spring Boot config ###
-src/main/resources/application*.properties
+# Keep the main application.properties in git for development.
+# Ignore only environment-specific overrides.
+src/main/resources/application-*.properties

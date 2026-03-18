@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root{
+            --primary:#4B2E83;
+            --accent:#F2B705;
+            --muted:#6b7280;
+            --card:#ffffff;
+            --bg:#f6f7fb;
+            --shadow:0 12px 28px rgba(15,23,42,0.08);
+            --radius:16px;
+        }
+
+        body{background:var(--bg);font-family:'Poppins',sans-serif}
+
+        .page-wrap{padding:24px 12px}
+        .hub{max-width:980px;margin:0 auto}
+
+        .top-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+        .title h2{margin:0;color:#111827;font-size:22px;letter-spacing:-0.2px}
+        .title p{margin:6px 0 0;color:var(--muted)}
+
+        /* Profile icon + dropdown */
+        .profile-area{display:flex;align-items:center;gap:10px}
+        .profile-btn{border:none;background:transparent;cursor:pointer;display:inline-flex;align-items:center;gap:10px}
+        .avatar{width:44px;height:44px;border-radius:999px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px rgba(75,46,131,0.18)}
+        .avatar i{font-size:20px;color:#fff}
+
+        .profile-card{position:relative}
+        .dropdown{display:none;position:absolute;right:0;top:54px;width:280px;background:var(--card);border-radius:14px;box-shadow:var(--shadow);border:1px solid rgba(15,23,42,0.08);padding:14px;z-index:20}
+        .dropdown.open{display:block}
+        .dropdown .line{margin-bottom:10px}
+        .dropdown .label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+        .dropdown .value{font-size:14px;color:#111827;font-weight:800;word-break:break-word}
+
+        /* Subtle Start selling icon button */
+        .start-selling{border:none;background:transparent;cursor:pointer;display:inline-flex;align-items:center;gap:8px;color:rgba(17,24,39,0.65);font-weight:800;font-size:13px;padding:8px 10px;border-radius:999px;text-decoration:none}
+        .start-selling:hover{background:rgba(75,46,131,0.06);color:#111827;text-decoration:none}
+
+        .grid{display:grid;grid-template-columns:1fr;gap:16px}
+
+        .panel{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(15,23,42,0.06);padding:22px}
+
+        /* Order tracker section */
+        .tracker-title{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+        .tracker-title h3{margin:0;font-size:17px;color:#111827;font-weight:700}
+        .tracker-title .muted{margin-left:auto;color:var(--muted);font-size:13px}
+
+        .steps{display:flex;align-items:flex-start;justify-content:space-between;gap:0;flex-wrap:nowrap}
+        .step{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;text-decoration:none;color:inherit;padding:8px 4px;border-radius:14px;transition:background .2s}
+        .step:hover{background:rgba(75,46,131,0.04);text-decoration:none;color:inherit}
+        .node{width:48px;height:48px;border-radius:999px;display:flex;align-items:center;justify-content:center;position:relative;transition:transform .2s}
+        .step:hover .node{transform:scale(1.08)}
+        .node i{font-size:22px}
+        .node-pending{background:rgba(255,179,71,0.15);border:2px solid rgba(255,179,71,0.3)}
+        .node-pending i{color:#e6930a}
+        .node-placed{background:rgba(75,46,131,0.1);border:2px solid rgba(75,46,131,0.2)}
+        .node-placed i{color:#4B2E83}
+        .node-campus{background:rgba(59,130,246,0.1);border:2px solid rgba(59,130,246,0.2)}
+        .node-campus i{color:#3b82f6}
+        .node-delivered{background:rgba(40,167,69,0.1);border:2px solid rgba(40,167,69,0.2)}
+        .node-delivered i{color:#28a745}
+
+        /* Count badge on node */
+        .count-badge{position:absolute;top:-4px;right:-6px;min-width:20px;height:20px;border-radius:999px;
+            font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;
+            color:#fff;padding:0 5px;box-shadow:0 2px 6px rgba(0,0,0,0.15)}
+        .count-pending{background:linear-gradient(135deg,#ff9500,#e6930a)}
+        .count-placed{background:linear-gradient(135deg,#4B2E83,#7c52c9)}
+        .count-campus{background:linear-gradient(135deg,#3b82f6,#2563eb)}
+        .count-delivered{background:linear-gradient(135deg,#28a745,#20c997)}
+
+        .step .name{margin-top:10px;font-weight:700;font-size:12px;color:#111827}
+        .step .desc{margin-top:3px;font-size:11px;color:var(--muted);line-height:1.3}
+
+        .connector{height:2px;flex:0 0 30px;background:linear-gradient(90deg, rgba(75,46,131,0.2), rgba(242,183,5,0.3));border-radius:999px;margin-top:24px}
+
+        /* Quick links */
+        .link-list{display:flex;flex-direction:column;gap:10px}
+        .link-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-radius:14px;border:1px solid rgba(15,23,42,0.06);background:rgba(255,255,255,0.7);text-decoration:none;color:#111827;font-weight:700;transition:all .2s}
+        .link-item:hover{border-color:rgba(75,46,131,0.22);background:rgba(75,46,131,0.02);text-decoration:none;color:#111827}
+        .link-item .left{display:flex;align-items:center;gap:10px}
+        .icon-pill{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px}
+        .icon-pill-orders{background:rgba(242,183,5,0.2);color:#b8860b}
+        .icon-pill-seller{background:rgba(75,46,131,0.12);color:#4B2E83}
+        .chev{opacity:.4;font-size:18px}
+
+        .note{margin-top:12px;color:var(--muted);font-size:12px}
+
+        @media (max-width:600px){
+            .steps{gap:0}
+            .connector{flex:0 0 12px}
+            .node{width:40px;height:40px}
+            .node i{font-size:18px}
+            .step .name{font-size:11px}
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div class="page-wrap">
+    <div class="hub">
+
+        <div class="top-row">
+            <div class="title">
+                <h2>My Profile</h2>
+                <p>Track your orders and manage your selling access from here.</p>
+            </div>
+
+            <div class="profile-area">
+                <!-- Subtle start selling CTA -->
+                <a class="start-selling" th:href="@{/user/start-selling}" title="Start selling">
+                    <i class="bi bi-shop"></i>
+                    <span>Start selling</span>
+                </a>
+
+                <div class="profile-card">
+                    <button type="button" class="profile-btn" id="profileToggle" aria-haspopup="true" aria-expanded="false">
+                        <span class="avatar" aria-hidden="true">
+                            <i class="bi bi-person-fill"></i>
+                        </span>
+                    </button>
+
+                    <div class="dropdown" id="profileDropdown">
+                        <div class="line">
+                            <div class="label">Name</div>
+                            <div class="value" th:text="${session.userName}">User</div>
+                        </div>
+                        <div class="line" style="margin-bottom:0">
+                            <div class="label">Email</div>
+                            <div class="value" th:text="${session.userEmail != null ? session.userEmail : '—'}">—</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+
+            <!-- Order Tracking Section -->
+            <div class="panel">
+                <div class="tracker-title">
+                    <h3><i class="bi bi-box-seam" style="color:var(--accent);margin-right:6px"></i>Order Tracking</h3>
+                    <a th:href="@{/orders/history}" class="muted" style="text-decoration:none">View all orders <i class="bi bi-arrow-right"></i></a>
+                </div>
+
+                <div class="steps" aria-label="Order tracking steps">
+
+                    <!-- Step 0: Pending Payment -->
+                    <a class="step" th:href="@{/orders/history(filter='pending_payment')}">
+                        <div class="node node-pending">
+                            <i class="bi bi-hourglass-split"></i>
+                            <span class="count-badge count-pending" th:if="${pendingPaymentCount > 0}" th:text="${pendingPaymentCount}">0</span>
+                        </div>
+                        <div class="name">Pending Payment</div>
+                        <div class="desc">Complete your payment</div>
+                    </a>
+
+                    <div class="connector" aria-hidden="true"></div>
+
+                    <!-- Step 1: Order Placed -->
+                    <a class="step" th:href="@{/orders/history(filter='placed')}">
+                        <div class="node node-placed">
+                            <i class="bi bi-bag-check-fill"></i>
+                            <span class="count-badge count-placed" th:if="${placedCount > 0}" th:text="${placedCount}">0</span>
+                        </div>
+                        <div class="name">Order Placed</div>
+                        <div class="desc">Confirmed &amp; paid</div>
+                    </a>
+
+                    <div class="connector" aria-hidden="true"></div>
+
+                    <!-- Step 2: In Campus -->
+                    <a class="step" th:href="@{/orders/history(filter='in_campus')}">
+                        <div class="node node-campus">
+                            <i class="bi bi-building"></i>
+                            <span class="count-badge count-campus" th:if="${inCampusCount > 0}" th:text="${inCampusCount}">0</span>
+                        </div>
+                        <div class="name">In Campus</div>
+                        <div class="desc">On the way to you</div>
+                    </a>
+
+                    <div class="connector" aria-hidden="true"></div>
+
+                    <!-- Step 3: Delivered (last 3 days) -->
+                    <a class="step" th:href="@{/orders/history(filter='delivered')}">
+                        <div class="node node-delivered">
+                            <i class="bi bi-check2-all"></i>
+                            <span class="count-badge count-delivered" th:if="${deliveredCount > 0}" th:text="${deliveredCount}">0</span>
+                        </div>
+                        <div class="name">Delivered</div>
+                        <div class="desc">Last 3 days</div>
+                    </a>
+
+                </div>
+            </div>
+
+            <!-- Quick Actions Section -->
+            <div class="panel">
+                <div class="tracker-title">
+                    <h3><i class="bi bi-lightning" style="color:var(--accent);margin-right:6px"></i>Quick Actions</h3>
+                </div>
+
+                <div class="link-list">
+                    <a class="link-item" th:href="@{/orders/history}">
+                        <span class="left">
+                            <span class="icon-pill icon-pill-orders"><i class="bi bi-receipt"></i></span>
+                            <span>All My Orders</span>
+                        </span>
+                        <span class="chev"><i class="bi bi-chevron-right"></i></span>
+                    </a>
+
+                    <a class="link-item" th:href="@{/user/start-selling}">
+                        <span class="left">
+                            <span class="icon-pill icon-pill-seller"><i class="bi bi-shop-window"></i></span>
+                            <span>Seller Page</span>
+                        </span>
+                        <span class="chev"><i class="bi bi-chevron-right"></i></span>
+                    </a>
+                </div>
+
+                <div class="note"><i class="bi bi-info-circle" style="margin-right:4px"></i>Seller access requires verification. Clicking "Start selling" will guide you.</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<script>
+    (function(){
+        var toggle = document.getElementById('profileToggle');
+        var dropdown = document.getElementById('profileDropdown');
+        if(!toggle || !dropdown) return;
+
+        function close(){ dropdown.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
+        function open(){ dropdown.classList.add('open'); toggle.setAttribute('aria-expanded','true'); }
+
+        toggle.addEventListener('click', function(e){
+            e.stopPropagation();
+            if(dropdown.classList.contains('open')) close(); else open();
+        });
+
+        document.addEventListener('click', function(){ close(); });
+        document.addEventListener('keydown', function(e){
+            if(e.key === 'Escape') close();
+        });
+    })();
+</script>
+
+</body>
+</html>
+
