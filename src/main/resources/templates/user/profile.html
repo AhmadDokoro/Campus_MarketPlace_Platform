@@ -314,6 +314,13 @@
                                    th:href="@{/chat/order-item/{orderItemId}/page(orderItemId=${item.orderItemId})}">
                                     <i class="bi bi-chat-left-text"></i> Chat
                                 </a>
+                                <form th:action="@{/orders/items/{orderItemId}/received(orderItemId=${item.orderItemId})}"
+                                      method="post"
+                                      style="margin:0">
+                                    <button type="submit" class="btn btn-sm btn-outline-dark">
+                                        Mark as Received
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

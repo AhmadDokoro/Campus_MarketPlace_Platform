@@ -188,6 +188,20 @@ public class OrderController {
         return "order/history";
     }
 
+    @PostMapping("/items/{orderItemId}/received")
+    public String markOrderItemReceived(@PathVariable Long orderItemId, HttpSession session) {
+        Long userId = resolveUserId(session);
+        if (userId == null) return "redirect:/signin";
+
+        try {
+            orderService.markOrderItemReceived(orderItemId, userId);
+        } catch (IllegalArgumentException ignored) {
+            // Buyer profile should simply reload without crashing on invalid transitions.
+        }
+
+        return "redirect:/user/profile";
+    }
+
     // Displays a single order's full detail page.
     @GetMapping("/{orderId}")
     public String showOrderDetail(@PathVariable Long orderId, HttpSession session, Model model) {

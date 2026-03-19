@@ -26,6 +26,8 @@ public interface OrderService {
 
     void updateDeliveryStatus(Long orderItemId, Long sellerId, com.ahsmart.campusmarket.model.enums.DeliveryStatus newStatus);
 
+    void markOrderItemReceived(Long orderItemId, Long buyerUserId);
+
     UserAddress getBuyerAddress(Long orderItemId, Long sellerId);
 
     // Creates a new order from the buyer's cart items and returns the saved order.

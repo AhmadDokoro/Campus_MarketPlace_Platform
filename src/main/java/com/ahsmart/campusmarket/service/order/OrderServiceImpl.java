@@ -115,7 +115,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         DeliveryStatus currentStatus = orderItem.getDeliveryStatus();
-        if (currentStatus == DeliveryStatus.DELIVERED) {
+        if (currentStatus == DeliveryStatus.DELIVERED || currentStatus == DeliveryStatus.RECEIVED) {
             throw new IllegalArgumentException("Delivered order items cannot be updated again.");
         }
         if (currentStatus == DeliveryStatus.PENDING && newStatus != DeliveryStatus.IN_CAMPUS) {
@@ -126,6 +126,30 @@ public class OrderServiceImpl implements OrderService {
         }
 
         orderItem.setDeliveryStatus(newStatus);
+        orderItemRepository.save(orderItem);
+    }
+
+    @Override
+    @Transactional
+    public void markOrderItemReceived(Long orderItemId, Long buyerUserId) {
+        if (orderItemId == null) {
+            throw new IllegalArgumentException("Order item id is required.");
+        }
+        if (buyerUserId == null) {
+            throw new IllegalArgumentException("Buyer user id is required.");
+        }
+
+        OrderItem orderItem = orderItemRepository.findByIdWithOrderBuyerAndSeller(orderItemId)
+                .orElseThrow(() -> new IllegalArgumentException("Order item not found."));
+
+        if (!orderItem.getOrder().getBuyer().getUserId().equals(buyerUserId)) {
+            throw new IllegalArgumentException("You cannot access another buyer's order item.");
+        }
+        if (orderItem.getDeliveryStatus() != DeliveryStatus.DELIVERED) {
+            throw new IllegalArgumentException("Only delivered order items can be marked as received.");
+        }
+
+        orderItem.setDeliveryStatus(DeliveryStatus.RECEIVED);
         orderItemRepository.save(orderItem);
     }
 

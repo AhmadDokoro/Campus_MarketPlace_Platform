@@ -4,6 +4,7 @@ package com.ahsmart.campusmarket.model.enums;
 public enum DeliveryStatus {
     PENDING,
     IN_CAMPUS,
-    DELIVERED
+    DELIVERED,
+    RECEIVED
 }
 
