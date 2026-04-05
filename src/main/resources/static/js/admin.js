@@ -1,11 +1,9 @@
 // admin.js
-// Lightweight interactive behavior and charts for admin dashboard.
-// No backend; stub actions simulate expected flows.
+// Interactive behavior and charts for the admin dashboard.
+// Stat card values and chart data come from window.adminData injected by Thymeleaf.
 
-// ===== sample data (should be replaced by real backend responses) =====
+// ===== stub data used only for verification queue and flagged products previews =====
 const sample = {
-  totals: { users: 3240, sellers: 412, verifiedSellers: 298, listings: 2134, flagged: 12, sales: 1824 },
-  monthlyListings: [90,120,150,200,180,220,240,210,200,230,260,280],
   verificationQueue:[
     {id:101,name:"Aisha B",studentId:"UMT001",submitted:"2025-11-23",doc:"id_aisha.png"},
     {id:102,name:"Ibrahim S",studentId:"UMT089",submitted:"2025-11-25",doc:"id_ibrahim.png"}
@@ -20,14 +18,29 @@ const sample = {
   ]
 };
 
-// ===== populate stat cards =====
-document.addEventListener('DOMContentLoaded',function(){
-  document.getElementById('statUsers').textContent = sample.totals.users.toLocaleString();
-  document.getElementById('statSellers').textContent = sample.totals.sellers;
-  document.getElementById('statVerified').textContent = sample.totals.verifiedSellers;
-  document.getElementById('statListings').textContent = sample.totals.listings;
-  document.getElementById('statFlagged').textContent = sample.totals.flagged;
-  document.getElementById('statSales').textContent = sample.totals.sales;
+// ===== counter animation =====
+function animateCount(el, target) {
+  var start = 0;
+  var duration = 900;
+  var startTime = null;
+  function step(timestamp) {
+    if (!startTime) startTime = timestamp;
+    var progress = Math.min((timestamp - startTime) / duration, 1);
+    var eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+    var current = Math.round(eased * target);
+    el.textContent = current.toLocaleString();
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// ===== on DOM ready =====
+document.addEventListener('DOMContentLoaded', function() {
+  // Animate all stat counters from data-target attribute (set by Thymeleaf)
+  document.querySelectorAll('[data-target]').forEach(function(el) {
+    var target = parseInt(el.getAttribute('data-target'), 10) || 0;
+    animateCount(el, target);
+  });
 
   renderVerificationTable();
   renderFlaggedTable();
@@ -108,48 +121,71 @@ function deleteListing(id){
   showToast('Listing deleted (id: '+id+')', 'danger');
 }
 
-// ===== charts =====
+// ===== charts (data from window.adminData injected by Thymeleaf) =====
 function renderCharts(){
-  const ctx = document.getElementById('chartListings').getContext('2d');
-  new Chart(ctx, {
-    type:'line',
-    data:{
-      labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-      datasets:[{
-        label:'Listings',
-        data: sample.monthlyListings,
-        borderColor:'#1f2937',
-        backgroundColor:'rgba(31,41,55,0.06)',
-        tension:0.35,
-        pointRadius:3,
-        pointBackgroundColor:'#111827',
-        fill:true
-      }]
-    },
-    options:{
-      responsive:true,
-      plugins:{legend:{display:false}},
-      scales:{
-        x:{grid:{display:false}},
-        y:{beginAtZero:true}
-      }
-    }
-  });
+  var d = window.adminData || {};
+  var weeklyLabels = d.weeklyLabels || [];
+  var weeklyCounts = d.weeklyCounts || [];
+  var approved     = d.verificationApproved || 0;
+  var pending      = d.verificationPending  || 0;
+  var rejected     = d.verificationRejected || 0;
 
-  const ctx2 = document.getElementById('chartVerification').getContext('2d');
-  const verified = sample.totals.verifiedSellers;
-  const notVerified = sample.totals.sellers - sample.totals.verifiedSellers;
-  new Chart(ctx2, {
-    type:'doughnut',
-    data:{
-      labels:['Verified','Not Verified'],
-      datasets:[{
-        data:[verified, notVerified],
-        backgroundColor:[ 'rgba(75,46,131,0.9)','rgba(242,183,5,0.9)']
-      }]
-    },
-    options:{plugins:{legend:{position:'bottom'}}}
-  });
+  // Weekly listings — line chart
+  var ctxLine = document.getElementById('chartListings');
+  if(ctxLine){
+    new Chart(ctxLine.getContext('2d'), {
+      type:'line',
+      data:{
+        labels: weeklyLabels,
+        datasets:[{
+          label:'Listings',
+          data: weeklyCounts,
+          borderColor:'#4B2E83',
+          backgroundColor:'rgba(75,46,131,0.08)',
+          tension:0.4,
+          pointRadius:4,
+          pointBackgroundColor:'#4B2E83',
+          pointBorderColor:'#fff',
+          pointBorderWidth:2,
+          fill:true
+        }]
+      },
+      options:{
+        responsive:true,
+        plugins:{legend:{display:false}},
+        scales:{
+          x:{grid:{display:false}, ticks:{font:{size:12}}},
+          y:{beginAtZero:true, grid:{color:'rgba(0,0,0,0.04)'}, ticks:{font:{size:12}}}
+        }
+      }
+    });
+  }
+
+  // Verification status — donut chart (3 slices: Approved / Pending / Rejected)
+  var ctxDonut = document.getElementById('chartVerification');
+  if(ctxDonut){
+    new Chart(ctxDonut.getContext('2d'), {
+      type:'doughnut',
+      data:{
+        labels:['Approved','Pending','Rejected'],
+        datasets:[{
+          data:[approved, pending, rejected],
+          backgroundColor:['rgba(34,197,94,0.85)','rgba(242,183,5,0.85)','rgba(196,22,28,0.85)'],
+          borderWidth:2,
+          borderColor:'#fff'
+        }]
+      },
+      options:{
+        cutout:'68%',
+        plugins:{
+          legend:{
+            position:'bottom',
+            labels:{font:{size:12},padding:12,usePointStyle:true}
+          }
+        }
+      }
+    });
+  }
 }
 
 // ===== small toast CSS injection (runtime) =====

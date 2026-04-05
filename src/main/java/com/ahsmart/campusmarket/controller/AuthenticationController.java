@@ -51,14 +51,11 @@ public class AuthenticationController {
     public String indexPage(Model model) {
         // Load top categories and featured products for the homepage.
         java.util.List<com.ahsmart.campusmarket.model.Category> topCategories = categoryService.getTopCategories(7);
-        java.util.Map<Long, Long> categoryCounts = new java.util.HashMap<>();
-        // Build per-category product counts for the homepage cards.
-        for (com.ahsmart.campusmarket.model.Category category : topCategories) {
-            categoryCounts.put(category.getCategoryId(), productService.countProductsByCategoryId(category.getCategoryId()));
-        }
+        // Single GROUP BY query replaces the previous N per-category COUNT loop.
+        java.util.Map<Long, Long> categoryCounts = productService.getCategoryCountMap();
         model.addAttribute("topCategories", topCategories);
         model.addAttribute("categoryCounts", categoryCounts);
-        model.addAttribute("featuredProducts", productService.getFeaturedProducts(8));
+        model.addAttribute("featuredProducts", productService.getFeaturedProducts(20));
         return "index"; // render the main index template after splash
     }
 

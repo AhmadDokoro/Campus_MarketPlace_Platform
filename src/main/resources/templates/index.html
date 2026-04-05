@@ -49,7 +49,7 @@
         .category-scroll::-webkit-scrollbar{height:8px}
         .category-scroll::-webkit-scrollbar-thumb{background:#c9ccd1;border-radius:999px}
         .category-scroll::-webkit-scrollbar-track{background:#f3f4f6;border-radius:999px}
-        .category-card{min-width:220px;scroll-snap-align:start;transition:transform .2s ease, box-shadow .2s ease}
+        .category-card{width:220px;min-width:220px;flex-shrink:0;scroll-snap-align:start;transition:transform .2s ease, box-shadow .2s ease}
         .category-card:hover{transform:translateY(-4px);box-shadow:0 14px 24px rgba(76,29,149,0.18)}
         .category-pill{
             background:linear-gradient(135deg, rgba(75,46,131,0.12), rgba(255,214,102,0.14), rgba(255,159,67,0.16));
@@ -59,6 +59,10 @@
             box-shadow:0 10px 22px rgba(76,29,149,0.12);
             position:relative;
             overflow:hidden;
+            height:80px;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
         }
         .category-pill::before{
             content:"\f02b";
@@ -191,7 +195,7 @@
         <a class="btn btn-outline-primary" th:href="@{/products}"><i class="fas fa-store mr-2"></i>View all</a>
     </div>
     <div class="row px-xl-5 product-grid">
-        <div class="product-card-col" th:each="p : ${featuredProducts}">
+        <div class="product-card-col" th:each="p, stat : ${featuredProducts}" th:if="${stat.index < 10}">
             <div th:replace="fragments/product-card :: card(${p})"></div>
         </div>
     </div>
@@ -219,6 +223,18 @@
                     <a th:href="@{/products}" class="btn btn-primary">Explore</a>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid pt-5 pb-3 home-products">
+    <div class="d-flex align-items-center justify-content-between mx-xl-5 mb-4">
+        <h2 class="section-title position-relative text-uppercase mb-0"><span class="bg-secondary pr-3"><i class="fas fa-gem section-icon"></i>More Discoveries</span></h2>
+        <a class="btn btn-outline-primary" th:href="@{/products}"><i class="fas fa-store mr-2"></i>Explore More</a>
+    </div>
+    <div class="row px-xl-5 product-grid">
+        <div class="product-card-col" th:each="p, stat : ${featuredProducts}" th:if="${stat.index >= 10 and stat.index < 20}">
+            <div th:replace="fragments/product-card :: card(${p})"></div>
         </div>
     </div>
 </div>

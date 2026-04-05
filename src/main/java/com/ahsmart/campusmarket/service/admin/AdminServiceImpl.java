@@ -3,26 +3,45 @@ package com.ahsmart.campusmarket.service.admin;
 import com.ahsmart.campusmarket.helper.EmailHelper;
 import com.ahsmart.campusmarket.model.Seller;
 import com.ahsmart.campusmarket.model.Users;
+import com.ahsmart.campusmarket.model.enums.DeliveryStatus;
 import com.ahsmart.campusmarket.model.enums.Role;
 import com.ahsmart.campusmarket.model.enums.SellerStatus;
+import com.ahsmart.campusmarket.payloadDTOs.admin.CategoryStatsDTO;
+import com.ahsmart.campusmarket.payloadDTOs.admin.SellerStatDTO;
+import com.ahsmart.campusmarket.payloadDTOs.admin.WeeklyListingDTO;
+import com.ahsmart.campusmarket.repositories.OrderItemRepository;
+import com.ahsmart.campusmarket.repositories.ProductRepository;
 import com.ahsmart.campusmarket.repositories.SellerRepository;
 import com.ahsmart.campusmarket.repositories.UsersRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.sql.Timestamp;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.WeekFields;
+import java.util.*;
 
 @Service
 public class AdminServiceImpl implements AdminService {
 
     private final SellerRepository sellerRepository;
     private final UsersRepository usersRepository;
+    private final ProductRepository productRepository;
+    private final OrderItemRepository orderItemRepository;
     private final EmailHelper emailHelper;
 
-    public AdminServiceImpl(SellerRepository sellerRepository, UsersRepository usersRepository, EmailHelper emailHelper) {
-        this.sellerRepository = sellerRepository; // assign seller repo
-        this.usersRepository = usersRepository; // assign users repo
+    public AdminServiceImpl(SellerRepository sellerRepository,
+                            UsersRepository usersRepository,
+                            ProductRepository productRepository,
+                            OrderItemRepository orderItemRepository,
+                            EmailHelper emailHelper) {
+        this.sellerRepository = sellerRepository;
+        this.usersRepository = usersRepository;
+        this.productRepository = productRepository;
+        this.orderItemRepository = orderItemRepository;
         this.emailHelper = emailHelper;
     }
 
@@ -72,6 +91,108 @@ public class AdminServiceImpl implements AdminService {
         }
 
         return sellerRepository.save(seller);
+    }
+
+    // ── Analytics implementations ──────────────────────────────────────
+
+    @Override
+    public long getTotalUsers() {
+        return usersRepository.count();
+    }
+
+    @Override
+    public long getTotalSellers() {
+        return sellerRepository.count();
+    }
+
+    @Override
+    public long getVerifiedSellers() {
+        return sellerRepository.countByStatus(SellerStatus.APPROVED);
+    }
+
+    @Override
+    public long getActiveListings() {
+        return productRepository.count();
+    }
+
+    @Override
+    public long getTotalSales() {
+        return orderItemRepository.countByDeliveryStatus(DeliveryStatus.RECEIVED);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<WeeklyListingDTO> getWeeklyListings() {
+        List<Object[]> rows = productRepository.countProductsPerWeekLast8();
+        Map<Integer, Long> countByYw = new HashMap<>();
+        for (Object[] row : rows) {
+            int yw = ((Number) row[0]).intValue();
+            long cnt = ((Number) row[1]).longValue();
+            countByYw.put(yw, cnt);
+        }
+
+        List<WeeklyListingDTO> result = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        LocalDate currentMonday = today.with(DayOfWeek.MONDAY);
+        DateTimeFormatter labelFmt = DateTimeFormatter.ofPattern("MMM d", Locale.ENGLISH);
+
+        for (int i = 7; i >= 0; i--) {
+            LocalDate weekMonday = currentMonday.minusWeeks(i);
+            int year = weekMonday.getYear();
+            int isoWeek = weekMonday.get(WeekFields.ISO.weekOfWeekBasedYear());
+            int yw = year * 100 + isoWeek;
+            String label = weekMonday.format(labelFmt);
+            long count = countByYw.getOrDefault(yw, 0L);
+            result.add(new WeeklyListingDTO(label, count));
+        }
+        return result;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<String, Long> getVerificationStatusStats() {
+        Map<String, Long> stats = new LinkedHashMap<>();
+        stats.put("PENDING",  sellerRepository.countByStatus(SellerStatus.PENDING));
+        stats.put("APPROVED", sellerRepository.countByStatus(SellerStatus.APPROVED));
+        stats.put("REJECTED", sellerRepository.countByStatus(SellerStatus.REJECTED));
+        return stats;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CategoryStatsDTO> getTopCategories() {
+        List<Object[]> rows = productRepository.countProductsPerCategory();
+        List<CategoryStatsDTO> result = new ArrayList<>();
+        for (Object[] row : rows) {
+            String name = (String) row[0];
+            long count = ((Number) row[1]).longValue();
+            result.add(new CategoryStatsDTO(name, count));
+        }
+        return result;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<SellerStatDTO> getSellerStats() {
+        List<Object[]> rows = sellerRepository.findSellerStats();
+        List<SellerStatDTO> result = new ArrayList<>();
+        for (Object[] row : rows) {
+            Long sellerId    = ((Number) row[0]).longValue();
+            String firstName = row[1] == null ? "" : (String) row[1];
+            String lastName  = row[2] == null ? "" : (String) row[2];
+            String name = (firstName + " " + lastName).trim();
+            if (name.isEmpty()) name = "Unknown";
+
+            LocalDateTime submittedAt = null;
+            if (row[3] instanceof Timestamp ts) {
+                submittedAt = ts.toLocalDateTime();
+            }
+
+            String statusName = row[4] == null ? "UNKNOWN" : (String) row[4];
+            long listingCount = ((Number) row[5]).longValue();
+            result.add(new SellerStatDTO(sellerId, name, submittedAt, listingCount, statusName));
+        }
+        return result;
     }
 
     @Override

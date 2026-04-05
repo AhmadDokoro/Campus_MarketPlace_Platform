@@ -4,6 +4,7 @@ import com.ahsmart.campusmarket.model.Mentor;
 import com.ahsmart.campusmarket.model.Seller;
 import com.ahsmart.campusmarket.model.enums.SellerStatus;
 import com.ahsmart.campusmarket.model.enums.Role;
+import com.ahsmart.campusmarket.payloadDTOs.admin.WeeklyListingDTO;
 import com.ahsmart.campusmarket.service.admin.AdminService;
 import com.ahsmart.campusmarket.service.mentor.MentorService;
 import jakarta.servlet.http.HttpSession;
@@ -15,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
@@ -33,12 +35,34 @@ public class AdminController {
         return (roleObj instanceof Role) && Role.ADMIN.equals(roleObj);
     }
 
-    // Show admin dashboard
+    // Show admin dashboard with live analytics data
     @GetMapping("/dashboard")
-    public String dashboard(HttpSession session) {
+    public String dashboard(HttpSession session, Model model) {
         if (!isAdmin(session)) {
             return "redirect:/signin";
         }
+
+        model.addAttribute("totalUsers",     adminService.getTotalUsers());
+        model.addAttribute("totalSellers",   adminService.getTotalSellers());
+        model.addAttribute("verifiedSellers",adminService.getVerifiedSellers());
+        model.addAttribute("activeListings", adminService.getActiveListings());
+        model.addAttribute("totalSales",     adminService.getTotalSales());
+
+        // Split weekly listings into parallel label + count arrays for Chart.js
+        List<WeeklyListingDTO> weekly = adminService.getWeeklyListings();
+        List<String> weeklyLabels = weekly.stream().map(WeeklyListingDTO::getWeekLabel).toList();
+        List<Long>   weeklyCounts = weekly.stream().map(WeeklyListingDTO::getCount).toList();
+        model.addAttribute("weeklyLabels", weeklyLabels);
+        model.addAttribute("weeklyCounts", weeklyCounts);
+
+        Map<String, Long> vStats = adminService.getVerificationStatusStats();
+        model.addAttribute("verificationPending",  vStats.getOrDefault("PENDING",  0L));
+        model.addAttribute("verificationApproved", vStats.getOrDefault("APPROVED", 0L));
+        model.addAttribute("verificationRejected", vStats.getOrDefault("REJECTED", 0L));
+
+        model.addAttribute("topCategories", adminService.getTopCategories());
+        model.addAttribute("sellerStats",   adminService.getSellerStats());
+
         return "admin/dashboard";
     }
 

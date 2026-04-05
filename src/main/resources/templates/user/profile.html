@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -114,6 +116,32 @@
         .chat-btn{display:inline-flex;align-items:center;gap:6px}
         .empty-products{border:1px dashed rgba(15,23,42,0.12);border-radius:16px;padding:24px;text-align:center;color:var(--muted)}
 
+        .node-received{background:rgba(20,184,166,0.1);border:2px solid rgba(20,184,166,0.25)}
+        .node-received i{color:#0d9488}
+        .count-received{background:linear-gradient(135deg,#14b8a6,#0d9488)}
+        .status-pill-received{background:rgba(20,184,166,0.12);color:#0d9488}
+
+        /* Rating form */
+        .rate-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;
+            padding:6px 14px;border-radius:999px;border:1.5px solid #4B2E83;color:#4B2E83;
+            background:transparent;cursor:pointer;transition:all .2s}
+        .rate-btn:hover{background:#4B2E83;color:#fff}
+        .review-form-wrap{margin-top:12px;padding:14px 16px;border-radius:14px;
+            border:1px solid rgba(75,46,131,0.15);background:rgba(75,46,131,0.03);display:none}
+        .review-form-wrap.open{display:block}
+        .star-row{display:flex;gap:6px;margin-bottom:12px}
+        .star-btn{font-size:24px;background:none;border:none;cursor:pointer;color:#d1d5db;
+            transition:color .15s;padding:0;line-height:1}
+        .star-btn.selected,.star-btn:hover,.star-btn:hover~.star-btn{color:#F2B705}
+        .star-row:hover .star-btn{color:#F2B705}
+        .star-row .star-btn:hover~.star-btn{color:#d1d5db}
+        .reviewed-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;
+            font-weight:700;color:#0d9488;padding:6px 12px;border-radius:999px;
+            background:rgba(20,184,166,0.1);border:1.5px solid rgba(20,184,166,0.25)}
+        .alert-review{padding:10px 16px;border-radius:12px;font-size:13px;font-weight:600;margin-bottom:14px}
+        .alert-review-success{background:rgba(20,184,166,0.12);color:#0d9488;border:1px solid rgba(20,184,166,0.25)}
+        .alert-review-error{background:rgba(196,22,28,0.08);color:#C4161C;border:1px solid rgba(196,22,28,0.2)}
+
         @media (max-width:600px){
             .steps{gap:0}
             .connector{flex:0 0 12px}
@@ -223,7 +251,29 @@
                         <div class="desc">All items delivered</div>
                     </button>
 
+                    <div class="connector" aria-hidden="true"></div>
+
+                    <!-- Step 4: Received -->
+                    <button type="button" class="step" data-profile-tab="received">
+                        <div class="node node-received">
+                            <i class="bi bi-bag-heart-fill"></i>
+                            <span class="count-badge count-received" th:if="${receivedCount > 0}" th:text="${receivedCount}">0</span>
+                        </div>
+                        <div class="name">Received</div>
+                        <div class="desc">Rate the seller</div>
+                    </button>
+
                 </div>
+            </div>
+
+            <!-- Flash messages for review submission -->
+            <div th:if="${reviewSuccess}" class="alert-review alert-review-success">
+                <i class="bi bi-check-circle-fill" style="margin-right:6px"></i>
+                <span th:text="${reviewSuccess}">Review submitted.</span>
+            </div>
+            <div th:if="${reviewError}" class="alert-review alert-review-error">
+                <i class="bi bi-exclamation-circle-fill" style="margin-right:6px"></i>
+                <span th:text="${reviewError}">An error occurred.</span>
             </div>
 
             <div class="panel">
@@ -328,6 +378,74 @@
                         No delivered products yet.
                     </div>
                 </div>
+
+                <!-- Received tab: show Rate Seller button for unreviewed items -->
+                <div class="products-state" data-profile-state="received">
+                    <div class="product-stack">
+                        <div class="product-card"
+                             th:each="item : ${buyerChatItems}"
+                             th:if="${item.deliveryStatus.name() == 'RECEIVED'}">
+                            <div class="product-main" style="width:100%">
+                                <div class="product-eyebrow" th:text="'Order #' + ${item.orderId}">Order</div>
+                                <div class="product-title" th:text="${item.productTitle}">Product</div>
+                                <div class="product-sub" th:text="'Seller: ' + ${item.sellerName}">Seller</div>
+
+                                <!-- Rating form — shown only if this order has not been reviewed yet -->
+                                <div th:if="${!reviewedOrderIds.contains(item.orderId)}">
+                                    <div class="product-actions" style="margin-top:10px">
+                                        <span class="status-pill status-pill-received">
+                                            <i class="bi bi-bag-heart"></i> Received
+                                        </span>
+                                        <a class="btn btn-sm btn-outline-dark chat-btn"
+                                           th:href="@{/chat/order-item/{orderItemId}/page(orderItemId=${item.orderItemId})}">
+                                            <i class="bi bi-chat-left-text"></i> Chat
+                                        </a>
+                                        <button type="button" class="rate-btn"
+                                                th:attr="onclick='toggleRateForm(' + ${item.orderItemId} + ')'">
+                                            <i class="bi bi-star-fill"></i> Rate Seller
+                                        </button>
+                                    </div>
+                                    <!-- Inline review form -->
+                                    <div class="review-form-wrap" th:id="'rateForm-' + ${item.orderItemId}">
+                                        <form th:action="@{/reviews/submit}" method="post">
+                                            <input type="hidden" name="orderItemId" th:value="${item.orderItemId}">
+                                            <div style="margin-bottom:8px;font-size:13px;font-weight:700;color:#111827">Rate this seller</div>
+                                            <!-- Star rating input -->
+                                            <div class="star-row" th:id="'stars-' + ${item.orderItemId}">
+                                                <button type="button" class="star-btn" data-val="1">&#9733;</button>
+                                                <button type="button" class="star-btn" data-val="2">&#9733;</button>
+                                                <button type="button" class="star-btn" data-val="3">&#9733;</button>
+                                                <button type="button" class="star-btn" data-val="4">&#9733;</button>
+                                                <button type="button" class="star-btn" data-val="5">&#9733;</button>
+                                            </div>
+                                            <input type="hidden" name="rating" th:id="'ratingInput-' + ${item.orderItemId}" value="">
+                                            <textarea name="comment" rows="2"
+                                                      style="width:100%;border-radius:10px;border:1px solid rgba(15,23,42,0.15);padding:8px 12px;font-size:13px;resize:none;margin-bottom:10px"
+                                                      placeholder="Leave a comment (optional)"></textarea>
+                                            <button type="submit" class="btn btn-sm btn-primary"
+                                                    th:attr="onclick='return validateRating(' + ${item.orderItemId} + ')'">
+                                                <i class="bi bi-send-fill"></i> Submit Review
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Already reviewed badge -->
+                                <div th:if="${reviewedOrderIds.contains(item.orderId)}" class="product-actions" style="margin-top:10px">
+                                    <span class="status-pill status-pill-received">
+                                        <i class="bi bi-bag-heart"></i> Received
+                                    </span>
+                                    <span class="reviewed-badge">
+                                        <i class="bi bi-patch-check-fill"></i> Reviewed
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="empty-products" data-empty-state>
+                        No received products yet.
+                    </div>
+                </div>
             </div>
 
             <!-- Quick Actions Section -->
@@ -362,6 +480,10 @@
 </div>
 
 <div th:replace="fragments/footer :: footer"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
 
 <script>
     (function(){
@@ -425,6 +547,51 @@
 
         setActiveTab(savedTab);
     })();
+
+    // ── Rating form helpers ──────────────────────────────────────────
+    function toggleRateForm(orderItemId) {
+        var wrap = document.getElementById('rateForm-' + orderItemId);
+        if (!wrap) return;
+        wrap.classList.toggle('open');
+    }
+
+    function validateRating(orderItemId) {
+        var input = document.getElementById('ratingInput-' + orderItemId);
+        if (!input || !input.value) {
+            alert('Please select a star rating before submitting.');
+            return false;
+        }
+        return true;
+    }
+
+    // Attach click handlers to all star buttons.
+    document.querySelectorAll('.star-row').forEach(function(row) {
+        var stars = Array.from(row.querySelectorAll('.star-btn'));
+        var ratingInput = row.closest('form') ? row.closest('form').querySelector('input[name="rating"]') : null;
+
+        stars.forEach(function(star, idx) {
+            star.addEventListener('click', function() {
+                var val = parseInt(star.getAttribute('data-val'), 10);
+                if (ratingInput) ratingInput.value = val;
+                stars.forEach(function(s, i) {
+                    s.classList.toggle('selected', i < val);
+                    s.style.color = i < val ? '#F2B705' : '#d1d5db';
+                });
+            });
+            star.addEventListener('mouseenter', function() {
+                var val = parseInt(star.getAttribute('data-val'), 10);
+                stars.forEach(function(s, i) {
+                    s.style.color = i < val ? '#F2B705' : '#d1d5db';
+                });
+            });
+            star.addEventListener('mouseleave', function() {
+                var current = ratingInput ? parseInt(ratingInput.value, 10) : 0;
+                stars.forEach(function(s, i) {
+                    s.style.color = i < current ? '#F2B705' : '#d1d5db';
+                });
+            });
+        });
+    });
 </script>
 
 </body>

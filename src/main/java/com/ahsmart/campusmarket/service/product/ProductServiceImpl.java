@@ -19,6 +19,7 @@ import com.ahsmart.campusmarket.repositories.UsersRepository;
 import com.ahsmart.campusmarket.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -312,6 +313,22 @@ public class ProductServiceImpl implements ProductService {
                 ordered.add(product);
             }
         }
+        
+        // If top ordered items are less than the limit, fill the rest with recent products
+        if (ordered.size() < limit) {
+            int remaining = limit - ordered.size();
+            List<Product> recentProducts = productRepository.findAllByOrderByCreatedAtDesc(
+                    PageRequest.of(0, limit) // Fetch more to ensure we have enough to skip duplicates
+            );
+            
+            for (Product rp : recentProducts) {
+                if (ordered.size() >= limit) break;
+                if (!byId.containsKey(rp.getProductId())) {
+                    ordered.add(rp);
+                }
+            }
+        }
+        
         return ordered;
     }
 
@@ -321,32 +338,81 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.countByCategory_CategoryId(categoryId);
     }
 
-    // Loads a paginated product list for the explore page.
+    // Returns all category product counts in a single GROUP BY query.
+    @Override
+    public Map<Long, Long> getCategoryCountMap() {
+        Map<Long, Long> result = new HashMap<>();
+        for (Object[] row : productRepository.countGroupedByCategory()) {
+            result.put(((Number) row[0]).longValue(), ((Number) row[1]).longValue());
+        }
+        return result;
+    }
+
+    // Loads a paginated product list using two-phase ID-first query to avoid in-memory pagination.
     @Override
     public Page<Product> getProductPage(int pageNumber, int pageSize) {
-        // Build pageable safely with non-negative page and minimum size of 1.
-        return productRepository.findAllBy(PageRequest.of(Math.max(0, pageNumber), Math.max(1, pageSize)));
+        PageRequest pageable = PageRequest.of(Math.max(0, pageNumber), Math.max(1, pageSize));
+        // Phase 1: fetch only IDs with correct SQL LIMIT/OFFSET.
+        Page<Long> idPage = productRepository.findAllIds(pageable);
+        if (idPage.isEmpty()) {
+            return Page.empty(pageable);
+        }
+        // Phase 2: fetch full products with images for only those IDs.
+        List<Product> products = productRepository.findByProductIdInWithImages(idPage.getContent());
+        // Re-order to match the original ID order.
+        Map<Long, Product> byId = new HashMap<>();
+        for (Product p : products) byId.put(p.getProductId(), p);
+        List<Product> ordered = new ArrayList<>();
+        for (Long id : idPage.getContent()) {
+            Product p = byId.get(id);
+            if (p != null) ordered.add(p);
+        }
+        return new PageImpl<>(ordered, pageable, idPage.getTotalElements());
     }
 
     // Loads a paginated product list for one category on the explore page.
     @Override
     public Page<Product> getProductPageByCategory(Long categoryId, int pageNumber, int pageSize) {
-        // Build pageable safely with non-negative page and minimum size of 1.
-        return productRepository.findByCategory_CategoryId(
-                categoryId,
-                PageRequest.of(Math.max(0, pageNumber), Math.max(1, pageSize))
-        );
+        PageRequest pageable = PageRequest.of(Math.max(0, pageNumber), Math.max(1, pageSize));
+        // Phase 1: IDs only — SQL LIMIT is safe without any collection join.
+        Page<Long> idPage = productRepository.findIdsByCategory(categoryId, pageable);
+        if (idPage.isEmpty()) {
+            return Page.empty(pageable);
+        }
+        // Phase 2: load only the products on this page with their images.
+        Map<Long, Product> byId = new HashMap<>();
+        for (Product p : productRepository.findByProductIdInWithImages(idPage.getContent())) {
+            byId.put(p.getProductId(), p);
+        }
+        List<Product> ordered = new ArrayList<>();
+        for (Long id : idPage.getContent()) {
+            Product p = byId.get(id);
+            if (p != null) ordered.add(p);
+        }
+        return new PageImpl<>(ordered, pageable, idPage.getTotalElements());
     }
 
     // Searches products by title text with pagination for the explore page.
     @Override
     public Page<Product> searchProductPage(String searchText, int pageNumber, int pageSize) {
-        // Normalize the search text and return a paginated, case-insensitive title match.
-        String normalizedSearchText = searchText == null ? "" : searchText.trim();
-        return productRepository.findByTitleContainingIgnoreCase(
-                normalizedSearchText,
-                PageRequest.of(Math.max(0, pageNumber), Math.max(1, pageSize))
-        );
+        String q = searchText == null ? "" : searchText.trim();
+        PageRequest pageable = PageRequest.of(Math.max(0, pageNumber), Math.max(1, pageSize));
+        // Phase 1: IDs only — avoids in-memory pagination caused by collection joins.
+        Page<Long> idPage = productRepository.findIdsByTitleContaining(q, pageable);
+        if (idPage.isEmpty()) {
+            return Page.empty(pageable);
+        }
+        // Phase 2: load full products for only those IDs.
+        Map<Long, Product> byId = new HashMap<>();
+        for (Product p : productRepository.findByProductIdInWithImages(idPage.getContent())) {
+            byId.put(p.getProductId(), p);
+        }
+        List<Product> ordered = new ArrayList<>();
+        for (Long id : idPage.getContent()) {
+            Product p = byId.get(id);
+            if (p != null) ordered.add(p);
+        }
+        return new PageImpl<>(ordered, pageable, idPage.getTotalElements());
     }
 
     // Returns a small suggestion list for the header live-search dropdown.

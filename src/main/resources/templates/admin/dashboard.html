@@ -10,15 +10,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../../static/css/admin.css">
   <link rel="stylesheet" th:href="@{/css/admin.css}">
-
 </head>
+
 <body>
   <div class="admin-app">
+
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="brand">
@@ -48,12 +48,17 @@
 
     <!-- MAIN -->
     <main class="main">
+
       <!-- TOPBAR -->
       <header class="topbar">
-        <div class="topbar-actions">
-          <div class="notification">
-            <button title="Notifications" class="icon-btn">🔔<span class="badge">3</span></button>
+        <div class="topbar-left">
+          <div class="page-breadcrumb">
+            <span class="breadcrumb-icon">🏠</span>
+            <span class="breadcrumb-sep">/</span>
+            <span class="breadcrumb-current">Dashboard</span>
           </div>
+        </div>
+        <div class="topbar-actions">
           <div class="profile">
             <div class="admin-avatar">A</div>
             <div class="admin-meta">
@@ -66,73 +71,107 @@
 
       <!-- CONTENT -->
       <section class="content">
-        <!-- Overview Row -->
-        <section id="overview" class="section overview">
+
+        <!-- ── Overview ────────────────────────────────────────── -->
+        <section id="overview" class="section overview fade-in">
           <div class="overview-header">
-            <h1>Admin Dashboard</h1>
-            <p class="muted">Overview of system health, flagged products, and pending verifications.</p>
+            <div>
+              <h1>Admin Dashboard</h1>
+              <p class="muted">Live system overview — users, sellers, listings and sales.</p>
+            </div>
           </div>
 
           <div class="cards-grid">
-            <div class="card stat-card">
+
+            <div class="card stat-card stat-users">
+              <div class="stat-icon">👥</div>
               <div class="stat-title">Total Users</div>
-              <div class="stat-value" id="statUsers">0</div>
+              <div class="stat-value" id="statUsers"
+                   th:attr="data-target=${totalUsers}"
+                   th:text="${totalUsers}">0</div>
               <div class="stat-sub muted">Registered students</div>
             </div>
 
-            <div class="card stat-card">
+            <div class="card stat-card stat-sellers">
+              <div class="stat-icon">🏪</div>
               <div class="stat-title">Total Sellers</div>
-              <div class="stat-value" id="statSellers">0</div>
+              <div class="stat-value" id="statSellers"
+                   th:attr="data-target=${totalSellers}"
+                   th:text="${totalSellers}">0</div>
               <div class="stat-sub muted">All seller accounts</div>
             </div>
 
-            <div class="card stat-card">
+            <div class="card stat-card stat-verified">
+              <div class="stat-icon">✅</div>
               <div class="stat-title">Verified Sellers</div>
-              <div class="stat-value" id="statVerified">0</div>
+              <div class="stat-value" id="statVerified"
+                   th:attr="data-target=${verifiedSellers}"
+                   th:text="${verifiedSellers}">0</div>
               <div class="stat-sub muted">Accounts approved</div>
             </div>
 
-            <div class="card stat-card">
+            <div class="card stat-card stat-listings">
+              <div class="stat-icon">📦</div>
               <div class="stat-title">Active Listings</div>
-              <div class="stat-value" id="statListings">0</div>
+              <div class="stat-value" id="statListings"
+                   th:attr="data-target=${activeListings}"
+                   th:text="${activeListings}">0</div>
               <div class="stat-sub muted">Products live</div>
             </div>
 
-            <div class="card stat-card warn">
+            <div class="card stat-card warn stat-flagged">
+              <div class="stat-icon">🚩</div>
               <div class="stat-title">Flagged Listings</div>
-              <div class="stat-value" id="statFlagged">0</div>
+              <div class="stat-value" id="statFlagged"
+                   data-target="0">0</div>
               <div class="stat-sub muted">Pending review</div>
             </div>
 
-            <div class="card stat-card success">
+            <div class="card stat-card success stat-sales">
+              <div class="stat-icon">🛒</div>
               <div class="stat-title">Total Sales</div>
-              <div class="stat-value" id="statSales">0</div>
+              <div class="stat-value" id="statSales"
+                   th:attr="data-target=${totalSales}"
+                   th:text="${totalSales}">0</div>
               <div class="stat-sub muted">Completed transactions</div>
             </div>
+
           </div>
         </section>
 
-        <!-- Analytics Row -->
-        <section id="analytics" class="section analytics">
+        <!-- ── Analytics ──────────────────────────────────────── -->
+        <section id="analytics" class="section analytics fade-in" style="animation-delay:.1s">
+
           <div class="panel panel-wide">
             <div class="panel-header">
-              <h3>Monthly Listings</h3>
-              <div class="panel-actions">
-                <button class="btn small">Export CSV</button>
+              <div>
+                <h3>Weekly Listings</h3>
+                <p class="muted small" style="margin:2px 0 0">Products listed per week (last 8 weeks)</p>
               </div>
             </div>
             <div class="panel-body">
-              <canvas id="chartListings" height="120"></canvas>
+              <canvas id="chartListings" height="110"></canvas>
             </div>
           </div>
 
           <div class="side-panels">
+
             <div class="panel">
               <div class="panel-header">
                 <h4>Verification Status</h4>
               </div>
               <div class="panel-body">
-                <canvas id="chartVerification" height="160"></canvas>
+                <canvas id="chartVerification" height="150"></canvas>
+                <div class="vstat-legend">
+                  <span class="vstat-dot dot-approved"></span>
+                  Approved: <strong th:text="${verificationApproved}">0</strong>
+                  &nbsp;
+                  <span class="vstat-dot dot-pending"></span>
+                  Pending: <strong th:text="${verificationPending}">0</strong>
+                  &nbsp;
+                  <span class="vstat-dot dot-rejected"></span>
+                  Rejected: <strong th:text="${verificationRejected}">0</strong>
+                </div>
               </div>
             </div>
 
@@ -142,21 +181,26 @@
               </div>
               <div class="panel-body">
                 <ul class="category-list" id="topCategories">
-                  <li>Books <span class="muted">— 410 listings</span></li>
-                  <li>Electronics <span class="muted">— 320 listings</span></li>
-                  <li>Fashion <span class="muted">— 220 listings</span></li>
+                  <li th:each="cat, stat : ${topCategories}" class="cat-row">
+                    <span class="cat-rank" th:text="${stat.index + 1}">1</span>
+                    <span class="cat-name" th:text="${cat.categoryName}">Category</span>
+                    <span class="cat-count pill approved" th:text="${cat.productCount} + ' listings'">0 listings</span>
+                  </li>
+                  <li th:if="${#lists.isEmpty(topCategories)}" class="muted small">No category data yet.</li>
                 </ul>
               </div>
             </div>
+
           </div>
         </section>
 
-        <!-- Verification Queue -->
-        <section id="verify-sellers" class="section queue">
+        <!-- ── Verification Queue ─────────────────────────────── -->
+        <section id="verify-sellers" class="section queue fade-in" style="animation-delay:.15s">
           <div class="panel">
             <div class="panel-header">
               <h3>Seller Verification Queue</h3>
               <div class="panel-actions">
+                <a class="btn small" th:href="@{/admin/pendingSellers}">View Full Queue</a>
                 <input id="verifySearch" type="search" placeholder="Search name or student ID" />
               </div>
             </div>
@@ -175,13 +219,13 @@
                   <!-- rows populated by JS -->
                 </tbody>
               </table>
-              <div class="muted small">Approve only valid student IDs. Rejected sellers can re-apply.</div>
+              <div class="muted small" style="margin-top:8px">Approve only valid student IDs. Rejected sellers can re-apply.</div>
             </div>
           </div>
         </section>
 
-        <!-- Flagged Products -->
-        <section id="flagged" class="section flagged">
+        <!-- ── Flagged Products ───────────────────────────────── -->
+        <section id="flagged" class="section flagged fade-in" style="animation-delay:.2s">
           <div class="panel">
             <div class="panel-header">
               <h3>AI-Flagged Product Listings</h3>
@@ -210,13 +254,13 @@
           </div>
         </section>
 
-        <!-- Categories -->
-        <section id="categories" class="section categories">
+        <!-- ── Categories ─────────────────────────────────────── -->
+        <section id="categories" class="section categories fade-in" style="animation-delay:.25s">
           <div class="panel">
             <div class="panel-header">
               <h3>Category Management</h3>
               <div class="panel-actions">
-                <button class="btn primary" id="addCategoryBtn">+ Add Category</button>
+                <a class="btn primary" th:href="@{/admin/categories}">Manage Categories</a>
               </div>
             </div>
             <div class="panel-body">
@@ -227,41 +271,81 @@
           </div>
         </section>
 
-        <!-- Manage Sellers -->
-        <section id="manage-sellers" class="section manage-sellers">
+        <!-- ── Manage Sellers ─────────────────────────────────── -->
+        <section id="manage-sellers" class="section manage-sellers fade-in" style="animation-delay:.3s">
           <div class="panel">
             <div class="panel-header">
               <h3>Manage Sellers</h3>
+              <div class="panel-actions">
+                <a class="btn small" th:href="@{/admin/pendingSellers}">Pending Queue</a>
+              </div>
             </div>
             <div class="panel-body">
               <table class="table" id="sellersTable">
                 <thead>
                   <tr>
+                    <th>#</th>
                     <th>Seller</th>
                     <th>Joined</th>
                     <th>Listings</th>
-                    <th>Verified</th>
+                    <th>Status</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td>Sample Seller</td><td>2025-02-10</td><td>12</td><td><span class="pill success">Yes</span></td><td><button class="btn small">View</button></td></tr>
+                  <tr th:each="s, stat : ${sellerStats}">
+                    <td class="muted" th:text="${stat.index + 1}">1</td>
+                    <td>
+                      <div class="seller-name-cell">
+                        <div class="seller-avatar-sm" th:text="${#strings.substring(s.sellerName, 0, 1)}">S</div>
+                        <span th:text="${s.sellerName}">Seller</span>
+                      </div>
+                    </td>
+                    <td class="muted"
+                        th:text="${s.submittedAt != null ? #temporals.format(s.submittedAt, 'MMM d, yyyy') : '—'}">—</td>
+                    <td th:text="${s.listingCount}">0</td>
+                    <td>
+                      <span class="pill approved" th:if="${s.statusName == 'APPROVED'}">Approved</span>
+                      <span class="pill pending"  th:if="${s.statusName == 'PENDING'}">Pending</span>
+                      <span class="pill rejected" th:if="${s.statusName == 'REJECTED'}">Rejected</span>
+                      <span class="pill"
+                            th:if="${s.statusName != 'APPROVED' and s.statusName != 'PENDING' and s.statusName != 'REJECTED'}"
+                            th:text="${s.statusName}">—</span>
+                    </td>
+                    <td>
+                      <a class="btn small"
+                         th:href="@{/admin/getSellerDetailsForReview(sellerId=${s.sellerId})}">View</a>
+                    </td>
+                  </tr>
+                  <tr th:if="${#lists.isEmpty(sellerStats)}">
+                    <td colspan="6" class="muted" style="text-align:center;padding:24px">No sellers registered yet.</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
         </section>
 
-
-      </section> <!-- end content -->
-    </main> <!-- end main -->
+      </section><!-- end content -->
+    </main><!-- end main -->
   </div>
 
-  <!-- Modal placeholders (hidden, will be toggled by JS) -->
+  <!-- Modal placeholder -->
   <div id="modalRoot"></div>
 
-  <!-- JS -->
-  <script src="/js/admin.js"></script>
+  <!-- Inject server data for Chart.js -->
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    window.adminData = {
+        weeklyLabels:          /*[[${weeklyLabels}]]*/ [],
+        weeklyCounts:          /*[[${weeklyCounts}]]*/ [],
+        verificationPending:   /*[[${verificationPending}]]*/ 0,
+        verificationApproved:  /*[[${verificationApproved}]]*/ 0,
+        verificationRejected:  /*[[${verificationRejected}]]*/ 0
+    };
+    /*]]>*/
+  </script>
+
   <script th:src="@{/js/admin.js}"></script>
 </body>
 </html>

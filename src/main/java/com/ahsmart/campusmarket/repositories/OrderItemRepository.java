@@ -14,6 +14,9 @@ import java.util.Optional;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
+    // Counts order items with a specific delivery status — used for admin total-sales metric.
+    long countByDeliveryStatus(DeliveryStatus deliveryStatus);
+
     @Query("select (count(oi) > 0) from OrderItem oi " +
             "where oi.product.productId = :productId " +
             "and (oi.deliveryStatus <> :deliveredStatus " +
@@ -69,6 +72,15 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
             "join fetch oi.seller s " +
             "where oi.orderItemId = :orderItemId")
     Optional<OrderItem> findByIdWithOrderBuyerAndSeller(@Param("orderItemId") Long orderItemId);
+
+    // Fetches order item with order, buyer, seller, and seller's user — used by review service.
+    @Query("select oi from OrderItem oi " +
+            "join fetch oi.order o " +
+            "join fetch o.buyer " +
+            "join fetch oi.seller s " +
+            "join fetch s.user " +
+            "where oi.orderItemId = :orderItemId")
+    Optional<OrderItem> findByIdWithOrderBuyerSellerAndUser(@Param("orderItemId") Long orderItemId);
 
     // Finds top-selling product ids by total ordered quantity.
     @Query("select oi.product.productId from OrderItem oi " +

@@ -47,6 +47,22 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @EntityGraph(attributePaths = {"images", "category"})
     Page<Product> findByTitleContainingIgnoreCase(String searchText, Pageable pageable);
 
+    // Phase-1 (IDs only): paginated product ids with no joins — SQL LIMIT is safe here.
+    @Query("SELECT p.productId FROM Product p ORDER BY p.createdAt DESC")
+    Page<Long> findAllIds(Pageable pageable);
+
+    // Phase-1 (IDs only): paginated product ids for a single category.
+    @Query("SELECT p.productId FROM Product p WHERE p.category.categoryId = :categoryId ORDER BY p.createdAt DESC")
+    Page<Long> findIdsByCategory(@Param("categoryId") Long categoryId, Pageable pageable);
+
+    // Phase-1 (IDs only): paginated product ids matching a title search.
+    @Query("SELECT p.productId FROM Product p WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :q, '%')) ORDER BY p.createdAt DESC")
+    Page<Long> findIdsByTitleContaining(@Param("q") String q, Pageable pageable);
+
+    // Returns per-category product counts in a single GROUP BY query (replaces N+1 loop).
+    @Query("SELECT p.category.categoryId, COUNT(p) FROM Product p GROUP BY p.category.categoryId")
+    List<Object[]> countGroupedByCategory();
+
     // Fetches a single product by ID with images, category, and seller eagerly loaded for the detail page.
     @Query("SELECT DISTINCT p FROM Product p " +
             "LEFT JOIN FETCH p.images " +
@@ -62,4 +78,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findRelatedProducts(@Param("categoryId") Long categoryId,
                                       @Param("excludeId") Long excludeId,
                                       Pageable pageable);
+
+    // Returns (YEARWEEK, count) pairs for products created in the last 8 weeks — admin weekly chart.
+    @Query(value = "SELECT YEARWEEK(created_at, 1) AS yw, COUNT(*) AS cnt " +
+            "FROM products " +
+            "WHERE created_at >= DATE_SUB(NOW(), INTERVAL 8 WEEK) " +
+            "GROUP BY YEARWEEK(created_at, 1) " +
+            "ORDER BY yw ASC", nativeQuery = true)
+    List<Object[]> countProductsPerWeekLast8();
+
+    // Returns (categoryName, count) pairs sorted descending — admin top-categories panel.
+    @Query("SELECT c.name, COUNT(p) FROM Product p JOIN p.category c GROUP BY c.categoryId, c.name ORDER BY COUNT(p) DESC")
+    List<Object[]> countProductsPerCategory();
 }

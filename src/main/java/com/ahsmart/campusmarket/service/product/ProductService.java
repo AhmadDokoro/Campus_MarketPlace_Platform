@@ -51,6 +51,9 @@ public interface ProductService {
     // Counts products in a category for the homepage cards.
     long countProductsByCategoryId(Long categoryId);
 
+    // Returns a map of categoryId → product count for all categories in one query.
+    java.util.Map<Long, Long> getCategoryCountMap();
+
     // Loads a page of products for the explore page.
     org.springframework.data.domain.Page<Product> getProductPage(int pageNumber, int pageSize);
 
