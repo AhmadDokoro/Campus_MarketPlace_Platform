@@ -35,4 +35,9 @@ build/
 ### Spring Boot config ###
 # Keep the main application.properties in git for development.
 # Ignore only environment-specific overrides.
+src/main/resources/application.properties
 src/main/resources/application-*.properties
+src/test/resources/application-test.properties
+
+### Local logs ###
+sent-emails.log
