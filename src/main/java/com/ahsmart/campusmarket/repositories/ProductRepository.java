@@ -88,6 +88,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Object[]> countProductsPerWeekLast8();
 
     // Returns (categoryName, count) pairs sorted descending — admin top-categories panel.
-    @Query("SELECT c.name, COUNT(p) FROM Product p JOIN p.category c GROUP BY c.categoryId, c.name ORDER BY COUNT(p) DESC")
+    @Query("SELECT c.categoryName, COUNT(p) FROM Product p JOIN p.category c GROUP BY c.categoryId, c.categoryName ORDER BY COUNT(p) DESC")
     List<Object[]> countProductsPerCategory();
 }
