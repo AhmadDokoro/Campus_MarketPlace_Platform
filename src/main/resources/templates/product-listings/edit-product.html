@@ -6,146 +6,757 @@
     <title>Edit Product</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link th:href="@{/css/style.css}" rel="stylesheet" />
-
     <style>
-        :root{
-            --accent:#4B2E83;
-            --accent-soft:rgba(75,46,131,0.10);
-            --bg:#f6f7fb;
-            --card:#ffffff;
-            --muted:#6b7280;
-            --shadow:0 12px 28px rgba(15,23,42,0.08);
-            --radius:16px;
+        :root {
+            --bg: #f3f5ff;
+            --ink: #1d2240;
+            --muted: #6b7293;
+            --line: #d9def2;
+            --panel: #ffffff;
+            --accent: #f28c1f;
+            --accent-dark: #e2b106;
+            --dark: #4b2e83;
+            --dark-soft: #295f98;
+            --success: #0f766e;
+            --danger: #b42318;
+            --shadow: 0 20px 50px rgba(75, 46, 131, 0.10);
         }
-        body{font-family:Inter,system-ui,Arial;background:var(--bg)}
-        .page-wrap{padding:24px 12px}
-        .shell{max-width:980px;margin:0 auto}
-        .headline{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-        .headline h2{margin:0;color:#111827;font-size:22px;letter-spacing:-0.2px}
-        .headline p{margin:6px 0 0;color:var(--muted)}
 
-        .card-soft{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(15,23,42,0.06)}
-        .card-body{padding:20px}
+        * { box-sizing: border-box; }
 
-        .form-control, .custom-select{border-radius:12px}
-        .form-control:focus, .custom-select:focus{border-color:rgba(75,46,131,0.45);box-shadow:0 0 0 0.2rem rgba(75,46,131,0.12)}
-        label{font-weight:700;color:#111827}
+        body {
+            margin: 0;
+            font-family: "Plus Jakarta Sans", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top right, rgba(242, 140, 31, 0.18), transparent 20%),
+                radial-gradient(circle at top left, rgba(75, 46, 131, 0.10), transparent 24%),
+                linear-gradient(180deg, #fbfbff 0%, var(--bg) 100%);
+        }
 
-        .section-title{font-weight:800;color:#111827;margin-bottom:8px}
-        .section-note{color:var(--muted);font-size:13px;margin-bottom:12px}
+        .page {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 24px 18px 36px;
+        }
 
-        .badge-hint{display:inline-flex;align-items:center;gap:8px;background:var(--accent-soft);color:var(--accent);border:1px solid rgba(75,46,131,0.20);border-radius:999px;padding:6px 12px;font-weight:700;font-size:12px}
+        .top-rail {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 22px;
+            padding: 16px 18px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+            flex-wrap: wrap;
+        }
 
-        .btn-accent{background:var(--accent);color:#fff;border-color:var(--accent)}
-        .btn-accent:hover{background:#3e2670;color:#fff}
+        .rail-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
 
-        .alert{border-radius:12px}
-        .file-card{border:1px dashed rgba(15,23,42,0.12);border-radius:12px;padding:12px;background:#fbfbfe}
-        .help-text{color:var(--muted);font-size:12px}
-        .image-preview{width:70px;height:70px;border-radius:12px;object-fit:cover;background:#e5e7eb}
+        .rail-mark {
+            width: 46px;
+            height: 46px;
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--dark);
+            color: #fff;
+        }
+
+        .rail-title strong {
+            display: block;
+            font-size: 18px;
+            line-height: 1.1;
+        }
+
+        .rail-title span {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .rail-badge,
+        .dash-link,
+        .btn-accent,
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            border-radius: 999px;
+            font-weight: 800;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .rail-badge {
+            padding: 10px 14px;
+            background: var(--dark);
+            color: #fff;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .dash-link {
+            padding: 13px 18px;
+            background: #fff;
+            color: var(--ink);
+            border: 1px solid var(--line);
+        }
+
+        .dash-link:hover,
+        .btn-ghost:hover {
+            color: var(--ink);
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.52fr) minmax(320px, 0.95fr);
+            gap: 24px;
+        }
+
+        .panel {
+            border-radius: 30px;
+            overflow: hidden;
+            background: var(--panel);
+            box-shadow: var(--shadow);
+        }
+
+        .form-panel {
+            border: 1px solid rgba(75, 46, 131, 0.08);
+        }
+
+        .panel-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 24px 28px 18px;
+            border-bottom: 1px solid #eceff3;
+            flex-wrap: wrap;
+        }
+
+        .panel-head h1 {
+            margin: 0;
+            font-size: 30px;
+            line-height: 1;
+            letter-spacing: -0.05em;
+        }
+
+        .panel-head p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .head-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 13px;
+            border-radius: 999px;
+            background: var(--dark);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .panel-body {
+            padding: 26px 28px 30px;
+        }
+
+        .alert-soft {
+            border: none;
+            border-radius: 18px;
+            padding: 15px 16px;
+            font-weight: 700;
+        }
+
+        .alert-success.alert-soft { background: rgba(15, 118, 110, 0.12); color: var(--success); }
+        .alert-danger.alert-soft { background: rgba(180, 35, 24, 0.10); color: var(--danger); }
+
+        .section + .section {
+            margin-top: 28px;
+            padding-top: 26px;
+            border-top: 1px solid #eceff3;
+        }
+
+        .section-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .section-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--dark);
+            color: #fff;
+        }
+
+        .section-bar strong {
+            display: block;
+            font-size: 18px;
+            line-height: 1.1;
+        }
+
+        .section-bar span {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .form-control,
+        .custom-select {
+            min-height: 56px;
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            padding: 15px 16px;
+            font-size: 15px;
+            background: #fbfbff;
+        }
+
+        textarea.form-control {
+            min-height: 148px;
+            resize: vertical;
+        }
+
+        .form-control:focus,
+        .custom-select:focus {
+            border-color: rgba(75, 46, 131, 0.34);
+            box-shadow: 0 0 0 0.2rem rgba(75, 46, 131, 0.12);
+            background: #fff;
+        }
+
+        .image-stage {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .image-card {
+            border-radius: 24px;
+            padding: 16px;
+            background: #fbfbff;
+            border: 1px solid #edf1f5;
+        }
+
+        .image-card strong {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .image-frame {
+            height: 230px;
+            border-radius: 18px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #dfe5ec, #eef2f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .new-image-frame img {
+            display: none;
+        }
+
+        .image-empty {
+            text-align: center;
+            color: #788394;
+            padding: 28px;
+            line-height: 1.6;
+        }
+
+        .image-empty i {
+            display: block;
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .replace-shell {
+            margin-top: 14px;
+            border-radius: 24px;
+            border: 1px dashed #cbd3dc;
+            background: #fbfbff;
+            padding: 18px;
+        }
+
+        .btn-accent {
+            border: none;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #f28c1f, #f2c230);
+            color: #fff;
+            box-shadow: 0 16px 30px rgba(242, 140, 31, 0.24);
+        }
+
+        .btn-accent:hover {
+            color: #fff;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .btn-ghost {
+            border: 1px solid var(--line);
+            padding: 14px 20px;
+            background: #fff;
+            color: var(--ink);
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid #eceff3;
+            flex-wrap: wrap;
+        }
+
+        .action-tools {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .visual-panel {
+            padding: 22px;
+            background: linear-gradient(180deg, var(--dark) 0%, var(--dark-soft) 100%);
+            color: #fff;
+        }
+
+        .visual-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .visual-top strong {
+            font-size: 20px;
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+        }
+
+        .visual-kicker {
+            padding: 9px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .snapshot-card {
+            border-radius: 26px;
+            overflow: hidden;
+            background: #fff;
+            color: var(--ink);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.24);
+        }
+
+        .snapshot-top {
+            display: grid;
+            grid-template-columns: 92px minmax(0, 1fr);
+            gap: 14px;
+            padding: 18px;
+            border-bottom: 1px solid #edf1f5;
+        }
+
+        .snapshot-thumb {
+            width: 92px;
+            height: 92px;
+            border-radius: 22px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #e6ebff, #eef4ff);
+        }
+
+        .snapshot-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .snapshot-meta strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 18px;
+            line-height: 1.25;
+            letter-spacing: -0.03em;
+        }
+
+        .snapshot-meta span {
+            display: block;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .snapshot-stats {
+            padding: 18px;
+        }
+
+        .stat-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 15px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #f4f2ff, #eef5ff);
+        }
+
+        .stat-row + .stat-row {
+            margin-top: 10px;
+        }
+
+        .stat-row span:first-child {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .stat-row span:last-child {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--ink);
+        }
+
+        .visual-strip {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .visual-box {
+            min-height: 108px;
+            border-radius: 22px;
+            padding: 16px 14px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .visual-box i {
+            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            background: rgba(255, 255, 255, 0.10);
+            color: #fff;
+        }
+
+        .visual-box strong {
+            display: block;
+            font-size: 13px;
+            line-height: 1.35;
+        }
+
+        .footer-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-top: 24px;
+            padding: 16px 18px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+        }
+
+        .footer-bar strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .footer-bar p {
+            color: var(--muted);
+            font-size: 13px;
+            margin: 0;
+        }
+
+        @media (max-width: 991px) {
+            .layout { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 767px) {
+            .page { padding: 16px 12px 26px; }
+            .top-rail, .panel-head, .panel-body, .visual-panel, .footer-bar { padding-left: 18px; padding-right: 18px; }
+            .image-stage, .visual-strip { grid-template-columns: 1fr; }
+            .actions, .footer-bar { align-items: stretch; }
+            .action-tools, .action-tools a, .action-tools button, .footer-bar .dash-link { width: 100%; }
+        }
     </style>
 </head>
 <body>
-
-<div th:replace="fragments/header :: header"></div>
-
-<div class="page-wrap">
-    <div class="shell">
-        <div class="headline">
-            <div>
-                <div class="badge-hint"><i class="fas fa-pen"></i> Edit Listing</div>
-                <h2 class="mt-2">Edit Product</h2>
-                <p>Update your product details or replace the image.</p>
-            </div>
-            <div>
-                <a class="btn btn-outline-secondary" th:href="@{/seller/dashboard}"><i class="fas fa-arrow-left mr-2"></i>Back to dashboard</a>
+<div class="page">
+    <div class="top-rail">
+        <div class="rail-left">
+            <span class="rail-mark"><i class="fas fa-pen"></i></span>
+            <div class="rail-title">
+                <strong>Edit Product</strong>
+                <span>Seller product editor</span>
             </div>
         </div>
-
-        <div class="mb-3" th:if="${success != null}">
-            <div class="alert alert-success" th:text="${success}">Product updated successfully.</div>
+        <div class="d-flex align-items-center flex-wrap" style="gap:12px;">
+            <span class="rail-badge"><i class="fas fa-circle" style="font-size:8px;"></i>Live Edit</span>
+            <a class="dash-link" th:href="@{/seller/dashboard}"><i class="fas fa-arrow-left"></i>Back to Dashboard</a>
         </div>
-        <div class="mb-3" th:if="${error != null}">
-            <div class="alert alert-danger" th:text="${error}">Error message</div>
-        </div>
+    </div>
 
-        <div class="card-soft">
-            <div class="card-body">
+    <div class="layout">
+        <section class="panel form-panel">
+            <div class="panel-head">
+                <div>
+                    <h1>Edit Listing</h1>
+                    <p>Sharper layout. Same edit logic.</p>
+                </div>
+                <div class="head-chip"><i class="fas fa-sliders-h"></i>Product Editor</div>
+            </div>
+
+            <div class="panel-body">
+                <div th:if="${success != null}" class="alert alert-success alert-soft" th:text="${success}">Product updated successfully.</div>
+                <div th:if="${error != null}" class="alert alert-danger alert-soft" th:text="${error}">Error message</div>
+
                 <form th:action="@{'/seller/products/' + ${product.productId} + '/edit'}" method="post" enctype="multipart/form-data">
-                    <div class="section-title">Product details</div>
-                    <div class="section-note">Keep your title short and descriptive so buyers can find it quickly.</div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-8">
-                            <label for="title">Title *</label>
-                            <input type="text" class="form-control" id="title" name="title" th:value="${product.title}" required>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="condition">Condition *</label>
-                            <select class="custom-select" id="condition" name="condition" required>
-                                <option th:each="c : ${conditions}" th:value="${c}" th:text="${c}" th:selected="${product.condition == c}">NEW</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea class="form-control" id="description" name="description" rows="4" th:text="${product.description}"></textarea>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <label for="price">Price (RM) *</label>
-                            <input type="number" step="0.01" min="0.01" class="form-control" id="price" name="price" th:value="${product.price}" required>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="quantity">Quantity *</label>
-                            <input type="number" min="1" class="form-control" id="quantity" name="quantity" th:value="${product.quantity}" required>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="categoryId">Category *</label>
-                            <select class="custom-select" id="categoryId" name="categoryId" required>
-                                <option th:each="cat : ${categories}" th:value="${cat.categoryId}" th:text="${cat.categoryName}" th:selected="${product.category != null and product.category.categoryId == cat.categoryId}">Category</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="section-title mt-4">Product image</div>
-                    <div class="section-note">Upload a new image only if you want to replace the current one.</div>
-                    <div class="file-card">
-                        <div class="d-flex align-items-center gap-3 mb-2">
-                            <img class="image-preview" th:if="${product.images != null and !#lists.isEmpty(product.images)}" th:src="${product.images.get(0).imageUrl}" alt="Current image" />
-                            <span class="image-preview" th:if="${product.images == null or #lists.isEmpty(product.images)}"></span>
+                    <div class="section">
+                        <div class="section-bar">
+                            <span class="section-icon"><i class="fas fa-tag"></i></span>
                             <div>
-                                <div class="font-weight-bold">Current image</div>
-                                <div class="help-text">You can replace it below.</div>
+                                <strong>Product Details</strong>
+                                <span>Update the listing fields</span>
                             </div>
                         </div>
-                        <div class="form-group mb-2">
-                            <label for="image">Replace image (optional)</label>
-                            <input type="file" class="form-control-file" id="image" name="image" accept="image/*">
+
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <div class="field">
+                                    <label for="title">Title</label>
+                                    <input type="text" class="form-control" id="title" name="title" th:value="${product.title}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="field">
+                                    <label for="condition">Condition</label>
+                                    <select class="custom-select" id="condition" name="condition" required>
+                                        <option th:each="c : ${conditions}" th:value="${c}" th:text="${c}" th:selected="${product.condition == c}">NEW</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <div class="help-text">Recommended: JPG or PNG, clear background, good lighting.</div>
+
+                        <div class="field">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" th:text="${product.description}"></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <div class="field">
+                                    <label for="price">Price (RM)</label>
+                                    <input type="number" step="0.01" min="0.01" class="form-control" id="price" name="price" th:value="${product.price}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="field">
+                                    <label for="quantity">Quantity</label>
+                                    <input type="number" min="1" class="form-control" id="quantity" name="quantity" th:value="${product.quantity}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="field">
+                                    <label for="categoryId">Category</label>
+                                    <select class="custom-select" id="categoryId" name="categoryId" required>
+                                        <option th:each="cat : ${categories}" th:value="${cat.categoryId}" th:text="${cat.categoryName}" th:selected="${product.category != null and product.category.categoryId == cat.categoryId}">Category</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="d-flex justify-content-end mt-4">
-                        <button type="submit" class="btn btn-accent px-4"><i class="fas fa-save mr-2"></i>Save Changes</button>
+                    <div class="section">
+                        <div class="section-bar">
+                            <span class="section-icon"><i class="fas fa-camera"></i></span>
+                            <div>
+                                <strong>Image Replacement</strong>
+                                <span>Current and new preview</span>
+                            </div>
+                        </div>
+
+                        <div class="image-stage">
+                            <div class="image-card">
+                                <strong>Current</strong>
+                                <div class="image-frame">
+                                    <img th:if="${product.images != null and !#lists.isEmpty(product.images)}" th:src="${product.images.get(0).imageUrl}" alt="Current product image">
+                                    <div class="image-empty" th:if="${product.images == null or #lists.isEmpty(product.images)}">
+                                        <i class="far fa-image"></i>
+                                        No image attached yet.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="image-card">
+                                <strong>New Preview</strong>
+                                <div class="image-frame new-image-frame">
+                                    <img id="newImagePreview" alt="New image preview">
+                                    <div class="image-empty" id="newImageEmpty">
+                                        <i class="fas fa-sparkles"></i>
+                                        New image preview appears here.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="replace-shell">
+                            <label for="image">Replace image</label>
+                            <input type="file" class="form-control-file" id="image" name="image" accept="image/*">
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <div class="rail-badge"><i class="fas fa-check"></i>Ready to Save</div>
+                        <div class="action-tools">
+                            <a class="btn-ghost" th:href="@{/seller/dashboard}"><i class="fas fa-arrow-left"></i>Back to Dashboard</a>
+                            <button type="submit" class="btn-accent"><i class="fas fa-save"></i>Save Changes</button>
+                        </div>
                     </div>
                 </form>
             </div>
+        </section>
+
+        <aside class="panel visual-panel">
+            <div class="visual-top">
+                <div>
+                    <strong>Listing Snapshot</strong>
+                </div>
+                <span class="visual-kicker">Visual</span>
+            </div>
+
+            <div class="snapshot-card">
+                <div class="snapshot-top">
+                    <div class="snapshot-thumb">
+                        <img th:if="${product.images != null and !#lists.isEmpty(product.images)}" th:src="${product.images.get(0).imageUrl}" alt="Product thumbnail">
+                        <img th:if="${product.images == null or #lists.isEmpty(product.images)}" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Empty thumbnail">
+                    </div>
+                    <div class="snapshot-meta">
+                        <strong th:text="${product.title}">Product title</strong>
+                        <span th:text="${product.category != null ? product.category.categoryName : 'No category'}">Category</span>
+                        <span th:text="${product.condition != null ? product.condition : 'No condition'}">Condition</span>
+                    </div>
+                </div>
+                <div class="snapshot-stats">
+                    <div class="stat-row"><span>Listing ID</span><span th:text="'#' + ${product.productId}">#0</span></div>
+                    <div class="stat-row"><span>Current price</span><span th:text="'RM ' + ${#numbers.formatDecimal(product.price, 1, 2)}">RM 0.00</span></div>
+                    <div class="stat-row"><span>Quantity</span><span th:text="${product.quantity}">0</span></div>
+                </div>
+            </div>
+
+            <div class="visual-strip">
+                <div class="visual-box">
+                    <i class="fas fa-pen"></i>
+                    <strong>Fast field updates</strong>
+                </div>
+                <div class="visual-box">
+                    <i class="fas fa-image"></i>
+                    <strong>Clear image swap zone</strong>
+                </div>
+                <div class="visual-box">
+                    <i class="fas fa-columns"></i>
+                    <strong>Direct dashboard return</strong>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <div class="footer-bar">
+        <div>
+            <strong>Seller-only edit page</strong>
+            <p>Compact top rail, stronger contrast, direct workflow.</p>
         </div>
+        <a class="dash-link" th:href="@{/seller/dashboard}"><i class="fas fa-columns"></i>Return to Seller Dashboard</a>
     </div>
 </div>
-
-<div th:replace="fragments/footer :: footer"></div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
+<script>
+    const editImageInput = document.getElementById('image');
+    const newImagePreview = document.getElementById('newImagePreview');
+    const newImageEmpty = document.getElementById('newImageEmpty');
+
+    if (editImageInput) {
+        editImageInput.addEventListener('change', function(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) {
+                newImagePreview.style.display = 'none';
+                newImagePreview.removeAttribute('src');
+                newImageEmpty.style.display = 'block';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(loadEvent) {
+                newImagePreview.src = loadEvent.target.result;
+                newImagePreview.style.display = 'block';
+                newImageEmpty.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+</script>
 </body>
 </html>
-

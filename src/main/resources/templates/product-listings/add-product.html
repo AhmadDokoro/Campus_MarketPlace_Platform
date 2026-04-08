@@ -6,272 +6,864 @@
     <title>Add Product</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link th:href="@{/css/style.css}" rel="stylesheet" />
-
     <style>
-        :root{
-            --accent:#4B2E83;
-            --accent-soft:rgba(75,46,131,0.10);
-            --bg:#f6f7fb;
-            --card:#ffffff;
-            --muted:#6b7280;
-            --shadow:0 12px 28px rgba(15,23,42,0.08);
-            --radius:16px;
+        :root {
+            --bg: #f3f5ff;
+            --ink: #1d2240;
+            --muted: #6b7293;
+            --line: #d9def2;
+            --panel: #ffffff;
+            --accent: #f28c1f;
+            --accent-dark: #e2b106;
+            --dark: #4b2e83;
+            --dark-soft: #295f98;
+            --success: #0f766e;
+            --danger: #b42318;
+            --shadow: 0 20px 50px rgba(75, 46, 131, 0.10);
         }
-        body{font-family:Inter,system-ui,Arial;background:var(--bg)}
-        .page-wrap{padding:24px 12px}
-        .shell{max-width:980px;margin:0 auto}
-        .headline{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-        .headline h2{margin:0;color:#111827;font-size:22px;letter-spacing:-0.2px}
-        .headline p{margin:6px 0 0;color:var(--muted)}
 
-        .card-soft{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(15,23,42,0.06)}
-        .card-body{padding:20px}
+        * { box-sizing: border-box; }
 
-        .form-control, .custom-select{border-radius:12px}
-        .form-control:focus, .custom-select:focus{border-color:rgba(75,46,131,0.45);box-shadow:0 0 0 0.2rem rgba(75,46,131,0.12)}
-        label{font-weight:700;color:#111827}
+        body {
+            margin: 0;
+            font-family: "Plus Jakarta Sans", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top right, rgba(242, 140, 31, 0.18), transparent 20%),
+                radial-gradient(circle at top left, rgba(75, 46, 131, 0.10), transparent 24%),
+                linear-gradient(180deg, #fbfbff 0%, var(--bg) 100%);
+        }
 
-        .section-title{font-weight:800;color:#111827;margin-bottom:8px}
-        .section-note{color:var(--muted);font-size:13px;margin-bottom:12px}
+        .page {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 24px 18px 36px;
+        }
 
-        .badge-hint{display:inline-flex;align-items:center;gap:8px;background:var(--accent-soft);color:var(--accent);border:1px solid rgba(75,46,131,0.20);border-radius:999px;padding:6px 12px;font-weight:700;font-size:12px}
+        .top-rail {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 22px;
+            padding: 16px 18px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+            flex-wrap: wrap;
+        }
 
-        .btn-accent{background:var(--accent);color:#fff;border-color:var(--accent)}
-        .btn-accent:hover{background:#3e2670;color:#fff}
+        .rail-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
 
-        .alert{border-radius:12px}
-        .file-card{border:1px dashed rgba(15,23,42,0.12);border-radius:12px;padding:12px;background:#fbfbfe}
-        .help-text{color:var(--muted);font-size:12px}
+        .rail-mark {
+            width: 46px;
+            height: 46px;
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f28c1f, #f2c230);
+            color: #fff;
+            box-shadow: 0 14px 26px rgba(242, 140, 31, 0.24);
+        }
+
+        .rail-title strong {
+            display: block;
+            font-size: 18px;
+            line-height: 1.1;
+        }
+
+        .rail-title span {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .rail-badge,
+        .dash-link,
+        .btn-accent,
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            border-radius: 999px;
+            font-weight: 800;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .rail-badge {
+            padding: 10px 14px;
+            background: var(--dark);
+            color: #fff;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .dash-link {
+            padding: 13px 18px;
+            background: #fff;
+            color: var(--ink);
+            border: 1px solid var(--line);
+        }
+
+        .dash-link:hover {
+            color: var(--ink);
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.92fr);
+            gap: 24px;
+        }
+
+        .panel {
+            border-radius: 30px;
+            overflow: hidden;
+            background: var(--panel);
+            box-shadow: var(--shadow);
+        }
+
+        .form-panel {
+            border: 1px solid rgba(75, 46, 131, 0.08);
+        }
+
+        .panel-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 24px 28px 18px;
+            border-bottom: 1px solid #eceff3;
+            flex-wrap: wrap;
+        }
+
+        .panel-head h1 {
+            margin: 0;
+            font-size: 30px;
+            line-height: 1;
+            letter-spacing: -0.05em;
+        }
+
+        .panel-head p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .head-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 13px;
+            border-radius: 999px;
+            background: var(--dark);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .panel-body {
+            padding: 26px 28px 30px;
+        }
+
+        .alert-soft {
+            border: none;
+            border-radius: 18px;
+            padding: 15px 16px;
+            font-weight: 700;
+        }
+
+        .alert-success.alert-soft { background: rgba(15, 118, 110, 0.12); color: var(--success); }
+        .alert-danger.alert-soft { background: rgba(180, 35, 24, 0.10); color: var(--danger); }
+
+        .section + .section {
+            margin-top: 28px;
+            padding-top: 26px;
+            border-top: 1px solid #eceff3;
+        }
+
+        .section-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .section-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--dark);
+            color: #fff;
+        }
+
+        .section-bar strong {
+            display: block;
+            font-size: 18px;
+            line-height: 1.1;
+        }
+
+        .section-bar span {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .form-control,
+        .custom-select {
+            min-height: 56px;
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            padding: 15px 16px;
+            font-size: 15px;
+            background: #fbfbff;
+        }
+
+        textarea.form-control {
+            min-height: 148px;
+            resize: vertical;
+        }
+
+        .form-control:focus,
+        .custom-select:focus {
+            border-color: rgba(75, 46, 131, 0.34);
+            box-shadow: 0 0 0 0.2rem rgba(75, 46, 131, 0.12);
+            background: #fff;
+        }
+
+        .switcher {
+            display: inline-flex;
+            padding: 6px;
+            border-radius: 999px;
+            background: #eef1ff;
+            margin-bottom: 18px;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .switcher button {
+            border: none;
+            border-radius: 999px;
+            padding: 12px 16px;
+            background: transparent;
+            color: var(--muted);
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        .switcher button.active {
+            background: linear-gradient(135deg, var(--dark), var(--dark-soft));
+            color: #fff;
+        }
+
+        .pane { display: none; }
+        .pane.active { display: block; }
+
+        .upload-shell,
+        .search-shell {
+            border-radius: 24px;
+            border: 1px solid #edf1f5;
+            background: #fbfbff;
+            padding: 18px;
+        }
+
+        .upload-shell {
+            border-style: dashed;
+            border-color: #cbd3dc;
+        }
+
+        .search-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .result-card {
+            border: none;
+            padding: 0;
+            overflow: hidden;
+            border-radius: 20px;
+            background: #fff;
+            box-shadow: 0 14px 28px rgba(17, 17, 17, 0.08);
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .result-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .result-card span {
+            display: block;
+            padding: 12px 13px;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--ink);
+        }
+
+        .status-pill {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(15, 118, 110, 0.12);
+            color: var(--success);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .status-pill.show { display: inline-flex; }
+
+        .btn-accent {
+            border: none;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #f28c1f, #f2c230);
+            color: #fff;
+            box-shadow: 0 16px 30px rgba(242, 140, 31, 0.24);
+        }
+
+        .btn-accent:hover {
+            color: #fff;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .btn-ghost {
+            border: 1px solid var(--line);
+            padding: 14px 20px;
+            background: #fff;
+            color: var(--ink);
+        }
+
+        .btn-ghost:hover {
+            color: var(--ink);
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid #eceff3;
+            flex-wrap: wrap;
+        }
+
+        .action-tools {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .visual-panel {
+            padding: 22px;
+            background: linear-gradient(180deg, var(--dark) 0%, var(--dark-soft) 100%);
+            color: #fff;
+        }
+
+        .visual-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .visual-top strong {
+            font-size: 20px;
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+        }
+
+        .visual-kicker {
+            padding: 9px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .preview-card {
+            border-radius: 26px;
+            overflow: hidden;
+            background: #fff;
+            color: var(--ink);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.24);
+        }
+
+        .preview-stage {
+            height: 290px;
+            background: linear-gradient(135deg, #dfe5ec, #eef2f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .preview-stage img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .preview-empty {
+            text-align: center;
+            color: #788394;
+            padding: 28px;
+        }
+
+        .preview-empty i {
+            display: block;
+            font-size: 34px;
+            margin-bottom: 12px;
+        }
+
+        .preview-body {
+            padding: 18px;
+        }
+
+        .preview-title {
+            margin-bottom: 12px;
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .metric {
+            padding: 12px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #f4f2ff, #eef5ff);
+            text-align: center;
+        }
+
+        .metric strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .metric span {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .visual-strip {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .visual-box {
+            min-height: 108px;
+            border-radius: 22px;
+            padding: 16px 14px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .visual-box i {
+            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            background: rgba(255, 255, 255, 0.10);
+            color: #fff;
+        }
+
+        .visual-box strong {
+            display: block;
+            font-size: 13px;
+            line-height: 1.35;
+        }
+
+        .footer-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-top: 24px;
+            padding: 16px 18px;
+            border-radius: 24px;
+            flex-wrap: wrap;
+        }
+
+        .footer-bar strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .footer-bar p {
+            font-size: 13px;
+        }
+
+        @media (max-width: 991px) {
+            .layout { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 767px) {
+            .page { padding: 16px 12px 26px; }
+            .top-rail, .panel-head, .panel-body, .visual-panel, .footer-bar { padding-left: 18px; padding-right: 18px; }
+            .layout, .results, .metric-grid, .visual-strip, .search-row { grid-template-columns: 1fr; }
+            .actions, .footer-bar { align-items: stretch; }
+            .action-tools, .action-tools a, .action-tools button, .footer-bar .dash-link { width: 100%; }
+        }
     </style>
 </head>
 <body>
-
-<div th:replace="fragments/header :: header"></div>
-
-<div class="page-wrap">
-    <div class="shell">
-        <div class="headline">
-            <div>
-                <div class="badge-hint"><i class="fas fa-box"></i> Product Listings</div>
-                <h2 class="mt-2">Add New Product</h2>
-                <p>Provide the details for your new listing. </p>
+<div class="page">
+    <div class="top-rail">
+        <div class="rail-left">
+            <span class="rail-mark"><i class="fas fa-plus"></i></span>
+            <div class="rail-title">
+                <strong>Add Product</strong>
+                <span>Seller product listing workspace</span>
             </div>
-            <a class="btn btn-outline-secondary" th:href="@{/seller/dashboard}"><i class="fas fa-arrow-left mr-2"></i>Back to dashboard</a>
         </div>
+        <div class="d-flex align-items-center flex-wrap" style="gap:12px;">
+            <span class="rail-badge"><i class="fas fa-circle" style="font-size:8px;"></i>Live Form</span>
+            <a class="dash-link" th:href="@{/seller/dashboard}"><i class="fas fa-arrow-left"></i>Back to Dashboard</a>
+        </div>
+    </div>
 
-        <div class="mb-3" th:if="${success != null}">
-            <div class="alert alert-success" th:text="${success}">Product added successfully.</div>
-        </div>
-        <div class="mb-3" th:if="${error != null}">
-            <div class="alert alert-danger" th:text="${error}">Error message</div>
-        </div>
+    <div class="layout">
+        <section class="panel form-panel">
+            <div class="panel-head">
+                <div>
+                    <h1>New Listing</h1>
+                    <p>Clean form. Strong contrast. Direct workflow.</p>
+                </div>
+                <div class="head-chip"><i class="fas fa-bolt"></i>Seller Mode</div>
+            </div>
 
-        <div class="card-soft">
-            <div class="card-body">
+            <div class="panel-body">
+                <div th:if="${success != null}" class="alert alert-success alert-soft" th:text="${success}">Product added successfully.</div>
+                <div th:if="${error != null}" class="alert alert-danger alert-soft" th:text="${error}">Error message</div>
+
                 <form th:action="@{/seller/products}" method="post" enctype="multipart/form-data">
-                    <div class="section-title">Product details</div>
-                    <div class="section-note">Keep your title short and descriptive so buyers can find it quickly.</div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-8">
-                            <label for="title">Title</label>
-                            <input type="text" class="form-control" id="title" name="title" placeholder="e.g., TI-84 Scientific Calculator" required>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="condition">Condition</label>
-                            <select class="custom-select" id="condition" name="condition" required>
-                                <option value="" selected disabled>Choose...</option>
-                                <option th:each="c : ${conditions}" th:value="${c}" th:text="${c}">NEW</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea class="form-control" id="description" name="description" rows="4" placeholder="Optional details about the product..."></textarea>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <label for="price">Price (RM)</label>
-                            <input type="number" step="0.01" min="0.01" class="form-control" id="price" name="price" placeholder="0.00" required>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="quantity">Quantity</label>
-                            <input type="number" min="1" class="form-control" id="quantity" name="quantity" placeholder="1" required>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="categoryId">Category</label>
-                            <select class="custom-select" id="categoryId" name="categoryId" required>
-                                <option value="" selected disabled>Select category</option>
-                                <option th:each="cat : ${categories}" th:value="${cat.categoryId}" th:text="${cat.categoryName}">Category</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="section-title mt-4">Product image</div>
-                    <div class="section-note">Upload one clear image. This will be your primary listing photo.</div>
-                    <div class="file-card">
-                        <!-- Tabs for Upload vs Search -->
-                        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="upload-tab" data-toggle="pill" href="#upload-sec" role="tab">Upload File</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="search-tab" data-toggle="pill" href="#search-sec" role="tab">Search Online (Dev)</a>
-                            </li>
-                        </ul>
-
-                        <div class="tab-content">
-                            <!-- Original File Upload -->
-                            <div class="tab-pane fade show active" id="upload-sec" role="tabpanel">
-                                <div class="form-group mb-2">
-                                    <label for="image">Image *</label>
-                                    <input type="file" class="form-control-file" id="image" name="image" accept="image/*" required>
-                                </div>
-                                <div class="help-text">Recommended: JPG or PNG, clear background, good lighting.</div>
+                    <div class="section">
+                        <div class="section-bar">
+                            <span class="section-icon"><i class="fas fa-tag"></i></span>
+                            <div>
+                                <strong>Product Details</strong>
+                                <span>Core listing information</span>
                             </div>
+                        </div>
 
-                            <!-- New Image Search -->
-                            <div class="tab-pane fade" id="search-sec" role="tabpanel">
-                                <div class="input-group mb-3">
-                                    <input type="text" id="imageSearchInput" class="form-control" placeholder="Search for products (e.g., laptop)...">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-accent" type="button" id="searchImageBtn">Search</button>
-                                    </div>
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <div class="field">
+                                    <label for="title">Title</label>
+                                    <input type="text" class="form-control" id="title" name="title" placeholder="TI-84 calculator, barely used" required>
                                 </div>
-                                <div id="imageResults" class="d-flex flex-wrap gap-2" style="max-height: 200px; overflow-y: auto;">
-                                    <!-- Search results will appear here -->
+                            </div>
+                            <div class="col-md-4">
+                                <div class="field">
+                                    <label for="condition">Condition</label>
+                                    <select class="custom-select" id="condition" name="condition" required>
+                                        <option value="" selected disabled>Select</option>
+                                        <option th:each="c : ${conditions}" th:value="${c}" th:text="${c}">NEW</option>
+                                    </select>
                                 </div>
-                                <div id="selectedImagePreview" class="mt-2 text-success" style="font-weight: bold; display: none;">
-                                    ✓ Image selected and attached to form!
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" placeholder="Write the key details buyers care about."></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <div class="field">
+                                    <label for="price">Price (RM)</label>
+                                    <input type="number" step="0.01" min="0.01" class="form-control" id="price" name="price" placeholder="0.00" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="field">
+                                    <label for="quantity">Quantity</label>
+                                    <input type="number" min="1" class="form-control" id="quantity" name="quantity" placeholder="1" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="field">
+                                    <label for="categoryId">Category</label>
+                                    <select class="custom-select" id="categoryId" name="categoryId" required>
+                                        <option value="" selected disabled>Select category</option>
+                                        <option th:each="cat : ${categories}" th:value="${cat.categoryId}" th:text="${cat.categoryName}">Category</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-end mt-4">
-                        <button type="submit" class="btn btn-accent px-4"><i class="fas fa-cloud-upload-alt mr-2"></i>Publish Product</button>
+                    <div class="section">
+                        <div class="section-bar">
+                            <span class="section-icon"><i class="fas fa-camera"></i></span>
+                            <div>
+                                <strong>Primary Image</strong>
+                                <span>Upload or pull from library</span>
+                            </div>
+                        </div>
+
+                        <div class="switcher">
+                            <button type="button" class="active" data-pane="upload-pane"><i class="fas fa-upload"></i>Upload</button>
+                            <button type="button" data-pane="search-pane"><i class="fas fa-images"></i>Image Library</button>
+                        </div>
+
+                        <div class="pane active" id="upload-pane">
+                            <div class="upload-shell">
+                                <label for="image">Primary image file</label>
+                                <input type="file" class="form-control-file" id="image" name="image" accept="image/*" required>
+                            </div>
+                        </div>
+
+                        <div class="pane" id="search-pane">
+                            <div class="search-shell">
+                                <div class="search-row">
+                                    <input type="text" id="imageSearchInput" class="form-control" placeholder="Search for product visuals">
+                                    <button class="btn-accent" type="button" id="searchImageBtn"><i class="fas fa-search"></i>Search</button>
+                                </div>
+                                <div id="imageResults" class="results"></div>
+                                <div id="selectedImagePreview" class="status-pill"><i class="fas fa-check-circle"></i>Image attached to the form.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <div class="rail-badge"><i class="fas fa-check"></i>Ready to Publish</div>
+                        <div class="action-tools">
+                            <a class="btn-ghost" th:href="@{/seller/dashboard}"><i class="fas fa-arrow-left"></i>Back to Dashboard</a>
+                            <button type="submit" class="btn-accent"><i class="fas fa-cloud-upload-alt"></i>Publish Product</button>
+                        </div>
                     </div>
                 </form>
             </div>
+        </section>
+
+        <aside class="panel visual-panel">
+            <div class="visual-top">
+                <div>
+                    <strong>Listing Preview</strong>
+                </div>
+                <span class="visual-kicker">Visual</span>
+            </div>
+
+            <div class="preview-card">
+                <div class="preview-stage">
+                    <img id="previewImage" alt="Selected product preview">
+                    <div class="preview-empty" id="previewEmpty">
+                        <i class="far fa-image"></i>
+                        Select an image to preview the first impression.
+                    </div>
+                </div>
+                <div class="preview-body">
+                    <div class="preview-title">Primary Listing Card</div>
+                    <div class="metric-grid">
+                        <div class="metric"><strong>Title</strong><span>Visible</span></div>
+                        <div class="metric"><strong>Price</strong><span>Visible</span></div>
+                        <div class="metric"><strong>Image</strong><span>Priority</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="visual-strip">
+                <div class="visual-box">
+                    <i class="fas fa-eye"></i>
+                    <strong>Cleaner visual focus</strong>
+                </div>
+                <div class="visual-box">
+                    <i class="fas fa-bolt"></i>
+                    <strong>Faster seller flow</strong>
+                </div>
+                <div class="visual-box">
+                    <i class="fas fa-columns"></i>
+                    <strong>Dashboard return path</strong>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <div class="footer-bar">
+        <div>
+            <strong>Seller-only page</strong>
+            <p>No shared header. No shared footer. Direct product workflow.</p>
         </div>
+        <a class="dash-link" th:href="@{/seller/dashboard}"><i class="fas fa-columns"></i>Return to Seller Dashboard</a>
     </div>
 </div>
-
-<div th:replace="fragments/footer :: footer"></div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
-
 <script>
-    // ==================================================================
-    // DEV INSTRUCTIONS: GET YOUR FREE API KEY
-    // 1. Go to https://www.pexels.com/api/ and sign up for a free account.
-    // 2. Create a new app and copy your API Key.
-    // 3. Paste your API Key exactly inside the quotes below:
     const PEXELS_API_KEY = 'KndinDCCv9RLjTWL1kJ0n7EYaKPIGdTqmWnWIDzHjanOsOCrwH8meGaz';
-    // ==================================================================
+    const imageInput = document.getElementById('image');
+    const previewImage = document.getElementById('previewImage');
+    const previewEmpty = document.getElementById('previewEmpty');
+    const selectedImagePreview = document.getElementById('selectedImagePreview');
+
+    document.querySelectorAll('.switcher button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            document.querySelectorAll('.switcher button').forEach(function(item) { item.classList.remove('active'); });
+            document.querySelectorAll('.pane').forEach(function(pane) { pane.classList.remove('active'); });
+            button.classList.add('active');
+            document.getElementById(button.getAttribute('data-pane')).classList.add('active');
+        });
+    });
+
+    if (imageInput) {
+        imageInput.addEventListener('change', function(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(loadEvent) {
+                previewImage.src = loadEvent.target.result;
+                previewImage.style.display = 'block';
+                previewEmpty.style.display = 'none';
+                selectedImagePreview.classList.remove('show');
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 
     document.getElementById('searchImageBtn').addEventListener('click', async function() {
         const query = document.getElementById('imageSearchInput').value;
-        if (!query) return;
-
         const resultsContainer = document.getElementById('imageResults');
-        resultsContainer.innerHTML = 'Searching...';
-
-        if (PEXELS_API_KEY === 'YOUR_PEXELS_API_KEY_HERE') {
-            resultsContainer.innerHTML = '<div class="alert alert-warning w-100">Please add your Pexels API Key in the add-product.html file. Check the instructions inside the code!</div>';
-            return;
-        }
+        if (!query) return;
+        resultsContainer.innerHTML = '<div class="hint">Searching image library...</div>';
 
         try {
-            // Call Pexels directly without the proxy to avoid preflight CORS header restrictions
-            const response = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=6`, {
-                headers: {
-                    Authorization: PEXELS_API_KEY
-                }
+            const response = await fetch('https://api.pexels.com/v1/search?query=' + encodeURIComponent(query) + '&per_page=6', {
+                headers: { Authorization: PEXELS_API_KEY }
             });
 
-            if(response.status === 401) {
-                resultsContainer.innerHTML = '<div class="alert alert-danger w-100">Invalid API Key! Please check your Pexels API Key.</div>';
+            if (response.status === 401) {
+                resultsContainer.innerHTML = '<div class="alert alert-danger alert-soft" style="margin:0;">Invalid API key. Check the current Pexels key.</div>';
                 return;
             }
 
             const data = await response.json();
             resultsContainer.innerHTML = '';
-
-            if(data.photos && data.photos.length > 0) {
-                data.photos.forEach(photo => {
-                    const imgUrl = photo.src.medium;
-                    const img = document.createElement('img');
-                    img.src = imgUrl;
-                    img.style.width = '120px';
-                    img.style.height = '120px';
-                    img.style.objectFit = 'cover';
-                    img.style.cursor = 'pointer';
-                    img.style.borderRadius = '8px';
-                    img.style.margin = '4px';
-                    img.style.border = '2px solid transparent';
-
-                    // When clicked, grab the image and trick the input type="file"
-                    img.onclick = async function() {
-                        resultsContainer.innerHTML = 'Downloading and attaching image...';
-                        await attachImageToFileInput(imgUrl, `product-${photo.id}.jpg`);
-                        resultsContainer.innerHTML = '';
-                        document.getElementById('selectedImagePreview').style.display = 'block';
-                    };
-
-                    resultsContainer.appendChild(img);
-                });
-            } else {
-                resultsContainer.innerHTML = 'No images found for that search.';
+            if (!(data.photos && data.photos.length > 0)) {
+                resultsContainer.innerHTML = '<div class="hint">No images found for that search.</div>';
+                return;
             }
+
+            data.photos.forEach(function(photo) {
+                const imgUrl = photo.src.medium;
+                const card = document.createElement('button');
+                card.type = 'button';
+                card.className = 'result-card';
+                card.innerHTML = '<img src="' + imgUrl + '" alt="Search result"><span>Select this image</span>';
+                card.addEventListener('click', async function() {
+                    resultsContainer.innerHTML = '<div class="hint">Downloading and attaching image...</div>';
+                    await attachImageToFileInput(imgUrl, 'product-' + photo.id + '.jpg');
+                    previewImage.src = imgUrl;
+                    previewImage.style.display = 'block';
+                    previewEmpty.style.display = 'none';
+                    selectedImagePreview.classList.add('show');
+                    resultsContainer.innerHTML = '';
+                });
+                resultsContainer.appendChild(card);
+            });
         } catch (error) {
             console.error('Search error:', error);
-            resultsContainer.innerHTML = 'Search failed. Check the browser console.';
+            resultsContainer.innerHTML = '<div class="hint">Search failed. Check the browser console.</div>';
         }
     });
 
     async function attachImageToFileInput(imageUrl, filename) {
         try {
-            // First, try fetching directly
             let response = await fetch(imageUrl);
-
-            // If the server blocks the direct download via CORS, response will fail
-            if (!response.ok) throw new Error("Direct fetch failed");
-
+            if (!response.ok) throw new Error('Direct fetch failed');
             const blob = await response.blob();
             const file = new File([blob], filename, { type: blob.type });
             const dataTransfer = new DataTransfer();
             dataTransfer.items.add(file);
-            const fileInput = document.getElementById('image');
-            fileInput.files = dataTransfer.files;
-        } catch(err) {
-            console.warn("Direct fetch blocked by CORS, using proxy fallback...", err);
+            imageInput.files = dataTransfer.files;
+        } catch (err) {
             try {
-                // Fallback to a reliable CORS proxy to download the image as a blob
-                const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(imageUrl)}`;
+                const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(imageUrl);
                 const response = await fetch(proxyUrl);
                 const blob = await response.blob();
                 const file = new File([blob], filename, { type: blob.type });
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);
-                const fileInput = document.getElementById('image');
-                fileInput.files = dataTransfer.files;
+                imageInput.files = dataTransfer.files;
             } catch (fallbackErr) {
-                console.error("Proxy fallback also failed:", fallbackErr);
-                alert("Could not attach image automatically due to browser security. Please try another image.");
+                console.error('Proxy fallback also failed:', fallbackErr);
+                alert('Could not attach image automatically due to browser security. Please try another image.');
             }
         }
     }
 </script>
 </body>
 </html>
-
-

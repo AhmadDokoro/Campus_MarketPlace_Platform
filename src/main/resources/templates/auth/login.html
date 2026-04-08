@@ -2,107 +2,391 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Campus Marketplace</title>
     <link th:href="@{/css/authentication.css}" rel="stylesheet" />
-
-    <!-- Login-only styling (pure image left) -->
     <style>
-        /* LEFT IMAGE PANEL (PURE IMAGE) */
-        .login-image-panel {
-            flex: 0 0 420px;
-            background:
-                    linear-gradient(
-                            180deg,
-                            rgba(0,0,0,0.25),
-                            rgba(0,0,0,0.35)
-                    ),
-                    url('/img/side.jpg') center/cover no-repeat;
-            animation: slideInLeft 600ms ease;
+        /* ── Reset ──────────────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
+
+        body.login-body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0824;
+            padding: 0;
+            min-height: 100vh;
         }
 
-        /* Animate form side */
-        .login-form-section {
-            animation: slideInRight 600ms ease;
+        /* ── Outer shell ────────────────────────────────────────── */
+        .lp-shell {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
         }
 
-        /* Input focus enhancement */
-        .login-input-group input:focus {
-            box-shadow: 0 0 0 4px rgba(242,183,5,0.25);
-            border-color: rgba(242,183,5,0.6);
+        /* ════════════════════════════════════════════════════════
+           LEFT — Decorative panel
+        ════════════════════════════════════════════════════════ */
+        .lp-deco {
+            flex: 0 0 44%;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(155deg, #4B2E83 0%, #2d1a57 55%, #170c30 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 56px 44px;
         }
 
-        /* Button micro-interaction */
-        .login-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 22px 50px rgba(242,183,5,0.28);
+        /* Blurred blob accents */
+        .lp-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(64px);
+            pointer-events: none;
+        }
+        .lp-blob--1 { width:380px; height:380px; background:#F2B705; opacity:.14; top:-100px; left:-100px; }
+        .lp-blob--2 { width:300px; height:300px; background:#8b5cf6; opacity:.18; bottom:-80px; right:-80px; }
+        .lp-blob--3 { width:220px; height:220px; background:#F2B705; opacity:.09; bottom:100px; left:-50px; }
+
+        /* Geometric triangle / mountain shapes (sketch-inspired) */
+        .lp-triangle { position:absolute; width:0; height:0; pointer-events:none; }
+        .lp-tri--1 {
+            border-left:110px solid transparent; border-right:110px solid transparent;
+            border-bottom:180px solid rgba(242,183,5,0.13);
+            top:50px; right:70px;
+        }
+        .lp-tri--2 {
+            border-left:75px solid transparent; border-right:75px solid transparent;
+            border-bottom:130px solid rgba(255,255,255,0.07);
+            top:105px; right:180px;
+        }
+        .lp-tri--3 {
+            border-left:90px solid transparent; border-right:90px solid transparent;
+            border-bottom:150px solid rgba(139,92,246,0.1);
+            top:20px; left:40px;
         }
 
-        /* Animations */
-        @keyframes slideInLeft {
-            from { opacity:0; transform:translateX(-20px); }
-            to { opacity:1; transform:translateX(0); }
+        /* Floating accent dots */
+        .lp-dot {
+            position:absolute; border-radius:50%; pointer-events:none;
+            background:rgba(255,255,255,0.14);
+        }
+        .lp-dot--a { width:8px;  height:8px;  top:18%; left:12%; }
+        .lp-dot--b { width:13px; height:13px; top:33%; right:18%; background:rgba(242,183,5,.3); }
+        .lp-dot--c { width:6px;  height:6px;  top:62%; left:28%; }
+        .lp-dot--d { width:18px; height:18px; bottom:22%; right:22%; background:rgba(242,183,5,.18); }
+        .lp-dot--e { width:5px;  height:5px;  top:78%; left:8%; }
+        .lp-dot--f { width:10px; height:10px; top:48%; left:6%; background:rgba(242,183,5,.22); }
+        .lp-dot--g { width:7px;  height:7px;  bottom:40%; right:10%; }
+
+        /* Bottom wave */
+        .lp-wave {
+            position:absolute; bottom:0; left:0; right:0;
+            pointer-events:none; opacity:.1;
         }
 
-        @keyframes slideInRight {
-            from { opacity:0; transform:translateX(20px); }
-            to { opacity:1; transform:translateX(0); }
+        /* Deco content (above all shapes) */
+        .lp-deco__content {
+            position:relative; z-index:1;
+            display:flex; flex-direction:column; align-items:center; text-align:center;
         }
 
-        /* Mobile: hide image panel */
-        @media (max-width:800px){
-            .login-image-panel {
-                display: none;
-            }
+        .lp-deco__logo {
+            width:108px; height:auto;
+            filter: brightness(0) invert(1);
+            opacity:.95;
+            margin-bottom:22px;
+            animation: floatLogo 4s ease-in-out infinite;
+            drop-shadow: 0 0 24px rgba(242,183,5,.4);
+        }
+        @keyframes floatLogo {
+            0%,100% { transform:translateY(0); }
+            50%      { transform:translateY(-9px); }
+        }
+
+        .lp-deco__name {
+            font-size:1.55rem; font-weight:900;
+            color:#F2B705; letter-spacing:.3px; margin-bottom:8px; line-height:1.2;
+        }
+        .lp-deco__tagline {
+            font-size:.9rem; color:rgba(255,255,255,.65);
+            line-height:1.65; max-width:270px;
+        }
+
+        /* Feature pill list */
+        .lp-pills { display:flex; flex-direction:column; gap:10px; margin-top:36px; width:100%; max-width:280px; }
+        .lp-pill {
+            display:flex; align-items:center; gap:10px;
+            background:rgba(255,255,255,.07);
+            border:1px solid rgba(255,255,255,.11);
+            border-radius:40px; padding:9px 18px;
+            font-size:.83rem; color:rgba(255,255,255,.82);
+            backdrop-filter:blur(4px);
+        }
+        .lp-pill__icon { font-size:15px; flex-shrink:0; }
+
+        /* ════════════════════════════════════════════════════════
+           RIGHT — Form panel
+        ════════════════════════════════════════════════════════ */
+        .lp-form-panel {
+            flex:1;
+            display:flex; align-items:center; justify-content:center;
+            padding:48px 32px;
+            background:#ffffff;
+        }
+
+        .lp-form-inner {
+            width:100%; max-width:390px;
+            animation: slideUp 480ms cubic-bezier(.2,.9,.2,1) both;
+        }
+        @keyframes slideUp {
+            from { opacity:0; transform:translateY(22px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        /* Mobile-only logo (hidden on desktop because deco panel shows it) */
+        .lp-mobile-logo { display:none; text-align:center; margin-bottom:24px; }
+        .lp-mobile-logo img { width:58px; height:auto; }
+
+        /* Headings */
+        .lp-eyebrow {
+            font-size:.75rem; font-weight:700; letter-spacing:.14em;
+            text-transform:uppercase; color:#F2B705; margin-bottom:6px;
+        }
+        .lp-heading {
+            font-size:1.85rem; font-weight:900; color:#1a0f35;
+            letter-spacing:-.3px; margin-bottom:6px; line-height:1.2;
+        }
+        .lp-sub {
+            font-size:.88rem; color:#6b7280; margin-bottom:30px; line-height:1.5;
+        }
+
+        /* Field */
+        .lp-field { margin-bottom:18px; }
+        .lp-field label {
+            display:block; font-size:.84rem; font-weight:700;
+            color:#374151; margin-bottom:7px;
+        }
+        .lp-field__wrap { position:relative; }
+        .lp-field__icon {
+            position:absolute; left:13px; top:50%; transform:translateY(-50%);
+            font-size:15px; color:#9ca3af; pointer-events:none; line-height:1;
+        }
+        .lp-field input {
+            width:100%; padding:13px 42px 13px 40px;
+            border-radius:12px; border:1.5px solid #e5e7eb;
+            background:#f9fafb; font-size:.95rem; color:#111827;
+            outline:none; font-family:inherit;
+            transition:border-color 200ms, box-shadow 200ms, background 200ms;
+        }
+        .lp-field input::placeholder { color:#9ca3af; }
+        .lp-field input:focus {
+            border-color:#4B2E83;
+            background:#fff;
+            box-shadow:0 0 0 4px rgba(75,46,131,.1);
+        }
+
+        /* Password show/hide toggle */
+        .lp-toggle {
+            position:absolute; right:11px; top:50%; transform:translateY(-50%);
+            background:none; border:none; cursor:pointer;
+            font-size:16px; color:#9ca3af; padding:4px; line-height:1;
+            transition:color 160ms;
+        }
+        .lp-toggle:hover { color:#4B2E83; }
+
+        /* Error banner */
+        .lp-error {
+            display:flex; align-items:center; gap:8px;
+            background:#fef2f2; border:1px solid #fecaca;
+            border-radius:10px; padding:11px 14px;
+            margin-bottom:16px; font-size:.87rem;
+            color:#991b1b; font-weight:600;
+        }
+
+        /* LOGIN button */
+        .lp-btn {
+            display:block; width:100%;
+            padding:15px;
+            border-radius:50px; border:none;
+            background:linear-gradient(90deg, #F2B705 0%, #d9a200 100%);
+            color:#1a0f35; font-size:1rem; font-weight:900;
+            letter-spacing:.1em; cursor:pointer; font-family:inherit;
+            box-shadow:0 8px 30px rgba(242,183,5,.32);
+            transition:transform 200ms, box-shadow 200ms, filter 200ms;
+            margin-top:6px;
+        }
+        .lp-btn:hover {
+            transform:translateY(-3px);
+            box-shadow:0 18px 44px rgba(242,183,5,.4);
+            filter:brightness(1.04);
+        }
+        .lp-btn:active { transform:translateY(0); box-shadow:0 4px 16px rgba(242,183,5,.3); }
+
+        /* Register link row */
+        .lp-register {
+            text-align:center; margin-top:22px;
+            font-size:.88rem; color:#6b7280;
+        }
+        .lp-register a {
+            color:#4B2E83; font-weight:700; text-decoration:none;
+            transition:color 160ms;
+        }
+        .lp-register a:hover { color:#F2B705; }
+
+        /* Divider */
+        .lp-divider {
+            display:flex; align-items:center; gap:12px;
+            margin:22px 0; color:#d1d5db; font-size:.8rem;
+        }
+        .lp-divider::before, .lp-divider::after {
+            content:''; flex:1; height:1px; background:#e5e7eb;
+        }
+
+        /* ── Mobile ─────────────────────────────────────────────── */
+        @media (max-width:860px) {
+            .lp-shell       { flex-direction:column; }
+            .lp-deco        { flex:0 0 auto; padding:36px 24px; min-height:auto; }
+            .lp-deco__logo  { width:78px; margin-bottom:14px; }
+            .lp-deco__name  { font-size:1.25rem; }
+            .lp-pills       { display:none; }
+            .lp-tri--1, .lp-tri--2, .lp-tri--3 { display:none; }
+            .lp-form-panel  { padding:36px 22px; }
+            .lp-mobile-logo { display:block; }
+            .lp-heading     { font-size:1.55rem; }
         }
     </style>
 </head>
 
 <body class="login-body">
+<div class="lp-shell">
 
-<div class="login-wrapper">
+    <!-- ══════════════════════════════════════════════════════════
+         LEFT — Decorative panel
+    ══════════════════════════════════════════════════════════════ -->
+    <div class="lp-deco">
 
-    <div class="login-card">
+        <!-- Background layers -->
+        <div class="lp-blob lp-blob--1"></div>
+        <div class="lp-blob lp-blob--2"></div>
+        <div class="lp-blob lp-blob--3"></div>
 
-        <!-- LEFT: PURE IMAGE -->
-        <div class="login-image-panel"></div>
+        <div class="lp-triangle lp-tri--1"></div>
+        <div class="lp-triangle lp-tri--2"></div>
+        <div class="lp-triangle lp-tri--3"></div>
 
-        <!-- RIGHT: LOGIN FORM -->
-        <div class="login-form-section">
-            <h2 class="login-title">Welcome Back</h2>
+        <div class="lp-dot lp-dot--a"></div>
+        <div class="lp-dot lp-dot--b"></div>
+        <div class="lp-dot lp-dot--c"></div>
+        <div class="lp-dot lp-dot--d"></div>
+        <div class="lp-dot lp-dot--e"></div>
+        <div class="lp-dot lp-dot--f"></div>
+        <div class="lp-dot lp-dot--g"></div>
 
-            <form method="post" th:action="@{/signin}" class="login-form">
+        <svg class="lp-wave" viewBox="0 0 1440 100" preserveAspectRatio="none"
+             xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,50 C360,100 720,0 1080,50 C1260,75 1380,20 1440,50 L1440,100 L0,100 Z"
+                  fill="rgba(255,255,255,1)"/>
+        </svg>
 
-                <div class="login-input-group">
-                    <label for="username">Email</label>
-                    <input id="username" type="text" name="email" required>
+        <!-- Content -->
+        <div class="lp-deco__content">
+            <img th:src="@{/img/umtlogo.png}" alt="UMT Logo" class="lp-deco__logo" />
+
+            <div class="lp-deco__name">Campus Marketplace</div>
+            <p class="lp-deco__tagline">
+                Your trusted student e-commerce platform — buy, sell and connect within the UMT community.
+            </p>
+
+            <div class="lp-pills">
+                <div class="lp-pill">
+                    <span class="lp-pill__icon">🛍️</span>
+                    Buy &amp; sell campus goods
                 </div>
-
-                <div class="login-input-group">
-                    <label for="password">Password</label>
-                    <input id="password" type="password" name="password" required>
+                <div class="lp-pill">
+                    <span class="lp-pill__icon">🔒</span>
+                    Verified student accounts only
                 </div>
-
-                <!-- Error message -->
-                <div th:if="${error}"
-                     class="login-error"
-                     style="color:#ffffff;background:#C4161C;padding:10px;border-radius:6px;margin-bottom:12px;">
-                    <p th:text="${error}" style="margin:0;font-weight:600;"></p>
+                <div class="lp-pill">
+                    <span class="lp-pill__icon">💬</span>
+                    Real-time buyer–seller chat
                 </div>
-
-                <button type="submit" class="login-button">Login</button>
-
-                <div style="margin-top:14px;">
-                    <a th:href="@{/registerUser}" class="signup-button">
-                        Create an account
-                    </a>
-                </div>
-
-            </form>
+            </div>
         </div>
 
     </div>
 
-</div>
+    <!-- ══════════════════════════════════════════════════════════
+         RIGHT — Form panel
+    ══════════════════════════════════════════════════════════════ -->
+    <div class="lp-form-panel">
+        <div class="lp-form-inner">
 
+            <!-- Mobile-only logo (deco panel hidden on small screens) -->
+            <div class="lp-mobile-logo">
+                <img th:src="@{/img/umtlogo.png}" alt="UMT Logo" />
+            </div>
+
+            <p class="lp-eyebrow">UMT Campus Marketplace</p>
+            <h1 class="lp-heading">Welcome Back 👋</h1>
+            <p class="lp-sub">Sign in to your account to continue.</p>
+
+            <form method="post" th:action="@{/signin}">
+
+                <!-- Email -->
+                <div class="lp-field">
+                    <label for="email">Email</label>
+                    <div class="lp-field__wrap">
+                        <span class="lp-field__icon">✉️</span>
+                        <input id="email" type="text" name="email"
+                               placeholder="your@umt.edu.my"
+                               autocomplete="email" required />
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="lp-field">
+                    <label for="password">Password</label>
+                    <div class="lp-field__wrap">
+                        <span class="lp-field__icon">🔐</span>
+                        <input id="password" type="password" name="password"
+                               placeholder="Enter your password"
+                               autocomplete="current-password" required />
+                        <button type="button" class="lp-toggle" onclick="togglePwd()" title="Show / hide">
+                            👁
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Error banner -->
+                <div th:if="${error}" class="lp-error">
+                    <span>⚠️</span>
+                    <span th:text="${error}">Invalid email or password.</span>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="lp-btn">LOGIN</button>
+
+            </form>
+
+            <div class="lp-divider">or</div>
+
+            <div class="lp-register">
+                Don't have an account?&nbsp;
+                <a th:href="@{/registerUser}">Create one</a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<script>
+    function togglePwd() {
+        var f = document.getElementById('password');
+        f.type = f.type === 'password' ? 'text' : 'password';
+    }
+</script>
 </body>
 </html>
