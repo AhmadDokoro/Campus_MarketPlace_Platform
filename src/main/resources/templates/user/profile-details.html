@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --purple:#4B2E83;
+            --purple-deep:#27184f;
+            --purple-soft:#ede7fb;
+            --orange:#f28c1f;
+            --yellow:#f2c230;
+            --blue:#2d6fb7;
+            --blue-soft:#eaf2ff;
+            --ink:#1f2640;
+            --muted:#6b7293;
+            --line:#d9def2;
+            --page:#f4f6ff;
+            --card:#ffffff;
+            --shadow:0 24px 54px rgba(75,46,131,0.10);
+        }
+
+        *{box-sizing:border-box}
+        body{
+            margin:0;
+            font-family:"Plus Jakarta Sans",sans-serif;
+            color:var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(75,46,131,.12), transparent 22%),
+                radial-gradient(circle at top right, rgba(242,140,31,.15), transparent 18%),
+                linear-gradient(180deg,#fbfbff 0%,var(--page) 100%);
+        }
+
+        .profile-page{
+            padding:28px 14px 40px;
+        }
+
+        .profile-shell{
+            max-width:1080px;
+            margin:0 auto;
+        }
+
+        .hero{
+            margin-bottom:18px;
+            padding:24px;
+            border-radius:30px;
+            background:
+                radial-gradient(circle at top right, rgba(242,194,48,.18), transparent 28%),
+                linear-gradient(135deg,#fff 0%, #fbf9ff 48%, #eef5ff 100%);
+            border:1px solid rgba(255,255,255,.96);
+            box-shadow:var(--shadow);
+        }
+
+        .hero-top{
+            display:flex;
+            align-items:flex-start;
+            justify-content:space-between;
+            gap:18px;
+            flex-wrap:wrap;
+        }
+
+        .hero-id{
+            display:flex;
+            align-items:center;
+            gap:18px;
+            min-width:0;
+        }
+
+        .hero-avatar{
+            width:88px;
+            height:88px;
+            border-radius:28px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            flex-shrink:0;
+            color:#fff;
+            background:
+                linear-gradient(135deg,var(--purple),#7550c7 58%, var(--orange) 120%);
+            box-shadow:0 18px 34px rgba(75,46,131,.20);
+        }
+
+        .hero-avatar i{font-size:36px}
+
+        .hero-copy h1{
+            margin:0;
+            font-size:34px;
+            line-height:1;
+            letter-spacing:-.06em;
+        }
+
+        .hero-email{
+            margin-top:8px;
+            color:#68708d;
+            font-family:"Space Grotesk",sans-serif;
+            font-size:13px;
+            text-transform:uppercase;
+            letter-spacing:.05em;
+        }
+
+        .hero-copy p{
+            margin:10px 0 0;
+            color:var(--muted);
+            font-size:14px;
+            max-width:620px;
+        }
+
+        .hero-actions{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+
+        .btn-hero{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:9px;
+            padding:13px 16px;
+            border-radius:999px;
+            text-decoration:none;
+            font-weight:800;
+            border:1px solid transparent;
+        }
+
+        .btn-hero:hover{text-decoration:none}
+        .btn-home{
+            background:#fff;
+            color:var(--ink);
+            border-color:var(--line);
+        }
+
+        .btn-back{
+            background:linear-gradient(135deg,var(--orange),var(--yellow));
+            color:#fff;
+            box-shadow:0 14px 24px rgba(242,140,31,.20);
+        }
+
+        .content{
+            display:block;
+        }
+
+        .sheet{
+            background:rgba(255,255,255,.90);
+            border-radius:28px;
+            border:1px solid rgba(15,23,42,.06);
+            box-shadow:var(--shadow);
+        }
+        .sheet{padding:24px;}
+
+        .section{
+            margin-top:22px;
+        }
+
+        .section:first-child{margin-top:0}
+
+        .section-head{
+            display:flex;
+            align-items:flex-end;
+            justify-content:space-between;
+            gap:12px;
+            flex-wrap:wrap;
+            margin-bottom:14px;
+        }
+
+        .section-head h2{
+            margin:0;
+            font-size:20px;
+            line-height:1;
+            letter-spacing:-.04em;
+        }
+
+        .section-head p{
+            margin:6px 0 0;
+            color:var(--muted);
+            font-size:13px;
+        }
+
+        .section-tag{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding:8px 12px;
+            border-radius:999px;
+            font-size:11px;
+            font-weight:800;
+            letter-spacing:.08em;
+            text-transform:uppercase;
+        }
+
+        .tag-purple{background:var(--purple-soft);color:var(--purple)}
+        .tag-blue{background:var(--blue-soft);color:var(--blue)}
+
+        .form-grid{
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:14px;
+        }
+
+        .field{
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+        }
+
+        .field-full{grid-column:1 / -1}
+
+        .field label{
+            font-size:12px;
+            font-weight:800;
+            color:var(--muted);
+            letter-spacing:.05em;
+            text-transform:uppercase;
+        }
+
+        .field input{
+            width:100%;
+            height:50px;
+            padding:0 16px;
+            border-radius:16px;
+            border:1px solid var(--line);
+            background:#fff;
+            color:var(--ink);
+            font-size:14px;
+            transition:border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .field input:focus{
+            outline:none;
+            border-color:rgba(75,46,131,.44);
+            box-shadow:0 0 0 4px rgba(75,46,131,.10);
+        }
+
+        .field-note{
+            margin-top:6px;
+            color:var(--muted);
+            font-size:12px;
+        }
+
+        .divider{
+            height:1px;
+            margin:22px 0;
+            background:linear-gradient(90deg,rgba(75,46,131,.12),rgba(217,222,242,0));
+        }
+
+        .form-actions{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            flex-wrap:wrap;
+            margin-top:22px;
+        }
+
+        .action-copy{
+            color:var(--muted);
+            font-size:13px;
+        }
+
+        .button-row{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+
+        .btn-save,
+        .btn-cancel{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            padding:13px 17px;
+            border-radius:999px;
+            border:none;
+            text-decoration:none;
+            font-weight:800;
+        }
+
+        .btn-save{
+            background:linear-gradient(135deg,var(--purple),#7550c7);
+            color:#fff;
+            box-shadow:0 16px 26px rgba(75,46,131,.20);
+        }
+
+        .btn-cancel{
+            background:#fff;
+            color:var(--ink);
+            border:1px solid var(--line);
+        }
+
+        .alert-wrap{
+            margin-bottom:16px;
+        }
+
+        .alert{
+            border:none;
+            border-radius:16px;
+            padding:13px 15px;
+            font-weight:700;
+        }
+
+        @media (max-width:767px){
+            .profile-page{padding:18px 12px 32px}
+            .hero,.sheet{padding:18px}
+            .hero-id{align-items:flex-start}
+            .hero-avatar{
+                width:72px;
+                height:72px;
+                border-radius:24px;
+            }
+            .hero-avatar i{font-size:30px}
+            .hero-copy h1{font-size:28px}
+            .form-grid{grid-template-columns:1fr}
+            .btn-hero,.btn-save,.btn-cancel{width:100%;justify-content:center}
+            .button-row{width:100%}
+            .form-actions{align-items:stretch}
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-page">
+    <div class="profile-shell">
+        <section class="hero">
+            <div class="hero-top">
+                <div class="hero-id">
+                    <div class="hero-avatar" aria-hidden="true">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div class="hero-copy">
+                        <h1 th:text="${profileForm.displayName}">User</h1>
+                        <div class="hero-email" th:text="${profileForm.email != null ? profileForm.email : 'no email added yet'}">email</div>
+                        <p>Review your personal details, keep your campus address current, and save changes here.</p>
+                    </div>
+                </div>
+
+                <div class="hero-actions">
+                    <a class="btn-hero btn-home" th:href="@{/index}">
+                        <i class="bi bi-house-door"></i> Back to Home
+                    </a>
+                    <a class="btn-hero btn-back" th:href="@{/user/profile}">
+                        <i class="bi bi-arrow-left"></i> Back to Profile
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <div class="content">
+            <section class="sheet">
+                <div class="alert-wrap">
+                    <div class="alert alert-success" th:if="${success != null}" th:text="${success}">Saved</div>
+                    <div class="alert alert-danger" th:if="${error != null}" th:text="${error}">Error</div>
+                </div>
+
+                <form th:action="@{/user/profile/details}" method="post" th:object="${profileForm}">
+                    <section class="section">
+                        <div class="section-head">
+                            <div>
+                                <h2>Personal Details</h2>
+                                <p>These are the main identity fields used across your account.</p>
+                            </div>
+                            <span class="section-tag tag-purple"><i class="bi bi-person-vcard"></i> Account</span>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="field">
+                                <label for="firstName">First Name</label>
+                                <input id="firstName" type="text" th:field="*{firstName}" required>
+                            </div>
+                            <div class="field">
+                                <label for="lastName">Last Name</label>
+                                <input id="lastName" type="text" th:field="*{lastName}" required>
+                            </div>
+                            <div class="field">
+                                <label for="email">Email</label>
+                                <input id="email" type="email" th:field="*{email}" required>
+                            </div>
+                            <div class="field">
+                                <label for="phone">Phone</label>
+                                <input id="phone" type="text" th:field="*{phone}">
+                            </div>
+                            <div class="field">
+                                <label for="academicId">Academic ID</label>
+                                <input id="academicId" type="text" th:field="*{academicId}" required>
+                            </div>
+                            <div class="field">
+                                <label for="level">Level</label>
+                                <input id="level" type="text" th:field="*{level}">
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="divider"></div>
+
+                    <section class="section">
+                        <div class="section-head">
+                            <div>
+                                <h2>Address</h2>
+                                <p>Your latest campus address is used as your current saved location.</p>
+                            </div>
+                            <span class="section-tag tag-blue"><i class="bi bi-geo-alt"></i> Campus Address</span>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="field">
+                                <label for="hostelBlock">Hostel Block</label>
+                                <input id="hostelBlock" type="text" th:field="*{hostelBlock}">
+                            </div>
+                            <div class="field">
+                                <label for="floor">Floor</label>
+                                <input id="floor" type="text" th:field="*{floor}">
+                            </div>
+                            <div class="field">
+                                <label for="roomNumber">Room Number</label>
+                                <input id="roomNumber" type="text" th:field="*{roomNumber}">
+                            </div>
+                            <div class="field">
+                                <label for="city">City</label>
+                                <input id="city" type="text" th:field="*{city}">
+                            </div>
+                            <div class="field field-full">
+                                <label for="state">State</label>
+                                <input id="state" type="text" th:field="*{state}">
+                                <div class="field-note">Save the address you currently want associated with your account.</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="form-actions">
+                        <div class="action-copy">Changes here update your account details and your latest saved address.</div>
+                        <div class="button-row">
+                            <a class="btn-cancel" th:href="@{/user/profile}">
+                                <i class="bi bi-arrow-left"></i> Cancel
+                            </a>
+                            <button class="btn-save" type="submit">
+                                <i class="bi bi-check2-circle"></i> Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

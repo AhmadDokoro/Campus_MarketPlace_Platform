@@ -8,62 +8,383 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root{
             --primary:#4B2E83;
+            --primary-deep:#2c1f59;
             --accent:#F2B705;
+            --accent-soft:#fff3c6;
+            --blue:#2d6fb7;
+            --teal:#0d9488;
             --muted:#6b7280;
             --card:#ffffff;
             --bg:#f6f7fb;
-            --shadow:0 12px 28px rgba(15,23,42,0.08);
-            --radius:16px;
+            --line:rgba(15,23,42,0.08);
+            --line-strong:rgba(75,46,131,0.14);
+            --shadow:0 14px 34px rgba(15,23,42,0.08);
+            --radius:22px;
         }
 
-        body{background:var(--bg);font-family:'Poppins',sans-serif}
+        *{box-sizing:border-box}
+        body{
+            margin:0;
+            background:
+                radial-gradient(circle at top left, rgba(75,46,131,0.10), transparent 22%),
+                radial-gradient(circle at top right, rgba(242,183,5,0.12), transparent 18%),
+                linear-gradient(180deg,#fbfbff 0%,var(--bg) 100%);
+            font-family:'Poppins',sans-serif;
+            color:#111827;
+        }
 
-        .page-wrap{padding:24px 12px}
-        .hub{max-width:980px;margin:0 auto}
+        .page-wrap{padding:28px 14px 40px}
+        .hub{max-width:1120px;margin:0 auto}
 
-        .top-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-        .title h2{margin:0;color:#111827;font-size:22px;letter-spacing:-0.2px}
-        .title p{margin:6px 0 0;color:var(--muted)}
+        .account-hero{
+            margin-bottom:18px;
+            padding:24px;
+            border-radius:30px;
+            background:
+                radial-gradient(circle at top right, rgba(242,183,5,0.22), transparent 24%),
+                radial-gradient(circle at bottom left, rgba(45,111,183,0.14), transparent 26%),
+                linear-gradient(135deg,#ffffff 0%, #f7f1ff 42%, #eef4ff 100%);
+            border:1px solid rgba(132,112,197,0.18);
+            box-shadow:0 26px 60px rgba(75,46,131,0.14);
+        }
 
-        /* Profile icon + dropdown */
-        .profile-area{display:flex;align-items:center;gap:10px}
-        .profile-btn{border:none;background:transparent;cursor:pointer;display:inline-flex;align-items:center;gap:10px}
-        .avatar{width:44px;height:44px;border-radius:999px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px rgba(75,46,131,0.18)}
-        .avatar i{font-size:20px;color:#fff}
+        .account-top{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:20px;
+            flex-wrap:wrap;
+            margin-bottom:18px;
+        }
 
-        .profile-card{position:relative}
-        .dropdown{display:none;position:absolute;right:0;top:54px;width:280px;background:var(--card);border-radius:14px;box-shadow:var(--shadow);border:1px solid rgba(15,23,42,0.08);padding:14px;z-index:20}
-        .dropdown.open{display:block}
-        .dropdown .line{margin-bottom:10px}
-        .dropdown .label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.3px}
-        .dropdown .value{font-size:14px;color:#111827;font-weight:800;word-break:break-word}
+        .account-link{
+            flex:1 1 560px;
+            min-width:0;
+            display:flex;
+            align-items:center;
+            gap:18px;
+            text-decoration:none;
+            color:inherit;
+            padding:18px 20px;
+            border-radius:26px;
+            background:
+                linear-gradient(135deg,rgba(255,255,255,0.98),rgba(244,248,255,0.95));
+            border:1px solid rgba(75,46,131,0.14);
+            box-shadow:0 16px 28px rgba(75,46,131,0.08);
+            transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+        }
 
-        /* Subtle Start selling icon button */
-        .start-selling{border:none;background:transparent;cursor:pointer;display:inline-flex;align-items:center;gap:8px;color:rgba(17,24,39,0.65);font-weight:800;font-size:13px;padding:8px 10px;border-radius:999px;text-decoration:none}
-        .start-selling:hover{background:rgba(75,46,131,0.06);color:#111827;text-decoration:none}
+        .account-link:hover{
+            text-decoration:none;
+            color:inherit;
+            transform:translateY(-2px);
+            box-shadow:0 18px 34px rgba(75,46,131,0.13);
+            border-color:rgba(75,46,131,0.28);
+            background:
+                linear-gradient(135deg,rgba(255,255,255,1),rgba(240,245,255,0.96));
+        }
 
-        .grid{display:grid;grid-template-columns:1fr;gap:16px}
+        .account-avatar{
+            width:84px;
+            height:84px;
+            border-radius:28px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            flex-shrink:0;
+            color:#fff;
+            background:
+                radial-gradient(circle at top, rgba(255,255,255,0.20), transparent 40%),
+                linear-gradient(135deg,var(--primary),#7250c2 55%, #f2b705 125%);
+            box-shadow:0 16px 28px rgba(75,46,131,0.20);
+        }
 
-        .panel{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(15,23,42,0.06);padding:22px}
+        .account-avatar i{font-size:34px}
+        .account-copy{min-width:0}
 
-        /* Order tracker section */
-        .tracker-title{display:flex;align-items:center;gap:10px;margin-bottom:18px}
-        .tracker-title h3{margin:0;font-size:17px;color:#111827;font-weight:700}
-        .tracker-title .muted{margin-left:auto;color:var(--muted);font-size:13px}
+        .account-kicker{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            margin-bottom:8px;
+            padding:7px 12px;
+            border-radius:999px;
+            background:linear-gradient(135deg,rgba(75,46,131,0.13),rgba(242,183,5,0.18));
+            color:var(--primary-deep);
+            font-size:11px;
+            font-weight:800;
+            letter-spacing:.08em;
+            text-transform:uppercase;
+        }
 
-        .steps{display:flex;align-items:flex-start;justify-content:space-between;gap:0;flex-wrap:nowrap}
-        .step{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;text-decoration:none;color:inherit;padding:8px 4px;border-radius:14px;transition:background .2s}
-        .step:hover{background:rgba(75,46,131,0.04);text-decoration:none;color:inherit}
-        button.step{background:none;border:none;width:100%;cursor:pointer}
-        .step-active{background:rgba(75,46,131,0.08)}
-        .node{width:48px;height:48px;border-radius:999px;display:flex;align-items:center;justify-content:center;position:relative;transition:transform .2s}
+        .account-copy h1{
+            margin:0;
+            font-size:32px;
+            line-height:1;
+            letter-spacing:-.05em;
+        }
+
+        .account-email{
+            margin:8px 0 0;
+            color:#68708d;
+            font-size:13px;
+            font-family:'Space Grotesk',sans-serif;
+            letter-spacing:.05em;
+            text-transform:uppercase;
+        }
+
+        .account-copy p{
+            margin:10px 0 0;
+            color:var(--muted);
+            font-size:14px;
+        }
+
+        .account-arrow{
+            margin-left:auto;
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            padding:12px 14px;
+            border-radius:18px;
+            background:linear-gradient(135deg,var(--purple),#6f4dc0);
+            border:1px solid rgba(75,46,131,0.22);
+            color:#fff;
+            font-size:13px;
+            font-weight:700;
+            white-space:nowrap;
+            box-shadow:0 14px 24px rgba(75,46,131,0.20);
+        }
+
+        .utility-actions{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            flex-wrap:wrap;
+            margin-bottom:14px;
+        }
+
+        .utility-btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            padding:12px 15px;
+            border-radius:999px;
+            text-decoration:none;
+            font-size:13px;
+            font-weight:800;
+            border:1px solid transparent;
+        }
+
+        .utility-btn:hover{text-decoration:none}
+        .utility-home{
+            background:#fff;
+            color:var(--ink);
+            border-color:rgba(75,46,131,0.12);
+        }
+
+        .utility-details{
+            background:linear-gradient(135deg,var(--orange),var(--yellow));
+            color:#fff;
+            box-shadow:0 14px 24px rgba(242,140,31,.18);
+        }
+
+        .account-actions{
+            display:grid;
+            grid-template-columns:repeat(3,minmax(0,1fr));
+            gap:12px;
+        }
+
+        .account-action{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:14px;
+            padding:16px 18px;
+            border-radius:22px;
+            background:rgba(255,255,255,0.92);
+            border:1px solid rgba(75,46,131,0.10);
+            color:#111827;
+            text-decoration:none;
+            transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .account-action:hover{
+            text-decoration:none;
+            color:#111827;
+            transform:translateY(-2px);
+            border-color:rgba(75,46,131,0.24);
+            box-shadow:0 16px 30px rgba(75,46,131,0.11);
+        }
+
+        .account-action-main{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            min-width:0;
+        }
+
+        .account-action-icon{
+            width:42px;
+            height:42px;
+            border-radius:14px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:18px;
+            flex-shrink:0;
+        }
+
+        .icon-profile{background:rgba(75,46,131,0.12);color:var(--primary)}
+        .icon-orders{background:rgba(242,183,5,0.18);color:#b8860b}
+        .icon-seller{background:rgba(45,111,183,0.12);color:var(--blue)}
+
+        .action-profile{
+            background:linear-gradient(180deg,rgba(245,240,255,0.96),rgba(255,255,255,0.95));
+        }
+
+        .action-orders{
+            background:linear-gradient(180deg,rgba(255,247,220,0.96),rgba(255,255,255,0.95));
+        }
+
+        .action-seller{
+            background:linear-gradient(180deg,rgba(235,244,255,0.98),rgba(255,255,255,0.95));
+        }
+
+        .account-action strong{
+            display:block;
+            font-size:14px;
+            font-weight:800;
+            line-height:1.25;
+        }
+
+        .account-action span{
+            display:block;
+            margin-top:4px;
+            color:var(--muted);
+            font-size:12px;
+            line-height:1.45;
+        }
+
+        .account-action i.chev{
+            color:rgba(17,24,39,0.38);
+            font-size:18px;
+        }
+
+        .grid{display:grid;grid-template-columns:1fr;gap:18px}
+
+        .panel{
+            background:rgba(255,255,255,0.90);
+            border-radius:var(--radius);
+            box-shadow:var(--shadow);
+            border:1px solid var(--line);
+            padding:24px;
+        }
+
+        .panel-head{
+            display:flex;
+            align-items:flex-start;
+            justify-content:space-between;
+            gap:14px;
+            flex-wrap:wrap;
+            margin-bottom:18px;
+        }
+
+        .panel-title{
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .panel-title h3{
+            margin:0;
+            font-size:18px;
+            font-weight:800;
+            color:#111827;
+        }
+
+        .panel-copy{
+            margin-top:7px;
+            color:var(--muted);
+            font-size:13px;
+        }
+
+        .panel-link{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding:11px 14px;
+            border-radius:999px;
+            background:#fff;
+            border:1px solid var(--line);
+            color:#111827;
+            font-size:13px;
+            font-weight:700;
+            text-decoration:none;
+        }
+
+        .panel-link:hover{color:#111827;text-decoration:none}
+
+        .tracker-panel{padding-bottom:30px}
+
+        .steps{
+            display:flex;
+            align-items:flex-start;
+            justify-content:space-between;
+            gap:0;
+            flex-wrap:nowrap;
+            margin-top:4px;
+        }
+
+        .step{
+            flex:1;
+            min-width:0;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            text-align:center;
+            text-decoration:none;
+            color:inherit;
+            padding:10px 6px;
+            border-radius:18px;
+            transition:background .2s ease, transform .2s ease;
+        }
+
+        .step:hover{
+            background:rgba(75,46,131,0.04);
+            text-decoration:none;
+            color:inherit;
+        }
+
+        button.step{
+            background:none;
+            border:none;
+            width:100%;
+            cursor:pointer;
+        }
+
+        .step-active{
+            background:linear-gradient(180deg,rgba(75,46,131,0.08),rgba(75,46,131,0.03));
+        }
+
+        .node{
+            width:52px;
+            height:52px;
+            border-radius:999px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            position:relative;
+            transition:transform .2s ease;
+        }
+
         .step:hover .node{transform:scale(1.08)}
         .node i{font-size:22px}
+
         .node-pending{background:rgba(255,179,71,0.15);border:2px solid rgba(255,179,71,0.3)}
         .node-pending i{color:#e6930a}
         .node-placed{background:rgba(75,46,131,0.1);border:2px solid rgba(75,46,131,0.2)}
@@ -72,80 +393,245 @@
         .node-campus i{color:#3b82f6}
         .node-delivered{background:rgba(40,167,69,0.1);border:2px solid rgba(40,167,69,0.2)}
         .node-delivered i{color:#28a745}
+        .node-received{background:rgba(20,184,166,0.1);border:2px solid rgba(20,184,166,0.25)}
+        .node-received i{color:var(--teal)}
 
-        /* Count badge on node */
-        .count-badge{position:absolute;top:-4px;right:-6px;min-width:20px;height:20px;border-radius:999px;
-            font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;
-            color:#fff;padding:0 5px;box-shadow:0 2px 6px rgba(0,0,0,0.15)}
+        .count-badge{
+            position:absolute;
+            top:-4px;
+            right:-6px;
+            min-width:20px;
+            height:20px;
+            border-radius:999px;
+            font-size:11px;
+            font-weight:800;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#fff;
+            padding:0 5px;
+            box-shadow:0 2px 6px rgba(0,0,0,0.15);
+        }
+
         .count-pending{background:linear-gradient(135deg,#ff9500,#e6930a)}
         .count-placed{background:linear-gradient(135deg,#4B2E83,#7c52c9)}
         .count-campus{background:linear-gradient(135deg,#3b82f6,#2563eb)}
         .count-delivered{background:linear-gradient(135deg,#28a745,#20c997)}
+        .count-received{background:linear-gradient(135deg,#14b8a6,#0d9488)}
 
-        .step .name{margin-top:10px;font-weight:700;font-size:12px;color:#111827}
-        .step .desc{margin-top:3px;font-size:11px;color:var(--muted);line-height:1.3}
+        .step .name{
+            margin-top:10px;
+            font-weight:700;
+            font-size:12px;
+            color:#111827;
+        }
 
-        .connector{height:2px;flex:0 0 30px;background:linear-gradient(90deg, rgba(75,46,131,0.2), rgba(242,183,5,0.3));border-radius:999px;margin-top:24px}
+        .step .desc{
+            margin-top:3px;
+            font-size:11px;
+            color:var(--muted);
+            line-height:1.3;
+        }
 
-        /* Quick links */
-        .link-list{display:flex;flex-direction:column;gap:10px}
-        .link-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-radius:14px;border:1px solid rgba(15,23,42,0.06);background:rgba(255,255,255,0.7);text-decoration:none;color:#111827;font-weight:700;transition:all .2s}
-        .link-item:hover{border-color:rgba(75,46,131,0.22);background:rgba(75,46,131,0.02);text-decoration:none;color:#111827}
-        .link-item .left{display:flex;align-items:center;gap:10px}
-        .icon-pill{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px}
-        .icon-pill-orders{background:rgba(242,183,5,0.2);color:#b8860b}
-        .icon-pill-seller{background:rgba(75,46,131,0.12);color:#4B2E83}
-        .chev{opacity:.4;font-size:18px}
+        .connector{
+            height:2px;
+            flex:0 0 42px;
+            background:linear-gradient(90deg, rgba(75,46,131,0.2), rgba(242,183,5,0.3));
+            border-radius:999px;
+            margin-top:25px;
+        }
 
-        .note{margin-top:12px;color:var(--muted);font-size:12px}
-        .products-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+        .alert-review{
+            padding:12px 16px;
+            border-radius:16px;
+            font-size:13px;
+            font-weight:600;
+            margin:0;
+        }
+
+        .alert-review-success{background:rgba(20,184,166,0.12);color:#0d9488;border:1px solid rgba(20,184,166,0.25)}
+        .alert-review-error{background:rgba(196,22,28,0.08);color:#C4161C;border:1px solid rgba(196,22,28,0.2)}
+
+        .products-panel-head{
+            display:flex;
+            align-items:flex-start;
+            justify-content:space-between;
+            gap:14px;
+            flex-wrap:wrap;
+            margin-bottom:18px;
+        }
+
         .products-state{display:none}
         .products-state.active{display:block}
-        .product-stack{display:flex;flex-direction:column;gap:12px}
-        .product-card{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px;border:1px solid rgba(15,23,42,0.08);border-radius:16px;background:rgba(255,255,255,0.72)}
+        .product-stack{display:flex;flex-direction:column;gap:14px}
+
+        .product-card{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:18px;
+            padding:18px;
+            border:1px solid rgba(15,23,42,0.08);
+            border-radius:20px;
+            background:
+                linear-gradient(180deg,rgba(255,255,255,0.94),rgba(248,249,255,0.88));
+        }
+
         .product-main{min-width:0}
-        .product-eyebrow{font-size:12px;color:var(--muted);margin-bottom:6px}
-        .product-title{font-size:16px;font-weight:700;color:#111827;margin-bottom:4px}
+
+        .product-eyebrow{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            margin-bottom:8px;
+            padding:6px 11px;
+            border-radius:999px;
+            background:rgba(75,46,131,0.06);
+            color:var(--primary);
+            font-size:11px;
+            font-weight:800;
+            letter-spacing:.06em;
+            text-transform:uppercase;
+        }
+
+        .product-title{
+            font-size:17px;
+            font-weight:700;
+            color:#111827;
+            margin-bottom:4px;
+        }
+
         .product-sub{font-size:13px;color:var(--muted)}
-        .product-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-        .status-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;font-size:12px;font-weight:700}
+
+        .product-actions{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            flex-wrap:wrap;
+            justify-content:flex-end;
+        }
+
+        .status-pill{
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            padding:8px 13px;
+            border-radius:999px;
+            font-size:12px;
+            font-weight:700;
+        }
+
         .status-pill-placed{background:rgba(75,46,131,0.10);color:#4B2E83}
         .status-pill-campus{background:rgba(59,130,246,0.12);color:#2563eb}
         .status-pill-delivered{background:rgba(40,167,69,0.12);color:#28a745}
         .status-pill-pending{background:rgba(255,149,0,0.14);color:#e6930a}
-        .chat-btn{display:inline-flex;align-items:center;gap:6px}
-        .empty-products{border:1px dashed rgba(15,23,42,0.12);border-radius:16px;padding:24px;text-align:center;color:var(--muted)}
-
-        .node-received{background:rgba(20,184,166,0.1);border:2px solid rgba(20,184,166,0.25)}
-        .node-received i{color:#0d9488}
-        .count-received{background:linear-gradient(135deg,#14b8a6,#0d9488)}
         .status-pill-received{background:rgba(20,184,166,0.12);color:#0d9488}
 
-        /* Rating form */
-        .rate-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;
-            padding:6px 14px;border-radius:999px;border:1.5px solid #4B2E83;color:#4B2E83;
-            background:transparent;cursor:pointer;transition:all .2s}
+        .chat-btn{
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            border-radius:999px;
+            padding:.45rem .9rem;
+        }
+
+        .empty-products{
+            border:1px dashed rgba(15,23,42,0.12);
+            border-radius:20px;
+            padding:28px 24px;
+            text-align:center;
+            color:var(--muted);
+            background:linear-gradient(180deg,#fdfdff,#f8f9ff);
+        }
+
+        .rate-btn{
+            display:inline-flex;
+            align-items:center;
+            gap:5px;
+            font-size:12px;
+            font-weight:700;
+            padding:7px 14px;
+            border-radius:999px;
+            border:1.5px solid #4B2E83;
+            color:#4B2E83;
+            background:transparent;
+            cursor:pointer;
+            transition:all .2s;
+        }
+
         .rate-btn:hover{background:#4B2E83;color:#fff}
-        .review-form-wrap{margin-top:12px;padding:14px 16px;border-radius:14px;
-            border:1px solid rgba(75,46,131,0.15);background:rgba(75,46,131,0.03);display:none}
+
+        .review-form-wrap{
+            margin-top:14px;
+            padding:14px 16px;
+            border-radius:16px;
+            border:1px solid rgba(75,46,131,0.15);
+            background:rgba(75,46,131,0.03);
+            display:none;
+        }
+
         .review-form-wrap.open{display:block}
         .star-row{display:flex;gap:6px;margin-bottom:12px}
-        .star-btn{font-size:24px;background:none;border:none;cursor:pointer;color:#d1d5db;
-            transition:color .15s;padding:0;line-height:1}
+        .star-btn{
+            font-size:24px;
+            background:none;
+            border:none;
+            cursor:pointer;
+            color:#d1d5db;
+            transition:color .15s;
+            padding:0;
+            line-height:1;
+        }
+
         .star-btn.selected,.star-btn:hover,.star-btn:hover~.star-btn{color:#F2B705}
         .star-row:hover .star-btn{color:#F2B705}
         .star-row .star-btn:hover~.star-btn{color:#d1d5db}
-        .reviewed-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;
-            font-weight:700;color:#0d9488;padding:6px 12px;border-radius:999px;
-            background:rgba(20,184,166,0.1);border:1.5px solid rgba(20,184,166,0.25)}
-        .alert-review{padding:10px 16px;border-radius:12px;font-size:13px;font-weight:600;margin-bottom:14px}
-        .alert-review-success{background:rgba(20,184,166,0.12);color:#0d9488;border:1px solid rgba(20,184,166,0.25)}
-        .alert-review-error{background:rgba(196,22,28,0.08);color:#C4161C;border:1px solid rgba(196,22,28,0.2)}
 
-        @media (max-width:600px){
+        .reviewed-badge{
+            display:inline-flex;
+            align-items:center;
+            gap:5px;
+            font-size:12px;
+            font-weight:700;
+            color:#0d9488;
+            padding:7px 12px;
+            border-radius:999px;
+            background:rgba(20,184,166,0.1);
+            border:1.5px solid rgba(20,184,166,0.25);
+        }
+
+        .foot-note{
+            color:var(--muted);
+            font-size:12px;
+            margin-top:8px;
+            padding:0 4px;
+        }
+
+        @media (max-width:991px){
+            .account-actions{grid-template-columns:1fr}
+            .account-link{flex-basis:100%}
+            .account-arrow{margin-left:0}
+        }
+
+        @media (max-width:767px){
+            .page-wrap{padding:18px 12px 32px}
+            .account-hero,.panel{padding:18px}
+            .account-top{margin-bottom:14px}
+            .account-link{
+                padding:16px;
+                align-items:flex-start;
+                flex-wrap:wrap;
+            }
+            .account-avatar{
+                width:68px;
+                height:68px;
+                border-radius:22px;
+            }
+            .account-avatar i{font-size:28px}
+            .account-copy h1{font-size:26px}
             .steps{gap:0}
-            .connector{flex:0 0 12px}
-            .node{width:40px;height:40px}
+            .connector{flex:0 0 16px}
+            .node{width:42px;height:42px}
             .node i{font-size:18px}
             .step .name{font-size:11px}
             .product-card{align-items:flex-start;flex-direction:column}
@@ -155,57 +641,84 @@
 </head>
 <body>
 
-<div th:replace="fragments/header :: header"></div>
-
 <div class="page-wrap">
     <div class="hub">
-
-        <div class="top-row">
-            <div class="title">
-                <h2>My Profile</h2>
-                <p>Track your orders and manage your selling access from here.</p>
+        <section class="account-hero" id="account-overview">
+            <div class="account-top">
+                <a class="account-link" th:href="@{/user/profile/details}">
+                    <span class="account-avatar" aria-hidden="true">
+                        <i class="bi bi-person-fill"></i>
+                    </span>
+                    <div class="account-copy">
+                        <span class="account-kicker"><i class="bi bi-stars"></i> My Account</span>
+                        <h1 th:text="${profile.displayName}">User</h1>
+                        <div class="account-email" th:text="${profile.email != null ? profile.email : 'no email added yet'}">user@email.com</div>
+                    </div>
+                    <span class="account-arrow">
+                        Open Profile
+                        <i class="bi bi-arrow-up-right"></i>
+                    </span>
+                </a>
             </div>
 
-            <div class="profile-area">
-                <!-- Subtle start selling CTA -->
-                <a class="start-selling" th:href="@{/user/start-selling}" title="Start selling">
-                    <i class="bi bi-shop"></i>
-                    <span>Start selling</span>
+            <div class="utility-actions">
+                <a class="utility-btn utility-home" th:href="@{/index}">
+                    <i class="bi bi-house-door"></i> Back to Home
+                </a>
+                <a class="utility-btn utility-details" th:href="@{/user/profile/details}">
+                    <i class="bi bi-pencil-square"></i> Edit Profile
+                </a>
+            </div>
+
+            <div class="account-actions">
+                <a class="account-action action-profile" th:href="@{/user/profile/details}">
+                    <span class="account-action-main">
+                        <span class="account-action-icon icon-profile"><i class="bi bi-person-vcard"></i></span>
+                        <span>
+                            <strong>Profile</strong>
+                            <span>Open and edit your details</span>
+                        </span>
+                    </span>
+                    <i class="bi bi-chevron-right chev"></i>
                 </a>
 
-                <div class="profile-card">
-                    <button type="button" class="profile-btn" id="profileToggle" aria-haspopup="true" aria-expanded="false">
-                        <span class="avatar" aria-hidden="true">
-                            <i class="bi bi-person-fill"></i>
+                <a class="account-action action-orders" th:href="@{/orders/history}">
+                    <span class="account-action-main">
+                        <span class="account-action-icon icon-orders"><i class="bi bi-receipt"></i></span>
+                        <span>
+                            <strong>My Orders</strong>
+                            <span>Open your full order history</span>
                         </span>
-                    </button>
+                    </span>
+                    <i class="bi bi-chevron-right chev"></i>
+                </a>
 
-                    <div class="dropdown" id="profileDropdown">
-                        <div class="line">
-                            <div class="label">Name</div>
-                            <div class="value" th:text="${session.userName}">User</div>
-                        </div>
-                        <div class="line" style="margin-bottom:0">
-                            <div class="label">Email</div>
-                            <div class="value" th:text="${session.userEmail != null ? session.userEmail : '—'}">—</div>
-                        </div>
-                    </div>
-                </div>
+                <a class="account-action action-seller" th:href="@{/user/start-selling}">
+                    <span class="account-action-main">
+                        <span class="account-action-icon icon-seller"><i class="bi bi-shop-window"></i></span>
+                        <span>
+                            <strong>Seller Page</strong>
+                            <span>Manage seller access and selling flow</span>
+                        </span>
+                    </span>
+                    <i class="bi bi-chevron-right chev"></i>
+                </a>
             </div>
-        </div>
+        </section>
 
         <div class="grid">
-
-            <!-- Order Tracking Section -->
-            <div class="panel">
-                <div class="tracker-title">
-                    <h3><i class="bi bi-box-seam" style="color:var(--accent);margin-right:6px"></i>Order Tracking</h3>
-                    <a th:href="@{/orders/history}" class="muted" style="text-decoration:none">View all orders <i class="bi bi-arrow-right"></i></a>
+            <div class="panel tracker-panel">
+                <div class="panel-head">
+                    <div>
+                        <div class="panel-title">
+                            <h3><i class="bi bi-box-seam" style="color:var(--accent);margin-right:6px"></i>Order Tracking</h3>
+                        </div>
+                        <div class="panel-copy">Follow each product state from payment to review without changing the current order flow.</div>
+                    </div>
+                    <a th:href="@{/orders/history}" class="panel-link">View all orders <i class="bi bi-arrow-right"></i></a>
                 </div>
 
                 <div class="steps" aria-label="Order tracking steps">
-
-                    <!-- Step 0: Pending Payment -->
                     <button type="button" class="step" data-profile-tab="pending_payment">
                         <div class="node node-pending">
                             <i class="bi bi-hourglass-split"></i>
@@ -217,19 +730,17 @@
 
                     <div class="connector" aria-hidden="true"></div>
 
-                    <!-- Step 1: Order Placed -->
                     <button type="button" class="step" data-profile-tab="placed">
                         <div class="node node-placed">
                             <i class="bi bi-bag-check-fill"></i>
                             <span class="count-badge count-placed" th:if="${placedCount > 0}" th:text="${placedCount}">0</span>
                         </div>
                         <div class="name">Order Placed</div>
-                        <div class="desc">Confirmed &amp; paid</div>
+                        <div class="desc">Confirmed and paid</div>
                     </button>
 
                     <div class="connector" aria-hidden="true"></div>
 
-                    <!-- Step 2: In Campus -->
                     <button type="button" class="step" data-profile-tab="in_campus">
                         <div class="node node-campus">
                             <i class="bi bi-building"></i>
@@ -241,7 +752,6 @@
 
                     <div class="connector" aria-hidden="true"></div>
 
-                    <!-- Step 3: Delivered -->
                     <button type="button" class="step" data-profile-tab="delivered">
                         <div class="node node-delivered">
                             <i class="bi bi-check2-all"></i>
@@ -253,7 +763,6 @@
 
                     <div class="connector" aria-hidden="true"></div>
 
-                    <!-- Step 4: Received -->
                     <button type="button" class="step" data-profile-tab="received">
                         <div class="node node-received">
                             <i class="bi bi-bag-heart-fill"></i>
@@ -262,11 +771,9 @@
                         <div class="name">Received</div>
                         <div class="desc">Rate the seller</div>
                     </button>
-
                 </div>
             </div>
 
-            <!-- Flash messages for review submission -->
             <div th:if="${reviewSuccess}" class="alert-review alert-review-success">
                 <i class="bi bi-check-circle-fill" style="margin-right:6px"></i>
                 <span th:text="${reviewSuccess}">Review submitted.</span>
@@ -278,16 +785,19 @@
 
             <div class="panel">
                 <div class="products-panel-head">
-                    <div class="tracker-title" style="margin-bottom:0">
-                        <h3><i class="bi bi-chat-dots" style="color:var(--accent);margin-right:6px"></i>Tracked Products</h3>
+                    <div>
+                        <div class="panel-title">
+                            <h3><i class="bi bi-chat-dots" style="color:var(--accent);margin-right:6px"></i>Tracked Products</h3>
+                        </div>
+                        <div class="panel-copy">Keep the current buyer-side order actions, chat access, and review flow exactly as they are.</div>
                     </div>
-                    <a th:href="@{/orders/history}" class="muted" style="text-decoration:none">Open full order history <i class="bi bi-arrow-right"></i></a>
+                    <a th:href="@{/orders/history}" class="panel-link">Open full order history <i class="bi bi-arrow-right"></i></a>
                 </div>
 
                 <div class="products-state" data-profile-state="pending_payment">
                     <div class="empty-products">
                         <div class="fw-bold mb-2">Pending payment items</div>
-                        <p class="mb-3">Use your existing order flow to complete payment before chat becomes available for each product.</p>
+                        <p class="mb-3">Use your current checkout and payment flow before chat becomes available for each product.</p>
                         <a class="btn btn-sm btn-outline-primary" th:href="@{/orders/history(filter='pending_payment')}">
                             <i class="bi bi-credit-card mr-1"></i> View Pending Payment Orders
                         </a>
@@ -379,7 +889,6 @@
                     </div>
                 </div>
 
-                <!-- Received tab: show Rate Seller button for unreviewed items -->
                 <div class="products-state" data-profile-state="received">
                     <div class="product-stack">
                         <div class="product-card"
@@ -390,9 +899,8 @@
                                 <div class="product-title" th:text="${item.productTitle}">Product</div>
                                 <div class="product-sub" th:text="'Seller: ' + ${item.sellerName}">Seller</div>
 
-                                <!-- Rating form — shown only if this order has not been reviewed yet -->
                                 <div th:if="${!reviewedOrderIds.contains(item.orderId)}">
-                                    <div class="product-actions" style="margin-top:10px">
+                                    <div class="product-actions" style="margin-top:12px">
                                         <span class="status-pill status-pill-received">
                                             <i class="bi bi-bag-heart"></i> Received
                                         </span>
@@ -405,12 +913,10 @@
                                             <i class="bi bi-star-fill"></i> Rate Seller
                                         </button>
                                     </div>
-                                    <!-- Inline review form -->
                                     <div class="review-form-wrap" th:id="'rateForm-' + ${item.orderItemId}">
                                         <form th:action="@{/reviews/submit}" method="post">
                                             <input type="hidden" name="orderItemId" th:value="${item.orderItemId}">
                                             <div style="margin-bottom:8px;font-size:13px;font-weight:700;color:#111827">Rate this seller</div>
-                                            <!-- Star rating input -->
                                             <div class="star-row" th:id="'stars-' + ${item.orderItemId}">
                                                 <button type="button" class="star-btn" data-val="1">&#9733;</button>
                                                 <button type="button" class="star-btn" data-val="2">&#9733;</button>
@@ -430,8 +936,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Already reviewed badge -->
-                                <div th:if="${reviewedOrderIds.contains(item.orderId)}" class="product-actions" style="margin-top:10px">
+                                <div th:if="${reviewedOrderIds.contains(item.orderId)}" class="product-actions" style="margin-top:12px">
                                     <span class="status-pill status-pill-received">
                                         <i class="bi bi-bag-heart"></i> Received
                                     </span>
@@ -448,33 +953,10 @@
                 </div>
             </div>
 
-            <!-- Quick Actions Section -->
-            <div class="panel">
-                <div class="tracker-title">
-                    <h3><i class="bi bi-lightning" style="color:var(--accent);margin-right:6px"></i>Quick Actions</h3>
-                </div>
-
-                <div class="link-list">
-                    <a class="link-item" th:href="@{/orders/history}">
-                        <span class="left">
-                            <span class="icon-pill icon-pill-orders"><i class="bi bi-receipt"></i></span>
-                            <span>All My Orders</span>
-                        </span>
-                        <span class="chev"><i class="bi bi-chevron-right"></i></span>
-                    </a>
-
-                    <a class="link-item" th:href="@{/user/start-selling}">
-                        <span class="left">
-                            <span class="icon-pill icon-pill-seller"><i class="bi bi-shop-window"></i></span>
-                            <span>Seller Page</span>
-                        </span>
-                        <span class="chev"><i class="bi bi-chevron-right"></i></span>
-                    </a>
-                </div>
-
-                <div class="note"><i class="bi bi-info-circle" style="margin-right:4px"></i>Seller access requires verification. Clicking "Start selling" will guide you.</div>
+            <div class="foot-note">
+                <i class="bi bi-info-circle" style="margin-right:4px"></i>
+                Seller access still follows the same verification flow. This page changes only the interface.
             </div>
-
         </div>
     </div>
 </div>
@@ -486,25 +968,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
 
 <script>
-    (function(){
-        var toggle = document.getElementById('profileToggle');
-        var dropdown = document.getElementById('profileDropdown');
-        if(!toggle || !dropdown) return;
-
-        function close(){ dropdown.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
-        function open(){ dropdown.classList.add('open'); toggle.setAttribute('aria-expanded','true'); }
-
-        toggle.addEventListener('click', function(e){
-            e.stopPropagation();
-            if(dropdown.classList.contains('open')) close(); else open();
-        });
-
-        document.addEventListener('click', function(){ close(); });
-        document.addEventListener('keydown', function(e){
-            if(e.key === 'Escape') close();
-        });
-    })();
-
     (function(){
         var tabButtons = Array.from(document.querySelectorAll('[data-profile-tab]'));
         var states = Array.from(document.querySelectorAll('[data-profile-state]'));
@@ -548,7 +1011,6 @@
         setActiveTab(savedTab);
     })();
 
-    // ── Rating form helpers ──────────────────────────────────────────
     function toggleRateForm(orderItemId) {
         var wrap = document.getElementById('rateForm-' + orderItemId);
         if (!wrap) return;
@@ -564,12 +1026,11 @@
         return true;
     }
 
-    // Attach click handlers to all star buttons.
     document.querySelectorAll('.star-row').forEach(function(row) {
         var stars = Array.from(row.querySelectorAll('.star-btn'));
         var ratingInput = row.closest('form') ? row.closest('form').querySelector('input[name="rating"]') : null;
 
-        stars.forEach(function(star, idx) {
+        stars.forEach(function(star) {
             star.addEventListener('click', function() {
                 var val = parseInt(star.getAttribute('data-val'), 10);
                 if (ratingInput) ratingInput.value = val;
@@ -596,4 +1057,3 @@
 
 </body>
 </html>
-
