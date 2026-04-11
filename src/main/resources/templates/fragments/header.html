@@ -1,12 +1,6 @@
 <header th:fragment="header">
     <div class="container-fluid">
-        <div class="row py-1 px-xl-5" style="background: linear-gradient(
-          to right,
-          rgba(128, 0, 128, 0.4),   /* purple */
-          rgba(255, 165, 0, 0.4),   /* orange */
-          rgba(255, 255, 0, 0.2),   /* yellow */
-          rgba(0, 0, 255, 0.4)      /* blue */
-        );">
+        <div class="row py-1 px-xl-5 header-top-strip">
             <div class="col-lg-6 d-none d-lg-block">
                 <div class="d-inline-flex align-items-center h-100">
                     <a class="text-body mr-3" href="">About</a>
@@ -20,20 +14,20 @@
             <div class="col-lg-6 text-center text-lg-right">
                 <!-- If user logged in (session.userId set) -->
                 <div th:if="${session.userId != null}" class="d-inline-flex align-items-center">
-                    <a th:href="@{/user/profile}" class="btn btn-sm btn-primary d-inline-flex align-items-center mr-2">
+                    <a th:href="@{/user/profile}" class="btn btn-sm btn-primary d-inline-flex align-items-center mr-2 header-profile-chip">
                         <img th:src="@{https://i.pravatar.cc/150}" alt="User avatar" class="rounded-circle"
                              style="width:28px;height:28px;object-fit:cover;margin-right:8px;">
                         <span th:text="${session.userName}">User</span>
                     </a>
 
-                    <a th:href="@{/logout}" class="btn btn-sm btn-outline-danger d-inline-flex align-items-center">
+                    <a th:href="@{/logout}" class="btn btn-sm btn-outline-danger d-inline-flex align-items-center header-logout-chip">
                         <i class="fas fa-sign-out-alt mr-1"></i> Logout
                     </a>
                 </div>
 
                 <!-- If not logged in -->
                 <div th:unless="${session.userId != null}">
-                    <a th:href="@{/signin}" class="btn " style="background-color: #6e2124; color:white;">
+                    <a th:href="@{/signin}" class="btn header-login-chip">
                         <i class="fas fa-sign-in-alt mr-2"></i>Login
                     </a>
                 </div>
@@ -42,7 +36,7 @@
         </div>
 
         <!-- Logo and search bar section -->
-        <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
+        <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex header-brand-row">
             <div class="col-lg-4">
                 <a th:href="@{/index}" class="text-decoration-none d-inline-flex align-items-center">
                     <span class="h3 text-uppercase text-white bg-dark px-2 mb-0">CAMPUS</span>
@@ -52,9 +46,9 @@
             <div class="col-lg-4 col-6 text-left header-search-wrap">
                 <form action="">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for products" aria-label="Search for products" id="header-search-input" autocomplete="off">
+                        <input type="text" class="form-control header-search-input" placeholder="Search for products" aria-label="Search for products" id="header-search-input" autocomplete="off">
                         <div class="input-group-append">
-                                <span class="input-group-text bg-transparent text-primary">
+                                <span class="input-group-text bg-transparent text-primary header-search-icon">
                                     <i class="fa fa-search"></i>
                                 </span>
                         </div>
@@ -72,10 +66,10 @@
 
     </div>
 
-    <div class="container-fluid bg-dark mb-30">
+    <div class="container-fluid bg-dark mb-30 header-nav-shell">
         <div class="row px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
-                <select class="form-control d-flex align-items-center text-white" id="categories-select" aria-label="Categories" style="height: 65px; padding: 0 30px; background-color: #4B2E83; border: 1px solid #FFD333; cursor: pointer; appearance: none; font-size: 18px; font-weight: 500;">
+                <select class="form-control d-flex align-items-center text-white header-category-select" id="categories-select" aria-label="Categories" style="height: 65px; padding: 0 30px; cursor: pointer; appearance: none; font-size: 18px; font-weight: 500;">
                     <option value="">Category  ▼</option>
                     <option value="smartphones">Smartphones</option>
                     <option value="kitchen">Kitchen</option>
@@ -86,7 +80,7 @@
                 </select>
             </div>
             <div class="col-lg-9">
-                <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
+                <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0 header-main-nav">
                     <a th:href="@{/index}" class="text-decoration-none d-block d-lg-none">
                         <span class="h3 text-uppercase text-dark bg-light px-2">CAMPUS</span>
                         <span class="h3 text-uppercase text-light bg-primary px-2 ml-n1">MARKETPLACE</span>
@@ -111,8 +105,8 @@
 
                         <!-- Right-side utilities: cart visible only when logged in -->
                         <div class="navbar-nav ml-auto py-0 d-none d-lg-block" th:if="${session.userId != null}">
-                            <a th:href="@{/cart}" class="btn px-0 ml-3">
-                                <i class="fas fa-shopping-cart" style="color:#c88914;"></i>
+                            <a th:href="@{/cart}" class="btn px-0 ml-3 header-cart-link">
+                                <i class="fas fa-shopping-cart header-cart-icon"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle cart-badge-count" style="padding-bottom: 2px;">0</span>
                             </a>
                         </div>
@@ -124,6 +118,114 @@
 
 
     <style>
+        .header-top-strip{
+            background: linear-gradient(120deg, rgba(122, 92, 255, 0.92), rgba(255, 170, 64, 0.9), rgba(255, 226, 112, 0.78), rgba(53, 128, 255, 0.92));
+            background-size: 220% 220%;
+            animation: headerGradientFlow 12s ease infinite;
+            box-shadow: inset 0 -1px 0 rgba(255,255,255,0.18);
+        }
+        .header-top-strip .text-body{
+            color: rgba(255,255,255,0.9) !important;
+            transition: color .25s ease, text-shadow .25s ease;
+        }
+        .header-top-strip .text-body:hover{
+            color: #ffffff !important;
+            text-shadow: 0 0 14px rgba(255,255,255,0.35);
+        }
+        .header-profile-chip{
+            background: linear-gradient(135deg, #ffffff, #f4eaff) !important;
+            border-color: rgba(125, 80, 219, 0.18) !important;
+            box-shadow: 0 10px 24px rgba(58, 43, 117, 0.18);
+        }
+        .header-logout-chip{
+            color: #ffffff !important;
+            border-color: rgba(255,255,255,0.42) !important;
+            background: rgba(124, 27, 52, 0.26) !important;
+            backdrop-filter: blur(8px);
+        }
+        .header-login-chip{
+            background: linear-gradient(135deg, #6f42ff, #ff9b3d) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255,255,255,0.24) !important;
+            box-shadow: 0 12px 24px rgba(85, 49, 166, 0.26);
+        }
+        .header-brand-row{
+            background:
+                radial-gradient(circle at top left, rgba(124, 84, 247, 0.12), transparent 38%),
+                radial-gradient(circle at top right, rgba(255, 192, 84, 0.22), transparent 34%),
+                linear-gradient(180deg, #ffffff, #f7f7ff);
+        }
+        .header-search-input{
+            border-color: rgba(109, 84, 213, 0.18) !important;
+            box-shadow: 0 10px 24px rgba(76, 46, 131, 0.08);
+        }
+        .header-search-input:focus{
+            border-color: rgba(96, 116, 255, 0.5) !important;
+            box-shadow: 0 0 0 .2rem rgba(124, 92, 255, 0.14), 0 16px 30px rgba(76, 46, 131, 0.12) !important;
+        }
+        .header-search-icon{
+            color: #6e59d9 !important;
+        }
+        .header-nav-shell{
+            background: linear-gradient(90deg, #2b1c54 0%, #382465 100%) !important;
+            box-shadow: 0 14px 32px rgba(39, 26, 76, 0.24);
+        }
+        .header-category-select{
+            background: linear-gradient(135deg, rgba(89, 53, 164, 0.98), rgba(52, 109, 226, 0.92)) !important;
+            border: 1px solid rgba(255, 219, 106, 0.9) !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 12px 28px rgba(43, 31, 84, 0.26);
+        }
+        .header-main-nav,
+        .header-main-nav.bg-dark,
+        .header-main-nav.navbar-dark{
+            background: #2f255f !important;
+            box-shadow: 0 12px 24px rgba(31, 22, 66, 0.24);
+        }
+        .header-main-nav .navbar-collapse{
+            background: #2f255f !important;
+        }
+        .header-main-nav .nav-link{
+            position: relative;
+            color: rgba(255,255,255,0.92) !important;
+            transition: color .25s ease, transform .25s ease, text-shadow .25s ease;
+        }
+        .header-main-nav .nav-link::after{
+            content: "";
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            bottom: 12px;
+            height: 3px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #ffd35a, #ffffff, #8eb6ff);
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform .28s ease, opacity .28s ease;
+            opacity: .88;
+        }
+        .header-main-nav .nav-link:hover,
+        .header-main-nav .nav-link.active{
+            color: #fff2ba !important;
+            transform: translateY(-1px);
+            text-shadow: 0 0 16px rgba(255, 214, 102, 0.32);
+        }
+        .header-main-nav .nav-link:hover::after,
+        .header-main-nav .nav-link.active::after{
+            transform: scaleX(1);
+        }
+        .header-cart-link{
+            color: #ffffff !important;
+        }
+        .header-cart-icon{
+            color: #ffd35a;
+            filter: drop-shadow(0 0 10px rgba(255, 211, 90, 0.42));
+            transition: color .25s ease, filter .25s ease, transform .25s ease;
+        }
+        .header-cart-link:hover .header-cart-icon{
+            color: #fff4c9;
+            filter: drop-shadow(0 0 16px rgba(255, 240, 181, 0.58));
+            transform: translateY(-1px);
+        }
         .header-search-wrap{position:relative}
         .search-results{display:none;position:absolute;top:100%;left:0;z-index:1050;width:100%;background:#fff;border-radius:12px;border:1px solid rgba(15,23,42,0.08);margin-top:6px;max-height:320px;overflow:auto}
         .search-item{display:flex;gap:10px;align-items:center;padding:10px 12px;text-decoration:none;color:#111827;border-bottom:1px solid rgba(15,23,42,0.06)}
@@ -133,6 +235,11 @@
         .search-title{font-weight:600;font-size:13px;margin-bottom:2px}
         .search-price{font-size:12px;color:#4B2E83}
         .search-empty{padding:12px;color:#6b7280;font-size:13px}
+        @keyframes headerGradientFlow{
+            0%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+            100%{background-position:0% 50%}
+        }
     </style>
 
     <script>

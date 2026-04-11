@@ -181,13 +181,18 @@
               </div>
               <div class="panel-body">
                 <ul class="category-list" id="topCategories">
-                  <li th:each="cat, stat : ${topCategories}" class="cat-row">
+next correction                   <li th:each="cat, stat : ${topCategories}" class="cat-row"
+                      th:classappend="${stat.index >= 5 ? 'extra-category' : ''}"
+                      th:style="${stat.index >= 5 ? 'display: none;' : ''}">
                     <span class="cat-rank" th:text="${stat.index + 1}">1</span>
                     <span class="cat-name" th:text="${cat.categoryName}">Category</span>
                     <span class="cat-count pill approved" th:text="${cat.productCount} + ' listings'">0 listings</span>
                   </li>
                   <li th:if="${#lists.isEmpty(topCategories)}" class="muted small">No category data yet.</li>
                 </ul>
+                <div th:if="${#lists.size(topCategories) > 5}" style="text-align: center; margin-top: 12px;">
+                  <button class="btn small outline" onclick="showExtraCategories(this)">Show More</button>
+                </div>
               </div>
             </div>
 
@@ -343,6 +348,13 @@
         verificationApproved:  /*[[${verificationApproved}]]*/ 0,
         verificationRejected:  /*[[${verificationRejected}]]*/ 0
     };
+
+    function showExtraCategories(btn) {
+        document.querySelectorAll('.extra-category').forEach(function(el) {
+            el.style.display = '';
+        });
+        btn.style.display = 'none';
+    }
     /*]]>*/
   </script>
 
