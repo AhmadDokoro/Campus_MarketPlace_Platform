@@ -3,6 +3,7 @@ package com.ahsmart.campusmarket.service.review;
 import com.ahsmart.campusmarket.model.OrderItem;
 import com.ahsmart.campusmarket.model.Review;
 import com.ahsmart.campusmarket.model.enums.DeliveryStatus;
+import com.ahsmart.campusmarket.payloadDTOs.review.ProductReviewDTO;
 import com.ahsmart.campusmarket.repositories.OrderItemRepository;
 import com.ahsmart.campusmarket.repositories.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -68,5 +70,14 @@ public class ReviewServiceImpl implements ReviewService {
             return Collections.emptySet();
         }
         return reviewRepository.findReviewedOrderIdsByReviewer(buyerUserId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductReviewDTO> getReviewsByProductId(Long productId) {
+        if (productId == null) {
+            return Collections.emptyList();
+        }
+        return reviewRepository.findProductReviewsByProductId(productId);
     }
 }

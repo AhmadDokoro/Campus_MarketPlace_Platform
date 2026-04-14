@@ -6,6 +6,7 @@ import com.ahsmart.campusmarket.model.enums.PaymentMethod;
 import com.ahsmart.campusmarket.payloadDTOs.order.BuyerOrderItemChatDTO;
 import com.ahsmart.campusmarket.payloadDTOs.order.BuyerOrderTrackingSummaryDTO;
 import com.ahsmart.campusmarket.payloadDTOs.order.SellerOrderItemDTO;
+import com.ahsmart.campusmarket.payloadDTOs.order.SellerSalesHistoryDTO;
 
 import java.util.List;
 
@@ -53,5 +54,11 @@ public interface OrderService {
 
     // Loads a single order with full details (items, products, images) for the order detail page.
     Order getOrderDetail(Long orderId, Long userId);
+
+    // Returns all completed (buyer-confirmed) sales for a seller, newest first.
+    List<SellerSalesHistoryDTO> getSellerSalesHistory(Long sellerId);
+
+    // Counts completed (buyer-confirmed) sales items for a seller.
+    long countCompletedSalesForSeller(Long sellerId);
 }
 

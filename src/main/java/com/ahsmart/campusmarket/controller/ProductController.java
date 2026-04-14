@@ -5,9 +5,13 @@ import com.ahsmart.campusmarket.model.UserAddress;
 import com.ahsmart.campusmarket.model.enums.Condition;
 import com.ahsmart.campusmarket.model.enums.DeliveryStatus;
 import com.ahsmart.campusmarket.payloadDTOs.order.SellerOrderItemDTO;
+import com.ahsmart.campusmarket.payloadDTOs.order.SellerSalesHistoryDTO;
+import com.ahsmart.campusmarket.payloadDTOs.review.ProductReviewDTO;
 import com.ahsmart.campusmarket.service.category.CategoryService;
 import com.ahsmart.campusmarket.service.order.OrderService;
 import com.ahsmart.campusmarket.service.product.ProductService;
+import com.ahsmart.campusmarket.service.review.ReviewService;
+import org.springframework.http.ResponseEntity;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,11 +31,13 @@ public class ProductController {
     private final CategoryService categoryService;
     private final ProductService productService;
     private final OrderService orderService;
+    private final ReviewService reviewService;
 
-    public ProductController(CategoryService categoryService, ProductService productService, OrderService orderService) {
+    public ProductController(CategoryService categoryService, ProductService productService, OrderService orderService, ReviewService reviewService) {
         this.categoryService = categoryService;
         this.productService = productService;
         this.orderService = orderService;
+        this.reviewService = reviewService;
     }
 
     @GetMapping("/dashboard")
@@ -66,6 +72,28 @@ public class ProductController {
             Long sellerId = productService.getSellerIdForUser(userId);
             populateSellerOrdersModel(model, sellerId);
             return "seller/orders";
+        } catch (IllegalArgumentException ex) {
+            return "redirect:/user/start-selling";
+        }
+    }
+
+    @GetMapping("/sales-history")
+    public String salesHistory(HttpSession session, Model model) {
+        Long userId = resolveUserId(session);
+        if (userId == null) {
+            return "redirect:/signin";
+        }
+
+        try {
+            Long sellerId = productService.getSellerIdForUser(userId);
+            List<SellerSalesHistoryDTO> salesHistory = orderService.getSellerSalesHistory(sellerId);
+            BigDecimal totalRevenue = salesHistory.stream()
+                    .map(SellerSalesHistoryDTO::getSubtotal)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            model.addAttribute("salesHistory", salesHistory);
+            model.addAttribute("totalRevenue", totalRevenue);
+            model.addAttribute("completedSalesCount", salesHistory.size());
+            return "seller/sales-history";
         } catch (IllegalArgumentException ex) {
             return "redirect:/user/start-selling";
         }
@@ -111,6 +139,22 @@ public class ProductController {
         }
 
         return "redirect:/seller/orders";
+    }
+
+    @GetMapping("/products/{productId}/reviews")
+    @ResponseBody
+    public ResponseEntity<?> getProductReviews(@PathVariable Long productId, HttpSession session) {
+        Long userId = resolveUserId(session);
+        if (userId == null) {
+            return ResponseEntity.status(401).build();
+        }
+        try {
+            productService.getProductForEdit(userId, productId);
+            List<ProductReviewDTO> reviews = reviewService.getReviewsByProductId(productId);
+            return ResponseEntity.ok(reviews);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(403).body(ex.getMessage());
+        }
     }
 
     @GetMapping("/products/new")

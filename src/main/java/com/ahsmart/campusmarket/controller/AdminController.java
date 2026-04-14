@@ -147,6 +147,35 @@ public class AdminController {
         }
     }
 
+    // ------------------- Flagged Products -------------------
+
+    @GetMapping("/flaggedProducts")
+    public String flaggedProducts(HttpSession session, Model model) {
+        if (!isAdmin(session)) {
+            return "redirect:/signin";
+        }
+        model.addAttribute("flaggedProducts", adminService.getSuspiciousProducts());
+        return "admin/flaggedProducts";
+    }
+
+    @PostMapping("/flaggedProducts/{id}/approve")
+    public String approveProduct(@PathVariable("id") Long productId, HttpSession session) {
+        if (!isAdmin(session)) {
+            return "redirect:/signin";
+        }
+        adminService.approveProduct(productId);
+        return "redirect:/admin/flaggedProducts";
+    }
+
+    @PostMapping("/flaggedProducts/{id}/delete")
+    public String deleteProduct(@PathVariable("id") Long productId, HttpSession session) {
+        if (!isAdmin(session)) {
+            return "redirect:/signin";
+        }
+        adminService.adminDeleteProduct(productId);
+        return "redirect:/admin/flaggedProducts";
+    }
+
     // ------------------- Manage Mentors -------------------
 
     @GetMapping("/mentors")

@@ -1,6 +1,7 @@
 package com.ahsmart.campusmarket.repositories;
 
 import com.ahsmart.campusmarket.model.Product;
+import com.ahsmart.campusmarket.model.enums.FlaggedStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -90,4 +91,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     // Returns (categoryName, count) pairs sorted descending — admin top-categories panel.
     @Query("SELECT c.categoryName, COUNT(p) FROM Product p JOIN p.category c GROUP BY c.categoryId, c.categoryName ORDER BY COUNT(p) DESC")
     List<Object[]> countProductsPerCategory();
+
+    // Fetches all products matching the given flagged status with images, category, and seller eagerly loaded — admin flagged products page.
+    @Query("SELECT DISTINCT p FROM Product p " +
+            "LEFT JOIN FETCH p.images " +
+            "LEFT JOIN FETCH p.category " +
+            "LEFT JOIN FETCH p.seller s " +
+            "LEFT JOIN FETCH s.user " +
+            "WHERE p.flaggedStatus = :status " +
+            "ORDER BY p.createdAt DESC")
+    List<Product> findByFlaggedStatusWithDetails(@Param("status") FlaggedStatus status);
 }
