@@ -16,6 +16,7 @@ import com.ahsmart.campusmarket.repositories.ProductImageRepository;
 import com.ahsmart.campusmarket.repositories.ProductRepository;
 import com.ahsmart.campusmarket.repositories.SellerRepository;
 import com.ahsmart.campusmarket.repositories.UsersRepository;
+import com.ahsmart.campusmarket.service.openai.OpenAiService;
 import com.ahsmart.campusmarket.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -44,6 +45,7 @@ public class ProductServiceImpl implements ProductService {
     private final FileService fileService;
     private final OrderService orderService;
     private final OrderItemRepository orderItemRepository;
+    private final OpenAiService openAiService;
 
     // Validates input, uploads the image, and persists product + primary image.
     @Override
@@ -107,7 +109,8 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(price);
         product.setQuantity(quantity);
         product.setCondition(condition);
-        product.setFlaggedStatus(FlaggedStatus.UNKNOWN);
+        FlaggedStatus flaggedStatus = openAiService.detectFraud(normalizedTitle, description, price);
+        product.setFlaggedStatus(flaggedStatus);
 
         Product savedProduct = productRepository.save(product);
 
