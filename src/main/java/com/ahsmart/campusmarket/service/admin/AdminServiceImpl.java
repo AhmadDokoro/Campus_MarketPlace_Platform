@@ -1,18 +1,24 @@
 package com.ahsmart.campusmarket.service.admin;
 
 import com.ahsmart.campusmarket.helper.EmailHelper;
+import com.ahsmart.campusmarket.model.Product;
+import com.ahsmart.campusmarket.model.ProductImage;
 import com.ahsmart.campusmarket.model.Seller;
 import com.ahsmart.campusmarket.model.Users;
 import com.ahsmart.campusmarket.model.enums.DeliveryStatus;
+import com.ahsmart.campusmarket.model.enums.FlaggedStatus;
 import com.ahsmart.campusmarket.model.enums.Role;
 import com.ahsmart.campusmarket.model.enums.SellerStatus;
 import com.ahsmart.campusmarket.payloadDTOs.admin.CategoryStatsDTO;
+import com.ahsmart.campusmarket.payloadDTOs.admin.FlaggedProductDTO;
 import com.ahsmart.campusmarket.payloadDTOs.admin.SellerStatDTO;
 import com.ahsmart.campusmarket.payloadDTOs.admin.WeeklyListingDTO;
 import com.ahsmart.campusmarket.repositories.OrderItemRepository;
+import com.ahsmart.campusmarket.repositories.ProductImageRepository;
 import com.ahsmart.campusmarket.repositories.ProductRepository;
 import com.ahsmart.campusmarket.repositories.SellerRepository;
 import com.ahsmart.campusmarket.repositories.UsersRepository;
+import com.ahsmart.campusmarket.service.product.FileService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,17 +38,23 @@ public class AdminServiceImpl implements AdminService {
     private final ProductRepository productRepository;
     private final OrderItemRepository orderItemRepository;
     private final EmailHelper emailHelper;
+    private final ProductImageRepository productImageRepository;
+    private final FileService fileService;
 
     public AdminServiceImpl(SellerRepository sellerRepository,
                             UsersRepository usersRepository,
                             ProductRepository productRepository,
                             OrderItemRepository orderItemRepository,
-                            EmailHelper emailHelper) {
+                            EmailHelper emailHelper,
+                            ProductImageRepository productImageRepository,
+                            FileService fileService) {
         this.sellerRepository = sellerRepository;
         this.usersRepository = usersRepository;
         this.productRepository = productRepository;
         this.orderItemRepository = orderItemRepository;
         this.emailHelper = emailHelper;
+        this.productImageRepository = productImageRepository;
+        this.fileService = fileService;
     }
 
     @Override
@@ -193,6 +205,59 @@ public class AdminServiceImpl implements AdminService {
             result.add(new SellerStatDTO(sellerId, name, submittedAt, listingCount, statusName));
         }
         return result;
+    }
+
+    // ── Flagged Products ─────────────────────────────────────────────────
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<FlaggedProductDTO> getSuspiciousProducts() {
+        List<Product> products = productRepository.findByFlaggedStatusWithDetails(FlaggedStatus.SUSPICIOUS);
+        List<FlaggedProductDTO> result = new ArrayList<>();
+        for (Product p : products) {
+            String primaryImageUrl = p.getImages().stream()
+                    .filter(img -> Boolean.TRUE.equals(img.getIsPrimary()))
+                    .map(ProductImage::getImageUrl)
+                    .findFirst()
+                    .orElse(null);
+            String sellerName = p.getSeller() != null && p.getSeller().getUser() != null
+                    ? (p.getSeller().getUser().getFirstName() + " " + p.getSeller().getUser().getLastName()).trim()
+                    : "Unknown";
+            String categoryName = p.getCategory() != null ? p.getCategory().getCategoryName() : "—";
+            String conditionName = p.getCondition() != null ? p.getCondition().name() : "—";
+            result.add(new FlaggedProductDTO(
+                    p.getProductId(),
+                    p.getTitle(),
+                    p.getDescription(),
+                    p.getPrice(),
+                    p.getQuantity(),
+                    conditionName,
+                    categoryName,
+                    sellerName,
+                    primaryImageUrl,
+                    p.getCreatedAt()
+            ));
+        }
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public void approveProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
+        product.setFlaggedStatus(FlaggedStatus.VERIFIED);
+        productRepository.save(product);
+    }
+
+    @Override
+    @Transactional
+    public void adminDeleteProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
+        productImageRepository.findByProduct_ProductId(productId)
+                .forEach(image -> fileService.deleteImageByUrl(image.getImageUrl()));
+        productRepository.delete(product);
     }
 
     @Override

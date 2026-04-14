@@ -13,7 +13,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
   <!-- CSS -->
-  <link rel="stylesheet" th:href="@{/css/admin.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css(v=2)}">
 </head>
 
 <body>
@@ -34,7 +34,7 @@
         <a class="nav-item" href="#analytics"><span class="icon">📈</span> Analytics</a>
         <a class="nav-item" th:href="@{/admin/pendingSellers}"><span class="icon">📝</span> Seller Verification</a>
         <a class="nav-item" th:href="@{/admin/mentors}"><span class="icon">👥</span> Manage Mentors</a>
-        <a class="nav-item" th:href="@{/admin/flaggedProducts}"><span class="icon">🚩</span> Flagged Products</a>
+        <a class="nav-item" th:href="@{/admin/flaggedProducts}"><span class="icon">🚩</span> View Flagged Products</a>
         <a class="nav-item" th:href="@{/admin/categories}"><span class="icon">🗂️</span> Categories</a>
         <div class="nav-spacer"></div>
         <a class="nav-item danger" th:href="@{/logout}"><span class="icon">🔒</span> Logout</a>
@@ -199,83 +199,6 @@ next correction                   <li th:each="cat, stat : ${topCategories}" cla
           </div>
         </section>
 
-        <!-- ── Verification Queue ─────────────────────────────── -->
-        <section id="verify-sellers" class="section queue fade-in" style="animation-delay:.15s">
-          <div class="panel">
-            <div class="panel-header">
-              <h3>Seller Verification Queue</h3>
-              <div class="panel-actions">
-                <a class="btn small" th:href="@{/admin/pendingSellers}">View Full Queue</a>
-                <input id="verifySearch" type="search" placeholder="Search name or student ID" />
-              </div>
-            </div>
-            <div class="panel-body">
-              <table class="table" id="verificationTable">
-                <thead>
-                  <tr>
-                    <th>Submitted</th>
-                    <th>Name</th>
-                    <th>Student ID</th>
-                    <th>Document</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- rows populated by JS -->
-                </tbody>
-              </table>
-              <div class="muted small" style="margin-top:8px">Approve only valid student IDs. Rejected sellers can re-apply.</div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ── Flagged Products ───────────────────────────────── -->
-        <section id="flagged" class="section flagged fade-in" style="animation-delay:.2s">
-          <div class="panel">
-            <div class="panel-header">
-              <h3>AI-Flagged Product Listings</h3>
-              <div class="panel-actions">
-                <button class="btn outline">Bulk Approve</button>
-                <button class="btn danger">Bulk Delete</button>
-              </div>
-            </div>
-            <div class="panel-body">
-              <table class="table table-img" id="flaggedTable">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>Product</th>
-                    <th>Seller</th>
-                    <th>AI Score</th>
-                    <th>Reason</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- populated by JS -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- ── Categories ─────────────────────────────────────── -->
-        <section id="categories" class="section categories fade-in" style="animation-delay:.25s">
-          <div class="panel">
-            <div class="panel-header">
-              <h3>Category Management</h3>
-              <div class="panel-actions">
-                <a class="btn primary" th:href="@{/admin/categories}">Manage Categories</a>
-              </div>
-            </div>
-            <div class="panel-body">
-              <div class="category-grid" id="categoryGrid">
-                <!-- JS will render categories -->
-              </div>
-            </div>
-          </div>
-        </section>
-
         <!-- ── Manage Sellers ─────────────────────────────────── -->
         <section id="manage-sellers" class="section manage-sellers fade-in" style="animation-delay:.3s">
           <div class="panel">
@@ -298,7 +221,9 @@ next correction                   <li th:each="cat, stat : ${topCategories}" cla
                   </tr>
                 </thead>
                 <tbody>
-                  <tr th:each="s, stat : ${sellerStats}">
+                  <tr th:each="s, stat : ${sellerStats}"
+                      th:classappend="${stat.index >= 5 ? 'extra-seller' : ''}"
+                      th:style="${stat.index >= 5 ? 'display:none;' : ''}">
                     <td class="muted" th:text="${stat.index + 1}">1</td>
                     <td>
                       <div class="seller-name-cell">
@@ -327,6 +252,9 @@ next correction                   <li th:each="cat, stat : ${topCategories}" cla
                   </tr>
                 </tbody>
               </table>
+              <div th:if="${#lists.size(sellerStats) > 5}" style="text-align:center;margin-top:14px">
+                <button class="btn small outline" id="sellersToggleBtn" onclick="toggleSellers(this)">Show More</button>
+              </div>
             </div>
           </div>
         </section>
@@ -355,9 +283,18 @@ next correction                   <li th:each="cat, stat : ${topCategories}" cla
         });
         btn.style.display = 'none';
     }
+
+    function toggleSellers(btn) {
+        var rows = document.querySelectorAll('#sellersTable .extra-seller');
+        var expanded = btn.textContent.trim() === 'Show Less';
+        rows.forEach(function(row) {
+            row.style.display = expanded ? 'none' : '';
+        });
+        btn.textContent = expanded ? 'Show More' : 'Show Less';
+    }
     /*]]>*/
   </script>
 
-  <script th:src="@{/js/admin.js}"></script>
+  <script th:src="@{/js/admin.js(v=2)}"></script>
 </body>
 </html>

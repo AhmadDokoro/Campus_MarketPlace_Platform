@@ -10,6 +10,7 @@ import com.ahsmart.campusmarket.repositories.UsersRepository;
 import com.ahsmart.campusmarket.payloadDTOs.order.BuyerOrderItemChatDTO;
 import com.ahsmart.campusmarket.payloadDTOs.order.BuyerOrderTrackingSummaryDTO;
 import com.ahsmart.campusmarket.payloadDTOs.order.SellerOrderItemDTO;
+import com.ahsmart.campusmarket.payloadDTOs.order.SellerSalesHistoryDTO;
 import com.ahsmart.campusmarket.service.cart.CartService;
 import com.ahsmart.campusmarket.service.chat.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -349,6 +350,25 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return orderItem;
+    }
+
+    // Returns all completed (buyer-confirmed RECEIVED) sales for a seller, newest first.
+    @Override
+    @Transactional(readOnly = true)
+    public List<SellerSalesHistoryDTO> getSellerSalesHistory(Long sellerId) {
+        if (sellerId == null) {
+            throw new IllegalArgumentException("Seller id is required.");
+        }
+        return orderItemRepository.findSellerSalesHistory(sellerId, OrderStatus.PAID, DeliveryStatus.RECEIVED);
+    }
+
+    // Counts completed (buyer-confirmed RECEIVED) sales items for a seller.
+    @Override
+    public long countCompletedSalesForSeller(Long sellerId) {
+        if (sellerId == null) {
+            return 0L;
+        }
+        return orderItemRepository.countCompletedSalesForSeller(sellerId, OrderStatus.PAID, DeliveryStatus.RECEIVED);
     }
 }
 

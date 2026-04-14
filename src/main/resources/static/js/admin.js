@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // ===== render verification table =====
 function renderVerificationTable(){
   const tbody = document.querySelector('#verificationTable tbody');
+  if(!tbody) return;
   sample.verificationQueue.forEach(item=>{
     const tr = document.createElement('tr');
     tr.innerHTML = `
@@ -70,6 +71,7 @@ function renderVerificationTable(){
 // ===== render flagged table =====
 function renderFlaggedTable(){
   const tbody = document.querySelector('#flaggedTable tbody');
+  if(!tbody) return;
   sample.flaggedProducts.forEach(p=>{
     const tr = document.createElement('tr');
     tr.innerHTML = `
@@ -90,6 +92,7 @@ function renderFlaggedTable(){
 // ===== categories grid =====
 function renderCategoryGrid(){
   const grid = document.getElementById('categoryGrid');
+  if(!grid) return;
   sample.categories.forEach(c=>{
     const card = document.createElement('div');
     card.className='category-card';

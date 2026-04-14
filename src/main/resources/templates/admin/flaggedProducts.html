@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Flagged Products — Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/admin.css(v=2)}">
+</head>
+
+<body>
+  <div class="admin-app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo-square">CM</div>
+        <div class="brand-text">
+          <div class="title">Campus</div>
+          <div class="subtitle">Marketplace</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a class="nav-item" th:href="@{/admin/dashboard}"><span class="icon">🏠</span> Overview</a>
+        <a class="nav-item" th:href="@{/admin/dashboard#analytics}"><span class="icon">📈</span> Analytics</a>
+        <a class="nav-item" th:href="@{/admin/pendingSellers}"><span class="icon">📝</span> Seller Verification</a>
+        <a class="nav-item" th:href="@{/admin/mentors}"><span class="icon">👥</span> Manage Mentors</a>
+        <a class="nav-item active" th:href="@{/admin/flaggedProducts}"><span class="icon">🚩</span> View Flagged Products</a>
+        <a class="nav-item" th:href="@{/admin/categories}"><span class="icon">🗂️</span> Categories</a>
+        <div class="nav-spacer"></div>
+        <a class="nav-item danger" th:href="@{/logout}"><span class="icon">🔒</span> Logout</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div>Version 1.0</div>
+        <div class="small muted">UMT • Campus Marketplace</div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="page-breadcrumb">
+            <span class="breadcrumb-icon">🏠</span>
+            <span class="breadcrumb-sep">/</span>
+            <a th:href="@{/admin/dashboard}" class="breadcrumb-link">Dashboard</a>
+            <span class="breadcrumb-sep">/</span>
+            <span class="breadcrumb-current">Flagged Products</span>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <div class="profile">
+            <div class="admin-avatar">A</div>
+            <div class="admin-meta">
+              <div class="admin-name">SEO Admin</div>
+              <div class="admin-role">Student Entrepreneurship Officer</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <section class="content">
+        <section class="section fade-in">
+
+          <div class="overview-header" style="margin-bottom:18px">
+            <div>
+              <h1>Flagged Products</h1>
+              <p class="muted">Products automatically flagged as suspicious. Review and approve or remove them.</p>
+            </div>
+            <div>
+              <span class="pill suspicious" th:text="${flaggedProducts.size()} + ' suspicious'">0 suspicious</span>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-body" style="padding-top:8px">
+
+              <!-- Empty state -->
+              <div th:if="${flaggedProducts.isEmpty()}" class="fp-empty">
+                <div class="fp-empty-icon">✅</div>
+                <div class="fp-empty-text">No flagged products right now.</div>
+                <div class="muted small">All products are clear. Check back later.</div>
+              </div>
+
+              <!-- Flagged product list -->
+              <div th:unless="${flaggedProducts.isEmpty()}" class="fp-list">
+
+                <div th:each="p : ${flaggedProducts}" class="fp-item" th:id="|fp-wrap-${p.productId}|">
+
+                  <!-- Summary row (clickable) -->
+                  <div class="fp-summary" th:onclick="|toggleFpDetail('fp-detail-${p.productId}', this)|">
+                    <div class="fp-thumb-wrap">
+                      <img th:if="${p.primaryImageUrl != null}"
+                           th:src="${p.primaryImageUrl}"
+                           class="fp-thumb" alt="product" />
+                      <div th:unless="${p.primaryImageUrl != null}" class="fp-thumb fp-thumb-placeholder">📦</div>
+                    </div>
+                    <div class="fp-summary-info">
+                      <span class="fp-title" th:text="${p.title}">Product Title</span>
+                      <span class="fp-meta muted small">
+                        <span th:text="${p.categoryName}">Category</span>
+                        &nbsp;·&nbsp;
+                        <span th:text="${p.sellerName}">Seller</span>
+                        &nbsp;·&nbsp;
+                        <span th:text="${p.conditionName}">Condition</span>
+                      </span>
+                    </div>
+                    <div class="fp-summary-right">
+                      <span class="fp-price" th:text="'RM ' + ${#numbers.formatDecimal(p.price, 1, 2)}">RM 0.00</span>
+                      <span class="pill suspicious">Suspicious</span>
+                      <span class="fp-chevron">▼</span>
+                    </div>
+                  </div>
+
+                  <!-- Detail row (accordion) -->
+                  <div class="fp-detail" th:id="|fp-detail-${p.productId}|" style="display:none">
+                    <div class="fp-detail-inner">
+                      <div class="fp-detail-img-col">
+                        <img th:if="${p.primaryImageUrl != null}"
+                             th:src="${p.primaryImageUrl}"
+                             class="fp-detail-img" alt="product image" />
+                        <div th:unless="${p.primaryImageUrl != null}" class="fp-detail-img fp-img-placeholder">📦</div>
+                      </div>
+                      <div class="fp-detail-meta">
+                        <div class="fp-detail-row">
+                          <span class="fp-label">Description</span>
+                          <span class="fp-value" th:text="${p.description != null and !#strings.isEmpty(p.description) ? p.description : 'No description provided.'}">—</span>
+                        </div>
+                        <div class="fp-detail-row">
+                          <span class="fp-label">Price</span>
+                          <span class="fp-value" th:text="'RM ' + ${#numbers.formatDecimal(p.price, 1, 2)}">RM 0.00</span>
+                        </div>
+                        <div class="fp-detail-row">
+                          <span class="fp-label">Quantity</span>
+                          <span class="fp-value" th:text="${p.quantity}">0</span>
+                        </div>
+                        <div class="fp-detail-row">
+                          <span class="fp-label">Condition</span>
+                          <span class="fp-value" th:text="${p.conditionName}">—</span>
+                        </div>
+                        <div class="fp-detail-row">
+                          <span class="fp-label">Category</span>
+                          <span class="fp-value" th:text="${p.categoryName}">—</span>
+                        </div>
+                        <div class="fp-detail-row">
+                          <span class="fp-label">Seller</span>
+                          <span class="fp-value" th:text="${p.sellerName}">—</span>
+                        </div>
+                        <div class="fp-detail-row">
+                          <span class="fp-label">Listed On</span>
+                          <span class="fp-value" th:text="${p.createdAt != null ? #temporals.format(p.createdAt, 'MMM d, yyyy') : '—'}">—</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="fp-actions">
+                      <form th:action="|/admin/flaggedProducts/${p.productId}/approve|" method="post" style="display:inline">
+                        <button type="submit" class="btn fp-approve-btn">✅ Approve Product</button>
+                      </form>
+                      <form th:action="|/admin/flaggedProducts/${p.productId}/delete|" method="post" style="display:inline"
+                            onsubmit="return confirm('Permanently delete this product? This cannot be undone.')">
+                        <button type="submit" class="btn danger">🗑️ Delete Product</button>
+                      </form>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </section>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    function toggleFpDetail(detailId, summaryEl) {
+        var detail = document.getElementById(detailId);
+        var chevron = summaryEl.querySelector('.fp-chevron');
+        var isOpen = detail.style.display !== 'none';
+
+        document.querySelectorAll('.fp-detail').forEach(function(d) { d.style.display = 'none'; });
+        document.querySelectorAll('.fp-chevron').forEach(function(c) { c.textContent = '▼'; });
+        document.querySelectorAll('.fp-summary').forEach(function(s) { s.classList.remove('fp-summary-open'); });
+
+        if (!isOpen) {
+            detail.style.display = 'block';
+            chevron.textContent = '▲';
+            summaryEl.classList.add('fp-summary-open');
+        }
+    }
+  </script>
+</body>
+</html>

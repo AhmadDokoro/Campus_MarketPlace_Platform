@@ -2,7 +2,9 @@ package com.ahsmart.campusmarket.service.admin;
 
 import com.ahsmart.campusmarket.model.Seller;
 import com.ahsmart.campusmarket.model.enums.SellerStatus;
+import com.ahsmart.campusmarket.model.enums.Role;
 import com.ahsmart.campusmarket.payloadDTOs.admin.CategoryStatsDTO;
+import com.ahsmart.campusmarket.payloadDTOs.admin.FlaggedProductDTO;
 import com.ahsmart.campusmarket.payloadDTOs.admin.SellerStatDTO;
 import com.ahsmart.campusmarket.payloadDTOs.admin.WeeklyListingDTO;
 
@@ -47,4 +49,15 @@ public interface AdminService {
 
     // Seller name, join date, listing count, and status for the manage-sellers table.
     List<SellerStatDTO> getSellerStats();
+
+    // ── Flagged Products ───────────────────────────────────────────────
+
+    // Returns all products with SUSPICIOUS flagged status for admin review.
+    List<FlaggedProductDTO> getSuspiciousProducts();
+
+    // Marks a flagged product as VERIFIED (approved by admin).
+    void approveProduct(Long productId);
+
+    // Deletes a product and its Cloudinary images — admin bypass (no seller ownership check).
+    void adminDeleteProduct(Long productId);
 }

@@ -5,6 +5,7 @@ import com.ahsmart.campusmarket.model.enums.DeliveryStatus;
 import com.ahsmart.campusmarket.model.enums.OrderStatus;
 import com.ahsmart.campusmarket.payloadDTOs.order.BuyerOrderItemChatDTO;
 import com.ahsmart.campusmarket.payloadDTOs.order.SellerOrderItemDTO;
+import com.ahsmart.campusmarket.payloadDTOs.order.SellerSalesHistoryDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -81,6 +82,31 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
             "join fetch s.user " +
             "where oi.orderItemId = :orderItemId")
     Optional<OrderItem> findByIdWithOrderBuyerSellerAndUser(@Param("orderItemId") Long orderItemId);
+
+    // Fetches all completed (buyer-received) order items for a seller — used for Sales History page.
+    @Query("select new com.ahsmart.campusmarket.payloadDTOs.order.SellerSalesHistoryDTO(" +
+            "oi.orderItemId, p.title, oi.quantity, oi.unitPrice, oi.subtotal, buyer.firstName, buyer.lastName, o.orderId, o.createdAt, p.productId) " +
+            "from OrderItem oi " +
+            "join oi.order o " +
+            "join o.buyer buyer " +
+            "join oi.product p " +
+            "where oi.seller.sellerId = :sellerId " +
+            "and o.status = :paidStatus " +
+            "and oi.deliveryStatus = :receivedStatus " +
+            "order by o.createdAt desc, oi.orderItemId desc")
+    List<SellerSalesHistoryDTO> findSellerSalesHistory(@Param("sellerId") Long sellerId,
+                                                       @Param("paidStatus") OrderStatus paidStatus,
+                                                       @Param("receivedStatus") DeliveryStatus receivedStatus);
+
+    // Counts completed sales items for a seller — used for dashboard signal strip.
+    @Query("select count(oi) from OrderItem oi " +
+            "join oi.order o " +
+            "where oi.seller.sellerId = :sellerId " +
+            "and o.status = :paidStatus " +
+            "and oi.deliveryStatus = :receivedStatus")
+    long countCompletedSalesForSeller(@Param("sellerId") Long sellerId,
+                                      @Param("paidStatus") OrderStatus paidStatus,
+                                      @Param("receivedStatus") DeliveryStatus receivedStatus);
 
     // Finds top-selling product ids by total ordered quantity.
     @Query("select oi.product.productId from OrderItem oi " +
