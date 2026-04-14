@@ -526,7 +526,6 @@
                   <th>Subtotal</th>
                   <th>Status</th>
                   <th>Date</th>
-                  <th>Order #</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -549,9 +548,6 @@
                   <td>
                     <span class="date-cell"
                           th:text="${#temporals.format(sale.orderedAt, 'dd MMM yyyy, HH:mm')}">—</span>
-                  </td>
-                  <td>
-                    <span class="order-ref" th:text="'#' + ${sale.orderId}">—</span>
                   </td>
                   <td>
                     <button class="btn-reviews"
