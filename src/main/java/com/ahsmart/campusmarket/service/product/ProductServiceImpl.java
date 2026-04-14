@@ -55,7 +55,8 @@ public class ProductServiceImpl implements ProductService {
                                  BigDecimal price,
                                  Integer quantity,
                                  Condition condition,
-                                 MultipartFile imageFile) {
+                                 MultipartFile imageFile,
+                                 String imageUrl) {
 
         if (userId == null) {
             throw new IllegalArgumentException("You must be logged in to add products.");
@@ -79,7 +80,9 @@ public class ProductServiceImpl implements ProductService {
         if (condition == null) {
             throw new IllegalArgumentException("Condition is required.");
         }
-        if (imageFile == null || imageFile.isEmpty()) {
+        boolean hasFile = imageFile != null && !imageFile.isEmpty();
+        boolean hasUrl  = imageUrl != null && !imageUrl.isBlank();
+        if (!hasFile && !hasUrl) {
             throw new IllegalArgumentException("A product image is required.");
         }
 
@@ -108,12 +111,14 @@ public class ProductServiceImpl implements ProductService {
 
         Product savedProduct = productRepository.save(product);
 
-        String imageUrl = fileService.uploadImage(imageFile);
+        String uploadedUrl = hasFile
+                ? fileService.uploadImage(imageFile)
+                : fileService.uploadImageFromUrl(imageUrl);
 
         ProductImage productImage = new ProductImage();
         productImage.setProduct(savedProduct);
-        productImage.setImageUrl(imageUrl);
-        productImage.setPublicId(extractPublicId(imageUrl));
+        productImage.setImageUrl(uploadedUrl);
+        productImage.setPublicId(extractPublicId(uploadedUrl));
         productImage.setIsPrimary(true);
 
         productImageRepository.save(productImage);

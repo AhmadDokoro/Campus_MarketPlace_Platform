@@ -45,6 +45,29 @@ public class FileServiceImpl implements FileService {
     }
 
 
+    // Tells Cloudinary to fetch the image from the given URL and store it — avoids any browser CORS download.
+    @Override
+    public String uploadImageFromUrl(String url) {
+        try {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> result = cloudinary.uploader().upload(
+                    url,
+                    ObjectUtils.asMap(
+                            "resource_type", "image",
+                            "transformation", new Transformation()
+                                    .quality("auto:best")
+                                    .fetchFormat("auto")
+                                    .width(2000)
+                                    .height(2500)
+                                    .crop("limit")
+                    )
+            );
+            return result.get("secure_url").toString();
+        } catch (IOException e) {
+            throw new APIException("Cloudinary URL upload failed: " + e.getMessage());
+        }
+    }
+
     // delete image
     @Override
     public void deleteImageByUrl(String imageUrl) {

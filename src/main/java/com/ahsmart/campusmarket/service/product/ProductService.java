@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    // Creates a product with a single primary image.
+    // Creates a product with a primary image — either a direct file upload or a library URL.
     Product createProduct(Long userId,
                           Long categoryId,
                           String title,
@@ -17,7 +17,8 @@ public interface ProductService {
                           BigDecimal price,
                           Integer quantity,
                           Condition condition,
-                          MultipartFile imageFile);
+                          MultipartFile imageFile,
+                          String imageUrl);
 
     // Lists all products for the seller to render in the dashboard table.
     List<Product> getProductsForSeller(Long userId);
