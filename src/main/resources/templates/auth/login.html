@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login — Campus Marketplace</title>
     <link th:href="@{/css/authentication.css}" rel="stylesheet" />
+    <link th:href="@{/css/mobile.css}" rel="stylesheet" />
     <style>
         /* ── Reset ──────────────────────────────────────────────── */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -95,11 +96,10 @@
 
         .lp-deco__logo {
             width:108px; height:auto;
-            filter: brightness(0) invert(1);
+            filter: brightness(0) invert(1) drop-shadow(0 0 24px rgba(242,183,5,.4));
             opacity:.95;
             margin-bottom:22px;
             animation: floatLogo 4s ease-in-out infinite;
-            drop-shadow: 0 0 24px rgba(242,183,5,.4);
         }
         @keyframes floatLogo {
             0%,100% { transform:translateY(0); }
