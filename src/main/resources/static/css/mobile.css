@@ -1,0 +1,1628 @@
+/*
+ * mobile.css — Campus Marketplace Platform
+ * ─────────────────────────────────────────────────────────────
+ * MOBILE-ONLY responsive overrides.
+ * Every rule is wrapped in a max-width media query.
+ * This file DOES NOT affect laptop screens or larger.
+ * ─────────────────────────────────────────────────────────────
+ * Breakpoints used:
+ *   @media (max-width: 991px)  → tablets + phones
+ *   @media (max-width: 767px)  → phones (primary target)
+ *   @media (max-width: 575px)  → small phones
+ */
+
+
+/* ═══════════════════════════════════════════════════════════
+   1. GLOBAL — touch friendliness, font scaling, overflow
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    html {
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+
+    /* Ensure all images never overflow their container */
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Back-to-top button — keep it from covering content */
+    .back-to-top {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        right: 12px;
+        bottom: 12px;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   2. HEADER — navigation, top strip, search, cart
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Top strip (auth bar) ── */
+@media (max-width: 767px) {
+    .header-top-strip .row {
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+    }
+
+    /* Auth area: center on mobile, reduce button size */
+    .header-top-strip .col-lg-6.text-right {
+        padding: 4px 16px !important;
+    }
+
+    .header-profile-chip {
+        font-size: 12px !important;
+        padding: 5px 10px !important;
+    }
+
+    .header-profile-chip img {
+        width: 22px !important;
+        height: 22px !important;
+        margin-right: 5px !important;
+    }
+
+    .header-profile-chip span {
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+    }
+
+    .header-logout-chip {
+        font-size: 12px !important;
+        padding: 5px 8px !important;
+    }
+
+    .header-login-chip {
+        font-size: 13px !important;
+        padding: 6px 14px !important;
+    }
+}
+
+/* ── Main navbar (dark bar) ── */
+@media (max-width: 767px) {
+    .header-nav-shell .row {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    /* Set navbar padding strictly flush left for left-aligned hamburger */
+    .header-main-nav {
+        padding-left: 0 !important;
+    }
+
+    /* Navbar toggler €” bigger touch target */
+    .navbar-toggler {
+        padding: 8px 12px;
+        border-radius: 10px;
+        margin-left: 0 !important;
+    }
+
+    /* Mobile cart flush right */
+    .mobile-always-cart {
+        margin-right: 10px !important;
+    }
+
+    /* Mobile brand text inside collapsed nav */
+    .header-main-nav .text-dark.bg-light,
+    .header-main-nav .text-light.bg-primary {
+        font-size: 18px !important;
+    }
+
+    /* Collapsed nav links — bigger tap targets */
+    .header-main-nav .nav-item.nav-link {
+        padding: 12px 16px !important;
+        font-size: 15px !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* Cart icon inside collapsed nav */
+    .header-main-nav .navbar-nav.ml-auto {
+        padding: 12px 16px;
+    }
+
+    .header-cart-icon {
+        font-size: 22px;
+    }
+
+    /* Search bar — inject into collapsed nav on mobile */
+    .mobile-nav-search {
+        display: block !important;
+        padding: 10px 16px 14px;
+        position: relative;
+    }
+
+    .mobile-nav-search .input-group {
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    .mobile-nav-search input {
+        border-radius: 999px 0 0 999px !important;
+        font-size: 14px;
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+    }
+
+    .mobile-nav-search input::placeholder {
+        color: rgba(255, 255, 255, 0.55);
+    }
+
+    .mobile-nav-search input:focus {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        outline: none;
+        box-shadow: none;
+        border-color: rgba(255, 214, 102, 0.5);
+    }
+
+    .mobile-nav-search .input-group-text {
+        background: rgba(255, 214, 102, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-left: none;
+        color: #ffd35a;
+        border-radius: 0 999px 999px 0 !important;
+    }
+
+    /* Mobile search results dropdown */
+    .mobile-nav-search .search-results {
+        background: #fff;
+        border-radius: 12px;
+        width: 100%;
+        left: 0;
+        right: 0;
+    }
+}
+
+/* On desktop/tablet, keep the mobile search hidden */
+@media (min-width: 768px) {
+    .mobile-nav-search {
+        display: none !important;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   3. INDEX / HOMEPAGE
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Hide the two side product-offer images, let carousel take full width ── */
+/* Bootstrap already makes col-lg-8 → 100% width below 992px, so just hiding  */
+/* the side column is enough. No extra carousel width override needed.          */
+@media (max-width: 991px) {
+    .hero-side-offers {
+        display: none !important;
+    }
+}
+
+/* ── Hero carousel ── */
+@media (max-width: 767px) {
+    /* Make Hero Carousel full bleed (edge-to-edge) on mobile like standard e-commerce */
+    .hero-container {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    .hero-container .row.px-xl-5 {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        width: 100% !important;
+    }
+
+    .hero-container .col-lg-8 {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    /* Carousel height €” cut from 430px to a mobile-friendly size */
+    #header-carousel .carousel-item {
+        height: 200px !important;
+    }
+
+    /* Adapt sliding effect for mobile */
+    #header-carousel .carousel-item {
+        transition: transform 0.6s ease-in-out !important;
+    }
+
+    /* Restore and adapt caption to e-commerce style banner */
+    #header-carousel .carousel-caption {
+        top: auto;
+        bottom: 12px;
+        padding: 0 !important;
+        text-align: left;
+        left: 20px;
+        right: 20px;
+        align-items: flex-start !important;
+    }
+
+    /* Reinstate the text that was hidden previously */
+    #header-carousel .carousel-caption h1.display-4 {
+        display: block !important;
+        font-size: 16px !important;
+        margin-bottom: 4px !important;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    #header-carousel .carousel-caption h1.display-4 span {
+        font-size: inherit !important;
+        padding: 2px 6px !important;
+        margin-right: 4px !important;
+    }
+
+    #header-carousel .carousel-caption p {
+        display: block !important;
+        font-size: 11px !important;
+        line-height: 1.3 !important;
+        margin: 0 0 6px 0 !important;
+        padding: 0 !important;
+        text-align: left;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    #header-carousel .carousel-caption .btn {
+        padding: 4px 16px !important;
+        font-size: 12px !important;
+        margin-top: 0 !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        align-self: flex-start;
+    }
+
+    /* Side product-offer boxes below the carousel €” stack them */
+    .container-fluid .col-lg-4 .product-offer {
+        height: 150px !important;
+        margin-bottom: 12px;
+    }
+
+    /* Offer text inside banners */
+    .product-offer .offer-text h6 {
+        font-size: 11px !important;
+    }
+
+    .product-offer .offer-text h3 {
+        font-size: 16px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .product-offer .offer-text .btn {
+        padding: 5px 14px !important;
+        font-size: 12px !important;
+    }
+}
+
+@media (max-width: 575px) {
+    #header-carousel .carousel-item {
+        height: 180px !important;
+    }
+}
+
+/* ”€”€ Category section ”€”€ */
+@media (max-width: 767px) {
+    .category-scroll {
+        padding: 4px 8px 12px !important;
+        gap: 10px !important;
+    }
+
+    .category-card {
+        width: 160px !important;
+        min-width: 160px !important;
+    }
+
+    .category-pill {
+        height: 68px !important;
+        padding: 12px 14px !important;
+    }
+
+    .category-name {
+        font-size: 13px !important;
+    }
+
+    .category-count {
+        font-size: 11px !important;
+    }
+}
+
+/* ── Section headings ── */
+@media (max-width: 767px) {
+    .section-title {
+        font-size: 16px !important;
+    }
+
+    /* Increase page padding so content breathes more on mobile */
+    .container-fluid .px-xl-5 {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+
+    .container-fluid .row.px-xl-5,
+    .category-scroll.px-xl-5 {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+
+    /* View all / Explore More buttons */
+    .home-products .btn-outline-primary {
+        font-size: 12px !important;
+        padding: 6px 12px !important;
+    }
+}
+
+/* ── Always-visible mobile cart icon in navbar ── */
+@media (max-width: 991px) {
+    .mobile-always-cart {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        font-size: 17px;
+        text-decoration: none;
+        flex-shrink: 0;
+        transition: background 0.2s;
+    }
+
+    .mobile-always-cart:hover,
+    .mobile-always-cart:focus {
+        background: rgba(255, 214, 102, 0.25);
+        color: #ffd35a;
+        text-decoration: none;
+    }
+
+    .mobile-cart-badge {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        background: #f2b705;
+        color: #111;
+        border-radius: 50%;
+        font-size: 9px;
+        font-weight: 800;
+        min-width: 16px;
+        height: 16px;
+        line-height: 16px;
+        text-align: center;
+        padding: 0 3px;
+        display: block;
+    }
+
+    /* When user is not logged in, the cart icon is absent — shift toggler to far right */
+    .navbar-toggler {
+        margin-left: auto;
+    }
+}
+
+/* Hide the mobile-always-cart on desktop */
+@media (min-width: 992px) {
+    .mobile-always-cart {
+        display: none !important;
+    }
+}
+
+/* ── Bottom offer banners (Student Favorites / Marketplace Highlights) ── */
+@media (max-width: 767px) {
+    .container-fluid .row .col-md-6 .product-offer {
+        height: 180px !important;
+        margin-bottom: 14px;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   4. PRODUCT CARD (fragments/product-card.html)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    .pc-img-wrap {
+        height: 160px !important;
+    }
+
+    .pc-body {
+        padding: 12px 14px 14px !important;
+    }
+
+    .pc-title {
+        font-size: 13px !important;
+        min-height: 2.3em !important;
+    }
+
+    .pc-price {
+        font-size: 17px !important;
+    }
+
+    .pc-price-currency {
+        font-size: 11px !important;
+    }
+
+    .pc-cart-btn {
+        width: 36px !important;
+        height: 36px !important;
+    }
+
+    .pc-badge {
+        font-size: 9px !important;
+        padding: 3px 8px !important;
+    }
+
+    .pc-stock {
+        font-size: 9px !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .pc-img-wrap {
+        height: 150px !important;
+    }
+
+    /* On single-column layout, give the image more room */
+    .pc-body {
+        padding: 10px 12px 12px !important;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   5. BUYER — EXPLORE PRODUCTS (product-list.html)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    /* Reduce top padding */
+    .container-fluid.pt-4.pb-5 {
+        padding-top: 16px !important;
+        padding-bottom: 32px !important;
+    }
+
+    /* Search/filter header row */
+    .explore-title {
+        font-size: 16px;
+    }
+
+    /* Pagination — make tappable */
+    .pagination .page-link {
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+        min-width: 40px;
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 575px) {
+    /* 1 column on very small phones is already set in the template,
+       just make sure padding doesn't eat into the card */
+    .row.px-xl-5 {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   6. SELLER DASHBOARD (seller/dashboard.html)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 991px) {
+    /* Override the drop-from-top behavior — use a LEFT drawer instead */
+    .seller-rail {
+        position: fixed !important;
+        top: 0 !important;
+        left: -290px !important;  /* hidden off-screen to the left */
+        right: auto !important;
+        bottom: 0 !important;
+        width: 280px !important;
+        min-height: 100vh !important;
+        height: 100% !important;
+        border-radius: 0 24px 24px 0 !important;
+        z-index: 1050 !important;
+        transform: none !important;   /* disable transform-based slide */
+        transition: left 0.28s cubic-bezier(.4,0,.2,1) !important;
+        overflow-y: auto !important;
+        padding: 24px 18px !important;
+    }
+
+    /* Slide in from left when open */
+    .seller-rail.show {
+        left: 0 !important;
+        transform: none !important;
+    }
+
+    /* Backdrop when sidebar is open */
+    .seller-sidebar-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 1049;
+    }
+
+    .seller-sidebar-backdrop.show {
+        display: block;
+    }
+}
+
+@media (max-width: 767px) {
+    .seller-page {
+        padding: 12px !important;
+    }
+
+    /* Main content panel */
+    .seller-main {
+        border-radius: 20px !important;
+    }
+
+    /* Page header inside main panel */
+    .main-head {
+        padding: 16px 16px 14px !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    .main-head h1 {
+        font-size: 24px !important;
+    }
+
+    .main-head p {
+        font-size: 13px !important;
+    }
+
+    /* Tool row in header €” stack and stretch buttons */
+    .head-tools {
+        width: 100% !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+
+    .btn-head {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 12px 14px !important;
+        font-size: 14px !important;
+    }
+
+    .head-pill {
+        align-self: flex-start;
+        font-size: 11px !important;
+    }
+
+    /* Stat signals strip - 4 individual cards wrapper */
+    .signal-strip {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        background: transparent !important;
+        border: none !important;
+        gap: 12px !important;
+        padding: 4px 0 !important;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        margin-bottom: 12px !important;
+        padding-bottom: 8px !important;
+    }
+
+    /* Hide horizontal scrollbar but keep functionality */
+    .signal-strip::-webkit-scrollbar {
+        height: 0px !important;
+    }
+
+    /* Individual analytics card layout */
+    .signal {
+        flex: 0 0 130px !important;
+        padding: 14px 10px !important;
+        border: 1px solid #edf0f7 !important;
+        border-radius: 14px !important;
+        background: #fff !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        scroll-snap-align: start;
+    }
+
+    .signal:last-child {
+        border-right: 1px solid #edf0f7 !important;
+    }
+
+    .signal-label {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 6px !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        margin-bottom: 8px !important;
+        text-align: center !important;
+        width: 100% !important;
+        color: #4b5563 !important;
+    }
+
+    .signal-icon {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 14px !important;
+        margin-bottom: 4px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 8px !important;
+    }
+
+    .signal-value {
+        font-size: 20px !important;
+        line-height: 1 !important;
+        font-weight: 800 !important;
+    }
+
+    .signal-sub {
+        display: none !important;
+    }
+
+    /* Product listings section */
+    .listings-zone {
+        padding: 16px 14px 20px !important;
+    }
+
+    .zone-head {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    .zone-head h2 {
+        font-size: 18px !important;
+    }
+
+    .zone-link {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    /* Product table — make it scroll horizontally */
+    .table-shell {
+        border-radius: 16px !important;
+    }
+
+    /* Compact product cell */
+    .product-cell {
+        gap: 10px !important;
+        min-width: 160px !important;
+    }
+
+    .product-thumb {
+        width: 40px !important;
+        height: 40px !important;
+        border-radius: 10px !important;
+    }
+
+    .product-meta strong {
+        font-size: 13px !important;
+    }
+
+    .product-meta span {
+        font-size: 11px !important;
+    }
+
+    /* Action buttons */
+    .table-action {
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 8px !important;
+    }
+
+    /* Flash messages */
+    .flash-wrap {
+        padding: 12px 14px 0 !important;
+    }
+
+    /* Empty state */
+    .empty-state {
+        padding: 24px 16px !important;
+    }
+
+    .empty-state .icon {
+        width: 48px !important;
+        height: 48px !important;
+        font-size: 20px !important;
+    }
+
+    /* Order cards */
+    .order-line {
+        padding: 12px !important;
+        border-radius: 16px !important;
+    }
+
+    .order-line strong {
+        font-size: 13px !important;
+    }
+
+    .order-line small {
+        font-size: 11px !important;
+    }
+}
+
+@media (max-width: 575px) {
+    /* Maintain flex row on very small phones, overriding previous rigid column limits */
+    .signal-strip {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .signal {
+        border-bottom: 1px solid #edf0f7 !important;
+        flex: 0 0 130px !important;
+    }
+}
+
+
+/* •••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
+   7. ADMIN DASHBOARD (admin/dashboard.html + admin.css)
+   ••••••••••••••••••••••••••••••••••••••••••••••••••••••••••• */
+@media (max-width: 900px) {
+    /* Existing admin.css already hides .sidebar and changes layout.
+       We add a mobile top nav bar for admin. */
+    .admin-mobile-topbar {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(135deg, #4B2E83, #341f5a);
+        padding: 12px 16px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 4px 14px rgba(75, 46, 131, 0.3);
+    }
+
+    .admin-mobile-topbar .brand-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+    }
+
+    .admin-mobile-topbar .logo-square {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: #F2B705;
+        color: #111;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+    }
+
+    .admin-mobile-topbar .brand-name {
+        color: #fff;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .admin-mobile-menu-btn {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-size: 18px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+    }
+
+    /* Slide-out mobile sidebar panel for admin */
+    .admin-mobile-sidebar {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 260px;
+        height: 100%;
+        background: linear-gradient(180deg, #4B2E83, #341f5a);
+        z-index: 1100;
+        padding: 24px 18px;
+        overflow-y: auto;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+        transition: transform 0.25s ease;
+        transform: translateX(-100%);
+    }
+
+    .admin-mobile-sidebar.show {
+        display: flex !important;
+        flex-direction: column;
+        transform: translateX(0);
+    }
+
+    .admin-mobile-sidebar .brand {
+        margin-bottom: 20px;
+    }
+
+    .admin-mobile-sidebar .brand .logo-square {
+        background: #F2B705;
+        color: #111;
+    }
+
+    .admin-mobile-sidebar .nav-item {
+        color: rgba(255, 255, 255, 0.9);
+        padding: 12px 14px;
+        border-radius: 10px;
+        font-size: 14px;
+    }
+
+    .admin-mobile-sidebar .nav-item.active {
+        background: #F2B705;
+        color: #111;
+    }
+
+    .admin-mobile-sidebar .close-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border-radius: 8px;
+        padding: 6px 12px;
+        cursor: pointer;
+        margin-bottom: 16px;
+        align-self: flex-end;
+        font-size: 13px;
+    }
+
+    .admin-sidebar-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 1050;
+    }
+
+    .admin-sidebar-backdrop.show {
+        display: block;
+    }
+}
+
+@media (min-width: 901px) {
+    .admin-mobile-topbar {
+        display: none !important;
+    }
+
+    .admin-mobile-sidebar {
+        display: none !important;
+    }
+}
+
+@media (max-width: 767px) {
+    /* Content area padding */
+    .content {
+        padding: 16px 12px !important;
+    }
+
+    /* Topbar — simplify on mobile */
+    .topbar {
+        padding: 10px 12px !important;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    /* Stats cards — 2 per row on phone */
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+
+    .stat-card {
+        padding: 14px !important;
+    }
+
+    .stat-card .stat-icon {
+        font-size: 22px !important;
+    }
+
+    .stat-card .stat-value {
+        font-size: 22px !important;
+    }
+
+    .stat-card .stat-title {
+        font-size: 11px !important;
+    }
+
+    /* Analytics panels — stack vertically */
+    .side-panels {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    .panel-wide {
+        grid-column: auto !important;
+    }
+
+    /* Table — make scrollable */
+    .table {
+        font-size: 12px !important;
+    }
+
+    .table thead th {
+        font-size: 11px !important;
+        padding: 8px 10px !important;
+    }
+
+    .table tbody td {
+        padding: 10px !important;
+    }
+
+    /* Seller name cell */
+    .seller-name-cell {
+        gap: 6px;
+    }
+
+    .seller-avatar-sm {
+        width: 26px !important;
+        height: 26px !important;
+        font-size: 11px !important;
+    }
+
+    /* Category list */
+    .cat-row {
+        padding: 6px 8px !important;
+    }
+
+    /* Overview header */
+    .overview-header h1 {
+        font-size: 20px !important;
+    }
+}
+
+@media (max-width: 575px) {
+    /* 1 column on very small phones */
+    .cards-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .stat-card {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 14px !important;
+    }
+
+    .stat-card .stat-icon {
+        font-size: 28px !important;
+        margin-bottom: 0 !important;
+        flex-shrink: 0;
+    }
+
+    .stat-card .stat-value {
+        font-size: 26px !important;
+        line-height: 1 !important;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   8. FOOTER
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    .container-fluid.bg-dark.text-secondary.mt-5.pt-5 {
+        margin-top: 2rem !important;
+        padding-top: 2rem !important;
+    }
+
+    .container-fluid.bg-dark .row.px-xl-5.pt-5 {
+        padding-top: 1.5rem !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+
+    .container-fluid.bg-dark .col-lg-4 {
+        margin-bottom: 24px !important;
+        padding-right: 0 !important;
+    }
+
+    .container-fluid.bg-dark h5 {
+        font-size: 14px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .container-fluid.bg-dark p,
+    .container-fluid.bg-dark a {
+        font-size: 13px !important;
+    }
+
+    .container-fluid.bg-dark .row.border-top {
+        padding: 16px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   9. CART PAGE
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    /* Cart table rows — make them stack into cards */
+    .cart-item-row {
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 12px 0 !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.07) !important;
+    }
+
+    /* Generic table responsiveness for cart */
+    .table-responsive {
+        border-radius: 12px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   10. PRODUCT DETAIL PAGE
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    /* Product detail image */
+    .product-detail-img-wrap,
+    .product-img-main {
+        height: 260px !important;
+        border-radius: 16px !important;
+    }
+
+    /* Product title */
+    .product-detail-title {
+        font-size: 20px !important;
+    }
+
+    /* Price */
+    .product-detail-price {
+        font-size: 26px !important;
+    }
+
+    /* Action buttons — full width on mobile */
+    .product-detail-actions .btn,
+    .product-add-cart-btn,
+    .product-buy-btn {
+        width: 100% !important;
+        margin-bottom: 10px !important;
+    }
+}
+
+/* •••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
+   11. ADD PRODUCT PAGE (visual preview panel removal)
+   ••••••••••••••••••••••••••••••••••••••••••••••••••••••••••• */
+@media (max-width: 767px) {
+    /* Hide the listing preview entirely on mobile phones */
+    .visual-panel {
+        display: none !important;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   11. AUTH PAGES (login, register)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    /* Auth card — full width, remove side padding */
+    .auth-card,
+    .login-card,
+    .register-card {
+        margin: 12px !important;
+        padding: 20px 16px !important;
+        border-radius: 20px !important;
+    }
+
+    .auth-card .card-header,
+    .login-card .card-header {
+        padding: 14px 16px !important;
+    }
+
+    /* Form inputs — ensure 16px font to prevent iOS zoom */
+    .auth-card input,
+    .auth-card select,
+    .auth-card textarea,
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="password"],
+    form input[type="number"],
+    form select,
+    form textarea {
+        font-size: 16px !important;
+    }
+
+    /* Auth page heading */
+    .auth-title {
+        font-size: 22px !important;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   12. ORDER PAGES (checkout, payment, confirmation, history)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    /* Order summary tables */
+    .order-summary-table th,
+    .order-summary-table td {
+        font-size: 13px !important;
+        padding: 8px 10px !important;
+    }
+
+    /* Order confirmation card */
+    .order-confirmation-card {
+        padding: 20px 16px !important;
+        border-radius: 20px !important;
+    }
+
+    /* Payment form card */
+    .payment-card {
+        margin: 12px !important;
+        padding: 20px 14px !important;
+    }
+
+    /* Payment input — prevent iOS zoom */
+    .payment-card input {
+        font-size: 16px !important;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   13. USER PROFILE PAGE
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    /* Profile header section */
+    .profile-header {
+        flex-direction: column !important;
+        gap: 12px !important;
+        text-align: center;
+    }
+
+    .profile-avatar {
+        margin: 0 auto !important;
+    }
+
+    /* Stat cards in profile */
+    .profile-stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+
+    /* Order tracking mini-cards */
+    .order-track-item {
+        padding: 12px 14px !important;
+        border-radius: 14px !important;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   14. CHAT PAGE
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    /* Chat container — use full viewport height */
+    .chat-container,
+    .chat-wrap {
+        height: calc(100dvh - 120px) !important;
+        border-radius: 16px !important;
+    }
+
+    /* Message bubbles */
+    .chat-message {
+        max-width: 85% !important;
+        font-size: 14px !important;
+    }
+
+    /* Chat input area */
+    .chat-input-bar {
+        padding: 10px 12px !important;
+    }
+
+    .chat-input-bar input,
+    .chat-input-bar textarea {
+        font-size: 16px !important; /* prevent iOS zoom */
+        border-radius: 999px !important;
+    }
+
+    .chat-send-btn {
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 50% !important;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   15. SELLER ORDERS & SALES HISTORY PAGES
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    /* Orders page — cards instead of wide rows */
+    .seller-order-row {
+        flex-direction: column !important;
+        gap: 8px !important;
+        padding: 14px !important;
+    }
+
+    .seller-order-row .status-actions {
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    /* Sales history table */
+    .sales-history-table {
+        font-size: 12px !important;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   16. SPLASH PAGE
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    .splash-hero {
+        padding: 40px 20px !important;
+        min-height: 100dvh;
+    }
+
+    .splash-title {
+        font-size: 2rem !important;
+    }
+
+    .splash-subtitle {
+        font-size: 14px !important;
+    }
+
+    .splash-cta {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    .splash-cta .btn {
+        width: 100% !important;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   17. GENERAL UTILITY OVERRIDES FOR MOBILE
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    /* Bootstrap px-xl-5 overrides — give content room to breathe on mobile */
+    .px-xl-5 {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+
+    /* Prevent containers from adding horizontal scroll */
+    .container-fluid {
+        overflow-x: hidden;
+    }
+
+    /* Tables always horizontally scrollable */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Section top spacing */
+    .pt-5 {
+        padding-top: 2rem !important;
+    }
+
+    .pb-5 {
+        padding-bottom: 2rem !important;
+    }
+
+    /* Cards */
+    .card {
+        border-radius: 14px !important;
+    }
+
+    /* Modals — full screen on mobile */
+    .modal-dialog {
+        margin: 8px !important;
+        max-width: calc(100vw - 16px) !important;
+    }
+
+    .modal-content {
+        border-radius: 20px !important;
+    }
+
+    .modal-header {
+        padding: 14px 16px !important;
+    }
+
+    .modal-body {
+        padding: 14px 16px !important;
+    }
+
+    .modal-footer {
+        padding: 12px 16px !important;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .modal-footer .btn {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    /* Form controls — always 16px to avoid iOS zoom on focus */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="tel"],
+    input[type="search"],
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   18. CART PAGE  (cart/cart.html)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    /* Breadcrumb */
+    .breadcrumb-area { padding: 10px 0 !important; }
+    .breadcrumb-area .container { padding-left: 16px !important; padding-right: 16px !important; }
+
+    /* Page title */
+    .cart-page-title { font-size: 22px !important; }
+
+    /* Full-width single column layout */
+    .container.py-4 { padding: 12px 14px !important; }
+    .container.py-5 { padding: 12px 14px !important; }
+
+    /* Cart item card — stack image and info */
+    .cart-item-card { padding: 14px !important; }
+    .cart-item-card .d-flex.align-items-start { flex-wrap: wrap !important; gap: 12px !important; }
+    .cart-item-img { width: 80px !important; height: 80px !important; }
+    .cart-item-title { font-size: 14px !important; }
+    .cart-item-price { font-size: 16px !important; }
+    .cart-item-subtotal { font-size: 13px !important; }
+
+    /* Summary card - below items on mobile */
+    .summary-card { padding: 18px 16px !important; border-radius: 16px !important; }
+    .summary-total { font-size: 19px !important; }
+
+    /* Checkout button */
+    .btn-checkout { font-size: 15px !important; padding: 14px 20px !important; }
+
+    /* Quantity controls */
+    .qty-control { height: 34px !important; }
+    .qty-btn { width: 30px !important; height: 30px !important; font-size: 14px !important; }
+    .qty-value { font-size: 14px !important; width: 32px !important; }
+
+    /* Remove button */
+    .btn-remove { font-size: 12px !important; padding: 5px 12px !important; }
+
+    /* Toast — bottom centered on mobile */
+    .cart-toast {
+        bottom: 16px !important;
+        right: 50% !important;
+        transform: translateX(50%) !important;
+        min-width: 280px;
+        font-size: 13px !important;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   19. PRODUCT DETAIL PAGE  (product-listings/product-detail.html)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    /* Two columns → single column */
+    .product-detail-img { border-radius: 14px !important; }
+    .product-detail-img img { max-height: 300px !important; }
+
+    .product-info-card { padding: 20px 16px !important; border-radius: 14px !important; }
+    .product-detail-title { font-size: 20px !important; }
+    .product-detail-price { font-size: 26px !important; }
+
+    /* Buttons full width */
+    .btn-add-cart,
+    .btn-buy-now {
+        width: 100% !important;
+        padding: 14px !important;
+        font-size: 15px !important;
+        border-radius: 999px !important;
+    }
+
+    /* Review section */
+    .review-card { padding: 14px !important; border-radius: 12px !important; }
+    .review-stars { font-size: 13px !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   20. ORDER HISTORY PAGE  (order/history.html)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    .page-shell { padding: 16px 12px 32px !important; }
+
+    .page-top { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; margin-bottom: 16px !important; }
+    .page-title { font-size: 22px !important; }
+    .btn-back-profile { padding: 10px 16px !important; font-size: 13px !important; }
+
+    .order-card { padding: 16px 14px !important; border-radius: 14px !important; margin-bottom: 12px !important; }
+    .order-top { flex-direction: column !important; align-items: flex-start !important; gap: 6px !important; margin-bottom: 10px !important; }
+    .order-id { font-size: 14px !important; }
+    .order-total { font-size: 17px !important; }
+    .order-badges { gap: 6px !important; }
+    .ob { font-size: 10px !important; padding: 3px 10px !important; }
+    .order-bottom { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   21. SELLER ORDERS PAGE  (seller/orders.html)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    .page.container-fluid { padding: 12px 12px 30px !important; }
+
+    .card-elevated { padding: 16px 14px !important; border-radius: 14px !important; }
+
+    /* Tabs scroll horizontally */
+    .tabs { flex-wrap: nowrap !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; padding-bottom: 4px; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-pill { flex-shrink: 0 !important; padding: 8px 14px !important; font-size: 12px !important; }
+
+    /* Order cards stacked */
+    .order-card { flex-direction: column !important; gap: 12px !important; padding: 14px !important; border-radius: 14px !important; }
+    .order-title { font-size: 15px !important; }
+    .order-meta { font-size: 11px !important; }
+    .order-sub { font-size: 12px !important; }
+    .order-actions { width: 100% !important; justify-content: flex-start !important; }
+
+    /* Back to dashboard button */
+    .btn-back-dashboard { padding: 10px 16px !important; font-size: 13px !important; }
+
+    /* Status badges */
+    .status-badge { font-size: 11px !important; padding: 6px 10px !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   22. ADD PRODUCT / EDIT PRODUCT  (product-listings/add-product.html + edit-product.html)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    .page { padding: 12px 14px 30px !important; }
+
+    /* Top rail — stack on mobile */
+    .top-rail { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; padding: 14px 16px !important; border-radius: 16px !important; }
+    .rail-left { flex-wrap: wrap !important; gap: 10px !important; }
+    .rail-title strong { font-size: 16px !important; }
+    .rail-title span { font-size: 12px !important; }
+    .dash-link { font-size: 12px !important; padding: 10px 14px !important; }
+
+    /* Two-column layout → single column */
+    .layout { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+    /* Panel */
+    .panel { border-radius: 18px !important; }
+    .panel-head { padding: 16px 18px 14px !important; }
+    .panel-head h1 { font-size: 20px !important; }
+    .panel-body,
+    .form-body { padding: 16px 18px !important; }
+
+    /* Form inputs breathing room */
+    .form-group { margin-bottom: 16px !important; }
+    .form-label { font-size: 13px !important; font-weight: 600; }
+    .form-control { padding: 11px 14px !important; border-radius: 12px !important; }
+
+    /* Preview panel comes first on mobile (swapped in visual order) */
+    .panel:not(.form-panel) { order: -1; }
+
+    /* Submit buttons full width */
+    .btn-accent,
+    button[type="submit"] { width: 100% !important; padding: 14px !important; font-size: 15px !important; border-radius: 999px !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   23. SALES HISTORY PAGE  (seller/sales-history.html)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    /* Header area */
+    .main-head { padding: 18px 16px !important; }
+
+    /* Stats signal strip — single column */
+    .signal-strip { grid-template-columns: 1fr !important; }
+    .signal { border-right: none !important; border-bottom: 1px solid #edf0f7 !important; padding: 16px 16px !important; }
+    .signal:last-child { border-bottom: none !important; }
+    .signal-value { font-size: 26px !important; }
+
+    /* History zone */
+    .history-zone { padding: 16px 14px !important; }
+    .zone-head h2 { font-size: 18px !important; }
+
+    /* Table — horizontal scroll with sticky first col */
+    .table-shell { border-radius: 14px !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
+    .table-shell .table { min-width: 680px !important; font-size: 13px !important; }
+    .table-shell .table thead th { font-size: 11px !important; padding: 10px 12px !important; white-space: nowrap; }
+    .table-shell .table tbody td { padding: 10px 12px !important; }
+
+    /* Review button */
+    .btn-reviews { font-size: 11px !important; padding: 6px 10px !important; }
+
+    /* Empty state */
+    .empty-state { padding: 24px 16px !important; border-radius: 14px !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   24. CHECKOUT PAGE  (order/checkout.html)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    .checkout-title { font-size: 22px !important; }
+
+    .checkout-card { padding: 18px 16px !important; border-radius: 14px !important; margin-bottom: 14px !important; }
+
+    /* Form fields */
+    .checkout-card .form-group { margin-bottom: 14px !important; }
+
+    /* Order summary — below form on mobile */
+    .checkout-card .summary-item { font-size: 13px !important; }
+    .checkout-card .summary-total-row { font-size: 18px !important; }
+
+    /* Pay button full width */
+    .btn-pay,
+    .btn-place-order { width: 100% !important; padding: 14px !important; font-size: 15px !important; border-radius: 999px !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   25. ORDER DETAIL PAGE  (order/detail.html)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    .detail-card { padding: 18px 16px !important; border-radius: 14px !important; }
+    .detail-card h6 { font-size: 15px !important; }
+
+    /* Tracking steps — compact on mobile */
+    .tracking-step { padding: 12px 10px !important; }
+    .tracking-step-label { font-size: 12px !important; }
+
+    /* Item rows */
+    .order-item-row { flex-wrap: wrap !important; gap: 10px !important; }
+    .order-item-img { width: 64px !important; height: 64px !important; }
+
+    /* Action buttons */
+    .btn-confirm-receipt,
+    .btn-view-invoice { width: 100% !important; margin-bottom: 8px !important; border-radius: 999px !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   26. AUTH PAGES  (auth/login.html + auth/usersRegister.html)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    /* Login — full screen card */
+    .login-shell,
+    .lp-shell { flex-direction: column !important; min-height: 100vh; }
+
+    /* Hide decorative panel on very small screens */
+    .lp-deco { display: none !important; }
+
+    .lp-form { width: 100% !important; max-width: 100% !important; padding: 28px 20px !important; }
+
+    .lp-card { padding: 28px 22px !important; border-radius: 20px !important; }
+    .lp-card__title { font-size: 22px !important; }
+
+    /* Register — form width */
+    .auth-card,
+    .register-card { padding: 24px 18px !important; border-radius: 18px !important; }
+
+    /* Progress steps compact */
+    .progress-step { font-size: 11px !important; }
+}

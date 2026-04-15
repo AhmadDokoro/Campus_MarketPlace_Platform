@@ -2,39 +2,261 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Profile</title>
-    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile — Campus Marketplace</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/mobile.css}" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(180deg,#f9fafb 0%,#fff 45%,#f6f3ff 100%); font-family:'Poppins',sans-serif; }
+
+        /* ── Profile shell ── */
+        .profile-shell { max-width: 1100px; margin: 0 auto; padding: 32px 20px 60px; display: grid; grid-template-columns: 260px 1fr; gap: 28px; align-items: start; }
+
+        /* ── Side nav card ── */
+        .profile-sidenav {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 28px rgba(75,46,131,0.09);
+            overflow: hidden;
+            position: sticky;
+            top: 24px;
+        }
+
+        /* Avatar / identity block */
+        .profile-identity {
+            background: linear-gradient(135deg,#4B2E83,#7c52c9);
+            padding: 28px 20px 22px;
+            text-align: center;
+        }
+        .profile-avatar-circle {
+            width: 72px; height: 72px; border-radius: 50%;
+            background: rgba(255,255,255,0.22);
+            border: 3px solid rgba(255,255,255,0.45);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; font-weight: 800; color: #fff;
+            margin: 0 auto 12px;
+            letter-spacing: -.02em;
+        }
+        .profile-identity-name { color: #fff; font-weight: 700; font-size: 16px; margin-bottom: 3px; }
+        .profile-identity-id { color: rgba(255,255,255,0.65); font-size: 12px; }
+
+        /* Nav links */
+        .profile-nav-list { list-style: none; margin: 0; padding: 10px 0; }
+        .profile-nav-list li a {
+            display: flex; align-items: center; gap: 12px;
+            padding: 13px 20px;
+            color: #374151; font-weight: 600; font-size: 14px;
+            text-decoration: none;
+            transition: background .15s, color .15s;
+            border-left: 3px solid transparent;
+        }
+        .profile-nav-list li a i { width: 18px; text-align: center; color: #9ca3af; font-size: 15px; }
+        .profile-nav-list li a:hover { background: rgba(75,46,131,0.05); color: #4B2E83; text-decoration: none; }
+        .profile-nav-list li a:hover i { color: #4B2E83; }
+        .profile-nav-list li a.active { background: rgba(75,46,131,0.07); color: #4B2E83; border-left-color: #4B2E83; }
+        .profile-nav-list li a.active i { color: #4B2E83; }
+        .profile-nav-divider { height: 1px; background: rgba(0,0,0,0.06); margin: 6px 0; }
+
+        /* ── Main content area ── */
+        .profile-main { display: flex; flex-direction: column; gap: 22px; }
+
+        .profile-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 6px 22px rgba(17,24,39,0.06);
+            padding: 26px 28px;
+        }
+
+        .profile-card-title {
+            font-size: 18px; font-weight: 700; color: #2b2b37;
+            margin-bottom: 18px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .profile-card-title i { color: #ffb347; }
+
+        /* Info row */
+        .profile-info-row { display: flex; flex-direction: column; gap: 14px; }
+        .profile-info-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; background: #f9fafb; border-radius: 12px; }
+        .profile-info-label { font-size: 12px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: .05em; }
+        .profile-info-value { font-size: 15px; font-weight: 700; color: #2b2b37; }
+
+        /* Quick links grid */
+        .profile-links-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+        .profile-link-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 10px; padding: 22px 14px;
+            border-radius: 16px; text-decoration: none;
+            font-weight: 700; font-size: 13px;
+            transition: transform .2s, box-shadow .2s;
+            text-align: center;
+        }
+        .profile-link-btn:hover { transform: translateY(-3px); text-decoration: none; }
+        .profile-link-btn i { font-size: 24px; }
+
+        .plb-orders   { background: linear-gradient(135deg,rgba(75,46,131,0.08),rgba(75,46,131,0.04)); color:#4B2E83; border:1px solid rgba(75,46,131,0.14); }
+        .plb-orders:hover { box-shadow: 0 10px 24px rgba(75,46,131,0.15); color:#4B2E83; }
+        .plb-explore  { background: linear-gradient(135deg,rgba(255,179,71,0.12),rgba(255,179,71,0.06)); color:#e6930a; border:1px solid rgba(255,179,71,0.22); }
+        .plb-explore:hover { box-shadow: 0 10px 24px rgba(255,179,71,0.2); color:#e6930a; }
+        .plb-seller   { background: linear-gradient(135deg,rgba(15,118,110,0.09),rgba(15,118,110,0.04)); color:#0f766e; border:1px solid rgba(15,118,110,0.15); }
+        .plb-seller:hover { box-shadow: 0 10px 24px rgba(15,118,110,0.15); color:#0f766e; }
+        .plb-chat     { background: linear-gradient(135deg,rgba(59,130,246,0.09),rgba(59,130,246,0.04)); color:#2563eb; border:1px solid rgba(59,130,246,0.15); }
+        .plb-chat:hover { box-shadow: 0 10px 24px rgba(59,130,246,0.14); color:#2563eb; }
+
+        /* Seller note */
+        .profile-seller-note {
+            background: linear-gradient(135deg,rgba(75,46,131,0.07),rgba(255,179,71,0.07));
+            border-radius: 14px; padding: 18px 20px;
+            border: 1px solid rgba(75,46,131,0.1);
+            display: flex; align-items: flex-start; gap: 14px;
+        }
+        .profile-seller-note-icon {
+            width: 42px; height: 42px; border-radius: 12px;
+            background: linear-gradient(135deg,#4B2E83,#7c52c9);
+            color: #fff; display: flex; align-items: center; justify-content: center;
+            font-size: 18px; flex-shrink: 0;
+        }
+        .profile-seller-note p { margin: 0; font-size: 13px; color: #6b7280; line-height: 1.6; }
+        .profile-seller-note strong { color: #374151; }
+
+        /* ── Mobile tab nav (hidden on desktop) ── */
+        .profile-mobile-tabs {
+            display: none;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            gap: 8px;
+            padding: 12px 16px;
+            background: #fff;
+            border-bottom: 1px solid rgba(0,0,0,0.07);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .profile-mobile-tabs::-webkit-scrollbar { display: none; }
+        .profile-mobile-tab {
+            display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+            padding: 9px 16px; border-radius: 999px;
+            font-size: 13px; font-weight: 700;
+            border: 1px solid rgba(75,46,131,0.15);
+            background: #f5f3ff; color: #4B2E83;
+            text-decoration: none; flex-shrink: 0;
+            transition: background .15s, color .15s;
+        }
+        .profile-mobile-tab:hover, .profile-mobile-tab.active {
+            background: #4B2E83; color: #fff; text-decoration: none;
+        }
+
+        /* ── Responsive: mobile layout ── */
+        @media (max-width: 767px) {
+            .profile-shell { grid-template-columns: 1fr; padding: 16px 14px 40px; gap: 16px; }
+            .profile-sidenav { display: none; }
+            .profile-mobile-tabs { display: flex; }
+            .profile-links-grid { grid-template-columns: repeat(2,1fr); }
+            .profile-card { padding: 20px 18px; }
+            .profile-card-title { font-size: 16px; }
+        }
+
+        @media (max-width: 400px) {
+            .profile-links-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 
 <div th:replace="fragments/header :: header"></div>
 
-<div class="container" style="padding:24px;">
-    <h2 style="margin-bottom:8px;">My Profile</h2>
-    <p style="margin-top:0;color:#6b7280;">Manage your profile, address, and orders. Seller features will be available from here.</p>
+<!-- Mobile-only horizontal tab bar -->
+<nav class="profile-mobile-tabs" aria-label="Profile navigation">
+    <a class="profile-mobile-tab active" th:href="@{/user/profile}"><i class="bi bi-person-fill"></i> Profile</a>
+    <a class="profile-mobile-tab" th:href="@{/order/history}"><i class="bi bi-bag-fill"></i> My Orders</a>
+    <a class="profile-mobile-tab" th:href="@{/user/seller}"><i class="bi bi-shop"></i> Seller</a>
+    <a class="profile-mobile-tab" th:href="@{/chat}"><i class="bi bi-chat-dots-fill"></i> Chat</a>
+    <a class="profile-mobile-tab" th:href="@{/products}"><i class="bi bi-grid-fill"></i> Explore</a>
+</nav>
 
-    <div style="margin-top:16px;padding:16px;border:1px solid rgba(0,0,0,0.08);border-radius:12px;max-width:720px;">
-        <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-            <div>
-                <div style="font-weight:700;">Name</div>
-                <div th:text="${session.userName}">User</div>
+<div class="profile-shell">
+
+    <!-- ── Desktop Sidebar ── -->
+    <aside class="profile-sidenav">
+        <div class="profile-identity">
+            <div class="profile-avatar-circle"
+                 th:text="${session.userName != null ? #strings.substring(session.userName, 0, 1).toUpperCase() : 'U'}">U</div>
+            <div class="profile-identity-name" th:text="${session.userName}">User Name</div>
+            <div class="profile-identity-id">Account #<span th:text="${session.userId}">0</span></div>
+        </div>
+        <ul class="profile-nav-list">
+            <li><a class="active" th:href="@{/user/profile}"><i class="bi bi-person-fill"></i> My Profile</a></li>
+            <li><a th:href="@{/order/history}"><i class="bi bi-bag-fill"></i> My Orders</a></li>
+            <div class="profile-nav-divider"></div>
+            <li><a th:href="@{/user/seller}"><i class="bi bi-shop"></i> Seller Page</a></li>
+            <li><a th:href="@{/chat}"><i class="bi bi-chat-dots-fill"></i> Messages</a></li>
+            <li><a th:href="@{/products}"><i class="bi bi-grid-fill"></i> Explore Products</a></li>
+            <div class="profile-nav-divider"></div>
+            <li><a th:href="@{/logout}" style="color:#C4161C;"><i class="bi bi-box-arrow-right" style="color:#C4161C;"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- ── Main content ── -->
+    <div class="profile-main">
+
+        <!-- Account info card -->
+        <div class="profile-card">
+            <div class="profile-card-title"><i class="fas fa-user-circle"></i> Account Information</div>
+            <div class="profile-info-row">
+                <div class="profile-info-item">
+                    <div>
+                        <div class="profile-info-label">Full Name</div>
+                        <div class="profile-info-value" th:text="${session.userName}">User Name</div>
+                    </div>
+                    <i class="bi bi-person" style="color:#9ca3af;font-size:20px;"></i>
+                </div>
+                <div class="profile-info-item">
+                    <div>
+                        <div class="profile-info-label">Account ID</div>
+                        <div class="profile-info-value" th:text="${session.userId}">0</div>
+                    </div>
+                    <i class="bi bi-hash" style="color:#9ca3af;font-size:20px;"></i>
+                </div>
             </div>
-            <div>
-                <div style="font-weight:700;">Account</div>
-                <div th:text="${session.userId}">0</div>
+        </div>
+
+        <!-- Quick actions card -->
+        <div class="profile-card">
+            <div class="profile-card-title"><i class="fas fa-bolt"></i> Quick Access</div>
+            <div class="profile-links-grid">
+                <a class="profile-link-btn plb-orders" th:href="@{/order/history}">
+                    <i class="bi bi-bag-check-fill"></i>My Orders
+                </a>
+                <a class="profile-link-btn plb-explore" th:href="@{/products}">
+                    <i class="bi bi-search"></i>Explore
+                </a>
+                <a class="profile-link-btn plb-seller" th:href="@{/user/seller}">
+                    <i class="bi bi-shop-window"></i>Seller Page
+                </a>
+                <a class="profile-link-btn plb-chat" th:href="@{/chat}">
+                    <i class="bi bi-chat-dots-fill"></i>Messages
+                </a>
             </div>
         </div>
 
-        <hr style="margin:16px 0;">
-
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <a class="btn btn-primary" th:href="@{/buyer/orders.html}" style="text-decoration:none;">My Orders</a>
-            <a class="btn btn-outline-primary" th:href="@{/user/seller}" style="text-decoration:none;">Seller Page</a>
+        <!-- Seller note card -->
+        <div class="profile-card">
+            <div class="profile-seller-note">
+                <div class="profile-seller-note-icon"><i class="bi bi-shop-window"></i></div>
+                <div>
+                    <strong>Want to sell on Campus Marketplace?</strong>
+                    <p>Register as a seller, get verified by your mentor and admin, then start listing your products in minutes.</p>
+                    <a class="btn btn-sm btn-primary mt-2" th:href="@{/user/seller}" style="border-radius:999px;padding:8px 20px;font-weight:700;">
+                        Go to Seller Page <i class="bi bi-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <div style="margin-top:12px;color:#6b7280;font-size:14px;">
-            To start selling, you’ll request verification from the Seller Page.
-        </div>
     </div>
 </div>
 

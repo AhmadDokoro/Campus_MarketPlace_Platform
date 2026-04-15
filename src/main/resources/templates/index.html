@@ -38,6 +38,8 @@
 
     <!-- Custom Theme Stylesheet - project-specific colors, fonts, and component styles (brand colors: primary=blue, secondary=gray) -->
     <link th:href="@{/css/style.css}" rel="stylesheet">
+    <!-- Mobile-only responsive overrides (max-width: 767px) — does not affect desktop -->
+    <link th:href="@{/css/mobile.css}" rel="stylesheet">
     <style>
         .home-market-bg{
             background:
@@ -101,10 +103,10 @@
 <div th:replace="fragments/header :: header"></div>
 
 <!-- Main content (kept from original index.html) -->
-<div class="container-fluid mb-3">
+<div class="container-fluid hero-container mb-3">
     <div class="row px-xl-5">
         <div class="col-lg-8">
-            <div id="header-carousel" class="carousel slide carousel-fade mb-30 mb-lg-0" data-ride="carousel">
+            <div id="header-carousel" class="carousel slide mb-30 mb-lg-0" data-ride="carousel">
                 <ol class="carousel-indicators">
                     <li data-target="#header-carousel" data-slide-to="0" class="active"></li>
                     <li data-target="#header-carousel" data-slide-to="1"></li>
@@ -153,7 +155,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-4 hero-side-offers">
             <div class="product-offer mb-30" style="height: 200px;">
                 <img class="img-fluid" th:src="@{/img/main3.jpg}" alt="">
                 <div class="offer-text">
@@ -251,7 +253,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
 
-<!-- Initialize the header carousel: 2000ms interval, use fade class already present for stylish cross-fade -->
+<!-- Initialize the header carousel: 4000ms interval -->
 <script>
     (function($){
         function initCarousel(){
@@ -259,7 +261,6 @@
             if($carousel.length && $.fn && $.fn.carousel){
                 $carousel.carousel({ interval: 4000, pause: false });
                 $carousel.carousel('cycle');
-                $carousel.find('.carousel-item').css({ 'transition': 'opacity 900ms cubic-bezier(.25,.8,.25,1)' });
             }
         }
 

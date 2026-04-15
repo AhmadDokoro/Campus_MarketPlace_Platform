@@ -11,6 +11,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link th:href="@{/css/style.css}" rel="stylesheet" />
+  <link th:href="@{/css/mobile.css}" rel="stylesheet" />
   <style>
     :root{
       --purple:#4B2E83;
@@ -568,15 +569,20 @@
       .workspace{grid-template-columns:1fr}
       .seller-rail{
         position:fixed;
-        top:16px;
-        left:16px;
-        right:16px;
-        min-height:auto;
+        top:0;
+        left:-290px;
+        right:auto;
+        bottom:0;
+        width:280px;
+        min-height:100vh;
+        height:100%;
+        border-radius:0 24px 24px 0;
         z-index:1050;
-        transform:translateY(-120%);
-        transition:transform .22s ease;
+        transform:none;
+        transition:left .28s cubic-bezier(.4,0,.2,1);
+        overflow-y:auto;
       }
-      .seller-rail.show{transform:translateY(0)}
+      .seller-rail.show{left:0;transform:none}
       .seller-page{padding:16px}
     }
 
@@ -595,6 +601,9 @@
 <body>
 
 <div th:replace="fragments/header :: header"></div>
+
+<!-- Mobile sidebar backdrop (only visible on mobile when sidebar is open) -->
+<div class="seller-sidebar-backdrop" id="sellerBackdrop" onclick="toggleSellerSidebar()"></div>
 
 <div class="seller-page container-fluid">
   <div class="workspace">
@@ -626,10 +635,14 @@
           <p>Your listings and order movement in one focused workspace.</p>
         </div>
         <div class="head-tools">
-          <button class="btn-head btn-head-secondary d-lg-none" type="button" onclick="toggleSellerSidebar()">
-            <i class="bi bi-list"></i> Menu
-          </button>
-          <span class="head-pill"><i class="bi bi-lightning-charge-fill"></i> Live Seller View</span>
+          <!-- Direct mobile navigation links replacing the secondary menu -->
+          <a class="btn-head btn-head-secondary d-lg-none" th:href="@{/seller/orders}" style="padding: 10px 14px; font-size: 13px;">
+            <i class="bi bi-receipt-cutoff"></i> Orders
+          </a>
+          <a class="btn-head btn-head-secondary d-lg-none" th:href="@{/seller/sales-history}" style="padding: 10px 14px; font-size: 13px;">
+            <i class="bi bi-clock-history"></i> Sales
+          </a>
+          <span class="head-pill d-none d-md-inline-flex"><i class="bi bi-lightning-charge-fill"></i> Live Seller View</span>
           <a class="btn-head btn-head-primary" th:href="@{/seller/products/new}">
             <i class="bi bi-plus-circle"></i> Add New Product
           </a>
@@ -761,15 +774,28 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
 <script>
+  var _sbJustToggled = false;
+
   function toggleSellerSidebar() {
+    _sbJustToggled = true;
     var sb = document.getElementById('sellerSidebar');
-    if (sb) { sb.classList.toggle('show'); }
+    var bd = document.getElementById('sellerBackdrop');
+    if (!sb) return;
+    var isOpen = sb.classList.toggle('show');
+    if (bd) { bd.classList.toggle('show', isOpen); }
+    document.body.style.overflow = isOpen ? 'hidden' : '';
   }
 
   document.addEventListener('click', function(e) {
+    if (_sbJustToggled) { _sbJustToggled = false; return; }
     var sb = document.getElementById('sellerSidebar');
+    var bd = document.getElementById('sellerBackdrop');
     if (!sb || !sb.classList.contains('show')) return;
-    if (!sb.contains(e.target)) sb.classList.remove('show');
+    if (!sb.contains(e.target) && e.target.id !== 'sellerBackdrop') {
+      sb.classList.remove('show');
+      if (bd) bd.classList.remove('show');
+      document.body.style.overflow = '';
+    }
   });
 </script>
 </body>

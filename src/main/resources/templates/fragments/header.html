@@ -1,6 +1,15 @@
 <header th:fragment="header">
     <div class="container-fluid">
-        <div class="row py-1 px-xl-5 header-top-strip">
+        <div class="row py-1 px-xl-5 header-top-strip align-items-center">
+
+            <!-- Mobile-only Brand (Top Left) -->
+            <div class="col-6 d-block d-lg-none text-left" style="padding-left: 16px;">
+                <a th:href="@{/index}" class="text-decoration-none d-inline-block">
+                    <span class="font-weight-bold text-uppercase text-white" style="font-size: 15px; letter-spacing: 0.5px;">Campus</span>
+                    <span class="font-weight-bold text-uppercase text-warning" style="font-size: 15px; letter-spacing: 0.5px;">Market</span>
+                </a>
+            </div>
+
             <div class="col-lg-6 d-none d-lg-block">
                 <div class="d-inline-flex align-items-center h-100">
                     <a class="text-body mr-3" href="">About</a>
@@ -11,28 +20,29 @@
             </div>
 
             <!-- AUTH AREA: show user name + logout when logged in; login button otherwise -->
-            <div class="col-lg-6 text-center text-lg-right">
+            <div class="col-6 col-lg-6 text-right" style="padding-right: 16px;">
                 <!-- If user logged in (session.userId set) -->
                 <div th:if="${session.userId != null}" class="d-inline-flex align-items-center">
                     <a th:href="@{/user/profile}" class="btn btn-sm btn-primary d-inline-flex align-items-center mr-2 header-profile-chip">
-                        <img th:src="@{https://i.pravatar.cc/150}" alt="User avatar" class="rounded-circle"
-                             style="width:28px;height:28px;object-fit:cover;margin-right:8px;">
-                        <span th:text="${session.userName}">User</span>
+                        <span class="d-inline-flex align-items-center">
+                            <img th:src="@{https://i.pravatar.cc/150}" alt="User avatar" class="rounded-circle"
+                                 style="width:24px;height:24px;object-fit:cover;margin-right:6px;">
+                            <span th:text="${session.userName}" style="font-size: 13px; font-weight: 600;">User</span>
+                        </span>
                     </a>
 
                     <a th:href="@{/logout}" class="btn btn-sm btn-outline-danger d-inline-flex align-items-center header-logout-chip">
-                        <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                        <i class="fas fa-sign-out-alt mr-1"></i> <span class="d-none d-lg-inline">Logout</span>
                     </a>
                 </div>
 
                 <!-- If not logged in -->
                 <div th:unless="${session.userId != null}">
-                    <a th:href="@{/signin}" class="btn header-login-chip">
-                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    <a th:href="@{/signin}" class="btn header-login-chip text-white font-weight-bold" style="font-size: 13px; border-radius: 12px; padding: 6px 16px;">
+                        <i class="fas fa-sign-in-alt mr-2 d-none d-lg-inline"></i>Login
                     </a>
                 </div>
             </div>
-
         </div>
 
         <!-- Logo and search bar section -->
@@ -80,14 +90,38 @@
                 </select>
             </div>
             <div class="col-lg-9">
-                <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0 header-main-nav">
-                    <a th:href="@{/index}" class="text-decoration-none d-block d-lg-none">
-                        <span class="h3 text-uppercase text-dark bg-light px-2">CAMPUS</span>
-                        <span class="h3 text-uppercase text-light bg-primary px-2 ml-n1">MARKETPLACE</span>
-                    </a>
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                        <span class="navbar-toggler-icon"></span>
+                <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-2 py-lg-0 px-2 px-lg-0 header-main-nav text-left">
+
+                    <!-- Hamburger / Toggler (Mobile Left) -->
+                    <button type="button" class="navbar-toggler d-block d-lg-none border-0 p-0 m-0 text-left" data-toggle="collapse" data-target="#navbarCollapse" style="color: #fff; font-size: 24px; outline: none; box-shadow: none;">
+                        <i class="fas fa-bars"></i>
                     </button>
+
+                    <!-- Mobile-only search bar (hidden on desktop via mobile.css) - Positioned between menu and cart -->
+                    <div class="mobile-nav-search mx-auto d-lg-none d-block" style="padding: 0; display: block; width: 75%; max-width: 300px;" id="mobile-search-container">
+                        <div class="input-group" style="height: 38px; border-radius: 999px; border: 2px solid rgba(255, 214, 102, 0.4); box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+                            <input type="text"
+                                   class="form-control border-0"
+                                   placeholder="Search for products"
+                                   id="mobile-search-input"
+                                   autocomplete="off"
+                                   style="height: 100%; border-radius: 999px 0 0 999px; background: rgba(255,255,255,0.1); color: #fff;">
+                            <div class="input-group-append">
+                                <span class="input-group-text border-0 bg-transparent" style="height: 100%; border-radius: 0 999px 999px 0; color: #ffd666;"><i class="fa fa-search"></i></span>
+                            </div>
+                        </div>
+                        <div id="mobile-search-results" class="search-results shadow-sm" style="top: calc(100% + 5px);"></div>
+                    </div>
+
+                    <!-- Cart icon (Mobile Right) -->
+                    <a th:if="${session.userId != null}"
+                       th:href="@{/cart}"
+                       class="d-lg-none mobile-always-cart text-right"
+                       aria-label="Cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge-count mobile-cart-badge">0</span>
+                    </a>
+
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
 
                         <!-- Logged-in nav: common links for all authenticated users -->
@@ -103,7 +137,7 @@
                             <a th:href="@{/products}" class="nav-item nav-link">Explore</a>
                         </div>
 
-                        <!-- Right-side utilities: cart visible only when logged in -->
+                        <!-- Right-side utilities: cart visible only when logged in (desktop only) -->
                         <div class="navbar-nav ml-auto py-0 d-none d-lg-block" th:if="${session.userId != null}">
                             <a th:href="@{/cart}" class="btn px-0 ml-3 header-cart-link">
                                 <i class="fas fa-shopping-cart header-cart-icon"></i>
@@ -244,85 +278,81 @@
 
     <script>
         function setupHeaderSearch(){
-            var results = document.getElementById('header-search-results');
-            if(!results){return;}
+            function buildSearchHandler(inputId, resultsId){
+                var results = document.getElementById(resultsId);
+                if(!results){return;}
 
-            var debounceTimer;
-            function clearResults(){
-                results.innerHTML = '';
-                results.style.display = 'none';
-            }
+                var debounceTimer;
+                function clearResults(){
+                    results.innerHTML = '';
+                    results.style.display = 'none';
+                }
 
-            function renderResults(items){
-                if(!items || items.length === 0){
-                    results.innerHTML = '<div class="search-empty">No products found.</div>';
+                function renderResults(items){
+                    if(!items || items.length === 0){
+                        results.innerHTML = '<div class="search-empty">No products found.</div>';
+                        results.style.display = 'block';
+                        return;
+                    }
+                    results.innerHTML = items.map(function(item){
+                        var image = item.imageUrl ? item.imageUrl : '/img/productplaceholder.png';
+                        var price = item.price != null ? ('RM ' + Number(item.price).toFixed(2)) : 'RM 0.00';
+                        var href = '/products?searchText=' + encodeURIComponent(item.title || '');
+                        return '<a class="search-item" href="' + href + '">' +
+                            '<img class="search-thumb" src="' + image + '" alt="">' +
+                            '<div>' +
+                            '<div class="search-title">' + (item.title || '') + '</div>' +
+                            '<div class="search-price">' + price + '</div>' +
+                            '</div></a>';
+                    }).join('');
                     results.style.display = 'block';
-                    return;
                 }
-                results.innerHTML = items.map(function(item){
-                    var image = item.imageUrl ? item.imageUrl : '/img/productplaceholder.png';
-                    var price = item.price != null ? ('RM ' + Number(item.price).toFixed(2)) : 'RM 0.00';
-                    var href = '/products?searchText=' + encodeURIComponent(item.title || '');
-                    return '<a class="search-item" href="' + href + '">' +
-                        '<img class="search-thumb" src="' + image + '" alt="">' +
-                        '<div>' +
-                        '<div class="search-title">' + (item.title || '') + '</div>' +
-                        '<div class="search-price">' + price + '</div>' +
-                        '</div></a>';
-                }).join('');
-                results.style.display = 'block';
-            }
 
-            function renderError(){
-                results.innerHTML = '<div class="search-empty">Search error. Please try again.</div>';
-                results.style.display = 'block';
-            }
-
-            function runSearch(inputEl){
-                var searchText = inputEl.value.trim();
-                if(debounceTimer){clearTimeout(debounceTimer);}
-                if(searchText.length < 2){
-                    clearResults();
-                    return;
+                function renderError(){
+                    results.innerHTML = '<div class="search-empty">Search error. Please try again.</div>';
+                    results.style.display = 'block';
                 }
-                results.innerHTML = '<div class="search-empty">Searching...</div>';
-                results.style.display = 'block';
-                debounceTimer = setTimeout(function(){
-                    fetch('/products/search?searchText=' + encodeURIComponent(searchText))
-                        .then(function(res){
-                            if(!res.ok){throw new Error('Search failed');}
-                            return res.json();
-                        })
-                        .then(function(data){ renderResults(data); })
-                        .catch(function(){ renderError(); });
-                }, 200);
-            }
 
-            document.addEventListener('input', function(e){
-                if(e.target && e.target.id === 'header-search-input'){
-                    runSearch(e.target);
+                function runSearch(inputEl){
+                    var searchText = inputEl.value.trim();
+                    if(debounceTimer){clearTimeout(debounceTimer);}
+                    if(searchText.length < 2){
+                        clearResults();
+                        return;
+                    }
+                    results.innerHTML = '<div class="search-empty">Searching...</div>';
+                    results.style.display = 'block';
+                    debounceTimer = setTimeout(function(){
+                        fetch('/products/search?searchText=' + encodeURIComponent(searchText))
+                            .then(function(res){
+                                if(!res.ok){throw new Error('Search failed');}
+                                return res.json();
+                            })
+                            .then(function(data){ renderResults(data); })
+                            .catch(function(){ renderError(); });
+                    }, 200);
                 }
-            });
 
-            document.addEventListener('keyup', function(e){
-                if(e.target && e.target.id === 'header-search-input'){
-                    runSearch(e.target);
-                }
-            });
-
-            document.addEventListener('focusin', function(e){
-                if(e.target && e.target.id === 'header-search-input'){
-                    if(e.target.value.trim().length >= 2){
+                document.addEventListener('input', function(e){
+                    if(e.target && e.target.id === inputId){ runSearch(e.target); }
+                });
+                document.addEventListener('keyup', function(e){
+                    if(e.target && e.target.id === inputId){ runSearch(e.target); }
+                });
+                document.addEventListener('focusin', function(e){
+                    if(e.target && e.target.id === inputId && e.target.value.trim().length >= 2){
                         runSearch(e.target);
                     }
-                }
-            });
+                });
+                document.addEventListener('click', function(e){
+                    if(!results.contains(e.target) && e.target.id !== inputId){
+                        clearResults();
+                    }
+                });
+            }
 
-            document.addEventListener('click', function(e){
-                if(!results.contains(e.target) && e.target.id !== 'header-search-input'){
-                    clearResults();
-                }
-            });
+            buildSearchHandler('header-search-input', 'header-search-results');
+            buildSearchHandler('mobile-search-input', 'mobile-search-results');
         }
 
         if(document.readyState === 'loading'){

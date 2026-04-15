@@ -14,12 +14,50 @@
 
   <!-- CSS -->
   <link rel="stylesheet" th:href="@{/css/admin.css(v=2)}">
+  <!-- Mobile-only overrides (does not affect desktop) -->
+  <link rel="stylesheet" th:href="@{/css/mobile.css}">
 </head>
 
 <body>
+
+  <!-- Mobile-only admin top navigation bar (hidden on desktop via mobile.css) -->
+  <div class="admin-mobile-topbar" style="display:none;">
+    <div class="brand-logo">
+      <div class="logo-square">CM</div>
+      <span class="brand-name">Campus Marketplace</span>
+    </div>
+    <button class="admin-mobile-menu-btn" onclick="toggleAdminSidebar()" aria-label="Open navigation menu">
+      &#9776; Menu
+    </button>
+  </div>
+
+  <!-- Mobile sidebar backdrop -->
+  <div class="admin-sidebar-backdrop" id="adminBackdrop" onclick="toggleAdminSidebar()"></div>
+
+  <!-- Mobile slide-out sidebar -->
+  <aside class="admin-mobile-sidebar" id="adminMobileSidebar">
+    <button class="close-btn" onclick="toggleAdminSidebar()">&#x2715; Close</button>
+    <div class="brand">
+      <div class="logo-square">CM</div>
+      <div class="brand-text">
+        <div class="title">Campus</div>
+        <div class="subtitle">Marketplace</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="nav-item active" href="#overview"><span class="icon">&#127968;</span> Overview</a>
+      <a class="nav-item" href="#analytics"><span class="icon">&#128202;</span> Analytics</a>
+      <a class="nav-item" th:href="@{/admin/pendingSellers}"><span class="icon">&#128221;</span> Seller Verification</a>
+      <a class="nav-item" th:href="@{/admin/mentors}"><span class="icon">&#128101;</span> Manage Mentors</a>
+      <a class="nav-item" th:href="@{/admin/flaggedProducts}"><span class="icon">&#128681;</span> Flagged Products</a>
+      <a class="nav-item" th:href="@{/admin/categories}"><span class="icon">&#128193;</span> Categories</a>
+      <a class="nav-item danger" th:href="@{/logout}"><span class="icon">&#128274;</span> Logout</a>
+    </nav>
+  </aside>
+
   <div class="admin-app">
 
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR (desktop only) -->
     <aside class="sidebar">
       <div class="brand">
         <div class="logo-square">CM</div>
@@ -261,7 +299,8 @@ next correction                   <li th:each="cat, stat : ${topCategories}" cla
 
       </section><!-- end content -->
     </main><!-- end main -->
-  </div>
+
+  </div><!-- end admin-app -->
 
   <!-- Modal placeholder -->
   <div id="modalRoot"></div>
@@ -296,5 +335,15 @@ next correction                   <li th:each="cat, stat : ${topCategories}" cla
   </script>
 
   <script th:src="@{/js/admin.js(v=2)}"></script>
+  <script>
+    function toggleAdminSidebar() {
+      var sb = document.getElementById('adminMobileSidebar');
+      var bd = document.getElementById('adminBackdrop');
+      if (!sb) return;
+      var isOpen = sb.classList.toggle('show');
+      if (bd) bd.classList.toggle('show', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    }
+  </script>
 </body>
 </html>
