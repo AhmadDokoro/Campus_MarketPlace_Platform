@@ -120,8 +120,8 @@
                 <!-- Product title — links to detail page -->
                 <a class="pc-title" th:href="@{/products/{id}(id=${p.productId})}" th:text="${p.title}">Product Title</a>
 
-                <!-- Rating stars — resolved from real seller reviews via SellerRatingHelper -->
-                <th:block th:with="rd=${@sellerRatingHelper.getRatingData(p.seller.user.userId)}, avg=${rd.averageRating()}">
+                <!-- Rating stars — resolved from product-specific reviews -->
+                <th:block th:with="rd=${@productRatingHelper.getRatingData(p.productId)}, avg=${rd.averageRating()}">
                     <div class="pc-stars" th:attr="aria-label=${'Rating: ' + #numbers.formatDecimal(avg, 1, 1) + ' out of 5'}">
                         <i th:class="${avg >= 0.75 ? 'fas fa-star' : (avg >= 0.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
                         <i th:class="${avg >= 1.75 ? 'fas fa-star' : (avg >= 1.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
@@ -206,3 +206,4 @@
         }
     </script>
 </div>
+

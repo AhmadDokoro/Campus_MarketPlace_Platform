@@ -4,6 +4,7 @@ import com.ahsmart.campusmarket.model.Product;
 import com.ahsmart.campusmarket.model.ProductImage;
 import com.ahsmart.campusmarket.service.category.CategoryService;
 import com.ahsmart.campusmarket.service.product.ProductService;
+import com.ahsmart.campusmarket.service.review.ReviewService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +22,14 @@ public class ExploreProductsController {
     // Serves product browsing pages for buyers.
     private final ProductService productService;
     private final CategoryService categoryService;
+    private final ReviewService reviewService;
 
-    public ExploreProductsController(ProductService productService, CategoryService categoryService) {
+    public ExploreProductsController(ProductService productService,
+                                     CategoryService categoryService,
+                                     ReviewService reviewService) {
         this.productService = productService;
         this.categoryService = categoryService;
+        this.reviewService = reviewService;
     }
 
     // Loads the main explore page with pagination and optional title search filter.
@@ -90,6 +95,8 @@ public class ExploreProductsController {
             // Fetch the full product with images, category, and seller eagerly loaded.
             Product product = productService.getProductDetail(productId);
             model.addAttribute("product", product);
+            model.addAttribute("productRating", reviewService.getProductRatingData(productId));
+            model.addAttribute("productReviews", reviewService.getReviewsByProductId(productId));
 
             // Fetch up to 4 related products from the same category for "You May Also Like" section.
             List<Product> relatedProducts = productService.getRelatedProducts(

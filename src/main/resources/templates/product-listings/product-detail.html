@@ -151,6 +151,105 @@
         .related-section-title i { color: #ffb347; }
         .related-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
 
+        .rating-summary-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .detail-rating-text {
+            color: #6c757d;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .review-link-btn {
+            border: none;
+            background: transparent;
+            color: #4B2E83;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 0;
+        }
+        .review-link-btn:hover { color: #ffb347; text-decoration: none; }
+        .review-link-btn:focus { outline: none; box-shadow: none; }
+
+        .reviews-panel {
+            background: #fff;
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 12px 32px rgba(17,24,39,0.06);
+            margin-top: 26px;
+        }
+        .reviews-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+        .reviews-copy {
+            color: #6c757d;
+            font-size: 14px;
+            margin: 6px 0 0;
+        }
+        .review-preview-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+        .review-preview-card {
+            border: 1px solid rgba(75,46,131,0.10);
+            background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(247,243,255,0.92));
+            border-radius: 16px;
+            padding: 18px;
+        }
+        .review-preview-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .reviewer-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2b2b37;
+        }
+        .review-date {
+            font-size: 12px;
+            color: #999;
+            white-space: nowrap;
+        }
+        .review-comment {
+            margin: 0;
+            color: #555;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .review-empty {
+            border: 1px dashed rgba(75,46,131,0.18);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            color: #7a7f92;
+            background: rgba(75,46,131,0.03);
+        }
+        .modal-review-card {
+            border: 1px solid rgba(75,46,131,0.10);
+            border-radius: 16px;
+            padding: 16px 18px;
+            background: rgba(75,46,131,0.03);
+            margin-bottom: 12px;
+        }
+        .modal-review-card:last-child { margin-bottom: 0; }
+        .modal-review-stars { display: flex; gap: 3px; color: #ffb347; margin-top: 6px; }
+
+        @media (max-width: 768px) {
+            .review-preview-list { grid-template-columns: 1fr; }
+        }
+
         @media (max-width: 1200px) { .related-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
         @media (max-width: 992px) { .related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
         @media (max-width: 576px) { .related-grid { grid-template-columns: 1fr; } }
@@ -200,15 +299,29 @@
                 <!-- Product Title -->
                 <h1 class="product-detail-title" th:text="${product.title}">Product Title</h1>
 
-                <!-- Rating Stars (static placeholder) -->
-                <div class="detail-rating mt-2">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                    <span style="color:#999; font-size:13px; margin-left:8px;">(No reviews yet)</span>
-                </div>
+                <!-- Product-specific rating summary -->
+                <th:block th:with="avg=${productRating.averageRating()}, count=${productRating.reviewCount()}">
+                    <div class="rating-summary-row">
+                        <div class="detail-rating">
+                            <i th:class="${avg >= 0.75 ? 'fas fa-star' : (avg >= 0.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+                            <i th:class="${avg >= 1.75 ? 'fas fa-star' : (avg >= 1.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+                            <i th:class="${avg >= 2.75 ? 'fas fa-star' : (avg >= 2.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+                            <i th:class="${avg >= 3.75 ? 'fas fa-star' : (avg >= 3.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+                            <i th:class="${avg >= 4.75 ? 'fas fa-star' : (avg >= 4.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+                        </div>
+                        <span class="detail-rating-text"
+                              th:text="${count > 0 ? (#numbers.formatDecimal(avg, 1, 1) + ' / 5 (' + count + (count == 1 ? ' review)' : ' reviews)')) : 'No reviews yet for this product.'}">
+                            No reviews yet for this product.
+                        </span>
+                        <button type="button"
+                                class="review-link-btn"
+                                data-toggle="modal"
+                                data-target="#productReviewsModal"
+                                th:if="${count > 0}">
+                            View reviews
+                        </button>
+                    </div>
+                </th:block>
 
                 <!-- Price -->
                 <div class="product-detail-price" th:text="'RM ' + ${#numbers.formatDecimal(product.price, 1, 2)}">RM 0.00</div>
@@ -271,6 +384,98 @@
     </div>
 </div>
 
+<div class="container pb-4">
+    <div class="reviews-panel">
+        <div class="reviews-head">
+            <div>
+                <h4 class="related-section-title mb-0">
+                    <i class="fas fa-star"></i>
+                    <span>Buyer Reviews</span>
+                </h4>
+                <p class="reviews-copy"
+                   th:text="${productRating.reviewCount() > 0 ? 'Real buyer feedback tied to this product only.' : 'This product has not received a review yet.'}">
+                    Real buyer feedback tied to this product only.
+                </p>
+            </div>
+            <button type="button"
+                    class="btn btn-outline-primary"
+                    style="border-radius:999px;font-weight:700;"
+                    data-toggle="modal"
+                    data-target="#productReviewsModal"
+                    th:if="${productRating.reviewCount() > 0}">
+                View all reviews
+            </button>
+        </div>
+
+        <div class="review-preview-list" th:if="${productReviews != null and !#lists.isEmpty(productReviews)}">
+            <div class="review-preview-card"
+                 th:each="review, stat : ${productReviews}"
+                 th:if="${stat.index < 2}">
+                <div class="review-preview-top">
+                    <div>
+                        <div class="reviewer-name" th:text="${review.reviewerName}">Reviewer Name</div>
+                        <div class="modal-review-stars">
+                            <i th:each="star : ${#numbers.sequence(1, 5)}"
+                               th:class="${star <= review.rating ? 'fas fa-star' : 'far fa-star'}"></i>
+                        </div>
+                    </div>
+                    <div class="review-date" th:text="${review.createdAt}">01 Jan 2026, 12:00</div>
+                </div>
+                <p class="review-comment"
+                   th:text="${review.comment != null and !review.comment.isEmpty() ? review.comment : 'No comment left.'}">
+                    Review comment
+                </p>
+            </div>
+        </div>
+
+        <div class="review-empty" th:if="${productReviews == null or #lists.isEmpty(productReviews)}">
+            <i class="fas fa-comment-dots mb-2" style="font-size:26px;color:#4B2E83;"></i>
+            <p class="mb-0">No reviews yet for this product.</p>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="productReviewsModal" tabindex="-1" aria-labelledby="productReviewsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content" style="border-radius:24px;border:none;box-shadow:0 24px 60px rgba(75,46,131,0.18);">
+            <div class="modal-header" style="border-bottom:1px solid #edf0f7;padding:20px 24px;">
+                <div>
+                    <h5 class="modal-title mb-0" id="productReviewsModalLabel" style="font-size:20px;font-weight:800;letter-spacing:-.04em;">Product Reviews</h5>
+                    <p class="mb-0 mt-1" style="font-size:13px;color:#6b7293;" th:text="${product.title}">Product Title</p>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size:22px;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding:20px 24px;min-height:120px;">
+                <div th:if="${productReviews != null and !#lists.isEmpty(productReviews)}">
+                    <div class="modal-review-card" th:each="review : ${productReviews}">
+                        <div class="review-preview-top">
+                            <div>
+                                <div class="reviewer-name" th:text="${review.reviewerName}">Reviewer Name</div>
+                                <div class="modal-review-stars">
+                                    <i th:each="star : ${#numbers.sequence(1, 5)}"
+                                       th:class="${star <= review.rating ? 'fas fa-star' : 'far fa-star'}"></i>
+                                </div>
+                            </div>
+                            <div class="review-date" th:text="${review.createdAt}">01 Jan 2026, 12:00</div>
+                        </div>
+                        <p class="review-comment"
+                           th:text="${review.comment != null and !review.comment.isEmpty() ? review.comment : 'No comment left.'}">
+                            Review comment
+                        </p>
+                    </div>
+                </div>
+                <div class="review-empty" th:if="${productReviews == null or #lists.isEmpty(productReviews)}">
+                    <p class="mb-0">No reviews yet for this product.</p>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top:1px solid #edf0f7;padding:14px 24px;">
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal" style="border-radius:999px;padding:8px 18px;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- ── Related Products Section ("You May Also Like") ── -->
 <div class="container pb-5" th:if="${relatedProducts != null and !#lists.isEmpty(relatedProducts)}">
     <div class="detail-divider mb-4"></div>
@@ -349,4 +554,6 @@
 </script>
 </body>
 </html>
+
+
 

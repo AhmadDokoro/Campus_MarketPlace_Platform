@@ -62,14 +62,16 @@ public class Order {
         }
 
         boolean allDelivered = orderItems.stream()
-                .allMatch(item -> item.getDeliveryStatus() == DeliveryStatus.DELIVERED);
+                .allMatch(item -> item.getDeliveryStatus() == DeliveryStatus.DELIVERED
+                        || item.getDeliveryStatus() == DeliveryStatus.RECEIVED);
         if (allDelivered) {
             return DeliveryStatus.DELIVERED;
         }
 
         boolean anyBeyondPending = orderItems.stream()
                 .anyMatch(item -> item.getDeliveryStatus() == DeliveryStatus.IN_CAMPUS
-                        || item.getDeliveryStatus() == DeliveryStatus.DELIVERED);
+                        || item.getDeliveryStatus() == DeliveryStatus.DELIVERED
+                        || item.getDeliveryStatus() == DeliveryStatus.RECEIVED);
         return anyBeyondPending ? DeliveryStatus.IN_CAMPUS : DeliveryStatus.PENDING;
     }
 

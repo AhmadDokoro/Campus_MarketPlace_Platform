@@ -161,7 +161,8 @@
               <div class="stat-icon">🚩</div>
               <div class="stat-title">Flagged Listings</div>
               <div class="stat-value" id="statFlagged"
-                   data-target="0">0</div>
+                   th:attr="data-target=${flaggedListings}"
+                   th:text="${flaggedListings}">0</div>
               <div class="stat-sub muted">Pending review</div>
             </div>
 

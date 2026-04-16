@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/user")
@@ -43,19 +44,32 @@ public class UserController {
         UserProfileFormDTO profile = userService.getUserProfile(userId);
         BuyerOrderTrackingSummaryDTO trackingSummary = orderService.getBuyerTrackingSummary(userId);
         List<BuyerOrderItemChatDTO> buyerChatItems = orderService.getBuyerOrderItemsForChat(userId);
+        Set<Long> reviewedOrderItemIds = reviewService.getReviewedOrderItemIds(userId);
 
-        long receivedCount = buyerChatItems.stream()
+        List<BuyerOrderItemChatDTO> placedItems = buyerChatItems.stream()
+                .filter(item -> item.getDeliveryStatus() == DeliveryStatus.PENDING)
+                .toList();
+        List<BuyerOrderItemChatDTO> inCampusItems = buyerChatItems.stream()
+                .filter(item -> item.getDeliveryStatus() == DeliveryStatus.IN_CAMPUS)
+                .toList();
+        List<BuyerOrderItemChatDTO> deliveredItems = buyerChatItems.stream()
+                .filter(item -> item.getDeliveryStatus() == DeliveryStatus.DELIVERED)
+                .toList();
+        List<BuyerOrderItemChatDTO> receivedItems = buyerChatItems.stream()
                 .filter(item -> item.getDeliveryStatus() == DeliveryStatus.RECEIVED)
-                .count();
+                .filter(item -> !reviewedOrderItemIds.contains(item.getOrderItemId()))
+                .toList();
 
         model.addAttribute("profile", profile);
         model.addAttribute("pendingPaymentCount", trackingSummary.getPendingPaymentCount());
-        model.addAttribute("placedCount", trackingSummary.getPlacedCount());
-        model.addAttribute("inCampusCount", trackingSummary.getInCampusCount());
-        model.addAttribute("deliveredCount", trackingSummary.getDeliveredCount());
-        model.addAttribute("receivedCount", receivedCount);
-        model.addAttribute("buyerChatItems", buyerChatItems);
-        model.addAttribute("reviewedOrderIds", reviewService.getReviewedOrderIds(userId));
+        model.addAttribute("placedCount", placedItems.size());
+        model.addAttribute("inCampusCount", inCampusItems.size());
+        model.addAttribute("deliveredCount", deliveredItems.size());
+        model.addAttribute("receivedCount", receivedItems.size());
+        model.addAttribute("placedItems", placedItems);
+        model.addAttribute("inCampusItems", inCampusItems);
+        model.addAttribute("deliveredItems", deliveredItems);
+        model.addAttribute("receivedItems", receivedItems);
 
         return "user/profile";
     }

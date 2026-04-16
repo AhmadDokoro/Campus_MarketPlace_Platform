@@ -46,6 +46,7 @@ public class AdminController {
         model.addAttribute("totalSellers",   adminService.getTotalSellers());
         model.addAttribute("verifiedSellers",adminService.getVerifiedSellers());
         model.addAttribute("activeListings", adminService.getActiveListings());
+        model.addAttribute("flaggedListings",adminService.getSuspiciousProducts().size());
         model.addAttribute("totalSales",     adminService.getTotalSales());
 
         // Split weekly listings into parallel label + count arrays for Chart.js

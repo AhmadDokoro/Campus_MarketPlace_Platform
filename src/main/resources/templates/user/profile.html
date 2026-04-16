@@ -743,9 +743,7 @@
 
                 <div class="products-state" data-profile-state="placed">
                     <div class="product-stack">
-                        <div class="product-card"
-                             th:each="item : ${buyerChatItems}"
-                             th:if="${item.deliveryStatus.name() == 'PENDING'}">
+                        <div class="product-card" th:each="item : ${placedItems}">
                             <div class="product-main">
                                 <div class="product-eyebrow" th:text="'Order #' + ${item.orderId}">Order</div>
                                 <div class="product-title" th:text="${item.productTitle}">Product</div>
@@ -769,9 +767,7 @@
 
                 <div class="products-state" data-profile-state="in_campus">
                     <div class="product-stack">
-                        <div class="product-card"
-                             th:each="item : ${buyerChatItems}"
-                             th:if="${item.deliveryStatus.name() == 'IN_CAMPUS'}">
+                        <div class="product-card" th:each="item : ${inCampusItems}">
                             <div class="product-main">
                                 <div class="product-eyebrow" th:text="'Order #' + ${item.orderId}">Order</div>
                                 <div class="product-title" th:text="${item.productTitle}">Product</div>
@@ -795,9 +791,7 @@
 
                 <div class="products-state" data-profile-state="delivered">
                     <div class="product-stack">
-                        <div class="product-card"
-                             th:each="item : ${buyerChatItems}"
-                             th:if="${item.deliveryStatus.name() == 'DELIVERED'}">
+                        <div class="product-card" th:each="item : ${deliveredItems}">
                             <div class="product-main">
                                 <div class="product-eyebrow" th:text="'Order #' + ${item.orderId}">Order</div>
                                 <div class="product-title" th:text="${item.productTitle}">Product</div>
@@ -828,64 +822,51 @@
 
                 <div class="products-state" data-profile-state="received">
                     <div class="product-stack">
-                        <div class="product-card"
-                             th:each="item : ${buyerChatItems}"
-                             th:if="${item.deliveryStatus.name() == 'RECEIVED'}">
+                        <div class="product-card" th:each="item : ${receivedItems}">
                             <div class="product-main" style="width:100%">
                                 <div class="product-eyebrow" th:text="'Order #' + ${item.orderId}">Order</div>
                                 <div class="product-title" th:text="${item.productTitle}">Product</div>
                                 <div class="product-sub" th:text="'Seller: ' + ${item.sellerName}">Seller</div>
 
-                                <div th:if="${!reviewedOrderIds.contains(item.orderId)}">
-                                    <div class="product-actions" style="margin-top:12px">
-                                        <span class="status-pill status-pill-received">
-                                            <i class="bi bi-bag-heart"></i> Received
-                                        </span>
-                                        <a class="btn btn-sm btn-outline-dark chat-btn"
-                                           th:href="@{/chat/order-item/{orderItemId}/page(orderItemId=${item.orderItemId})}">
-                                            <i class="bi bi-chat-left-text"></i> Chat
-                                        </a>
-                                        <button type="button" class="rate-btn"
-                                                th:attr="onclick='toggleRateForm(' + ${item.orderItemId} + ')'">
-                                            <i class="bi bi-star-fill"></i> Rate Seller
-                                        </button>
-                                    </div>
-                                    <div class="review-form-wrap" th:id="'rateForm-' + ${item.orderItemId}">
-                                        <form th:action="@{/reviews/submit}" method="post">
-                                            <input type="hidden" name="orderItemId" th:value="${item.orderItemId}">
-                                            <div style="margin-bottom:8px;font-size:13px;font-weight:700;color:#111827">Rate this seller</div>
-                                            <div class="star-row" th:id="'stars-' + ${item.orderItemId}">
-                                                <button type="button" class="star-btn" data-val="1">&#9733;</button>
-                                                <button type="button" class="star-btn" data-val="2">&#9733;</button>
-                                                <button type="button" class="star-btn" data-val="3">&#9733;</button>
-                                                <button type="button" class="star-btn" data-val="4">&#9733;</button>
-                                                <button type="button" class="star-btn" data-val="5">&#9733;</button>
-                                            </div>
-                                            <input type="hidden" name="rating" th:id="'ratingInput-' + ${item.orderItemId}" value="">
-                                            <textarea name="comment" rows="2"
-                                                      style="width:100%;border-radius:10px;border:1px solid rgba(15,23,42,0.15);padding:8px 12px;font-size:13px;resize:none;margin-bottom:10px"
-                                                      placeholder="Leave a comment (optional)"></textarea>
-                                            <button type="submit" class="btn btn-sm btn-primary"
-                                                    th:attr="onclick='return validateRating(' + ${item.orderItemId} + ')'">
-                                                <i class="bi bi-send-fill"></i> Submit Review
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-
-                                <div th:if="${reviewedOrderIds.contains(item.orderId)}" class="product-actions" style="margin-top:12px">
+                                <div class="product-actions" style="margin-top:12px">
                                     <span class="status-pill status-pill-received">
                                         <i class="bi bi-bag-heart"></i> Received
                                     </span>
-                                    <span class="reviewed-badge">
-                                        <i class="bi bi-patch-check-fill"></i> Reviewed
-                                    </span>
+                                    <a class="btn btn-sm btn-outline-dark chat-btn"
+                                       th:href="@{/chat/order-item/{orderItemId}/page(orderItemId=${item.orderItemId})}">
+                                        <i class="bi bi-chat-left-text"></i> Chat
+                                    </a>
+                                    <button type="button" class="rate-btn"
+                                            th:attr="onclick='toggleRateForm(' + ${item.orderItemId} + ')'">
+                                        <i class="bi bi-star-fill"></i> Rate Seller
+                                    </button>
+                                </div>
+                                <div class="review-form-wrap" th:id="'rateForm-' + ${item.orderItemId}">
+                                    <form th:action="@{/reviews/submit}" method="post">
+                                        <input type="hidden" name="orderItemId" th:value="${item.orderItemId}">
+                                        <div style="margin-bottom:8px;font-size:13px;font-weight:700;color:#111827">Rate this seller</div>
+                                        <div class="star-row" th:id="'stars-' + ${item.orderItemId}">
+                                            <button type="button" class="star-btn" data-val="1">&#9733;</button>
+                                            <button type="button" class="star-btn" data-val="2">&#9733;</button>
+                                            <button type="button" class="star-btn" data-val="3">&#9733;</button>
+                                            <button type="button" class="star-btn" data-val="4">&#9733;</button>
+                                            <button type="button" class="star-btn" data-val="5">&#9733;</button>
+                                        </div>
+                                        <input type="hidden" name="rating" th:id="'ratingInput-' + ${item.orderItemId}" value="">
+                                        <textarea name="comment" rows="2"
+                                                  style="width:100%;border-radius:10px;border:1px solid rgba(15,23,42,0.15);padding:8px 12px;font-size:13px;resize:none;margin-bottom:10px"
+                                                  placeholder="Leave a comment (optional)"></textarea>
+                                        <button type="submit" class="btn btn-sm btn-primary"
+                                                th:attr="onclick='return validateRating(' + ${item.orderItemId} + ')'">
+                                            <i class="bi bi-send-fill"></i> Submit Review
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="empty-products" data-empty-state>
-                        No received products yet.
+                        No received products awaiting review.
                     </div>
                 </div>
             </div>
