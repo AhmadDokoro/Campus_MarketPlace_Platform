@@ -10,7 +10,6 @@ import com.ahsmart.campusmarket.service.mentor.MentorService;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,15 +19,14 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
+@lombok.RequiredArgsConstructor
 public class AdminController {
 
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class); // logger
 
-    @Autowired
-    private AdminService adminService; // admin service
+    private final AdminService adminService; // admin service
 
-    @Autowired
-    private MentorService mentorService;
+    private final MentorService mentorService;
 
     private boolean isAdmin(HttpSession session) {
         Object roleObj = session.getAttribute("role");
