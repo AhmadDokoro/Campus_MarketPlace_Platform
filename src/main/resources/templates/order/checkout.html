@@ -47,12 +47,22 @@
 
         /* Place order button */
         .btn-place-order{
-            background:linear-gradient(135deg,rgba(75,46,131,0.92) 0%,rgba(255,179,71,0.95) 100%);
-            color:#fff;border:none;padding:16px;width:100%;border-radius:999px;font-weight:700;font-size:16px;
-            box-shadow:0 12px 28px rgba(255,179,71,0.35),0 0 20px rgba(75,46,131,0.25);
-            transition:transform .25s ease,box-shadow .25s ease;animation:glowPulse 2.5s ease-in-out infinite}
-        .btn-place-order:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 16px 32px rgba(255,179,71,0.45),0 0 26px rgba(75,46,131,0.35);color:#fff}
-        @keyframes glowPulse{0%,100%{box-shadow:0 12px 28px rgba(255,179,71,0.35),0 0 20px rgba(75,46,131,0.25)}50%{box-shadow:0 14px 32px rgba(255,179,71,0.5),0 0 28px rgba(75,46,131,0.35)}}
+            position:relative;overflow:hidden;isolation:isolate;
+            background:linear-gradient(135deg,#4B2E83 0%,#6b3fb8 55%,#ffb347 100%);
+            color:#fff;border:1px solid rgba(255,255,255,0.14);
+            padding:16px 22px;width:100%;border-radius:14px;
+            font-weight:700;font-size:15.5px;letter-spacing:-.01em;
+            box-shadow:0 1px 0 rgba(255,255,255,0.22) inset,0 12px 28px -10px rgba(75,46,131,0.58),0 4px 12px -2px rgba(255,179,71,0.3);
+            transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .3s ease,filter .2s ease;cursor:pointer}
+        .btn-place-order::after{content:'';position:absolute;inset:0;z-index:-1;
+            background:linear-gradient(120deg,transparent 35%,rgba(255,255,255,0.32) 50%,transparent 65%);
+            transform:translateX(-110%);transition:transform .9s cubic-bezier(.22,1,.36,1)}
+        .btn-place-order:hover{transform:translateY(-2px);filter:brightness(1.05);
+            box-shadow:0 1px 0 rgba(255,255,255,0.28) inset,0 18px 34px -10px rgba(75,46,131,0.62),0 6px 16px -2px rgba(255,179,71,0.38);color:#fff}
+        .btn-place-order:hover::after{transform:translateX(110%)}
+        .btn-place-order:active{transform:translateY(0);filter:brightness(.98)}
+        .btn-place-order:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(242,194,48,0.45),0 12px 28px -10px rgba(75,46,131,0.58)}
+        .btn-place-order:disabled{opacity:.7;cursor:not-allowed;filter:grayscale(.15)}
 
         .alert-danger{border-radius:12px;font-weight:500}
     </style>

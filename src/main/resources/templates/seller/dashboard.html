@@ -163,17 +163,23 @@
       justify-content:center;
       gap:10px;
       width:100%;
-      padding:13px 16px;
-      border:none;
-      border-radius:999px;
+      padding:12px 16px;
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:12px;
       background:linear-gradient(135deg,var(--orange),var(--yellow));
       color:#fff;
-      font-weight:800;
+      font-weight:700;
+      letter-spacing:-.01em;
       text-decoration:none;
-      box-shadow:0 16px 28px rgba(242,140,31,.22);
+      box-shadow:0 8px 20px -6px rgba(242,140,31,.45),inset 0 1px 0 rgba(255,255,255,.18);
+      transition:transform .2s ease, box-shadow .25s ease, filter .2s ease;
     }
 
-    .btn-rail:hover{color:#fff;text-decoration:none}
+    .btn-rail:hover{color:#fff;text-decoration:none;transform:translateY(-1px);
+      box-shadow:0 12px 24px -6px rgba(242,140,31,.55),inset 0 1px 0 rgba(255,255,255,.22);
+      filter:brightness(1.05)}
+    .btn-rail:active{transform:translateY(0);filter:brightness(.98)}
+    .btn-rail:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(242,194,48,.35),0 8px 20px -6px rgba(242,140,31,.45)}
 
     .seller-main{
       background:rgba(255,255,255,.76);
@@ -232,26 +238,37 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      gap:10px;
-      padding:14px 18px;
-      border-radius:999px;
+      gap:9px;
+      padding:11px 18px;
+      border-radius:11px;
       text-decoration:none;
-      font-weight:800;
-      transition:transform .2s ease;
+      font-weight:700;
+      font-size:14px;
+      letter-spacing:-.01em;
+      border:1px solid transparent;
+      transition:transform .2s ease, box-shadow .25s ease, background .2s ease, color .2s ease, filter .2s ease;
+      cursor:pointer;
     }
 
     .btn-head:hover{text-decoration:none;transform:translateY(-1px)}
+    .btn-head:active{transform:translateY(0)}
+    .btn-head:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(75,46,131,.22)}
     .btn-head-primary{
       background:linear-gradient(135deg,var(--orange),var(--yellow));
       color:#fff;
-      box-shadow:0 16px 28px rgba(242,140,31,.22);
+      box-shadow:0 8px 18px -6px rgba(242,140,31,.45),inset 0 1px 0 rgba(255,255,255,.2);
     }
-    .btn-head-primary:hover{color:#fff}
+    .btn-head-primary:hover{color:#fff;filter:brightness(1.05);
+      box-shadow:0 12px 22px -6px rgba(242,140,31,.55),inset 0 1px 0 rgba(255,255,255,.24)}
+    .btn-head-primary:focus-visible{box-shadow:0 0 0 3px rgba(242,194,48,.4),0 8px 18px -6px rgba(242,140,31,.45)}
     .btn-head-secondary{
       background:#fff;
       color:var(--ink);
       border:1px solid var(--line);
+      box-shadow:0 1px 2px rgba(17,24,39,.04);
     }
+    .btn-head-secondary:hover{background:#f8f9ff;border-color:#c2cae8;color:var(--ink);
+      box-shadow:0 4px 10px -2px rgba(17,24,39,.08)}
 
     .signal-strip{
       display:grid;
@@ -261,9 +278,12 @@
     }
 
     .signal{
-      padding:20px 22px;
+      padding:22px 22px 20px;
       border-right:1px solid #edf0f7;
+      position:relative;
+      transition:background .25s ease;
     }
+    .signal:hover{background:rgba(75,46,131,.03)}
 
     .signal:last-child{border-right:none}
 
@@ -409,16 +429,18 @@
     .status-pill{
       display:inline-flex;
       align-items:center;
-      justify-content:center;
-      padding:9px 12px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.03em;
+      gap:6px;
+      padding:5px 11px;
+      border-radius:7px;
+      font-size:11.5px;
+      font-weight:700;
+      letter-spacing:.02em;
+      border:1px solid transparent;
     }
+    .status-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
 
-    .status-active{background:rgba(242,194,48,.16);color:#8e6c00}
-    .status-stock{background:rgba(75,46,131,.10);color:var(--purple)}
+    .status-active{background:rgba(16,185,129,.1);color:#047857;border-color:rgba(16,185,129,.22)}
+    .status-stock{background:rgba(239,68,68,.08);color:#b91c1c;border-color:rgba(239,68,68,.2)}
 
     .action-stack{
       display:flex;
@@ -428,27 +450,36 @@
     }
 
     .table-action{
-      width:38px;
-      height:38px;
-      border-radius:12px;
+      width:36px;
+      height:36px;
+      border-radius:10px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      border:none;
+      border:1px solid transparent;
       text-decoration:none;
-      transition:transform .2s ease;
+      font-size:14px;
+      cursor:pointer;
+      transition:transform .2s ease, box-shadow .25s ease, background .2s ease, border-color .2s ease;
     }
 
     .table-action:hover{text-decoration:none;transform:translateY(-1px)}
+    .table-action:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(75,46,131,.22)}
     .table-action.edit{
       background:linear-gradient(135deg,var(--orange),var(--yellow));
       color:#fff;
+      box-shadow:0 4px 10px -3px rgba(242,140,31,.42),inset 0 1px 0 rgba(255,255,255,.22);
     }
+    .table-action.edit:hover{filter:brightness(1.06);
+      box-shadow:0 8px 16px -4px rgba(242,140,31,.5),inset 0 1px 0 rgba(255,255,255,.25)}
     .table-action.delete{
-      background:#fff2f0;
+      background:#fff;
       color:#c24131;
       border:1px solid #f5d1cb;
+      box-shadow:0 1px 2px rgba(194,65,49,.06);
     }
+    .table-action.delete:hover{background:#fff2f0;border-color:#e8b5ac;color:#a53426;
+      box-shadow:0 4px 10px -2px rgba(194,65,49,.18)}
 
     .orders-stack{
       display:grid;
@@ -513,17 +544,23 @@
     .zone-link{
       display:inline-flex;
       align-items:center;
-      gap:10px;
-      padding:13px 16px;
-      border-radius:999px;
+      gap:9px;
+      padding:10px 16px;
+      border-radius:10px;
       border:1px solid var(--line);
       background:#fff;
       color:var(--ink);
       text-decoration:none;
-      font-weight:800;
+      font-weight:700;
+      font-size:14px;
+      letter-spacing:-.01em;
+      box-shadow:0 1px 2px rgba(17,24,39,.04);
+      transition:background .2s ease,border-color .2s ease,box-shadow .25s ease,transform .2s ease;
     }
 
-    .zone-link:hover{color:var(--ink);text-decoration:none}
+    .zone-link:hover{color:var(--ink);text-decoration:none;background:#f8f9ff;border-color:#c2cae8;
+      box-shadow:0 4px 10px -2px rgba(17,24,39,.08);transform:translateY(-1px)}
+    .zone-link:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(75,46,131,.22)}
 
     .empty-state{
       padding:34px 26px;
@@ -584,6 +621,175 @@
       }
       .seller-rail.show{left:0;transform:none}
       .seller-page{padding:16px}
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       ANIMATION LAYER — entrance, hover micro-interactions, pulses
+       ═══════════════════════════════════════════════════════════ */
+
+    /* Entrance keyframes */
+    @keyframes sdFadeInUp {
+      from { opacity:0; transform:translateY(14px) }
+      to   { opacity:1; transform:translateY(0) }
+    }
+    @keyframes sdFadeInLeft {
+      from { opacity:0; transform:translateX(-16px) }
+      to   { opacity:1; transform:translateX(0) }
+    }
+    @keyframes sdFadeInRight {
+      from { opacity:0; transform:translateX(16px) }
+      to   { opacity:1; transform:translateX(0) }
+    }
+    @keyframes sdScaleIn {
+      from { opacity:0; transform:scale(.92) }
+      to   { opacity:1; transform:scale(1) }
+    }
+
+    /* Rail slides in from the left on load */
+    .seller-rail { animation: sdFadeInLeft .55s cubic-bezier(.22,1,.36,1) both }
+    .seller-main { animation: sdFadeInUp .6s cubic-bezier(.22,1,.36,1) .05s both }
+
+    /* Rail links stagger in */
+    .rail-menu .rail-link {
+      animation: sdFadeInLeft .5s cubic-bezier(.22,1,.36,1) both;
+      position:relative;
+      overflow:hidden;
+    }
+    .rail-menu .rail-link:nth-child(1){ animation-delay:.18s }
+    .rail-menu .rail-link:nth-child(2){ animation-delay:.26s }
+    .rail-menu .rail-link:nth-child(3){ animation-delay:.34s }
+
+    /* Active indicator bar that slides in */
+    .rail-link.active::before{
+      content:''; position:absolute; left:0; top:50%; transform:translateY(-50%);
+      width:3px; height:60%; border-radius:0 3px 3px 0;
+      background:linear-gradient(180deg,var(--orange),var(--yellow));
+      box-shadow:0 0 12px rgba(242,140,31,.55);
+      animation: sdScaleIn .5s ease .3s both;
+    }
+
+    /* Shimmer sweep across rail-links on hover */
+    .rail-link::after{
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.08) 50%,transparent 70%);
+      transform:translateX(-110%); transition:transform .7s cubic-bezier(.22,1,.36,1);
+      pointer-events:none;
+    }
+    .rail-link:hover::after{ transform:translateX(110%) }
+
+    /* Icon "wiggle" on rail link hover */
+    .rail-link i{ transition:transform .3s cubic-bezier(.34,1.56,.64,1) }
+    .rail-link:hover i{ transform:rotate(-8deg) scale(1.15) }
+
+    /* Brand mark gets a soft floating animation */
+    @keyframes sdFloat {
+      0%,100% { transform:translateY(0) }
+      50%     { transform:translateY(-4px) }
+    }
+    .rail-brand-mark{ animation: sdFloat 3.2s ease-in-out infinite }
+    .rail-brand-mark i{ transition:transform .6s cubic-bezier(.22,1,.36,1) }
+    .rail-brand:hover .rail-brand-mark i{ transform:rotate(360deg) }
+
+    /* Main head animates in, then live pill pulses softly */
+    .main-head > div:first-child{ animation: sdFadeInUp .5s cubic-bezier(.22,1,.36,1) .15s both }
+    .main-head .head-tools{ animation: sdFadeInRight .5s cubic-bezier(.22,1,.36,1) .25s both }
+
+    @keyframes sdLivePulse {
+      0%,100% { box-shadow:0 0 0 0 rgba(75,46,131,.28) }
+      60%     { box-shadow:0 0 0 10px rgba(75,46,131,0) }
+    }
+    .head-pill{ position:relative; animation: sdLivePulse 2.4s ease-in-out infinite }
+    .head-pill i{ animation: sdFlash 1.6s ease-in-out infinite }
+    @keyframes sdFlash {
+      0%,100% { opacity:.6; transform:scale(1) }
+      50%     { opacity:1;  transform:scale(1.18); filter:drop-shadow(0 0 6px rgba(242,194,48,.7)) }
+    }
+
+    /* Signal cards stagger in and lift on hover */
+    .signal{ animation: sdFadeInUp .55s cubic-bezier(.22,1,.36,1) both; cursor:default }
+    .signal:nth-child(1){ animation-delay:.30s }
+    .signal:nth-child(2){ animation-delay:.38s }
+    .signal:nth-child(3){ animation-delay:.46s }
+    .signal:nth-child(4){ animation-delay:.54s }
+
+    .signal-icon{
+      transition:transform .4s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
+      box-shadow:0 4px 12px rgba(17,24,39,.08);
+    }
+    .signal:hover .signal-icon{
+      transform:translateY(-2px) rotate(-6deg) scale(1.08);
+      box-shadow:0 10px 20px rgba(17,24,39,.14);
+    }
+    .signal-value{
+      background-image:linear-gradient(135deg,var(--ink) 0%,var(--purple) 100%);
+      -webkit-background-clip:text; background-clip:text;
+      transition:transform .35s cubic-bezier(.22,1,.36,1);
+    }
+    .signal:hover .signal-value{ transform:translateX(3px); -webkit-text-fill-color:transparent; color:transparent }
+
+    /* Zone & table entrance */
+    .listings-zone{ animation: sdFadeInUp .6s cubic-bezier(.22,1,.36,1) .55s both }
+    .table tbody tr{
+      animation: sdFadeInUp .45s cubic-bezier(.22,1,.36,1) both;
+      transition:background .25s ease, transform .25s ease;
+    }
+    .table tbody tr:nth-child(1){ animation-delay:.70s }
+    .table tbody tr:nth-child(2){ animation-delay:.78s }
+    .table tbody tr:nth-child(3){ animation-delay:.86s }
+    .table tbody tr:nth-child(4){ animation-delay:.94s }
+    .table tbody tr:nth-child(5){ animation-delay:1.02s }
+    .table tbody tr:nth-child(n+6){ animation-delay:1.10s }
+
+    .table tbody tr:hover{ background:linear-gradient(90deg,rgba(75,46,131,.025),rgba(242,140,31,.025)) }
+    .table tbody tr:hover .product-thumb{ transform:scale(1.08) rotate(-2deg) }
+    .product-thumb{ transition:transform .4s cubic-bezier(.34,1.56,.64,1) }
+
+    /* Status pill — active gets a live pulsing dot (overrides default) */
+    .status-active::before{ animation: sdDotPulse 1.8s ease-in-out infinite }
+    @keyframes sdDotPulse {
+      0%,100% { box-shadow:0 0 0 0 rgba(16,185,129,.5) }
+      60%     { box-shadow:0 0 0 6px rgba(16,185,129,0) }
+    }
+
+    /* Ripple effect on primary head buttons */
+    .btn-head-primary, .btn-rail{ position:relative; overflow:hidden }
+    .btn-head-primary::before, .btn-rail::before{
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(120deg,transparent 35%,rgba(255,255,255,.35) 50%,transparent 65%);
+      transform:translateX(-110%);
+      transition:transform .85s cubic-bezier(.22,1,.36,1);
+      pointer-events:none;
+    }
+    .btn-head-primary:hover::before, .btn-rail:hover::before{ transform:translateX(110%) }
+    .btn-head-primary i, .btn-rail i{ transition:transform .3s cubic-bezier(.34,1.56,.64,1) }
+    .btn-head-primary:hover i{ transform:rotate(90deg) scale(1.15) }
+    .btn-rail:hover i{ transform:translateX(3px) scale(1.1) }
+
+    /* Table action buttons — icon rotation + haptic scale */
+    .table-action i{ transition:transform .3s cubic-bezier(.34,1.56,.64,1) }
+    .table-action.edit:hover i{ transform:rotate(-12deg) scale(1.15) }
+    .table-action.delete:hover i{ transform:rotate(8deg) scale(1.15) }
+    .table-action:active{ transform:scale(.92) }
+
+    /* Empty state icon floats */
+    .empty-state .icon{
+      animation: sdFloat 3s ease-in-out infinite;
+      transition:transform .4s cubic-bezier(.34,1.56,.64,1), background .3s ease;
+    }
+    .empty-state:hover .icon{ background:linear-gradient(135deg,var(--orange),var(--yellow)); color:#fff; transform:rotate(8deg) scale(1.1) }
+
+    /* Flash-wrap alerts slide down */
+    .flash-wrap .alert{ animation: sdFadeInUp .5s cubic-bezier(.22,1,.36,1) both }
+
+    /* Respect reduced-motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      .seller-rail, .seller-main, .rail-menu .rail-link,
+      .main-head > div:first-child, .main-head .head-tools,
+      .signal, .listings-zone, .table tbody tr, .flash-wrap .alert,
+      .rail-brand-mark, .empty-state .icon {
+        animation: none !important;
+      }
+      .head-pill, .status-active::before { animation: none !important }
     }
 
     @media (max-width:767px){
@@ -774,6 +980,30 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
 <script>
+  // Animated count-up for signal values on load.
+  (function(){
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('.signal-value').forEach(function(el, idx){
+      var target = parseInt(el.textContent.replace(/\D/g,''), 10);
+      if (isNaN(target) || target <= 0) return;
+      if (reduceMotion) return;
+      var duration = 1100;
+      var startDelay = 350 + idx * 80;
+      el.textContent = '0';
+      setTimeout(function(){
+        var start = performance.now();
+        function tick(now){
+          var p = Math.min(1, (now - start) / duration);
+          // easeOutCubic
+          var eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(target * eased).toLocaleString();
+          if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }, startDelay);
+    });
+  })();
+
   var _sbJustToggled = false;
 
   function toggleSellerSidebar() {
