@@ -40,6 +40,10 @@
     <link th:href="@{/css/style.css}" rel="stylesheet">
     <!-- Mobile-only responsive overrides (max-width: 767px) — does not affect desktop -->
     <link th:href="@{/css/mobile.css}" rel="stylesheet">
+    <!-- Enhancement layer: tokens, animations, contrast, responsive helpers -->
+    <link th:href="@{/css/cmp-enhance.css}" rel="stylesheet">
+    <!-- AOS (Animate on Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <style>
         .home-market-bg{
             background:
@@ -155,8 +159,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 hero-side-offers">
-            <div class="product-offer mb-30" style="height: 200px;">
+        <div class="col-lg-4 hero-side-offers" data-aos="fade-left" data-aos-delay="150">
+            <div class="product-offer mb-30 cmp-img-zoom" style="height: 200px;">
                 <img class="img-fluid" th:src="@{/img/main3.jpg}" alt="">
                 <div class="offer-text">
                     <h6 class="text-white text-uppercase">Academic trading, made simple</h6>
@@ -164,7 +168,7 @@
                     <a th:href="@{/products}" class="btn btn-primary">Explore</a>
                 </div>
             </div>
-            <div class="product-offer mb-30" style="height: 200px;">
+            <div class="product-offer mb-30 cmp-img-zoom" style="height: 200px;">
                 <img class="img-fluid" th:src="@{/img/side.jpg}" alt="">
                 <div class="offer-text">
                     <h6 class="text-white text-uppercase">Trusted flow, clearer listings</h6>
@@ -176,10 +180,11 @@
     </div>
 </div>
 
-<div class="container-fluid pt-5">
+<div class="container-fluid pt-5" data-aos="fade-up">
     <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3"><i class="fas fa-tags section-icon"></i>Categories</span></h2>
     <div class="category-scroll px-xl-5">
-        <div class="category-card" th:each="cat : ${topCategories}">
+        <div class="category-card" th:each="cat, iterStat : ${topCategories}"
+             data-aos="zoom-in" th:attr="data-aos-delay=${iterStat.index * 80}">
             <a class="text-decoration-none" th:href="@{'/products/category/' + ${cat.categoryId}}">
                 <div class="category-pill">
                     <div class="category-name" th:text="${cat.categoryName}">Category</div>
@@ -197,7 +202,8 @@
         <a class="btn btn-outline-primary" th:href="@{/products}"><i class="fas fa-store mr-2"></i>View all</a>
     </div>
     <div class="row px-xl-5 product-grid">
-        <div class="product-card-col" th:each="p, stat : ${featuredProducts}" th:if="${stat.index < 10}">
+        <div class="product-card-col" th:each="p, stat : ${featuredProducts}" th:if="${stat.index < 10}"
+             data-aos="fade-up" th:attr="data-aos-delay=${(stat.index % 5) * 90}">
             <div th:replace="fragments/product-card :: card(${p})"></div>
         </div>
     </div>
@@ -206,8 +212,8 @@
 
 <div class="container-fluid pt-4 pb-5">
     <div class="row px-xl-5">
-        <div class="col-md-6">
-            <div class="product-offer mb-30" style="height: 260px;">
+        <div class="col-md-6" data-aos="fade-right">
+            <div class="product-offer mb-30 cmp-img-zoom" style="height: 260px;">
                 <img class="img-fluid" th:src="@{/img/main1.jpg}" alt="">
                 <div class="offer-text">
                     <h6 class="text-white text-uppercase">Popular campus picks</h6>
@@ -216,8 +222,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="product-offer mb-30" style="height: 260px;">
+        <div class="col-md-6" data-aos="fade-left">
+            <div class="product-offer mb-30 cmp-img-zoom" style="height: 260px;">
                 <img class="img-fluid" th:src="@{/img/side.jpg}" alt="">
                 <div class="offer-text">
                     <h6 class="text-white text-uppercase">Handpicked for UMT</h6>
@@ -235,7 +241,8 @@
         <a class="btn btn-outline-primary" th:href="@{/products}"><i class="fas fa-store mr-2"></i>Explore More</a>
     </div>
     <div class="row px-xl-5 product-grid">
-        <div class="product-card-col" th:each="p, stat : ${featuredProducts}" th:if="${stat.index >= 10 and stat.index < 20}">
+        <div class="product-card-col" th:each="p, stat : ${featuredProducts}" th:if="${stat.index >= 10 and stat.index < 20}"
+             data-aos="fade-up" th:attr="data-aos-delay=${(stat.index % 5) * 90}">
             <div th:replace="fragments/product-card :: card(${p})"></div>
         </div>
     </div>
@@ -244,7 +251,11 @@
 <!-- Include footer fragment -->
 <div th:replace="fragments/footer :: footer"></div>
 
-<a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+<a href="#" class="btn btn-primary back-to-top cmp-animate-float"><i class="fa fa-angle-double-up"></i></a>
+
+<!-- AOS + enhancement JS -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js" defer></script>
+<script th:src="@{/js/cmp-enhance.js}" defer></script>
 
 <!-- Keep JS includes if necessary (not modifying behavior scripts) -->
 

@@ -1,0 +1,253 @@
+/* ===========================================================
+   Campus Marketplace — Enhancement Layer
+   Design tokens, animations, hover effects, responsive helpers.
+   Loaded on top of existing style.css / mobile.css / admin.css.
+   =========================================================== */
+
+:root{
+  /* Primary palette */
+  --cmp-purple-deep:    #1A0A3E;
+  --cmp-purple-primary: #2D1B69;
+  --cmp-purple-mid:     #4A2C8A;
+  --cmp-purple-light:   #6B4EAF;
+  --cmp-purple-soft:    #E8E0F5;
+
+  /* Accent */
+  --cmp-gold-primary:   #FFD700;
+  --cmp-gold-hover:     #FFC107;
+  --cmp-gold-soft:      #FFF8E1;
+  --cmp-gold-dark:      #C9A800;
+
+  /* Neutrals */
+  --cmp-white:      #FFFFFF;
+  --cmp-off-white:  #F8F6FC;
+  --cmp-gray-100:   #F1EEF6;
+  --cmp-gray-200:   #E0DBE8;
+  --cmp-gray-300:   #B8B0C4;
+  --cmp-gray-600:   #6B6280;
+  --cmp-gray-800:   #2E2740;
+  --cmp-gray-900:   #1A1528;
+
+  /* Semantic */
+  --cmp-success:    #22C55E;
+  --cmp-warning:    #F59E0B;
+  --cmp-danger:     #EF4444;
+  --cmp-info:       #3B82F6;
+
+  /* Shadows */
+  --shadow-sm:   0 1px 2px rgba(26,10,62,0.06);
+  --shadow-md:   0 4px 12px rgba(26,10,62,0.08);
+  --shadow-lg:   0 8px 24px rgba(26,10,62,0.12);
+  --shadow-xl:   0 16px 48px rgba(26,10,62,0.16);
+  --shadow-gold: 0 4px 16px rgba(255,215,0,0.30);
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* Motion */
+  --ease-default:    cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast:   150ms;
+  --duration-normal: 300ms;
+  --duration-slow:   500ms;
+}
+
+/* =============== KEYFRAMES =============== */
+@keyframes cmpFadeInUp   { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+@keyframes cmpFadeInDown { from{opacity:0;transform:translateY(-30px)} to{opacity:1;transform:translateY(0)} }
+@keyframes cmpFadeInLeft { from{opacity:0;transform:translateX(-40px)} to{opacity:1;transform:translateX(0)} }
+@keyframes cmpFadeInRight{ from{opacity:0;transform:translateX(40px)} to{opacity:1;transform:translateX(0)} }
+@keyframes cmpScaleIn    { from{opacity:0;transform:scale(.92)} to{opacity:1;transform:scale(1)} }
+@keyframes cmpPulse      { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+@keyframes cmpGlow       { 0%,100%{box-shadow:0 0 5px rgba(255,215,0,.3)} 50%{box-shadow:0 0 22px rgba(255,215,0,.6)} }
+@keyframes cmpShimmer    { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+@keyframes cmpFloat      { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+@keyframes cmpSkeleton   { 0%{background-position:-200px 0} 100%{background-position:calc(200px + 100%) 0} }
+@keyframes cmpSpin       { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+@keyframes cmpBounceIn   { 0%{transform:scale(.3);opacity:0} 50%{transform:scale(1.05)} 70%{transform:scale(.95)} 100%{transform:scale(1);opacity:1} }
+@keyframes cmpBellShake  { 0%,100%{transform:rotate(0)} 15%{transform:rotate(15deg)} 30%{transform:rotate(-15deg)} 45%{transform:rotate(10deg)} 60%{transform:rotate(-10deg)} 75%{transform:rotate(5deg)} }
+
+/* =============== UTILITY ANIMATION CLASSES =============== */
+.cmp-animate-fade-up    { animation: cmpFadeInUp    .65s var(--ease-default) both; }
+.cmp-animate-fade-down  { animation: cmpFadeInDown  .65s var(--ease-default) both; }
+.cmp-animate-fade-left  { animation: cmpFadeInLeft  .65s var(--ease-default) both; }
+.cmp-animate-fade-right { animation: cmpFadeInRight .65s var(--ease-default) both; }
+.cmp-animate-scale-in   { animation: cmpScaleIn     .55s var(--ease-default) both; }
+.cmp-animate-bounce-in  { animation: cmpBounceIn    .70s var(--ease-default) both; }
+.cmp-animate-pulse      { animation: cmpPulse       2s ease-in-out infinite; }
+.cmp-animate-glow       { animation: cmpGlow        2.4s ease-in-out infinite; }
+.cmp-animate-float      { animation: cmpFloat       3.2s ease-in-out infinite; }
+.cmp-delay-100 { animation-delay: 100ms; }
+.cmp-delay-200 { animation-delay: 200ms; }
+.cmp-delay-300 { animation-delay: 300ms; }
+.cmp-delay-400 { animation-delay: 400ms; }
+.cmp-delay-500 { animation-delay: 500ms; }
+
+/* Main content soft entrance on every page */
+main, .cmp-page-enter { animation: cmpFadeInUp .45s var(--ease-default); }
+
+/* =============== HOVER & MICRO-INTERACTIONS =============== */
+
+/* Card lift */
+.cmp-card-animated,
+.card.shadow-sm,
+.product-card,
+.product-item{
+  transition: transform .35s var(--ease-default), box-shadow .35s var(--ease-default), border-color .35s var(--ease-default);
+  will-change: transform;
+}
+.cmp-card-animated:hover,
+.card.shadow-sm:hover,
+.product-card:hover,
+.product-item:hover{
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 20px 40px rgba(26,10,62,0.16) !important;
+}
+
+/* Button polish — applies to Bootstrap primary/warning/success + custom */
+.btn{
+  transition: transform var(--duration-normal) var(--ease-default),
+              box-shadow var(--duration-normal) var(--ease-default),
+              background var(--duration-normal) var(--ease-default),
+              color var(--duration-normal) var(--ease-default) !important;
+  position: relative;
+  overflow: hidden;
+}
+.btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(26,10,62,0.18);
+}
+.btn:active{
+  transform: translateY(0) scale(.98);
+}
+/* Ripple layer — works on any .btn */
+.btn::after{
+  content:'';
+  position:absolute;
+  left:50%; top:50%;
+  width:0; height:0;
+  background: rgba(255,255,255,0.35);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width .55s ease, height .55s ease, opacity .8s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+.btn:active::after{
+  width: 320px; height: 320px; opacity: 1;
+}
+
+/* Image zoom on hover (opt-in via class) */
+.cmp-img-zoom{ overflow:hidden; border-radius: var(--radius-md); }
+.cmp-img-zoom img{ transition: transform .55s var(--ease-default); }
+.cmp-img-zoom:hover img{ transform: scale(1.08); }
+
+/* Animated link underline */
+.cmp-link-animated{ position:relative; text-decoration:none; }
+.cmp-link-animated::after{
+  content:''; position:absolute; left:0; bottom:-3px;
+  width:0; height:2px;
+  background: var(--cmp-gold-primary);
+  transition: width .3s var(--ease-default);
+}
+.cmp-link-animated:hover::after{ width:100%; }
+
+/* Nav glow */
+.nav-link-glow, .header-main-nav .nav-link{
+  transition: color .25s ease, transform .25s ease, text-shadow .25s ease;
+}
+.nav-link-glow:hover{
+  color: var(--cmp-gold-primary) !important;
+  text-shadow: 0 0 10px rgba(255,215,0,0.45);
+}
+
+/* Bell shake */
+.cmp-bell-shake:hover{ animation: cmpBellShake .6s ease; transform-origin: top center; }
+
+/* =============== SKELETON =============== */
+.cmp-skeleton{
+  background: linear-gradient(90deg, var(--cmp-gray-100) 25%, var(--cmp-gray-200) 50%, var(--cmp-gray-100) 75%);
+  background-size: 200px 100%;
+  animation: cmpSkeleton 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+.cmp-skeleton-text   { height:14px; margin-bottom:8px; width:80%; }
+.cmp-skeleton-title  { height:20px; margin-bottom:12px; width:60%; }
+.cmp-skeleton-image  { height:200px; width:100%; }
+.cmp-skeleton-avatar { height:48px; width:48px; border-radius:50%; }
+
+/* =============== ACCESSIBILITY / MOTION =============== */
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-aos]{ opacity:1 !important; transform:none !important; }
+}
+
+/* Disable heavy hover lifts on touch */
+@media (hover:none){
+  .cmp-card-animated:hover,
+  .card.shadow-sm:hover,
+  .product-card:hover,
+  .product-item:hover{
+    transform: none;
+    box-shadow: var(--shadow-md) !important;
+  }
+  .btn:hover{ transform:none; }
+}
+
+/* =============== RESPONSIVE HELPERS =============== */
+
+/* Touch targets — ensure buttons/links are tappable on mobile */
+@media (max-width: 767.98px){
+  .btn, .nav-link, .header-cart-link, .mobile-always-cart{
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Full-width primary actions on mobile */
+  .btn-block-mobile,
+  .btn-cmp-primary,
+  .btn-cmp-secondary{
+    width: 100%;
+  }
+  /* Headings scale down */
+  h1, .display-4{ font-size: 1.9rem !important; line-height:1.2 !important; }
+  h2{ font-size: 1.45rem !important; }
+  h3{ font-size: 1.2rem !important; }
+}
+
+/* Horizontal-scroll category strip */
+.cmp-scroll-x{
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  padding-bottom: 6px;
+}
+.cmp-scroll-x::-webkit-scrollbar{ height:6px; }
+.cmp-scroll-x::-webkit-scrollbar-thumb{ background: var(--cmp-gray-300); border-radius:999px; }
+.cmp-scroll-x > *{ flex-shrink:0; scroll-snap-align:start; }
+
+/* Responsive tables */
+.cmp-table-wrap{ width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.cmp-table-wrap table{ min-width: 600px; }
+
+/* Section entrance */
+.cmp-section{ animation: cmpFadeInUp .6s var(--ease-default) both; }
+
+/* =============== CONTRAST PATCHES =============== */
+
+/* Make sure gold-on-purple and purple-on-white are the default highlight pair */
+.cmp-accent-text{ color: var(--cmp-gold-primary); }
+.cmp-on-purple  { color: var(--cmp-white); }
+.cmp-on-white   { color: var(--cmp-gray-800); }
+
+/* AOS safety — hide initial state cleanly if AOS JS fails */
+[data-aos]{ will-change: opacity, transform; }

@@ -7,6 +7,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
     <link th:href="@{/css/mobile.css}" rel="stylesheet">
+    <link th:href="@{/css/cmp-enhance.css}" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -24,13 +26,14 @@
 
 <div class="container-fluid pt-4 pb-5">
     <div class="row px-xl-5">
-        <div class="col-12 d-flex align-items-center justify-content-between mb-3">
+        <div class="col-12 d-flex align-items-center justify-content-between mb-3" data-aos="fade-down">
             <h2 class="section-title text-uppercase mb-0 explore-title"><i class="fas fa-store"></i><span class="bg-secondary pr-3">Explore Products</span></h2>
         </div>
 
         <div class="col-12">
             <div class="product-grid">
-                <div th:each="p : ${page.content}">
+                <div th:each="p, stat : ${page.content}"
+                     data-aos="fade-up" th:attr="data-aos-delay=${(stat.index % 4) * 90}">
                     <div th:replace="fragments/product-card :: card(${p})"></div>
                 </div>
             </div>
@@ -55,5 +58,7 @@
 <div th:replace="fragments/footer :: footer"></div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js" defer></script>
+<script th:src="@{/js/cmp-enhance.js}" defer></script>
 </body>
 </html>

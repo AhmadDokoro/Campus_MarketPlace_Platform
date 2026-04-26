@@ -20,11 +20,15 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     @EntityGraph(attributePaths = {"product", "product.images", "product.category", "product.seller"})
     List<CartItem> findByCart_CartId(Long cartId);
 
+    boolean existsByProduct_ProductId(Long productId);
+
     // Counts total number of items in a user's cart for the header badge.
     @Query("SELECT COALESCE(SUM(ci.quantity), 0) FROM CartItem ci WHERE ci.cart.user.userId = :userId")
     int countTotalItemsByUserId(@Param("userId") Long userId);
 
     // Deletes all items in a cart (used for clear cart after checkout).
     void deleteAllByCart_CartId(Long cartId);
+
+    void deleteAllByProduct_ProductId(Long productId);
 }
 

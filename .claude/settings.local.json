@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(winget install *)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(/c/Program Files/GitHub CLI/gh.exe auth *)",
+      "Bash(/c/Program Files/GitHub CLI/gh.exe repo *)",
+      "Bash(git branch *)",
+      "Bash(git push *)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo edit AhmadDokoro/OneForAll --default-branch main)",
+      "Bash(rm -rf controller service repository model dto)",
+      "Read(//c/c/Users/PC/Desktop/OneForAll/Backend \\(Spring boot\\)/oneforall-backend/src/main/java/com/**)",
+      "Bash(./mvnw spring-boot:run)",
+      "Bash(mvn spring-boot:run)",
+      "Bash(mysql -u root -pAhmadakd003 -e \"SHOW DATABASES;\")",
+      "Bash(./mvnw spring-boot:run -q)",
+      "Bash(curl -s http://localhost:8080/actuator/health)",
+      "Bash(mvn --version)",
+      "Bash(java --version)",
+      "Bash(java *)",
+      "PowerShell(Get-Command *)",
+      "PowerShell(winget install *)",
+      "PowerShell(winget search *)",
+      "WebSearch",
+      "PowerShell(Get-Content *)",
+      "PowerShell(netstat *)",
+      "PowerShell(Invoke-RestMethod -Uri \"http://localhost:8080/api/v1/electricity/validate\" -Method POST -ContentType \"application/json\" -Body '{\"meterNumber\":\"04219401475\",\"state\":\"Lagos\"}' 2>&1)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :8080)",
+      "Bash(findstr LISTENING)",
+      "Bash(taskkill *)",
+      "PowerShell(Stop-Process *)",
+      "Bash(unzip -o __TRACKED_VAR__/__TRACKED_VAR__.skill -d __TRACKED_VAR__/extracted)",
+      "Read(//c/c/Users/PC/Desktop/Projects/Campus Marketplace Platform/campusmarket/src/main/resources/**)",
+      "Read(//c/c/Users/PC/Desktop/Projects/Campus Marketplace Platform/campusmarket/src/main/resources/static/**)",
+      "Bash(unzip -o .claude/skills/cmp-splash/cmp-splash.skill -d .claude/skills/cmp-splash/extracted)"
+    ]
+  }
+}

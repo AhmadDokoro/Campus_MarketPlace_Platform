@@ -16,6 +16,8 @@
   <link rel="stylesheet" th:href="@{/css/admin.css(v=2)}">
   <!-- Mobile-only overrides (does not affect desktop) -->
   <link rel="stylesheet" th:href="@{/css/mobile.css}">
+  <link rel="stylesheet" th:href="@{/css/cmp-enhance.css}">
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 </head>
 
 <body>
@@ -121,7 +123,7 @@
 
           <div class="cards-grid">
 
-            <div class="card stat-card stat-users">
+            <div class="card stat-card stat-users" data-aos="fade-up" data-aos-delay="0">
               <div class="stat-icon">👥</div>
               <div class="stat-title">Total Users</div>
               <div class="stat-value" id="statUsers"
@@ -130,7 +132,7 @@
               <div class="stat-sub muted">Registered students</div>
             </div>
 
-            <div class="card stat-card stat-sellers">
+            <div class="card stat-card stat-sellers" data-aos="fade-up" data-aos-delay="80">
               <div class="stat-icon">🏪</div>
               <div class="stat-title">Total Sellers</div>
               <div class="stat-value" id="statSellers"
@@ -139,7 +141,7 @@
               <div class="stat-sub muted">All seller accounts</div>
             </div>
 
-            <div class="card stat-card stat-verified">
+            <div class="card stat-card stat-verified" data-aos="fade-up" data-aos-delay="160">
               <div class="stat-icon">✅</div>
               <div class="stat-title">Verified Sellers</div>
               <div class="stat-value" id="statVerified"
@@ -148,7 +150,7 @@
               <div class="stat-sub muted">Accounts approved</div>
             </div>
 
-            <div class="card stat-card stat-listings">
+            <div class="card stat-card stat-listings" data-aos="fade-up" data-aos-delay="240">
               <div class="stat-icon">📦</div>
               <div class="stat-title">Active Listings</div>
               <div class="stat-value" id="statListings"
@@ -157,7 +159,7 @@
               <div class="stat-sub muted">Products live</div>
             </div>
 
-            <div class="card stat-card warn stat-flagged">
+            <div class="card stat-card warn stat-flagged" data-aos="fade-up" data-aos-delay="320">
               <div class="stat-icon">🚩</div>
               <div class="stat-title">Flagged Listings</div>
               <div class="stat-value" id="statFlagged"
@@ -166,7 +168,7 @@
               <div class="stat-sub muted">Pending review</div>
             </div>
 
-            <div class="card stat-card success stat-sales">
+            <div class="card stat-card success stat-sales" data-aos="fade-up" data-aos-delay="400">
               <div class="stat-icon">🛒</div>
               <div class="stat-title">Total Sales</div>
               <div class="stat-value" id="statSales"
@@ -181,7 +183,7 @@
         <!-- ── Analytics ──────────────────────────────────────── -->
         <section id="analytics" class="section analytics fade-in" style="animation-delay:.1s">
 
-          <div class="panel panel-wide">
+          <div class="panel panel-wide" data-aos="fade-up">
             <div class="panel-header">
               <div>
                 <h3>Weekly Listings</h3>
@@ -336,6 +338,8 @@ next correction                   <li th:each="cat, stat : ${topCategories}" cla
   </script>
 
   <script th:src="@{/js/admin.js(v=2)}"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js" defer></script>
+  <script th:src="@{/js/cmp-enhance.js}" defer></script>
   <script>
     function toggleAdminSidebar() {
       var sb = document.getElementById('adminMobileSidebar');

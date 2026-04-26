@@ -3,59 +3,554 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Create Account</title>
     <link th:href="@{/css/authentication.css}" rel="stylesheet" />
     <link th:href="@{/css/mobile.css}" rel="stylesheet" />
 
-    <!-- Register-only enhancements -->
     <style>
-        /* step container */
-        .form-step { display: none; animation: fadeStep 300ms ease; }
-        .form-step.active { display: block; }
+        :root {
+            --register-bg: #f7f4ff;
+            --register-bg-alt: #fffdf7;
+            --register-card: rgba(255, 255, 255, 0.94);
+            --register-card-strong: #ffffff;
+            --register-text: #1f1733;
+            --register-muted: #726987;
+            --register-border: rgba(78, 53, 138, 0.12);
+            --register-accent: #5b35b0;
+            --register-accent-soft: rgba(91, 53, 176, 0.1);
+            --register-gold: #f2b705;
+            --register-shadow: 0 24px 72px rgba(41, 30, 79, 0.12);
+            --register-shadow-soft: 0 12px 30px rgba(41, 30, 79, 0.08);
+            --register-danger: #c63a5c;
+            --register-success: #0f8b54;
+        }
 
-        /* progress bar */
-        .progress-wrapper {
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            min-height: 100%;
+        }
+
+        body.signup-body {
+            position: relative;
+            margin: 0;
+            padding: 28px 16px;
+            overflow-x: hidden;
+            font-family: "Segoe UI Variable", Inter, "Segoe UI", sans-serif;
+            color: var(--register-text);
+            background:
+                radial-gradient(circle at top left, rgba(242, 183, 5, 0.14), transparent 24%),
+                radial-gradient(circle at 88% 12%, rgba(91, 53, 176, 0.12), transparent 22%),
+                linear-gradient(180deg, var(--register-bg) 0%, var(--register-bg-alt) 100%);
+        }
+
+        body.signup-body::before,
+        body.signup-body::after {
+            content: "";
+            position: fixed;
+            border-radius: 999px;
+            pointer-events: none;
+            filter: blur(18px);
+            z-index: 0;
+            animation: floatBlob 12s ease-in-out infinite;
+        }
+
+        body.signup-body::before {
+            width: 220px;
+            height: 220px;
+            top: 8%;
+            left: -90px;
+            background: rgba(242, 183, 5, 0.12);
+        }
+
+        body.signup-body::after {
+            width: 260px;
+            height: 260px;
+            right: -110px;
+            bottom: 12%;
+            background: rgba(91, 53, 176, 0.12);
+            animation-delay: -4s;
+        }
+
+        .signup-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 760px;
+            margin: 0 auto;
+            min-height: calc(100vh - 56px);
             display: flex;
-            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .signup-card {
+            width: 100%;
+            padding: 30px;
+            border-radius: 28px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.98));
+            border: 1px solid var(--register-border);
+            box-shadow: var(--register-shadow);
+            backdrop-filter: blur(12px);
+            animation: cardIn 520ms cubic-bezier(.2, .9, .2, 1) both;
+        }
+
+        .signup-header {
             margin-bottom: 22px;
+            animation: fadeUp 520ms ease both;
         }
+
+        .signup-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: var(--register-accent-soft);
+            color: var(--register-accent);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .signup-title {
+            margin: 14px 0 8px;
+            font-size: clamp(2rem, 4vw, 2.7rem);
+            line-height: 1.02;
+            letter-spacing: -0.04em;
+            color: var(--register-text);
+        }
+
+        .signup-header .muted {
+            margin: 0;
+            color: var(--register-muted);
+            font-size: 0.96rem;
+            line-height: 1.65;
+        }
+
+        .progress-wrapper {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            animation: fadeUp 560ms ease both;
+            animation-delay: 90ms;
+        }
+
         .progress-step {
-            flex: 1;
-            height: 6px;
-            border-radius: 6px;
-            background: rgba(0,0,0,0.08);
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 64px;
+            padding: 12px 14px;
+            border-radius: 18px;
+            border: 1px solid rgba(91, 53, 176, 0.08);
+            background: rgba(91, 53, 176, 0.04);
+            transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
         }
+
         .progress-step.active {
-            background: linear-gradient(90deg,var(--accent),var(--accent-dark));
+            background: rgba(91, 53, 176, 0.08);
+            border-color: rgba(91, 53, 176, 0.18);
         }
 
-        /* step title */
-        .step-title {
-            font-size: 1.1rem;
-            margin-bottom: 14px;
+        .progress-step.current {
+            transform: translateY(-1px);
+            background: linear-gradient(135deg, rgba(91, 53, 176, 0.12), rgba(242, 183, 5, 0.1));
+            border-color: rgba(91, 53, 176, 0.22);
+            box-shadow: var(--register-shadow-soft);
+        }
+
+        .progress-index {
+            width: 38px;
+            height: 38px;
+            flex: 0 0 38px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: rgba(91, 53, 176, 0.08);
+            color: var(--register-accent);
+            font-size: 0.88rem;
+            font-weight: 900;
+        }
+
+        .progress-step.active .progress-index,
+        .progress-step.current .progress-index {
+            background: linear-gradient(135deg, var(--register-accent), #7d56d8);
+            color: #ffffff;
+        }
+
+        .progress-copy {
+            min-width: 0;
+        }
+
+        .progress-kicker {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--register-muted);
+        }
+
+        .progress-name {
+            display: block;
+            margin-top: 3px;
+            color: var(--register-text);
+            font-size: 0.94rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .progress-arrow {
+            color: rgba(91, 53, 176, 0.34);
+            font-size: 1.15rem;
+            font-weight: 900;
+            transform: translateY(-1px);
+            user-select: none;
+        }
+
+        .register-form {
+            display: grid;
+            gap: 18px;
+        }
+
+        .error-banner {
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: rgba(198, 58, 92, 0.1);
+            border: 1px solid rgba(198, 58, 92, 0.18);
+            color: #821d3a;
+            animation: fadeUp 300ms ease both;
+        }
+
+        .error-banner p {
+            margin: 0;
+            font-size: 0.93rem;
             font-weight: 700;
-            color: var(--primary);
         }
 
-        /* navigation buttons */
+        .form-step {
+            display: none;
+            padding: 24px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.76);
+            border: 1px solid rgba(91, 53, 176, 0.08);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            animation: stepIn 260ms ease both;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .step-head {
+            margin-bottom: 18px;
+        }
+
+        .step-title {
+            margin: 0;
+            font-size: 1.16rem;
+            font-weight: 800;
+            color: var(--register-text);
+        }
+
+        .step-description {
+            margin: 8px 0 0;
+            color: var(--register-muted);
+            font-size: 0.92rem;
+            line-height: 1.62;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .two-col {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field-span-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            margin: 0;
+            color: #564d69;
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .form-input,
+        .form-select {
+            min-height: 54px;
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(91, 53, 176, 0.12);
+            background: var(--register-card-strong);
+            color: var(--register-text);
+            font-size: 0.95rem;
+            transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+        }
+
+        .form-input::placeholder {
+            color: rgba(114, 105, 135, 0.72);
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            transform: translateY(-1px);
+            border-color: rgba(91, 53, 176, 0.28);
+            box-shadow: 0 0 0 4px rgba(91, 53, 176, 0.1);
+        }
+
+        .password-rules {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .rule-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(91, 53, 176, 0.08);
+            background: rgba(91, 53, 176, 0.04);
+            color: var(--register-muted);
+            font-size: 0.83rem;
+            font-weight: 700;
+            transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+        }
+
+        .rule-chip.valid {
+            background: rgba(15, 139, 84, 0.08);
+            border-color: rgba(15, 139, 84, 0.18);
+            color: var(--register-success);
+        }
+
+        .rule-dot {
+            width: 10px;
+            height: 10px;
+            flex: 0 0 10px;
+            border-radius: 999px;
+            background: currentColor;
+            opacity: 0.35;
+        }
+
+        .rule-chip.valid .rule-dot {
+            opacity: 1;
+        }
+
+        .password-status {
+            min-height: 20px;
+            margin: 2px 0 0;
+            font-size: 0.84rem;
+            font-weight: 700;
+            color: var(--register-muted);
+        }
+
+        .password-status.valid {
+            color: var(--register-success);
+        }
+
+        .password-status.invalid {
+            color: var(--register-danger);
+        }
+
+        .hint-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 2px;
+        }
+
+        .hint-pill {
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(91, 53, 176, 0.06);
+            color: var(--register-muted);
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+
         .step-actions {
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            gap: 12px;
             margin-top: 22px;
         }
 
-        .btn-secondary {
-            background: transparent;
-            border: 1px solid rgba(0,0,0,0.15);
-            color: var(--primary);
-            padding: 10px 16px;
-            border-radius: 8px;
-            cursor: pointer;
+        .step-spacer {
+            flex: 1;
         }
 
-        @keyframes fadeStep {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
+        .btn,
+        .btn-secondary {
+            min-height: 50px;
+            padding: 0 20px;
+            border-radius: 15px;
+            font-size: 0.94rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, opacity 180ms ease;
+        }
+
+        .btn {
+            border: none;
+        }
+
+        .btn:hover,
+        .btn-secondary:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--register-accent) 0%, #7c57d7 100%);
+            box-shadow: 0 16px 28px rgba(91, 53, 176, 0.2);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            border: 1px solid rgba(91, 53, 176, 0.12);
+            background: rgba(91, 53, 176, 0.05);
+            color: var(--register-text);
+        }
+
+        .auth-link {
+            margin: 16px 0 0;
+            text-align: center;
+            color: var(--register-muted);
+            font-size: 0.91rem;
+        }
+
+        .auth-link a {
+            color: var(--register-accent);
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .auth-link a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px) scale(0.985);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes stepIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floatBlob {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            50% {
+                transform: translateY(-14px) translateX(8px);
+            }
+        }
+
+        @media (max-width: 720px) {
+            body.signup-body {
+                padding: 18px 12px;
+            }
+
+            .signup-card {
+                padding: 22px;
+                border-radius: 24px;
+            }
+
+            .form-step {
+                padding: 18px;
+            }
+
+            .progress-wrapper {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .progress-arrow {
+                justify-self: center;
+                transform: rotate(90deg);
+            }
+
+            .two-col,
+            .password-rules {
+                grid-template-columns: 1fr;
+            }
+
+            .step-actions {
+                flex-direction: column-reverse;
+                align-items: stretch;
+            }
+
+            .btn,
+            .btn-secondary {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .signup-title {
+                font-size: 1.8rem;
+            }
+
+            .progress-step {
+                min-height: 58px;
+                padding: 11px 12px;
+            }
+
+            .progress-name {
+                white-space: normal;
+            }
         }
     </style>
 </head>
@@ -64,70 +559,111 @@
 
 <div class="signup-wrapper">
     <div class="signup-card">
-
         <div class="signup-header">
-            <h2 class="signup-title">Create an account</h2>
-            <p class="muted">Join the UMT Campus Marketplace in just a few steps.</p>
+            <span class="signup-eyebrow">Student Registration</span>
+            <h2 class="signup-title">Create your account</h2>
+            <p class="muted">A simple three-step flow for joining the campus marketplace.</p>
         </div>
 
-        <!-- Progress -->
-        <div class="progress-wrapper">
-            <div class="progress-step active"></div>
-            <div class="progress-step"></div>
-            <div class="progress-step"></div>
+        <div class="progress-wrapper" aria-label="Registration progress">
+            <div class="progress-step active current">
+                <span class="progress-index">01</span>
+                <span class="progress-copy">
+                    <span class="progress-kicker">Step 1</span>
+                    <span class="progress-name">Account</span>
+                </span>
+            </div>
+            <span class="progress-arrow" aria-hidden="true">→</span>
+            <div class="progress-step">
+                <span class="progress-index">02</span>
+                <span class="progress-copy">
+                    <span class="progress-kicker">Step 2</span>
+                    <span class="progress-name">Academic</span>
+                </span>
+            </div>
+            <span class="progress-arrow" aria-hidden="true">→</span>
+            <div class="progress-step">
+                <span class="progress-index">03</span>
+                <span class="progress-copy">
+                    <span class="progress-kicker">Step 3</span>
+                    <span class="progress-name">Mentor</span>
+                </span>
+            </div>
         </div>
 
-        <form th:action="@{/registerUser}" method="post" th:object="${userForm}">
-
-            <div th:if="${error}" style="color:#ffffff;padding:8px;background:#C4161C;border-radius:6px;margin-bottom:12px;">
+        <form class="register-form" th:action="@{/registerUser}" method="post" th:object="${userForm}">
+            <div class="error-banner" th:if="${error}">
                 <p th:text="${error}"></p>
             </div>
 
-            <!-- STEP 1 -->
             <div class="form-step active">
-                <div class="step-title">Account Information</div>
+                <div class="step-head">
+                    <h3 class="step-title">Account Information</h3>
+                    <p class="step-description">Add your basic details and confirm your password before moving forward.</p>
+                </div>
 
                 <div class="form-grid two-col">
                     <div class="form-field">
-                        <label class="form-label">First Name</label>
-                        <input class="form-input" type="text" th:field="*{firstName}" />
+                        <label class="form-label" for="firstName">First Name</label>
+                        <input id="firstName" class="form-input" type="text" th:field="*{firstName}" placeholder="Enter your first name" />
                     </div>
                     <div class="form-field">
-                        <label class="form-label">Last Name</label>
-                        <input class="form-input" type="text" th:field="*{lastName}" />
+                        <label class="form-label" for="lastName">Last Name</label>
+                        <input id="lastName" class="form-input" type="text" th:field="*{lastName}" placeholder="Enter your last name" />
+                    </div>
+                    <div class="form-field field-span-full">
+                        <label class="form-label" for="email">Email</label>
+                        <input id="email" class="form-input" type="email" th:field="*{email}" placeholder="student@umt.edu" />
                     </div>
                     <div class="form-field">
-                        <label class="form-label">Email</label>
-                        <input class="form-input" type="email" th:field="*{email}" />
+                        <label class="form-label" for="password">Password</label>
+                        <input id="password" class="form-input" type="password" th:field="*{password}" autocomplete="new-password" placeholder="Use more than 8 characters" />
                     </div>
                     <div class="form-field">
-                        <label class="form-label">Password</label>
-                        <input class="form-input" type="password" th:field="*{password}" />
+                        <label class="form-label" for="confirmPassword">Confirm Password</label>
+                        <input id="confirmPassword" class="form-input" type="password" autocomplete="new-password" placeholder="Re-enter your password" />
                     </div>
                 </div>
 
+                <div class="password-rules">
+                    <div class="rule-chip" id="lengthRule">
+                        <span class="rule-dot"></span>
+                        <span>Password is longer than 8 characters</span>
+                    </div>
+                    <div class="rule-chip" id="matchRule">
+                        <span class="rule-dot"></span>
+                        <span>Passwords match exactly</span>
+                    </div>
+                </div>
+
+                <p class="password-status" id="passwordValidationMessage" aria-live="polite"></p>
+
                 <div class="step-actions">
-                    <span></span>
-                    <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
+                    <div class="step-spacer"></div>
+                    <button id="accountContinueButton" type="button" class="btn btn-primary" onclick="nextStep()" disabled>
+                        Continue
+                    </button>
                 </div>
             </div>
 
-            <!-- STEP 2 -->
             <div class="form-step">
-                <div class="step-title">Academic Profile</div>
+                <div class="step-head">
+                    <h3 class="step-title">Academic Profile</h3>
+                    <p class="step-description">Add the student details used inside the marketplace and verification flow.</p>
+                </div>
 
                 <div class="form-grid two-col">
                     <div class="form-field">
-                        <label class="form-label">Phone</label>
-                        <input class="form-input" type="text" th:field="*{phone}" />
+                        <label class="form-label" for="phone">Phone</label>
+                        <input id="phone" class="form-input" type="text" th:field="*{phone}" placeholder="Enter your phone number" />
                     </div>
                     <div class="form-field">
-                        <label class="form-label">Academic ID</label>
-                        <input class="form-input" type="text" th:field="*{academicId}" />
+                        <label class="form-label" for="academicId">Academic ID</label>
+                        <input id="academicId" class="form-input" type="text" th:field="*{academicId}" placeholder="Enter your student ID" />
                     </div>
-                    <div class="form-field">
-                        <label class="form-label">Year</label>
-                        <select class="form-select" th:field="*{level}">
+                    <div class="form-field field-span-full">
+                        <label class="form-label" for="level">Year</label>
+                        <select id="level" class="form-select" th:field="*{level}">
                             <option value="">Select your current year</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -144,16 +680,22 @@
                 </div>
             </div>
 
-            <!-- STEP 3 -->
             <div class="form-step">
-                <div class="step-title">Mentor Information</div>
+                <div class="step-head">
+                    <h3 class="step-title">Mentor Information</h3>
+                    <p class="step-description">Choose the mentor linked to this account for the next stage of the process.</p>
+                </div>
 
-                <div class="form-grid two-col">
-                    <div class="form-field" style="grid-column: 1 / -1;">
-                        <label class="form-label">Mentor</label>
-                        <select class="form-select" th:field="*{mentorId}">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label class="form-label" for="mentorId">Mentor</label>
+                        <select id="mentorId" class="form-select" th:field="*{mentorId}">
                             <option value="">Select mentor</option>
-                            <option th:each="m : ${mentors}" th:value="${m.mentorId}" th:text="${m.mentorName + ' — ' + m.mentorEmail}"></option>
+                            <option
+                                th:each="m : ${mentors}"
+                                th:value="${m.mentorId}"
+                                th:text="${m.mentorName + ' - ' + m.mentorEmail}">
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -163,22 +705,86 @@
                     <button class="btn btn-primary" type="submit">Create Account</button>
                 </div>
             </div>
-
         </form>
+
+        <p class="auth-link">
+            Already have an account?
+            <a th:href="@{/signin}">Sign in</a>
+        </p>
     </div>
 </div>
 
 <script>
     let currentStep = 0;
-    const steps = document.querySelectorAll('.form-step');
-    const progress = document.querySelectorAll('.progress-step');
+    const steps = document.querySelectorAll(".form-step");
+    const progress = document.querySelectorAll(".progress-step");
+    const form = document.querySelector(".register-form");
+    const passwordInput = document.getElementById("password");
+    const confirmPasswordInput = document.getElementById("confirmPassword");
+    const continueButton = document.getElementById("accountContinueButton");
+    const lengthRule = document.getElementById("lengthRule");
+    const matchRule = document.getElementById("matchRule");
+    const passwordMessage = document.getElementById("passwordValidationMessage");
 
     function showStep(index) {
-        steps.forEach((step, i) => step.classList.toggle('active', i === index));
-        progress.forEach((bar, i) => bar.classList.toggle('active', i <= index));
+        steps.forEach((step, i) => {
+            step.classList.toggle("active", i === index);
+        });
+
+        progress.forEach((item, i) => {
+            item.classList.toggle("active", i <= index);
+            item.classList.toggle("current", i === index);
+        });
+    }
+
+    function syncPasswordValidation() {
+        const passwordValue = passwordInput.value;
+        const confirmValue = confirmPasswordInput.value;
+        const lengthOk = passwordValue.length > 8;
+        const matchOk = confirmValue.length > 0 && passwordValue === confirmValue;
+        const ready = lengthOk && matchOk;
+
+        lengthRule.classList.toggle("valid", lengthOk);
+        matchRule.classList.toggle("valid", matchOk);
+        continueButton.disabled = !ready;
+
+        passwordMessage.classList.remove("valid", "invalid");
+
+        if (!passwordValue && !confirmValue) {
+            passwordMessage.textContent = "Set a password and confirm it to unlock the next step.";
+            passwordMessage.classList.add("invalid");
+            return ready;
+        }
+
+        if (!lengthOk) {
+            passwordMessage.textContent = "Password must be longer than 8 characters.";
+            passwordMessage.classList.add("invalid");
+            return ready;
+        }
+
+        if (!confirmValue) {
+            passwordMessage.textContent = "Confirm your password to continue.";
+            passwordMessage.classList.add("invalid");
+            return ready;
+        }
+
+        if (!matchOk) {
+            passwordMessage.textContent = "Passwords do not match yet.";
+            passwordMessage.classList.add("invalid");
+            return ready;
+        }
+
+        passwordMessage.textContent = "Password confirmed. You can continue.";
+        passwordMessage.classList.add("valid");
+        return ready;
     }
 
     function nextStep() {
+        if (currentStep === 0 && !syncPasswordValidation()) {
+            confirmPasswordInput.focus();
+            return;
+        }
+
         if (currentStep < steps.length - 1) {
             currentStep++;
             showStep(currentStep);
@@ -191,6 +797,22 @@
             showStep(currentStep);
         }
     }
+
+    [passwordInput, confirmPasswordInput].forEach((input) => {
+        input.addEventListener("input", syncPasswordValidation);
+    });
+
+    form.addEventListener("submit", function (event) {
+        if (!syncPasswordValidation()) {
+            event.preventDefault();
+            currentStep = 0;
+            showStep(currentStep);
+            confirmPasswordInput.focus();
+        }
+    });
+
+    syncPasswordValidation();
+    showStep(currentStep);
 </script>
 
 </body>

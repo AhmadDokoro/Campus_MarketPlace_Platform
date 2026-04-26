@@ -18,6 +18,8 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
     // Counts order items with a specific delivery status — used for admin total-sales metric.
     long countByDeliveryStatus(DeliveryStatus deliveryStatus);
 
+    boolean existsByProduct_ProductId(Long productId);
+
     @Query("select (count(oi) > 0) from OrderItem oi " +
             "where oi.product.productId = :productId " +
             "and (oi.deliveryStatus <> :deliveredStatus " +
