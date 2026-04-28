@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
@@ -168,21 +167,11 @@ public class AdminController {
     }
 
     @PostMapping("/flaggedProducts/{id}/delete")
-    public String deleteProduct(@PathVariable("id") Long productId,
-                                HttpSession session,
-                                RedirectAttributes redirectAttributes) {
+    public String deleteProduct(@PathVariable("id") Long productId, HttpSession session) {
         if (!isAdmin(session)) {
             return "redirect:/signin";
         }
-        try {
-            adminService.adminDeleteProduct(productId);
-            redirectAttributes.addFlashAttribute("success", "Product deleted successfully.");
-        } catch (IllegalArgumentException ex) {
-            redirectAttributes.addFlashAttribute("error", ex.getMessage());
-        } catch (Exception ex) {
-            logger.error("Failed to delete flagged product {}", productId, ex);
-            redirectAttributes.addFlashAttribute("error", "Unable to delete product right now.");
-        }
+        adminService.adminDeleteProduct(productId);
         return "redirect:/admin/flaggedProducts";
     }
 

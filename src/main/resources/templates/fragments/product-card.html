@@ -4,163 +4,295 @@
 
 <div th:fragment="card(p)">
 
-    <!-- Card styles — injected with the fragment so they are always present -->
+    <!-- Updated New UI Card Styles -->
     <style>
-        .pc-card{position:relative;border-radius:22px;background:#fff;isolation:isolate;
-            box-shadow:0 1px 2px rgba(17,24,39,0.04),0 8px 24px -12px rgba(75,46,131,0.12);
-            border:1px solid rgba(75,46,131,0.06);
-            transition:transform .45s cubic-bezier(.22,1,.36,1),box-shadow .45s cubic-bezier(.22,1,.36,1),border-color .3s ease}
-        .pc-card:hover{transform:translateY(-6px);border-color:rgba(75,46,131,0.14);
-            box-shadow:0 2px 4px rgba(17,24,39,0.04),0 24px 48px -16px rgba(75,46,131,0.28),0 0 0 1px rgba(255,179,71,0.18)}
-        /* Subtle aurora sheen on hover — no harsh glowing border */
-        .pc-card::before{content:'';position:absolute;inset:0;border-radius:22px;pointer-events:none;z-index:2;
-            background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,0.45) 50%,transparent 60%);
-            opacity:0;transition:opacity .5s ease,transform .8s ease;transform:translateX(-60%);mix-blend-mode:overlay}
-        .pc-card:hover::before{opacity:.9;transform:translateX(60%)}
-        .pc-card-inner{position:relative;z-index:1;border-radius:22px;overflow:hidden;background:#fff}
-        .pc-img-wrap{position:relative;overflow:hidden;aspect-ratio:4/3;height:auto;min-height:200px;
-            background:linear-gradient(135deg,#f5f3ff 0%,#faf7ff 100%)}
-        .pc-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.22,1,.36,1),filter .5s ease}
-        .pc-card:hover .pc-img-wrap img{transform:scale(1.07);filter:brightness(1.04) saturate(1.08)}
-        .pc-badge-row{position:absolute;top:12px;left:12px;display:flex;gap:6px;z-index:3}
-        .pc-badge{padding:5px 11px;border-radius:8px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
-            backdrop-filter:blur(10px) saturate(140%);-webkit-backdrop-filter:blur(10px) saturate(140%);
-            border:1px solid rgba(255,255,255,0.25);box-shadow:0 2px 8px rgba(17,24,39,0.12)}
-        .pc-badge-new{background:rgba(75,46,131,0.92);color:#fff}
-        .pc-badge-used{background:rgba(255,255,255,0.92);color:#4B2E83}
-        .pc-heart{position:absolute;top:12px;right:12px;z-index:3;width:36px;height:36px;border-radius:12px;
-            background:rgba(255,255,255,0.9);backdrop-filter:blur(10px) saturate(140%);-webkit-backdrop-filter:blur(10px) saturate(140%);
-            display:flex;align-items:center;justify-content:center;cursor:pointer;
-            border:1px solid rgba(255,255,255,0.4);
-            transition:all .25s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 8px rgba(17,24,39,0.08)}
-        .pc-heart:hover{transform:scale(1.08);background:#fff;box-shadow:0 6px 16px rgba(196,22,28,0.22)}
-        .pc-heart i{font-size:14px;color:#C4161C;transition:transform .3s ease}
-        .pc-heart:active i{transform:scale(1.4)}
-        .pc-heart.saved i{animation:pcHeartPop .5s cubic-bezier(.22,1,.36,1)}
-        @keyframes pcHeartPop{0%{transform:scale(1)}50%{transform:scale(1.5)}100%{transform:scale(1)}}
-        .pc-overlay{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:18px;
-            background:linear-gradient(180deg,transparent 30%,rgba(31,36,65,0.1) 55%,rgba(31,36,65,0.68) 100%);
-            opacity:0;transition:opacity .4s ease;z-index:2;text-decoration:none}
-        .pc-card:hover .pc-overlay{opacity:1}
-        .pc-view-btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:10px;
-            color:#1f2341;font-weight:700;font-size:12px;letter-spacing:.3px;text-decoration:none;
-            background:rgba(255,255,255,0.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-            border:1px solid rgba(255,255,255,0.6);box-shadow:0 8px 20px rgba(17,24,39,0.18);
-            transform:translateY(10px);transition:transform .4s cubic-bezier(.22,1,.36,1),background .25s ease,box-shadow .25s ease}
-        .pc-card:hover .pc-view-btn{transform:translateY(0)}
-        .pc-view-btn:hover{background:#fff;color:#4B2E83;text-decoration:none;box-shadow:0 12px 26px rgba(17,24,39,0.24)}
-        .pc-body{padding:16px 18px 18px;position:relative}
-        .pc-category{display:inline-flex;align-items:center;font-size:10px;font-weight:700;color:#4B2E83;text-transform:uppercase;
-            letter-spacing:.7px;margin-bottom:6px;padding:3px 8px;border-radius:6px;background:rgba(75,46,131,0.08)}
-        .pc-title{display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;
-            font-family:'Poppins',sans-serif;font-weight:600;font-size:14.5px;color:#1f2341;
-            text-decoration:none;overflow:hidden;transition:color .2s ease;line-height:1.45;min-height:2.5em;
-            letter-spacing:-.01em}
-        .pc-title:hover{color:#4B2E83;text-decoration:none}
-        .pc-price-row{display:flex;align-items:flex-end;justify-content:space-between;margin-top:12px;gap:10px}
-        .pc-price{font-family:'Poppins',sans-serif;font-weight:800;font-size:21px;color:#1f2341;line-height:1;letter-spacing:-.03em;
-            display:inline-flex;align-items:baseline}
-        .pc-price-currency{font-size:11px;font-weight:700;color:#4B2E83;margin-right:3px;letter-spacing:.5px}
-        .pc-stars{display:flex;gap:2px;margin-top:8px;align-items:center}
-        .pc-stars i{font-size:11px;color:#F2B705;filter:drop-shadow(0 1px 2px rgba(242,183,5,0.35))}
-        .pc-stars i.fa-star,.pc-stars i.fa-star-half-alt{animation:pcStarPop 2.4s ease-in-out infinite}
-        .pc-stars i:nth-child(2){animation-delay:.15s}
-        .pc-stars i:nth-child(3){animation-delay:.3s}
-        .pc-stars i:nth-child(4){animation-delay:.45s}
-        .pc-stars i:nth-child(5){animation-delay:.6s}
-        @keyframes pcStarPop{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
-        .pc-cart-btn{width:42px;height:42px;border-radius:12px;border:none;cursor:pointer;
-            background:linear-gradient(135deg,#4B2E83 0%,#7c52c9 100%);color:#fff;
-            display:flex;align-items:center;justify-content:center;flex-shrink:0;
-            box-shadow:0 4px 12px rgba(75,46,131,0.32),inset 0 1px 0 rgba(255,255,255,0.18);
-            transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s ease,background .3s ease;position:relative;overflow:hidden}
-        .pc-cart-btn:hover{transform:translateY(-2px);
-            box-shadow:0 10px 24px rgba(75,46,131,0.42),inset 0 1px 0 rgba(255,255,255,0.22);
-            background:linear-gradient(135deg,#F2B705 0%,#ff9500 100%)}
-        .pc-cart-btn:active{transform:translateY(0) scale(0.94)}
-        .pc-cart-btn:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(75,46,131,0.3),0 4px 12px rgba(75,46,131,0.32)}
-        .pc-cart-btn i{font-size:15px;transition:transform .3s ease}
-        .pc-cart-btn:hover i{transform:translateX(-1px) scale(1.1)}
-        .pc-cart-btn::after{content:'';position:absolute;width:100%;height:100%;top:0;left:0;
-            background:radial-gradient(circle,rgba(255,255,255,0.4) 10%,transparent 70%);
-            transform:scale(0);transition:transform .4s ease;border-radius:12px}
-        .pc-cart-btn:active::after{transform:scale(2.5);transition:transform 0s}
-        .pc-cart-btn.added{background:linear-gradient(135deg,#10b981 0%,#059669 100%) !important;
-            box-shadow:0 4px 14px rgba(16,185,129,0.4) !important}
-        .pc-stock-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:6px;flex-shrink:0}
-        .pc-stock-in{background:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,0.18)}
-        .pc-stock-low{background:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,0.2)}
-        .pc-stock-out{background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,0.2)}
-        .pc-stock{display:flex;align-items:center;font-size:11px;color:#6b7293;font-weight:600;margin-top:10px;letter-spacing:.2px}
+        .pc-card-new {
+            --primary: #4B2E83;
+            --primary-800: #f5f3ff;
+            --primary-shadow: rgba(75, 46, 131, 0.2);
+            --text-main: #1f2341;
+            --text-muted: #6b7293;
+            --bg-linear: linear-gradient(135deg, var(--primary) 0%, #7c52c9 100%);
+
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            padding: 1rem;
+            width: 100%;
+            /* Pure white with mixture of gold and small purple */
+            background: linear-gradient(145deg, #ffffff 0%, #ffffff 50%, rgba(242, 183, 5, 0.15) 85%, rgba(107, 33, 196, 0.1) 100%);
+            border-radius: 1rem;
+            /* Pyramid lifted shadow effect */
+            box-shadow:
+                -4px 4px 10px rgba(0, 0, 0, 0.03),
+                -8px 8px 20px rgba(75, 46, 131, 0.06),
+                -16px 16px 35px rgba(0, 0, 0, 0.04),
+                inset 1px -1px 3px rgba(255, 255, 255, 0.9);
+            border-right: 1px solid rgba(75, 46, 131, 0.05);
+            border-bottom: 1px solid rgba(75, 46, 131, 0.05);
+            border-top: 1px solid #ffffff;
+            border-left: 1px solid #ffffff;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+            overflow: hidden;
+        }
+
+        .pc-card-new:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow:
+                -6px 6px 15px rgba(0, 0, 0, 0.04),
+                -12px 12px 25px rgba(75, 46, 131, 0.1),
+                -20px 20px 45px rgba(0, 0, 0, 0.08),
+                inset 1px -1px 3px rgba(255, 255, 255, 0.9);
+        }
+
+        .pc-card-new .image_container {
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            z-index: 5;
+            width: 100%;
+            height: 12rem;
+            border-radius: 0.5rem;
+            display: block;
+            /* Gradient colored border for the image */
+            border: 3px solid transparent;
+            background:
+                linear-gradient(var(--primary-800), var(--primary-800)) padding-box,
+                linear-gradient(135deg, #F2B705 0%, #a95df7 50%, #4B2E83 100%) border-box;
+            box-shadow: 0 4px 10px rgba(75, 46, 131, 0.1);
+        }
+
+        .pc-card-new .image_container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .pc-card-new:hover .image_container img {
+            transform: scale(1.05);
+        }
+
+        .pc-card-new .pc-badge-row {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            display: flex;
+            gap: 6px;
+            z-index: 3;
+        }
+
+        .pc-card-new .pc-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .pc-card-new .pc-badge-new { background: rgba(75,46,131,0.9); color: #fff; }
+        .pc-card-new .pc-badge-used { background: rgba(255,255,255,0.9); color: #4B2E83; }
+
+        .pc-card-new .pc-category-tag {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--primary);
+            background: rgba(75, 46, 131, 0.08);
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            align-self: flex-start;
+            text-transform: uppercase;
+        }
+
+        .pc-card-new .title {
+            overflow: hidden;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            text-transform: capitalize;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            text-decoration: none;
+            display: block;
+        }
+
+        .pc-card-new .title:hover {
+            color: var(--primary);
+        }
+
+        .pc-card-new .rating-stars {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .pc-card-new .rating-stars i {
+            color: #F2B705;
+            font-size: 0.8rem;
+        }
+
+        .pc-card-new .stock-info {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .pc-card-new .stock-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .pc-card-new .stock-in { background: #10b981; }
+        .pc-card-new .stock-low { background: #f59e0b; }
+        .pc-card-new .stock-out { background: #ef4444; }
+
+        .pc-card-new .action {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-top: auto;
+            position: relative;
+        }
+
+        .pc-card-new .price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+        }
+
+        .pc-card-new .price span.currency {
+            font-size: 0.8rem;
+            color: var(--primary);
+        }
+
+        .pc-card-new .cart-button {
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 0.9rem;
+            background: linear-gradient(180deg, #9f4cf0 0%, #6b21c4 100%);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #ffffff;
+            white-space: nowrap;
+            border: 2px solid #6b21c4;
+            border-radius: 1.5rem;
+            box-shadow:
+                inset 0 3px 5px rgba(255, 255, 255, 0.5),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+                0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .pc-card-new .cart-button:hover {
+            background: linear-gradient(180deg, #a95df7 0%, #7629d6 100%);
+            box-shadow:
+                inset 0 3px 5px rgba(255, 255, 255, 0.6),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+                0 6px 10px rgba(107, 33, 196, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .pc-card-new .cart-button:active {
+            transform: translateY(1px);
+            box-shadow:
+                inset 0 2px 4px rgba(0, 0, 0, 0.4),
+                inset 0 -1px 2px rgba(255, 255, 255, 0.1),
+                0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .pc-card-new .cart-button.added {
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+            border-color: #047857;
+            box-shadow:
+                inset 0 3px 5px rgba(255, 255, 255, 0.4),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+                0 4px 6px rgba(16, 185, 129, 0.3);
+        }
+
+        .pc-card-new .cart-button .cart-icon {
+            width: 1.1rem;
+            height: 1.1rem;
+        }
     </style>
 
-    <div class="pc-card">
-        <div class="pc-card-inner">
+    <div class="pc-card-new">
+        <a class="image_container" th:href="@{/products/{id}(id=${p.productId})}">
+            <img th:if="${p.images != null and !#lists.isEmpty(p.images)}" th:src="${@cloudinaryUrlHelper.thumbnail(p.images.get(0).imageUrl)}" alt="Product" loading="lazy">
+            <img th:if="${p.images == null or #lists.isEmpty(p.images)}" th:src="@{/img/productplaceholder.png}" alt="Product" loading="lazy">
 
-            <!-- ── Image Section ── -->
-            <div class="pc-img-wrap">
-                <!-- Product image -->
-                <img th:if="${p.images != null and !#lists.isEmpty(p.images)}" th:src="${@cloudinaryUrlHelper.thumbnail(p.images.get(0).imageUrl)}" alt="Product" loading="lazy">
-                <img th:if="${p.images == null or #lists.isEmpty(p.images)}" th:src="@{/img/productplaceholder.png}" alt="Product" loading="lazy">
-
-                <!-- Condition badge floating on top-left -->
-                <div class="pc-badge-row">
-                    <span class="pc-badge pc-badge-new" th:if="${p.condition != null and p.condition.name() == 'NEW'}">New</span>
-                    <span class="pc-badge pc-badge-used" th:if="${p.condition != null and p.condition.name() == 'USED'}">Used</span>
-                </div>
-
-                <!-- Wishlist heart floating on top-right -->
-                <button class="pc-heart" type="button" title="Save for later"><i class="fas fa-heart"></i></button>
-
-                <!-- Hover overlay with View Details link -->
-                <a class="pc-overlay" th:href="@{/products/{id}(id=${p.productId})}">
-                    <span class="pc-view-btn"><i class="fas fa-eye mr-1"></i> View Details</span>
-                </a>
+            <div class="pc-badge-row">
+                <span class="pc-badge pc-badge-new" th:if="${p.condition != null and p.condition.name() == 'NEW'}">New</span>
+                <span class="pc-badge pc-badge-used" th:if="${p.condition != null and p.condition.name() == 'USED'}">Used</span>
             </div>
+        </a>
 
-            <!-- ── Card Body ── -->
-            <div class="pc-body">
-                <!-- Category label -->
-                <span class="pc-category" th:if="${p.category != null}" th:text="${p.category.categoryName}">Category</span>
+        <span class="pc-category-tag" th:if="${p.category != null}" th:text="${p.category.categoryName}">Category</span>
 
-                <!-- Product title — links to detail page -->
-                <a class="pc-title" th:href="@{/products/{id}(id=${p.productId})}" th:text="${p.title}">Product Title</a>
+        <a class="title" th:href="@{/products/{id}(id=${p.productId})}" th:text="${p.title}">
+            Product brand name
+        </a>
 
-                <!-- Rating stars — resolved from product-specific reviews -->
-                <th:block th:with="rd=${@productRatingHelper.getRatingData(p.productId)}, avg=${rd.averageRating()}">
-                    <div class="pc-stars" th:attr="aria-label=${'Rating: ' + #numbers.formatDecimal(avg, 1, 1) + ' out of 5'}">
-                        <i th:class="${avg >= 0.75 ? 'fas fa-star' : (avg >= 0.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
-                        <i th:class="${avg >= 1.75 ? 'fas fa-star' : (avg >= 1.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
-                        <i th:class="${avg >= 2.75 ? 'fas fa-star' : (avg >= 2.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
-                        <i th:class="${avg >= 3.75 ? 'fas fa-star' : (avg >= 3.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
-                        <i th:class="${avg >= 4.75 ? 'fas fa-star' : (avg >= 4.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
-                        <small class="ml-1" style="font-size:10px;color:#aaa;" th:if="${rd.reviewCount() > 0}" th:text="'(' + ${rd.reviewCount()} + ')'"></small>
-                    </div>
-                </th:block>
+        <div class="rating-stars">
+            <th:block th:with="rd=${@productRatingHelper.getRatingData(p.productId)}, avg=${rd.averageRating()}">
+                <i th:class="${avg >= 0.75 ? 'fas fa-star' : (avg >= 0.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+                <i th:class="${avg >= 1.75 ? 'fas fa-star' : (avg >= 1.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+                <i th:class="${avg >= 2.75 ? 'fas fa-star' : (avg >= 2.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+                <i th:class="${avg >= 3.75 ? 'fas fa-star' : (avg >= 3.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+                <i th:class="${avg >= 4.75 ? 'fas fa-star' : (avg >= 4.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+                <span th:if="${rd.reviewCount() > 0}" th:text="'(' + ${rd.reviewCount()} + ')'"></span>
+            </th:block>
+        </div>
 
-                <!-- Price + Cart button row -->
-                <div class="pc-price-row">
-                    <span class="pc-price">
-                        <span class="pc-price-currency">RM</span>
-                        <span th:text="${#numbers.formatDecimal(p.price, 1, 2)}">0.00</span>
-                    </span>
-                    <button class="pc-cart-btn" type="button" title="Add to cart"
-                            th:data-product-id="${p.productId}"
-                            onclick="addToCartFromCard(this)">
-                        <i class="fas fa-shopping-cart"></i>
-                    </button>
-                </div>
+        <div class="stock-info" th:if="${p.quantity != null}">
+            <div class="stock-dot stock-in" th:if="${p.quantity > 5}"></div>
+            <span th:if="${p.quantity > 5}">In Stock</span>
+            <div class="stock-dot stock-low" th:if="${p.quantity > 0 and p.quantity <= 5}"></div>
+            <span th:if="${p.quantity > 0 and p.quantity <= 5}" th:text="'Only ' + ${p.quantity} + ' left'">Low Stock</span>
+            <div class="stock-dot stock-out" th:if="${p.quantity == 0}"></div>
+            <span th:if="${p.quantity == 0}">Out of Stock</span>
+        </div>
 
-                <!-- Stock indicator -->
-                <div class="pc-stock" th:if="${p.quantity != null}">
-                    <span class="pc-stock-dot pc-stock-in" th:if="${p.quantity > 5}"></span>
-                    <span th:if="${p.quantity > 5}">In Stock</span>
-                    <span class="pc-stock-dot pc-stock-low" th:if="${p.quantity > 0 and p.quantity <= 5}"></span>
-                    <span th:if="${p.quantity > 0 and p.quantity <= 5}" th:text="'Only ' + ${p.quantity} + ' left'">Low Stock</span>
-                    <span class="pc-stock-dot pc-stock-out" th:if="${p.quantity == 0}"></span>
-                    <span th:if="${p.quantity == 0}">Out of Stock</span>
-                </div>
+        <div class="action">
+            <div class="price">
+                <span class="currency">RM</span>
+                <span th:text="${#numbers.formatDecimal(p.price, 1, 2)}">0.00</span>
             </div>
+            <button class="cart-button" type="button" title="Add to cart"
+                    th:data-product-id="${p.productId}"
+                    onclick="addToCartFromCard(this)">
+                <svg
+                    class="cart-icon"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                        stroke-linejoin="round"
+                        stroke-linecap="round"
+                    ></path>
+                </svg>
+                <span>Add to cart</span>
+            </button>
         </div>
     </div>
 

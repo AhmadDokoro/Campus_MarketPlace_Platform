@@ -12,30 +12,32 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --bg: #f3f5ff;
-            --ink: #1d2240;
-            --muted: #6b7293;
-            --line: #d9def2;
-            --panel: #ffffff;
-            --accent: #f28c1f;
-            --accent-dark: #e2b106;
-            --dark: #4b2e83;
-            --dark-soft: #295f98;
-            --success: #0f766e;
-            --danger: #b42318;
-            --shadow: 0 20px 50px rgba(75, 46, 131, 0.10);
+            --bg: #050505;
+            --ink: #ffffff;
+            --muted: #888888;
+            --line: #333333;
+            --panel: #0a0a0a;
+            --accent: #F2B705;
+            --accent-dark: #cc9a04;
+            --dark: #111111;
+            --dark-soft: #222222;
+            --success: #0df07a;
+            --danger: #ff4a4a;
+            --shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
         }
 
         * { box-sizing: border-box; }
 
         body {
             margin: 0;
-            font-family: "Plus Jakarta Sans", sans-serif;
+            font-family: 'Space Grotesk', "Plus Jakarta Sans", sans-serif;
             color: var(--ink);
-            background:
-                radial-gradient(circle at top right, rgba(242, 140, 31, 0.18), transparent 20%),
-                radial-gradient(circle at top left, rgba(75, 46, 131, 0.10), transparent 24%),
-                linear-gradient(180deg, #fbfbff 0%, var(--bg) 100%);
+            background: var(--bg);
+        }
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px; pointer-events: none; z-index: -1;
         }
 
         .page {

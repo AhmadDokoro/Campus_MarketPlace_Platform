@@ -57,10 +57,32 @@
 
         .splash-content{
             position:relative;
-            text-align:center;
             z-index:3;
-            max-width: 760px;
+            max-width: 1200px;
             width:100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            text-align: left;
+        }
+
+        .splash-text-wrap {
+            flex: 1;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .splash-animation-wrap {
+            flex: 1;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            animation: splashFadeUp 1s ease 0.5s forwards;
+            max-width: 550px;
         }
 
         /* ===== LOGO ===== */
@@ -171,7 +193,7 @@
             height:4px;
             background: rgba(255,255,255,0.15);
             border-radius: 999px;
-            margin: 34px auto 18px;
+            margin: 34px 0 18px 0;
             overflow:hidden;
             opacity:0;
             animation: splashFadeUp .5s ease 1.6s forwards;
@@ -278,14 +300,37 @@
         }
 
         /* ===== RESPONSIVE ===== */
+        @media (max-width:991px){
+            .splash-content {
+                flex-direction: column;
+                justify-content: center;
+                text-align: center;
+            }
+            .splash-text-wrap {
+                align-items: center;
+                margin: 0 auto;
+            }
+            .splash-loader {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .splash-animation-wrap {
+                display: flex;
+                max-width: 300px;
+                margin-top: -20px;
+                order: -1; /* Move animation to the top on mobile */
+            }
+        }
         @media (max-width:576px){
             .splash-logo-img{ width:88px; }
             .splash-title{ letter-spacing:1px; }
             .splash-tagline{ padding: 0 12px; }
             .splash-subbrand{ font-size:.82rem; letter-spacing:1.8px; }
+            .splash-animation-wrap { max-width: 250px; }
         }
         @media (min-width:992px){
             .splash-logo-img{ width:140px; }
+            .splash-animation-wrap { display: flex; }
         }
 
         @media (prefers-reduced-motion: reduce){
@@ -318,36 +363,54 @@
         <span class="particle" style="--x:55%;--y:55%;--size:4px;--delay:.5s;--dur:4.9s;--tx:-26px;--ty:-22px;"></span>
     </div>
 
+    <!-- Add dotlottie player script -->
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+
     <!-- Shine sweep -->
     <div class="splash-shine" aria-hidden="true"></div>
 
     <div class="splash-content">
 
-        <!-- Logo -->
-        <div class="splash-logo">
-            <img src="/img/umtlogo.png" alt="UMT" class="splash-logo-img"/>
+        <div class="splash-text-wrap">
+            <!-- Logo -->
+            <div class="splash-logo">
+                <img src="/img/umtlogo.png" alt="UMT" class="splash-logo-img"/>
+            </div>
+
+            <!-- Title -->
+            <h1 class="splash-title">
+                <span class="splash-word" style="--i:0">Campus</span>
+                <br>
+                <span class="splash-word splash-highlight" style="--i:1">Marketplace</span>
+            </h1>
+
+            <!-- Tagline -->
+            <p class="splash-tagline">
+                A trusted campus marketplace built for <span class="accent">UMT</span> academic life
+            </p>
+
+            <!-- Loader -->
+            <div class="splash-loader" role="progressbar" aria-label="Loading">
+                <div class="splash-loader-bar"></div>
+            </div>
+
+            <!-- Sub-brand -->
+            <div class="splash-subbrand">
+                <span class="by">by</span>
+                <span class="sb-letter">A</span><span class="sb-letter">H</span><span class="sb-letter sb-gold">$</span><span class="sb-letter">M</span><span class="sb-letter">A</span><span class="sb-letter">R</span><span class="sb-letter">T</span>
+            </div>
         </div>
 
-        <!-- Title -->
-        <h1 class="splash-title">
-            <span class="splash-word" style="--i:0">Campus</span>
-            <span class="splash-word splash-highlight" style="--i:1">Marketplace</span>
-        </h1>
-
-        <!-- Tagline -->
-        <p class="splash-tagline">
-            A trusted campus marketplace built for <span class="accent">UMT</span> academic life
-        </p>
-
-        <!-- Loader -->
-        <div class="splash-loader" role="progressbar" aria-label="Loading">
-            <div class="splash-loader-bar"></div>
-        </div>
-
-        <!-- Sub-brand -->
-        <div class="splash-subbrand">
-            <span class="by">by</span>
-            <span class="sb-letter">A</span><span class="sb-letter">H</span><span class="sb-letter sb-gold">$</span><span class="sb-letter">M</span><span class="sb-letter">A</span><span class="sb-letter">R</span><span class="sb-letter">T</span>
+        <!-- Lottie Animation -->
+        <div class="splash-animation-wrap">
+            <dotlottie-player
+                src="/animation/Shopping bag.lottie"
+                background="transparent"
+                speed="1"
+                style="width: 100%; height: auto; aspect-ratio: 1/1; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4)) drop-shadow(0 0 30px rgba(255,215,0,0.3)); transform: scale(1.1);"
+                loop
+                autoplay>
+            </dotlottie-player>
         </div>
 
     </div>

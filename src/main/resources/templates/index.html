@@ -51,35 +51,168 @@
                 radial-gradient(circle at 90% 10%, rgba(75,46,131,0.18), transparent 45%),
                 linear-gradient(180deg, #f9fafb 0%, #ffffff 45%, #f6f3ff 100%);
         }
-        .category-scroll{display:flex;gap:16px;overflow-x:auto;padding:6px 0 16px;scroll-snap-type:x mandatory}
+        .category-scroll{display:flex;gap:20px;overflow-x:auto;padding:10px 0 20px;scroll-snap-type:x mandatory}
         .category-scroll::-webkit-scrollbar{height:8px}
         .category-scroll::-webkit-scrollbar-thumb{background:#c9ccd1;border-radius:999px}
-        .category-scroll::-webkit-scrollbar-track{background:#f3f4f6;border-radius:999px}
-        .category-card{width:220px;min-width:220px;flex-shrink:0;scroll-snap-align:start;transition:transform .2s ease, box-shadow .2s ease}
-        .category-card:hover{transform:translateY(-4px);box-shadow:0 14px 24px rgba(76,29,149,0.18)}
-        .category-pill{
-            background:linear-gradient(135deg, rgba(75,46,131,0.12), rgba(255,214,102,0.14), rgba(255,159,67,0.16));
-            border-radius:16px;
-            padding:16px 18px;
-            border:1px solid rgba(75,46,131,0.18);
-            box-shadow:0 10px 22px rgba(76,29,149,0.12);
-            position:relative;
-            overflow:hidden;
-            height:80px;
-            display:flex;
-            flex-direction:column;
-            justify-content:center;
+        .category-scroll::-webkit-scrollbar-track{background:transparent;border-radius:999px}
+        .category-card {
+            width: 240px;
+            min-width: 240px;
+            height: 135px;
+            perspective: 800px;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+            position: relative;
         }
-        .category-pill::before{
-            content:"\f02b";
-            font-family:"Font Awesome 5 Free";
-            font-weight:900;
-            position:absolute;
-            left:16px;top:14px;
-            color:rgba(75,46,131,0.35);
+
+        .category-inner-card {
+            display: block;
+            height: 100%;
+            border-radius: 26px;
+            background: linear-gradient(135deg, #1A0A3E 0%, #4A2C8A 100%);
+            transition: all 0.5s ease-in-out;
+            transform-style: preserve-3d;
+            box-shadow: rgba(26, 10, 62, 0) 30px 35px 20px -30px, rgba(26, 10, 62, 0.4) 0px 18px 20px -4px;
+            position: relative;
+            text-decoration: none !important;
         }
-        .category-name{padding-left:22px;font-weight:700;color:#2c2543;margin-bottom:4px;font-family:'Poppins',sans-serif}
-        .category-count{color:#5f5c6b;font-size:13px}
+
+        .category-glass {
+            transform-style: preserve-3d;
+            position: absolute;
+            inset: 6px;
+            border-radius: 22px;
+            border-top-right-radius: 100%;
+            background: linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.15) 100%);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transform: translate3d(0px, 0px, 20px);
+            border-left: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.5s ease-in-out;
+        }
+
+        .category-content {
+            padding: 24px 20px 0px 20px;
+            transform: translate3d(0, 0, 90px);
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .category-content .title {
+            display: block;
+            color: #FFD700;
+            font-weight: 800;
+            font-size: 16px;
+            margin-bottom: 3px;
+            font-family: 'Poppins', sans-serif;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+            text-transform: capitalize;
+            line-height: 1.25;
+            max-width: 65%;
+        }
+
+        .category-content .text {
+            display: block;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 5px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+            max-width: 65%;
+        }
+
+        .category-bottom {
+            padding: 8px 15px;
+            transform-style: preserve-3d;
+            position: absolute;
+            bottom: 10px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            transform: translate3d(0, 0, 90px);
+            z-index: 10;
+        }
+
+        .category-bottom .view-more {
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease-in-out;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .category-bottom .view-more span {
+            color: #FFD700;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .category-bottom .view-more svg {
+            fill: none;
+            stroke: #FFD700;
+            stroke-width: 3px;
+            max-height: 12px;
+            margin-left: 4px;
+        }
+
+        .category-logo {
+            position: absolute;
+            right: 0;
+            top: 0;
+            transform-style: preserve-3d;
+            pointer-events: none;
+        }
+
+        .category-logo .circle {
+            display: block;
+            position: absolute;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            top: 0;
+            right: 0;
+            box-shadow: rgba(0, 0, 0, 0.1) -8px 8px 15px 0px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            background: rgba(255, 215, 0, 0.1);
+            transition: all 0.5s ease-in-out;
+        }
+
+        .category-logo .circle1 { width: 95px; transform: translate3d(0, 0, 16px); top: 6px; right: 6px; }
+        .category-logo .circle2 { width: 75px; transform: translate3d(0, 0, 32px); top: 9px; right: 9px; transition-delay: 0.2s; }
+        .category-logo .circle3 { width: 50px; transform: translate3d(0, 0, 48px); top: 12px; right: 12px; transition-delay: 0.4s; }
+        .category-logo .circle4 { width: 30px; transform: translate3d(0, 0, 64px); top: 15px; right: 15px; transition-delay: 0.6s; display: grid; place-content: center; }
+        .category-logo .circle4 svg { width: 14px; fill: rgba(255,255,255,0.9); }
+
+        .category-card:hover .category-inner-card {
+            transform: rotate3d(1, -0.6, 0, 8deg) translateY(-4px);
+            box-shadow: rgba(26, 10, 62, 0.3) 20px 25px 15px -20px, rgba(26, 10, 62, 0.25) 0px 12px 15px -2px;
+        }
+
+        .category-card:hover .category-inner-card .category-logo .circle2 { transform: translate3d(0, 0, 42px); }
+        .category-card:hover .category-inner-card .category-logo .circle3 { transform: translate3d(0, 0, 56px); }
+        .category-card:hover .category-inner-card .category-logo .circle4 { transform: translate3d(0, 0, 72px); }
+
+        /* Hero Fade & Overlap */
+        .hero-container {
+            position: relative;
+            padding-bottom: 10px;
+        }
+        .hero-fade-overlay {
+            display: none;
+        }
+        .categories-overlap {
+            margin-top: 20px;
+            position: relative;
+            z-index: 10;
+        }
 
          .home-products .product-grid{display:grid;grid-template-columns:repeat(5, minmax(0,1fr));gap:20px}
         .home-products .product-card-col{padding:0}
@@ -96,7 +229,188 @@
             .home-products .product-grid{grid-template-columns:repeat(2, minmax(0,1fr))}
         }
         @media (max-width: 576px){
-            .home-products .product-grid{grid-template-columns:1fr}
+            .home-products .product-grid{grid-template-columns:repeat(2, minmax(0,1fr)); gap: 10px;}
+        }
+
+        /* Modernized Hero Offers */
+        .hero-side-offers .product-offer {
+            border-radius: 1.2rem;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(75, 46, 131, 0.15);
+            border: 2px solid rgba(255,255,255,0.8);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .hero-side-offers .product-offer:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(75, 46, 131, 0.25);
+        }
+
+        .hero-side-offers .product-offer .offer-text {
+            background: linear-gradient(0deg, rgba(31,36,65,0.9) 0%, rgba(31,36,65,0.6) 50%, transparent 100%);
+            backdrop-filter: blur(2px);
+            border-radius: 0 0 1.2rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-end;
+            padding: 1.5rem;
+            text-align: left;
+        }
+
+        .hero-side-offers .offer-text h6 {
+            color: #FFD700 !important;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-side-offers .offer-text h3 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 1.6rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            margin-bottom: 1rem;
+        }
+
+        .hero-side-offers .offer-text .btn {
+            border-radius: 2rem;
+            padding: 0.4rem 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border: none;
+            color: #1f2341;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .hero-side-offers .offer-text .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+            color: #1A0A3E;
+        }
+
+        /* Animated sweep for offers */
+        .hero-side-offers .product-offer::after, .aggr-offer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+            transform: rotate(45deg);
+            animation: heroSweep 5s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes heroSweep {
+            0% { transform: rotate(45deg) translateX(-100%); }
+            20%, 100% { transform: rotate(45deg) translateX(100%); }
+        }
+
+        /* Aggressive Mid Section */
+        .aggr-mid-section {
+            position: relative;
+            background: linear-gradient(135deg, #1A0A3E 0%, #2D1B69 50%, #4A2C8A 100%);
+            margin: 60px 0;
+            padding: 60px 0;
+            overflow: hidden;
+            box-shadow: inset 0 0 80px rgba(0,0,0,0.8), 0 20px 40px rgba(26,10,62,0.15);
+            border-top: 2px solid rgba(255,215,0,0.3);
+            border-bottom: 2px solid rgba(255,215,0,0.3);
+        }
+
+        .aggr-mid-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 50%, rgba(255, 78, 0, 0.15) 0%, transparent 50%);
+            animation: pulseBg 4s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes pulseBg {
+            0% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        .aggr-offer {
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+        }
+
+        .aggr-offer:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(255, 215, 0, 0.2);
+            border-color: rgba(255,215,0,0.5);
+            z-index: 10;
+        }
+
+        .aggr-offer .offer-text {
+            background: linear-gradient(0deg, rgba(26,10,62,0.95) 0%, rgba(26,10,62,0.5) 60%, transparent 100%);
+            border-radius: 0 0 12px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-end;
+            padding: 2rem;
+            text-align: left;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0; left: 0;
+        }
+
+        .aggr-offer .offer-text h6 {
+            color: #FFD700 !important;
+            font-weight: 800;
+            letter-spacing: 2px;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .aggr-offer .offer-text h3 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            font-size: 2.2rem;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.8);
+            margin-bottom: 1.2rem;
+            line-height: 1.1;
+        }
+
+        .aggr-offer .offer-text .btn {
+            border-radius: 4px;
+            padding: 0.6rem 2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, #ff4e00, #ec9f05);
+            border: none;
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(255, 78, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .aggr-offer .offer-text .btn:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 78, 0, 0.6);
+            color: #fff;
         }
     </style>
 </head>
@@ -107,7 +421,8 @@
 <div th:replace="fragments/header :: header"></div>
 
 <!-- Main content (kept from original index.html) -->
-<div class="container-fluid hero-container mb-3">
+<div class="container-fluid hero-container">
+    <div class="hero-fade-overlay"></div>
     <div class="row px-xl-5">
         <div class="col-lg-8">
             <div id="header-carousel" class="carousel slide mb-30 mb-lg-0" data-ride="carousel">
@@ -117,78 +432,96 @@
                     <li data-target="#header-carousel" data-slide-to="2"></li>
                 </ol>
                 <div class="carousel-inner">
-                    <div class="carousel-item position-relative active" style="height: 430px;">
+                    <div class="carousel-item position-relative active" style="height: 300px; box-shadow: inset 0 0 80px rgba(0,0,0,0.7);">
                         <img class="position-absolute w-100 h-100" th:src="@{/img/main1.jpg}" style="object-fit: cover;" alt="">
-                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center" style="background: rgba(15, 17, 17, 0.4);">
                             <div class="p-3" style="max-width: 700px;">
-                                <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">
-                                    <span class="animate__animated animate__fadeInDown" style="display: inline-block; padding: .2rem .65rem; border-radius: 799px; background: linear-gradient(90deg, rgba(56,189,248,0.52), rgba(251,146,60,0.52)); box-shadow: 0 8px 18px rgba(0,0,0,.18);">UMT</span>
+                                <h1 class="display-4 text-white mb-2 animate__animated animate__fadeInDown" style="font-size: 2.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px;">
+                                    <span class="animate__animated animate__fadeInDown" style="display: inline-block; padding: .1rem .5rem; border-radius: 4px; background: linear-gradient(90deg, #ff4e00, #ec9f05); box-shadow: 0 4px 15px rgba(255,78,0,.4);">UMT</span>
                                     <span> Marketplace</span>
                                 </h1>
-                                <p class="mx-md-5 px-5 animate__animated animate__bounceIn" style="line-height: 1.7; text-shadow: 0 6px 18px rgba(0,0,0,.45);">
+                                <p class="mx-md-5 px-5 animate__animated animate__bounceIn" style="line-height: 1.4; font-size: 1rem; text-shadow: 0 4px 12px rgba(0,0,0,.8); font-weight: 500;">
                                     A trusted campus marketplace built for UMT academic life—simple listings, clear information, and smoother student-to-student exchange.
                                 </p>
-                                <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" th:href="@{/products}">Explore</a>
+                                <a class="btn py-2 px-4 mt-2 animate__animated animate__fadeInUp" style="background: linear-gradient(to right, #ff4e00, #ec9f05); color: #fff; border: none; font-weight: 700; text-transform: uppercase; border-radius: 2px; box-shadow: 0 4px 15px rgba(255,78,0,.4);" th:href="@{/products}">Explore</a>
                             </div>
                         </div>
                     </div>
-                    <div class="carousel-item position-relative" style="height: 430px;">
+                    <div class="carousel-item position-relative" style="height: 300px; box-shadow: inset 0 0 80px rgba(0,0,0,0.7);">
                         <img class="position-absolute w-100 h-100" th:src="@{/img/side.jpg}" style="object-fit: cover;" alt="">
-                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center" style="background: rgba(15, 17, 17, 0.4);">
                             <div class="p-3" style="max-width: 700px;">
-                                <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">Structured & Verified Listings</h1>
-                                <p class="mx-md-5 px-5 animate__animated animate__bounceIn" style="line-height: 1.7; text-shadow: 0 6px 18px rgba(0,0,0,.45);">
+                                <h1 class="display-4 text-white mb-2 animate__animated animate__fadeInDown" style="font-size: 2.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Structured & Verified Listings</h1>
+                                <p class="mx-md-5 px-5 animate__animated animate__bounceIn" style="line-height: 1.4; font-size: 1rem; text-shadow: 0 4px 12px rgba(0,0,0,.8); font-weight: 500;">
                                     Designed around academic routines—profiles, review flow, and consistent details that make agreements faster and misunderstandings rare.
                                 </p>
-                                <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" th:href="@{/products}">Explore</a>
+                                <a class="btn py-2 px-4 mt-2 animate__animated animate__fadeInUp" style="background: linear-gradient(to right, #ff4e00, #ec9f05); color: #fff; border: none; font-weight: 700; text-transform: uppercase; border-radius: 2px; box-shadow: 0 4px 15px rgba(255,78,0,.4);" th:href="@{/products}">Explore</a>
                             </div>
                         </div>
                     </div>
-                    <div class="carousel-item position-relative" style="height: 430px;">
+                    <div class="carousel-item position-relative" style="height: 300px; box-shadow: inset 0 0 80px rgba(0,0,0,0.7);">
                         <img class="position-absolute w-100 h-100" th:src="@{/img/main3.jpg}" style="object-fit: cover;" alt="">
-                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center" style="background: rgba(15, 17, 17, 0.4);">
                             <div class="p-3" style="max-width: 700px;">
-                                <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">Mentor-Linked Profiles, Admin Review</h1>
-                                <p class="mx-md-5 px-5 animate__animated animate__bounceIn" style="line-height: 1.7; text-shadow: 0 6px 18px rgba(0,0,0,.45);">
+                                <h1 class="display-4 text-white mb-2 animate__animated animate__fadeInDown" style="font-size: 2.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Mentor-Linked Profiles</h1>
+                                <p class="mx-md-5 px-5 animate__animated animate__bounceIn" style="line-height: 1.4; font-size: 1rem; text-shadow: 0 4px 12px rgba(0,0,0,.8); font-weight: 500;">
                                     Built with accountability in mind—mentor-linked registration and admin verification help keep trading professional and campus-safe.
                                 </p>
-                                <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" th:href="@{/products}">Explore</a>
+                                <a class="btn py-2 px-4 mt-2 animate__animated animate__fadeInUp" style="background: linear-gradient(to right, #ff4e00, #ec9f05); color: #fff; border: none; font-weight: 700; text-transform: uppercase; border-radius: 2px; box-shadow: 0 4px 15px rgba(255,78,0,.4);" th:href="@{/products}">Explore</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 hero-side-offers" data-aos="fade-left" data-aos-delay="150">
-            <div class="product-offer mb-30 cmp-img-zoom" style="height: 200px;">
-                <img class="img-fluid" th:src="@{/img/main3.jpg}" alt="">
-                <div class="offer-text">
-                    <h6 class="text-white text-uppercase">Academic trading, made simple</h6>
-                    <h3 class="text-white mb-3">Campus Deals</h3>
-                    <a th:href="@{/products}" class="btn btn-primary">Explore</a>
+        <div class="col-lg-4 hero-side-offers" data-aos="fade-left" data-aos-delay="150" style="display: flex; flex-direction: column; gap: 15px; height: 300px;">
+            <div class="product-offer cmp-img-zoom m-0" style="flex: 1;">
+                <img class="img-fluid w-100 h-100" style="object-fit: cover;" th:src="@{/img/main3.jpg}" alt="">
+                <div class="offer-text w-100 h-100 position-absolute">
+                    <h6 class="text-white text-uppercase" style="letter-spacing: 0.5px;">Academic trading</h6>
+                    <h3 class="text-white mb-2" style="font-size: 1.3rem;">Campus Deals</h3>
+                    <a th:href="@{/products}" class="btn btn-primary" style="padding: 0.3rem 1rem; font-size: 0.75rem;">Explore Now</a>
                 </div>
             </div>
-            <div class="product-offer mb-30 cmp-img-zoom" style="height: 200px;">
-                <img class="img-fluid" th:src="@{/img/side.jpg}" alt="">
-                <div class="offer-text">
-                    <h6 class="text-white text-uppercase">Trusted flow, clearer listings</h6>
-                    <h3 class="text-white mb-3">Verified Marketplace</h3>
-                    <a th:href="@{/products}" class="btn btn-primary">Explore</a>
+            <div class="product-offer cmp-img-zoom m-0" style="flex: 1;">
+                <img class="img-fluid w-100 h-100" style="object-fit: cover;" th:src="@{/img/side.jpg}" alt="">
+                <div class="offer-text w-100 h-100 position-absolute">
+                    <h6 class="text-white text-uppercase" style="letter-spacing: 0.5px;">Trusted flow</h6>
+                    <h3 class="text-white mb-2" style="font-size: 1.3rem;">Verified Items</h3>
+                    <a th:href="@{/products}" class="btn btn-primary" style="padding: 0.3rem 1rem; font-size: 0.75rem;">Shop Securely</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="container-fluid pt-5" data-aos="fade-up">
-    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3"><i class="fas fa-tags section-icon"></i>Categories</span></h2>
+<div class="container-fluid categories-overlap" data-aos="fade-up">
     <div class="category-scroll px-xl-5">
         <div class="category-card" th:each="cat, iterStat : ${topCategories}"
              data-aos="zoom-in" th:attr="data-aos-delay=${iterStat.index * 80}">
-            <a class="text-decoration-none" th:href="@{'/products/category/' + ${cat.categoryId}}">
-                <div class="category-pill">
-                    <div class="category-name" th:text="${cat.categoryName}">Category</div>
-                    <div class="category-count" th:text="${categoryCounts[cat.categoryId]} + ' Products'">0 Products</div>
+            <a th:href="@{'/products/category/' + ${cat.categoryId}}" class="category-inner-card">
+
+                <div class="category-logo">
+                    <span class="circle circle1"></span>
+                    <span class="circle circle2"></span>
+                    <span class="circle circle3"></span>
+                    <span class="circle circle4">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-5.5l6-4.5-6-4.5v9z"/></svg>
+                    </span>
+                </div>
+
+                <div class="category-glass"></div>
+
+                <div class="category-content">
+                    <span class="title" th:text="${cat.categoryName}">Category</span>
+                    <span class="text" th:text="${categoryCounts[cat.categoryId]} + ' Active Products'">0 Products</span>
+                </div>
+
+                <div class="category-bottom">
+                    <div class="view-more">
+                        <span>Shop Now</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+                    </div>
                 </div>
             </a>
         </div>
@@ -210,25 +543,25 @@
 </div>
 <!-- Products End -->
 
-<div class="container-fluid pt-4 pb-5">
-    <div class="row px-xl-5">
+<div class="container-fluid aggr-mid-section">
+    <div class="row px-xl-5" style="position: relative; z-index: 10;">
         <div class="col-md-6" data-aos="fade-right">
-            <div class="product-offer mb-30 cmp-img-zoom" style="height: 260px;">
-                <img class="img-fluid" th:src="@{/img/main1.jpg}" alt="">
+            <div class="aggr-offer cmp-img-zoom mb-30" style="height: 320px;">
+                <img class="img-fluid w-100 h-100" style="object-fit: cover;" th:src="@{/img/main1.jpg}" alt="">
                 <div class="offer-text">
-                    <h6 class="text-white text-uppercase">Popular campus picks</h6>
-                    <h3 class="text-white mb-3">Student Favorites</h3>
-                    <a th:href="@{/products}" class="btn btn-primary">Explore</a>
+                    <h6>Popular campus picks</h6>
+                    <h3>Student Favorites</h3>
+                    <a th:href="@{/products}" class="btn">Explore</a>
                 </div>
             </div>
         </div>
-        <div class="col-md-6" data-aos="fade-left">
-            <div class="product-offer mb-30 cmp-img-zoom" style="height: 260px;">
-                <img class="img-fluid" th:src="@{/img/side.jpg}" alt="">
+        <div class="col-md-6" data-aos="fade-left" data-aos-delay="100">
+            <div class="aggr-offer cmp-img-zoom mb-30" style="height: 320px;">
+                <img class="img-fluid w-100 h-100" style="object-fit: cover;" th:src="@{/img/side.jpg}" alt="">
                 <div class="offer-text">
-                    <h6 class="text-white text-uppercase">Handpicked for UMT</h6>
-                    <h3 class="text-white mb-3">Marketplace Highlights</h3>
-                    <a th:href="@{/products}" class="btn btn-primary">Explore</a>
+                    <h6>Handpicked for UMT</h6>
+                    <h3>Market Highlights</h3>
+                    <a th:href="@{/products}" class="btn">Shop Now</a>
                 </div>
             </div>
         </div>

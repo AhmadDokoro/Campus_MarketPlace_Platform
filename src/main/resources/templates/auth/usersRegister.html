@@ -9,20 +9,20 @@
 
     <style>
         :root {
-            --register-bg: #f7f4ff;
-            --register-bg-alt: #fffdf7;
-            --register-card: rgba(255, 255, 255, 0.94);
-            --register-card-strong: #ffffff;
-            --register-text: #1f1733;
-            --register-muted: #726987;
-            --register-border: rgba(78, 53, 138, 0.12);
-            --register-accent: #5b35b0;
-            --register-accent-soft: rgba(91, 53, 176, 0.1);
-            --register-gold: #f2b705;
-            --register-shadow: 0 24px 72px rgba(41, 30, 79, 0.12);
-            --register-shadow-soft: 0 12px 30px rgba(41, 30, 79, 0.08);
-            --register-danger: #c63a5c;
-            --register-success: #0f8b54;
+            --register-bg: #050505;
+            --register-bg-alt: #000000;
+            --register-card: rgba(15, 15, 15, 0.85);
+            --register-card-strong: #111111;
+            --register-text: #ffffff;
+            --register-muted: #888888;
+            --register-border: rgba(255, 255, 255, 0.1);
+            --register-accent: #F2B705;
+            --register-accent-soft: rgba(242, 183, 5, 0.1);
+            --register-gold: #F2B705;
+            --register-shadow: 0 40px 80px rgba(0, 0, 0, 0.8);
+            --register-shadow-soft: 0 20px 40px rgba(0, 0, 0, 0.6);
+            --register-danger: #ff4a4a;
+            --register-success: #0df07a;
         }
 
         * {
@@ -36,50 +36,44 @@
         body.signup-body {
             position: relative;
             margin: 0;
-            padding: 28px 16px;
+            padding: 40px 20px;
             overflow-x: hidden;
-            font-family: "Segoe UI Variable", Inter, "Segoe UI", sans-serif;
+            font-family: 'Space Grotesk', Inter, "Segoe UI", sans-serif;
             color: var(--register-text);
-            background:
-                radial-gradient(circle at top left, rgba(242, 183, 5, 0.14), transparent 24%),
-                radial-gradient(circle at 88% 12%, rgba(91, 53, 176, 0.12), transparent 22%),
-                linear-gradient(180deg, var(--register-bg) 0%, var(--register-bg-alt) 100%);
-        }
-
-        body.signup-body::before,
-        body.signup-body::after {
-            content: "";
-            position: fixed;
-            border-radius: 999px;
-            pointer-events: none;
-            filter: blur(18px);
-            z-index: 0;
-            animation: floatBlob 12s ease-in-out infinite;
+            background: #050505;
         }
 
         body.signup-body::before {
-            width: 220px;
-            height: 220px;
-            top: 8%;
-            left: -90px;
-            background: rgba(242, 183, 5, 0.12);
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background:
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
         }
 
         body.signup-body::after {
-            width: 260px;
-            height: 260px;
-            right: -110px;
-            bottom: 12%;
-            background: rgba(91, 53, 176, 0.12);
-            animation-delay: -4s;
+            content: "";
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(80px);
+            z-index: 0;
+            width: 40vw; height: 40vh;
+            top: 10%; right: -10%;
+            background: rgba(242, 183, 5, 0.1);
+            animation: floatBlob 15s ease-in-out infinite alternate;
         }
 
         .signup-wrapper {
             position: relative;
             z-index: 1;
-            max-width: 760px;
+            max-width: 800px;
             margin: 0 auto;
-            min-height: calc(100vh - 56px);
+            min-height: calc(100vh - 80px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -87,54 +81,63 @@
 
         .signup-card {
             width: 100%;
-            padding: 30px;
-            border-radius: 28px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.98));
-            border: 1px solid var(--register-border);
+            padding: 40px;
+            border-radius: 0; /* Brutalist shape */
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: var(--register-shadow);
-            backdrop-filter: blur(12px);
-            animation: cardIn 520ms cubic-bezier(.2, .9, .2, 1) both;
+            backdrop-filter: blur(20px);
+            animation: cardIn 0.5s ease both;
+            position: relative;
+        }
+
+        .signup-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, #F2B705, #ff4e00);
         }
 
         .signup-header {
-            margin-bottom: 22px;
+            margin-bottom: 30px;
             animation: fadeUp 520ms ease both;
         }
 
         .signup-eyebrow {
             display: inline-flex;
             align-items: center;
-            padding: 8px 14px;
-            border-radius: 999px;
+            padding: 6px 12px;
             background: var(--register-accent-soft);
             color: var(--register-accent);
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             font-weight: 800;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
         }
 
         .signup-title {
-            margin: 14px 0 8px;
-            font-size: clamp(2rem, 4vw, 2.7rem);
-            line-height: 1.02;
-            letter-spacing: -0.04em;
+            margin: 15px 0 10px;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            line-height: 1;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
             color: var(--register-text);
         }
 
         .signup-header .muted {
             margin: 0;
             color: var(--register-muted);
-            font-size: 0.96rem;
-            line-height: 1.65;
+            font-size: 1rem;
+            line-height: 1.6;
         }
 
         .progress-wrapper {
             display: grid;
             grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
             align-items: center;
-            gap: 10px;
-            margin-bottom: 24px;
+            gap: 15px;
+            margin-bottom: 30px;
             animation: fadeUp 560ms ease both;
             animation-delay: 90ms;
         }
@@ -143,44 +146,43 @@
             position: relative;
             display: flex;
             align-items: center;
-            gap: 12px;
-            min-height: 64px;
-            padding: 12px 14px;
-            border-radius: 18px;
-            border: 1px solid rgba(91, 53, 176, 0.08);
-            background: rgba(91, 53, 176, 0.04);
-            transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+            gap: 15px;
+            min-height: 60px;
+            padding: 12px 15px;
+            border-radius: 0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.3s ease;
         }
 
         .progress-step.active {
-            background: rgba(91, 53, 176, 0.08);
-            border-color: rgba(91, 53, 176, 0.18);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
         }
 
         .progress-step.current {
-            transform: translateY(-1px);
-            background: linear-gradient(135deg, rgba(91, 53, 176, 0.12), rgba(242, 183, 5, 0.1));
-            border-color: rgba(91, 53, 176, 0.22);
-            box-shadow: var(--register-shadow-soft);
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, rgba(242, 183, 5, 0.1), rgba(242, 183, 5, 0.02));
+            border-color: var(--register-accent);
+            box-shadow: 0 10px 20px rgba(242, 183, 5, 0.1);
         }
 
         .progress-index {
-            width: 38px;
-            height: 38px;
-            flex: 0 0 38px;
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
             display: grid;
             place-items: center;
-            border-radius: 12px;
-            background: rgba(91, 53, 176, 0.08);
-            color: var(--register-accent);
-            font-size: 0.88rem;
+            background: #222;
+            color: #888;
+            font-size: 0.9rem;
             font-weight: 900;
         }
 
         .progress-step.active .progress-index,
         .progress-step.current .progress-index {
-            background: linear-gradient(135deg, var(--register-accent), #7d56d8);
-            color: #ffffff;
+            background: var(--register-accent);
+            color: #000;
         }
 
         .progress-copy {
@@ -189,9 +191,9 @@
 
         .progress-kicker {
             display: block;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             font-weight: 800;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             color: var(--register-muted);
         }
@@ -200,46 +202,42 @@
             display: block;
             margin-top: 3px;
             color: var(--register-text);
-            font-size: 0.94rem;
+            font-size: 0.9rem;
             font-weight: 800;
-            white-space: nowrap;
+            text-transform: uppercase;
         }
 
         .progress-arrow {
-            color: rgba(91, 53, 176, 0.34);
-            font-size: 1.15rem;
+            color: #444;
+            font-size: 1.2rem;
             font-weight: 900;
-            transform: translateY(-1px);
-            user-select: none;
         }
 
         .register-form {
             display: grid;
-            gap: 18px;
+            gap: 20px;
         }
 
         .error-banner {
-            padding: 14px 16px;
-            border-radius: 16px;
-            background: rgba(198, 58, 92, 0.1);
-            border: 1px solid rgba(198, 58, 92, 0.18);
-            color: #821d3a;
-            animation: fadeUp 300ms ease both;
+            padding: 15px 20px;
+            background: rgba(255, 74, 74, 0.1);
+            border: 1px solid var(--register-danger);
+            color: var(--register-danger);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
         }
 
         .error-banner p {
             margin: 0;
-            font-size: 0.93rem;
-            font-weight: 700;
+            font-size: 0.9rem;
         }
 
         .form-step {
             display: none;
-            padding: 24px;
-            border-radius: 22px;
-            background: rgba(255, 255, 255, 0.76);
-            border: 1px solid rgba(91, 53, 176, 0.08);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             animation: stepIn 260ms ease both;
         }
 
@@ -248,26 +246,28 @@
         }
 
         .step-head {
-            margin-bottom: 18px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 15px;
         }
 
         .step-title {
             margin: 0;
-            font-size: 1.16rem;
-            font-weight: 800;
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
             color: var(--register-text);
         }
 
         .step-description {
-            margin: 8px 0 0;
+            margin: 10px 0 0;
             color: var(--register-muted);
-            font-size: 0.92rem;
-            line-height: 1.62;
+            font-size: 0.95rem;
         }
 
         .form-grid {
             display: grid;
-            gap: 15px;
+            gap: 20px;
         }
 
         .two-col {
@@ -286,70 +286,73 @@
 
         .form-label {
             margin: 0;
-            color: #564d69;
-            font-size: 0.88rem;
+            color: #aaa;
+            font-size: 0.8rem;
             font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
 
         .form-input,
         .form-select {
-            min-height: 54px;
+            min-height: 55px;
             width: 100%;
-            padding: 14px 16px;
-            border-radius: 16px;
-            border: 1px solid rgba(91, 53, 176, 0.12);
-            background: var(--register-card-strong);
+            padding: 15px 20px;
+            border-radius: 0;
+            border: 1px solid #333;
+            background: #111;
             color: var(--register-text);
-            font-size: 0.95rem;
-            transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s;
         }
 
         .form-input::placeholder {
-            color: rgba(114, 105, 135, 0.72);
+            color: #444;
         }
 
         .form-input:focus,
         .form-select:focus {
             outline: none;
-            transform: translateY(-1px);
-            border-color: rgba(91, 53, 176, 0.28);
-            box-shadow: 0 0 0 4px rgba(91, 53, 176, 0.1);
+            border-color: var(--register-accent);
+            background: #0a0a0a;
+            box-shadow: inset 4px 0 0 var(--register-accent);
         }
 
         .password-rules {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-            margin-top: 4px;
+            gap: 15px;
+            margin-top: 10px;
         }
 
         .rule-chip {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 12px 14px;
-            border-radius: 14px;
-            border: 1px solid rgba(91, 53, 176, 0.08);
-            background: rgba(91, 53, 176, 0.04);
-            color: var(--register-muted);
-            font-size: 0.83rem;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #222;
+            color: #777;
+            font-size: 0.8rem;
             font-weight: 700;
-            transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s;
         }
 
         .rule-chip.valid {
-            background: rgba(15, 139, 84, 0.08);
-            border-color: rgba(15, 139, 84, 0.18);
+            background: rgba(13, 240, 122, 0.1);
+            border-color: var(--register-success);
             color: var(--register-success);
         }
 
         .rule-dot {
-            width: 10px;
-            height: 10px;
-            flex: 0 0 10px;
-            border-radius: 999px;
+            width: 8px;
+            height: 8px;
+            flex: 0 0 8px;
             background: currentColor;
-            opacity: 0.35;
+            opacity: 0.3;
         }
 
         .rule-chip.valid .rule-dot {
@@ -358,9 +361,11 @@
 
         .password-status {
             min-height: 20px;
-            margin: 2px 0 0;
-            font-size: 0.84rem;
+            margin: 15px 0 0;
+            font-size: 0.85rem;
             font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
             color: var(--register-muted);
         }
 
@@ -372,28 +377,14 @@
             color: var(--register-danger);
         }
 
-        .hint-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 2px;
-        }
-
-        .hint-pill {
-            padding: 8px 12px;
-            border-radius: 999px;
-            background: rgba(91, 53, 176, 0.06);
-            color: var(--register-muted);
-            font-size: 0.78rem;
-            font-weight: 800;
-        }
-
         .step-actions {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            margin-top: 22px;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #222;
         }
 
         .step-spacer {
@@ -402,13 +393,16 @@
 
         .btn,
         .btn-secondary {
-            min-height: 50px;
-            padding: 0 20px;
-            border-radius: 15px;
-            font-size: 0.94rem;
-            font-weight: 800;
+            min-height: 55px;
+            padding: 0 30px;
+            font-size: 1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
             cursor: pointer;
-            transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, opacity 180ms ease;
+            border-radius: 0;
+            transition: all 0.3s;
+            clip-path: polygon(4% 0, 100% 0, 96% 100%, 0 100%);
         }
 
         .btn {
@@ -417,140 +411,94 @@
 
         .btn:hover,
         .btn-secondary:hover {
-            transform: translateY(-1px);
+            transform: scale(1.02);
         }
 
         .btn-primary {
-            color: #ffffff;
-            background: linear-gradient(135deg, var(--register-accent) 0%, #7c57d7 100%);
-            box-shadow: 0 16px 28px rgba(91, 53, 176, 0.2);
+            color: #000;
+            background: var(--register-accent);
+        }
+
+        .btn-primary:hover {
+            background: #fff;
+            box-shadow: 0 0 30px rgba(242, 183, 5, 0.4);
         }
 
         .btn-primary:disabled {
-            opacity: 0.45;
+            opacity: 0.3;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+            background: #444;
+            color: #888;
         }
 
         .btn-secondary {
-            border: 1px solid rgba(91, 53, 176, 0.12);
-            background: rgba(91, 53, 176, 0.05);
-            color: var(--register-text);
+            border: 1px solid #444;
+            background: transparent;
+            color: #aaa;
+            clip-path: none;
+        }
+
+        .btn-secondary:hover {
+            background: #222;
+            color: #fff;
+            border-color: #666;
         }
 
         .auth-link {
-            margin: 16px 0 0;
+            margin: 25px 0 0;
             text-align: center;
             color: var(--register-muted);
-            font-size: 0.91rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .auth-link a {
             color: var(--register-accent);
             font-weight: 800;
             text-decoration: none;
+            padding-bottom: 2px;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s;
         }
 
         .auth-link a:hover {
-            text-decoration: underline;
+            border-color: var(--register-accent);
         }
 
         @keyframes cardIn {
-            from {
-                opacity: 0;
-                transform: translateY(18px) scale(0.985);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes stepIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes floatBlob {
-            0%, 100% {
-                transform: translateY(0) translateX(0);
-            }
-            50% {
-                transform: translateY(-14px) translateX(8px);
-            }
+            0% { transform: translateY(0) translateX(0); }
+            100% { transform: translateY(-30px) translateX(30px); }
         }
 
-        @media (max-width: 720px) {
-            body.signup-body {
-                padding: 18px 12px;
-            }
-
-            .signup-card {
-                padding: 22px;
-                border-radius: 24px;
-            }
-
-            .form-step {
-                padding: 18px;
-            }
-
-            .progress-wrapper {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-
-            .progress-arrow {
-                justify-self: center;
-                transform: rotate(90deg);
-            }
-
-            .two-col,
-            .password-rules {
-                grid-template-columns: 1fr;
-            }
-
-            .step-actions {
-                flex-direction: column-reverse;
-                align-items: stretch;
-            }
-
-            .btn,
-            .btn-secondary {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 420px) {
-            .signup-title {
-                font-size: 1.8rem;
-            }
-
-            .progress-step {
-                min-height: 58px;
-                padding: 11px 12px;
-            }
-
-            .progress-name {
-                white-space: normal;
-            }
+        @media (max-width: 768px) {
+            body.signup-body { padding: 20px 15px; }
+            .signup-card { padding: 25px; }
+            .signup-title { font-size: 2rem; }
+            .form-step { padding: 20px; }
+            .progress-wrapper { grid-template-columns: 1fr; gap: 10px; }
+            .progress-arrow { justify-self: center; transform: rotate(90deg); }
+            .two-col, .password-rules { grid-template-columns: 1fr; }
+            .step-actions { flex-direction: column-reverse; align-items: stretch; gap: 15px; }
+            .btn, .btn-secondary { width: 100%; clip-path: none; }
         }
     </style>
 </head>

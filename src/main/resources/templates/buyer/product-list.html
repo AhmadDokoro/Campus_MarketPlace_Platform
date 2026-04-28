@@ -3,51 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products</title>
+    <title>Explore Products</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
     <link th:href="@{/css/mobile.css}" rel="stylesheet">
     <link th:href="@{/css/cmp-enhance.css}" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <style>
-        body{background:linear-gradient(180deg, #f9fafb 0%, #ffffff 45%, #f6f3ff 100%);font-family:'Poppins',sans-serif}
-        .explore-title{display:flex;align-items:center;gap:10px}
-        .explore-title i{color:#ffb347}
-        .product-grid{display:grid;grid-template-columns:repeat(4, minmax(0,1fr));gap:20px}
+        body {
+            background: linear-gradient(135deg, #1A0A3E 0%, #2D1B69 50%, #4A2C8A 100%);
+            font-family: 'Inter', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* Aggressive Header Banner */
+        .explore-banner {
+            position: relative;
+            background: url('https://picsum.photos/1920/400?grayscale&blur=2') center/cover no-repeat;
+            padding: 80px 0;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 3px solid rgba(255, 215, 0, 0.4);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .explore-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, #1A0A3E 0%, rgba(26,10,62,0.7) 100%);
+        }
+
+        .explore-banner::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, transparent 60%);
+            animation: rotateGlow 15s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .banner-content {
+            position: relative;
+            z-index: 5;
+        }
+
+        .banner-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            margin-bottom: 10px;
+        }
+
+        .banner-title span {
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none;
+        }
+
+        .banner-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.8);
+            font-weight: 500;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Category Filter Pills */
+        .category-filters {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 10px 0 25px;
+            scrollbar-width: thin;
+        }
+
+        .category-filters::-webkit-scrollbar { height: 6px; }
+        .category-filters::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.4); border-radius: 4px; }
+
+        .filter-pill {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            text-decoration: none !important;
+            backdrop-filter: blur(5px);
+        }
+
+        .filter-pill:hover, .filter-pill.active {
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            color: #1A0A3E;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0,1fr));
+            gap: 25px;
+        }
+        @media (max-width: 1400px){.product-grid{grid-template-columns:repeat(4, minmax(0,1fr))}}
         @media (max-width: 1200px){.product-grid{grid-template-columns:repeat(3, minmax(0,1fr))}}
-        @media (max-width: 992px){.product-grid{grid-template-columns:repeat(2, minmax(0,1fr))}}
-        @media (max-width: 576px){.product-grid{grid-template-columns:1fr}}
+        @media (max-width: 992px) {.product-grid{grid-template-columns:repeat(2, minmax(0,1fr))}}
+        @media (max-width: 576px) {.product-grid{grid-template-columns:repeat(2, minmax(0,1fr)); gap: 10px;}}
+
+        /* Pagination */
+        .pagination .page-link {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #FFD700;
+            font-weight: 700;
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+        .pagination .page-item.active .page-link {
+            background: #FFD700;
+            border-color: #FFD700;
+            color: #1A0A3E;
+            box-shadow: 0 4px 15px rgba(255,215,0,0.4);
+        }
+        .pagination .page-link:hover {
+            background: rgba(255,215,0,0.2);
+            color: #FFD700;
+        }
+        .pagination .page-item.disabled .page-link {
+            background: transparent;
+            color: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.1);
+        }
     </style>
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
 
-<div class="container-fluid pt-4 pb-5">
-    <div class="row px-xl-5">
-        <div class="col-12 d-flex align-items-center justify-content-between mb-3" data-aos="fade-down">
-            <h2 class="section-title text-uppercase mb-0 explore-title"><i class="fas fa-store"></i><span class="bg-secondary pr-3">Explore Products</span></h2>
+<div class="explore-banner" data-aos="fade-down">
+    <div class="container banner-content">
+        <h1 class="banner-title">Explore <span>Our Campus</span></h1>
+        <p class="banner-subtitle">Discover thousands of verified products from UMT students. Filter by category, find what you need, and connect safely.</p>
+    </div>
+</div>
+
+<div class="container-fluid pb-5 px-xl-5">
+    <div class="row">
+        <div class="col-12 mb-4" data-aos="fade-up">
+            <div class="category-filters">
+                <a th:href="@{/products}" class="filter-pill" th:classappend="${selectedCategoryId == null and searchText == null ? 'active' : ''}">All Items</a>
+                <th:block th:if="${categories != null}">
+                    <a th:each="cat : ${categories}" th:href="@{'/products/category/' + ${cat.categoryId}}"
+                       class="filter-pill" th:classappend="${selectedCategoryId == cat.categoryId ? 'active' : ''}"
+                       th:text="${cat.categoryName}">Category</a>
+                </th:block>
+            </div>
+
+            <div th:if="${searchText != null}" class="mb-3 text-warning font-weight-bold" style="font-size: 1.2rem; letter-spacing: 1px;">
+                <i class="fas fa-search mr-2"></i> SEARCH RESULTS FOR: "<span th:text="${searchText}"></span>"
+            </div>
         </div>
 
         <div class="col-12">
-            <div class="product-grid">
-                <div th:each="p, stat : ${page.content}"
-                     data-aos="fade-up" th:attr="data-aos-delay=${(stat.index % 4) * 90}">
+            <div class="product-grid" th:if="${page != null and !page.content.isEmpty()}">
+                <div th:each="p, stat : ${page.content}" data-aos="zoom-in" th:attr="data-aos-delay=${(stat.index % 5) * 50}">
                     <div th:replace="fragments/product-card :: card(${p})"></div>
                 </div>
             </div>
 
-            <nav class="d-flex justify-content-center mt-4" th:if="${page.totalPages > 1}">
+            <div th:if="${page == null or page.content.isEmpty()}" class="text-center py-5" data-aos="fade-up">
+                <i class="fas fa-box-open mb-3" style="font-size: 4rem; color: rgba(255,255,255,0.2);"></i>
+                <h3 class="text-white font-weight-bold">No Products Found</h3>
+                <p style="color: rgba(255,255,255,0.6);">Try adjusting your search or selecting a different category.</p>
+                <a th:href="@{/products}" class="btn mt-3" style="background: linear-gradient(90deg, #FFD700, #FFA500); color: #1A0A3E; font-weight: 700; border-radius: 50px; padding: 10px 30px;">Reset Filters</a>
+            </div>
+
+            <nav class="d-flex justify-content-center mt-5" th:if="${page != null and page.totalPages > 1}" data-aos="fade-up">
                 <ul class="pagination">
                     <li class="page-item" th:classappend="${page.first} ? 'disabled'">
-                        <a class="page-link" th:href="@{/products(page=${page.number - 1}, size=${page.size})}">Prev</a>
+                        <a class="page-link" th:href="@{${selectedCategoryId != null ? '/products/category/' + selectedCategoryId : '/products'}(page=${page.number - 1}, size=${page.size}, searchText=${searchText})}">Prev</a>
                     </li>
                     <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}" th:classappend="${i == page.number} ? 'active'">
-                        <a class="page-link" th:href="@{/products(page=${i}, size=${page.size})}" th:text="${i + 1}">1</a>
+                        <a class="page-link" th:href="@{${selectedCategoryId != null ? '/products/category/' + selectedCategoryId : '/products'}(page=${i}, size=${page.size}, searchText=${searchText})}" th:text="${i + 1}">1</a>
                     </li>
                     <li class="page-item" th:classappend="${page.last} ? 'disabled'">
-                        <a class="page-link" th:href="@{/products(page=${page.number + 1}, size=${page.size})}">Next</a>
+                        <a class="page-link" th:href="@{${selectedCategoryId != null ? '/products/category/' + selectedCategoryId : '/products'}(page=${page.number + 1}, size=${page.size}, searchText=${searchText})}">Next</a>
                     </li>
                 </ul>
             </nav>
