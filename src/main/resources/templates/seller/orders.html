@@ -6,163 +6,396 @@
   <title>Seller Orders</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link th:href="@{/css/style.css}" rel="stylesheet" />
   <link th:href="@{/css/mobile.css}" rel="stylesheet" />
+  <link th:href="@{/css/cmp-enhance.css}" rel="stylesheet" />
+  <link th:href="@{/css/cmp-stunning.css}" rel="stylesheet" />
+  <link th:href="@{/css/seller-shell.css}" rel="stylesheet" />
   <style>
-    body{font-family:Inter,system-ui,Arial;background:#f5f6fb}
-    .page{padding:24px}
-    .card-elevated{background:#fff;border-radius:18px;box-shadow:0 12px 24px rgba(15,23,42,0.08);border:1px solid rgba(15,23,42,0.06)}
-    .badge-soft{background:rgba(75,46,131,0.10);color:#4B2E83;border:1px solid rgba(75,46,131,0.20)}
+    /* Page-specific: tabs + order cards */
     .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-    .tab-pill{border:none;background:#eef1f7;color:#334155;padding:10px 16px;border-radius:999px;font-size:13px;font-weight:800;cursor:pointer;transition:all .2s}
-    .tab-pill.active{background:#4B2E83;color:#fff;box-shadow:0 10px 18px rgba(75,46,131,0.18)}
-    .orders-stack{display:flex;flex-direction:column;gap:14px}
-    .order-card{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:18px;border:1px solid rgba(15,23,42,0.07);border-radius:18px;background:linear-gradient(180deg,#fff 0%,#fbfbff 100%)}
-    .order-main{min-width:0}
-    .order-meta{font-size:12px;color:#64748b;margin-bottom:8px}
-    .order-title{font-size:18px;font-weight:800;color:#111827;margin-bottom:6px}
-    .order-sub{font-size:13px;color:#6b7280}
-    .order-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}
-    .status-badge{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;font-size:12px;font-weight:800}
-    .status-paid{background:rgba(75,46,131,0.10);color:#4B2E83}
-    .status-campus{background:rgba(59,130,246,0.10);color:#2563eb}
-    .status-delivered{background:rgba(40,167,69,0.12);color:#28a745}
-    .empty-state{display:none;border:2px dashed rgba(15,23,42,0.12);border-radius:16px;padding:28px;text-align:center;color:#64748b}
-    .empty-state.active{display:block}
-    .btn-back-dashboard{
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      padding:12px 16px;border-radius:999px;text-decoration:none;font-weight:800;
-      color:#fff;background:linear-gradient(135deg,#4B2E83,#f28c1f);
-      border:none;box-shadow:0 10px 20px rgba(75,46,131,0.18)
+    .tab-pill{
+      border:1px solid rgba(107,78,175,.22);
+      background:rgba(255,255,255,.65);
+      color:#4A2C8A;
+      padding:10px 18px;
+      border-radius:999px;
+      font-family:'Poppins',sans-serif;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition: all .25s cubic-bezier(.22,1,.36,1);
     }
-    .btn-back-dashboard:hover{color:#fff;text-decoration:none}
+    .tab-pill:hover{
+      background:rgba(107,78,175,.08);
+      border-color:rgba(107,78,175,.4);
+      transform:translateY(-1px);
+    }
+    .tab-pill.active{
+      background: linear-gradient(135deg, #2D1B69, #4A2C8A);
+      color: #FFD700;
+      border-color: transparent;
+      box-shadow:0 10px 22px rgba(45,27,105,.28);
+    }
+
+    .orders-stack{display:flex;flex-direction:column;gap:14px}
+    .order-card{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:18px;
+      padding:20px 22px;
+      border:1px solid rgba(232,224,245,.85);
+      border-radius:18px;
+      background: rgba(255,255,255,.78);
+      -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+      box-shadow: 0 8px 22px rgba(45,27,105,.06);
+      transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease, border-color .25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .order-card::before{
+      content:""; position:absolute;
+      left:0; top:0; bottom:0;
+      width:3px;
+      background: linear-gradient(180deg, #6B4EAF, #FFD700);
+      opacity:0; transition: opacity .3s ease;
+    }
+    .order-card:hover{
+      transform: translateY(-3px);
+      border-color: rgba(107,78,175,.35);
+      box-shadow: 0 18px 38px rgba(45,27,105,.14);
+    }
+    .order-card:hover::before{ opacity: 1; }
+
+    .order-main{ min-width:0; flex:1; }
+    .order-meta{
+      font-family:'Poppins',sans-serif;
+      font-size:11px;
+      color:#8a6d00;
+      background: rgba(255,215,0,.14);
+      border:1px solid rgba(255,215,0,.35);
+      padding:4px 10px;
+      border-radius:999px;
+      display:inline-block;
+      margin-bottom:10px;
+      font-weight:700;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+    .order-title{
+      font-family:'Poppins',sans-serif;
+      font-size:18px;
+      font-weight:800;
+      color:#2D1B69;
+      margin-bottom:6px;
+      letter-spacing:-.01em;
+    }
+    .order-sub{ font-size:13px; color:#6B6280; margin-bottom:2px; }
+
+    .order-actions{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .status-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 13px;
+      border-radius:999px;
+      font-family:'Poppins',sans-serif;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      border:1px solid transparent;
+    }
+    .status-paid{
+      background: linear-gradient(135deg, rgba(255,215,0,.18), rgba(255,193,7,.12));
+      color:#8a6d00;
+      border-color: rgba(255,215,0,.45);
+    }
+    .status-campus{
+      background: rgba(107,78,175,.12);
+      color:#4A2C8A;
+      border-color: rgba(107,78,175,.3);
+    }
+    .status-delivered{
+      background: rgba(34,197,94,.12);
+      color:#166534;
+      border-color: rgba(34,197,94,.32);
+    }
+
+    .btn-action{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 14px;
+      border-radius:10px;
+      font-family:'Poppins',sans-serif;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.02em;
+      text-decoration:none;
+      border:1px solid transparent;
+      cursor:pointer;
+      transition: all .25s ease;
+    }
+    .btn-action:hover{ text-decoration:none; transform: translateY(-1px); }
+    .btn-action.outline{
+      background: rgba(45,27,105,.05);
+      color: #4A2C8A;
+      border-color: rgba(107,78,175,.25);
+    }
+    .btn-action.outline:hover{
+      background: linear-gradient(135deg, #2D1B69, #4A2C8A);
+      color: #FFD700;
+      border-color: transparent;
+    }
+    .btn-action.primary{
+      background: linear-gradient(135deg, #FFD700, #FFC107);
+      color: #1A0A3E;
+      box-shadow: 0 6px 14px rgba(255,193,7,.35);
+    }
+    .btn-action.primary:hover{ box-shadow: 0 10px 22px rgba(255,193,7,.5); color: #1A0A3E; }
+    .btn-action.success{
+      background: linear-gradient(135deg, #16a34a, #22C55E);
+      color:#fff;
+      box-shadow: 0 6px 14px rgba(34,197,94,.35);
+    }
+    .btn-action.success:hover{ box-shadow: 0 10px 22px rgba(34,197,94,.5); color:#fff; }
+    .btn-action.muted{
+      background: rgba(107,78,175,.08);
+      color: #6B6280;
+      cursor: not-allowed;
+    }
+
+    .filter-empty{
+      display:none;
+      padding:30px 22px;
+      border-radius:18px;
+      border:2px dashed rgba(107,78,175,.3);
+      background: rgba(255,255,255,.5);
+      text-align:center;
+      color:#6B6280;
+      font-size:14px;
+    }
+    .filter-empty.active{display:block}
+
     @media (max-width:768px){
       .order-card{flex-direction:column}
-      .order-actions{justify-content:flex-start}
+      .order-actions{justify-content:flex-start; width:100%}
     }
   </style>
 </head>
-<body>
-<main class="page container-fluid">
-  <div class="d-flex align-items-start align-items-md-center justify-content-between flex-wrap gap-3 mb-3">
-    <div>
-      <h3 class="fw-bold mb-1">Seller Orders</h3>
-      <p class="text-muted mb-0">Track your paid product items and update each delivery step independently.</p>
-    </div>
-    <a class="btn-back-dashboard" th:href="@{/seller/dashboard}">
-      <i class="bi bi-arrow-left"></i> Back to Dashboard
-    </a>
-  </div>
+<body class="cmp-aurora">
 
-  <div class="mb-3" th:if="${success != null}">
-    <div class="alert alert-success" th:text="${success}">Success</div>
-  </div>
-  <div class="mb-3" th:if="${error != null}">
-    <div class="alert alert-danger" th:text="${error}">Error</div>
-  </div>
+<div th:replace="fragments/header :: header"></div>
 
-  <div class="card-elevated p-3 p-md-4">
-    <div class="d-flex align-items-start align-items-md-center justify-content-between flex-wrap gap-2 mb-3">
-      <div>
-        <h5 class="fw-bold mb-1">Order Tracking</h5>
-        <div class="text-muted small">Switch tabs to filter the existing product items already loaded for this seller.</div>
-      </div>
-    </div>
+<div class="seller-sidebar-backdrop" id="sellerBackdrop" onclick="toggleSellerSidebar()"></div>
 
-    <div class="tabs" aria-label="Seller order tracking tabs">
-      <button type="button" class="tab-pill" data-seller-tab="PENDING">PAID</button>
-      <button type="button" class="tab-pill" data-seller-tab="IN_CAMPUS">IN_CAMPUS</button>
-      <button type="button" class="tab-pill" data-seller-tab="DELIVERED">DELIVERED</button>
-    </div>
-
-    <div class="orders-stack" id="sellerOrderStack" th:if="${sellerOrderItems != null and !#lists.isEmpty(sellerOrderItems)}">
-      <div class="order-card"
-           th:each="item : ${sellerOrderItems}"
-           th:attr="data-seller-stage=${item.deliveryStatus.name()}">
-        <div class="order-main">
-          <div class="order-meta"
-               th:text="'Order #' + ${item.orderId} + ' • Order Item #' + ${item.orderItemId}">
-            Order metadata
-          </div>
-          <div class="order-title" th:text="${item.productTitle}">Product</div>
-          <div class="order-sub" th:text="'Buyer: ' + ${item.buyerName}">Buyer</div>
-          <div class="order-sub" th:text="'Quantity: ' + ${item.quantity} + ' • Unit Price: RM ' + ${#numbers.formatDecimal(item.unitPrice, 1, 2)}">
-            Quantity and price
+<div class="seller-page container-fluid">
+  <div class="workspace">
+    <aside class="seller-rail" id="sellerSidebar">
+      <div class="rail-brand">
+        <div class="d-flex align-items-center" style="gap:12px;">
+          <span class="rail-brand-mark"><i class="bi bi-shop-window"></i></span>
+          <div class="rail-brand-copy">
+            <strong>Seller Workspace</strong>
+            <span>Campus Market</span>
           </div>
         </div>
+        <button class="btn btn-sm btn-outline-light d-lg-none" type="button" onclick="toggleSellerSidebar()" aria-label="Close sidebar">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
 
-        <div class="order-actions">
-          <span class="status-badge status-paid" th:if="${item.deliveryStatus.name() == 'PENDING'}">
-            <i class="bi bi-bag-check"></i> PAID
-          </span>
-          <span class="status-badge status-campus" th:if="${item.deliveryStatus.name() == 'IN_CAMPUS'}">
-            <i class="bi bi-building"></i> IN_CAMPUS
-          </span>
-          <span class="status-badge status-delivered" th:if="${item.deliveryStatus.name() == 'DELIVERED'}">
-            <i class="bi bi-check2-all"></i> DELIVERED
-          </span>
+      <nav class="rail-menu">
+        <a class="rail-link" th:href="@{/seller/dashboard}"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+        <a class="rail-link active" th:href="@{/seller/orders}"><i class="bi bi-receipt-cutoff"></i> Orders</a>
+        <a class="rail-link" th:href="@{/seller/sales-history}"><i class="bi bi-clock-history"></i> Sales History</a>
+      </nav>
+    </aside>
 
-          <a class="btn btn-sm btn-outline-dark"
-             th:href="@{/chat/order-item/{orderItemId}/page(orderItemId=${item.orderItemId})}">
-            <i class="bi bi-chat-left-text"></i> Chat
-          </a>
-
-          <a class="btn btn-sm btn-outline-info"
-             th:href="@{/seller/address/{orderItemId}(orderItemId=${item.orderItemId})}">
-            <i class="bi bi-geo-alt"></i> View Buyer Address
-          </a>
-
-          <form th:if="${item.deliveryStatus.name() == 'PENDING'}"
-                th:action="@{/seller/orders/update-status}"
-                method="post"
-                class="d-inline">
-            <input type="hidden" name="orderItemId" th:value="${item.orderItemId}" />
-            <input type="hidden" name="newStatus" value="IN_CAMPUS" />
-            <button type="submit" class="btn btn-sm btn-outline-primary">
-              Move to In Campus
-            </button>
-          </form>
-
-          <form th:if="${item.deliveryStatus.name() == 'IN_CAMPUS'}"
-                th:action="@{/seller/orders/update-status}"
-                method="post"
-                class="d-inline">
-            <input type="hidden" name="orderItemId" th:value="${item.orderItemId}" />
-            <input type="hidden" name="newStatus" value="DELIVERED" />
-            <button type="submit" class="btn btn-sm btn-success">
-              Move to Delivered
-            </button>
-          </form>
-
-          <button th:if="${item.deliveryStatus.name() == 'DELIVERED'}"
-                  type="button"
-                  class="btn btn-sm btn-secondary"
-                  disabled>
-            Delivered
+    <main class="seller-main">
+      <div class="main-head">
+        <div>
+          <h1>Seller Orders</h1>
+          <p>Track your paid product items and update each delivery step independently.</p>
+        </div>
+        <div class="head-tools">
+          <button class="btn-head btn-head-secondary d-lg-none" type="button" onclick="toggleSellerSidebar()">
+            <i class="bi bi-list"></i> Menu
           </button>
+          <span class="head-pill d-none d-md-inline-flex"><i class="bi bi-truck"></i> Delivery Tracking</span>
+          <a class="btn-head btn-head-primary" th:href="@{/seller/dashboard}">
+            <i class="bi bi-arrow-left"></i> Dashboard
+          </a>
         </div>
       </div>
-    </div>
 
-    <div class="empty-state" id="sellerOrdersEmpty">
-      No products match this status tab right now.
-    </div>
+      <div class="signal-strip"
+           th:with="paidCount=${sellerOrderItems != null ? #lists.size(sellerOrderItems.?[deliveryStatus.name() == 'PENDING']) : 0},
+                    campusCount=${sellerOrderItems != null ? #lists.size(sellerOrderItems.?[deliveryStatus.name() == 'IN_CAMPUS']) : 0},
+                    deliveredCount=${sellerOrderItems != null ? #lists.size(sellerOrderItems.?[deliveryStatus.name() == 'DELIVERED']) : 0},
+                    totalCount=${sellerOrderItems != null ? #lists.size(sellerOrderItems) : 0}">
+        <div class="signal">
+          <div class="signal-label">
+            <span class="signal-icon"><i class="bi bi-bag-check"></i></span>
+            Paid
+          </div>
+          <div class="signal-value" th:text="${paidCount}">0</div>
+          <div class="signal-sub">Awaiting your handover</div>
+        </div>
+        <div class="signal">
+          <div class="signal-label">
+            <span class="signal-icon"><i class="bi bi-building"></i></span>
+            In Campus
+          </div>
+          <div class="signal-value" th:text="${campusCount}">0</div>
+          <div class="signal-sub">Out for delivery on campus</div>
+        </div>
+        <div class="signal">
+          <div class="signal-label">
+            <span class="signal-icon"><i class="bi bi-check2-all"></i></span>
+            Delivered
+          </div>
+          <div class="signal-value" th:text="${deliveredCount}">0</div>
+          <div class="signal-sub">Handed off to the buyer</div>
+        </div>
+        <div class="signal">
+          <div class="signal-label">
+            <span class="signal-icon"><i class="bi bi-stack"></i></span>
+            Total Items
+          </div>
+          <div class="signal-value" th:text="${totalCount}">0</div>
+          <div class="signal-sub">All paid order items</div>
+        </div>
+      </div>
 
-    <div class="empty-state active" th:if="${sellerOrderItems == null or #lists.isEmpty(sellerOrderItems)}">
-      No paid seller order items yet. Your order-item cards will appear here once buyers complete payment.
-    </div>
+      <div class="flash-wrap">
+        <div class="alert alert-success" th:if="${success != null}" th:text="${success}">Success</div>
+        <div class="alert alert-danger" th:if="${error != null}" th:text="${error}">Error</div>
+      </div>
+
+      <section class="orders-zone">
+        <div class="zone-head">
+          <div>
+            <h2>Order Tracking</h2>
+            <p>Switch tabs to filter the existing product items already loaded for this seller.</p>
+          </div>
+        </div>
+
+        <div class="tabs" aria-label="Seller order tracking tabs">
+          <button type="button" class="tab-pill" data-seller-tab="PENDING">Paid</button>
+          <button type="button" class="tab-pill" data-seller-tab="IN_CAMPUS">In Campus</button>
+          <button type="button" class="tab-pill" data-seller-tab="DELIVERED">Delivered</button>
+        </div>
+
+        <div class="orders-stack" id="sellerOrderStack" th:if="${sellerOrderItems != null and !#lists.isEmpty(sellerOrderItems)}">
+          <div class="order-card"
+               th:each="item : ${sellerOrderItems}"
+               th:attr="data-seller-stage=${item.deliveryStatus.name()}">
+            <div class="order-main">
+              <div class="order-meta"
+                   th:text="'Order #' + ${item.orderId} + ' • Item #' + ${item.orderItemId}">
+                Order metadata
+              </div>
+              <div class="order-title" th:text="${item.productTitle}">Product</div>
+              <div class="order-sub" th:text="'Buyer: ' + ${item.buyerName}">Buyer</div>
+              <div class="order-sub" th:text="'Quantity: ' + ${item.quantity} + ' • Unit Price: RM ' + ${#numbers.formatDecimal(item.unitPrice, 1, 2)}">
+                Quantity and price
+              </div>
+            </div>
+
+            <div class="order-actions">
+              <span class="status-badge status-paid" th:if="${item.deliveryStatus.name() == 'PENDING'}">
+                <i class="bi bi-bag-check"></i> Paid
+              </span>
+              <span class="status-badge status-campus" th:if="${item.deliveryStatus.name() == 'IN_CAMPUS'}">
+                <i class="bi bi-building"></i> In Campus
+              </span>
+              <span class="status-badge status-delivered" th:if="${item.deliveryStatus.name() == 'DELIVERED'}">
+                <i class="bi bi-check2-all"></i> Delivered
+              </span>
+
+              <a class="btn-action outline"
+                 th:href="@{/chat/order-item/{orderItemId}/page(orderItemId=${item.orderItemId})}">
+                <i class="bi bi-chat-left-text"></i> Chat
+              </a>
+
+              <a class="btn-action outline"
+                 th:href="@{/seller/address/{orderItemId}(orderItemId=${item.orderItemId})}">
+                <i class="bi bi-geo-alt"></i> Address
+              </a>
+
+              <form th:if="${item.deliveryStatus.name() == 'PENDING'}"
+                    th:action="@{/seller/orders/update-status}"
+                    method="post"
+                    class="d-inline">
+                <input type="hidden" name="orderItemId" th:value="${item.orderItemId}" />
+                <input type="hidden" name="newStatus" value="IN_CAMPUS" />
+                <button type="submit" class="btn-action primary">
+                  <i class="bi bi-arrow-right"></i> Move to In Campus
+                </button>
+              </form>
+
+              <form th:if="${item.deliveryStatus.name() == 'IN_CAMPUS'}"
+                    th:action="@{/seller/orders/update-status}"
+                    method="post"
+                    class="d-inline">
+                <input type="hidden" name="orderItemId" th:value="${item.orderItemId}" />
+                <input type="hidden" name="newStatus" value="DELIVERED" />
+                <button type="submit" class="btn-action success">
+                  <i class="bi bi-check2-all"></i> Mark Delivered
+                </button>
+              </form>
+
+              <button th:if="${item.deliveryStatus.name() == 'DELIVERED'}"
+                      type="button"
+                      class="btn-action muted"
+                      disabled>
+                <i class="bi bi-lock"></i> Delivered
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-empty" id="sellerOrdersEmpty">
+          No products match this status tab right now.
+        </div>
+
+        <div class="empty-state" th:if="${sellerOrderItems == null or #lists.isEmpty(sellerOrderItems)}">
+          <div class="icon"><i class="bi bi-receipt-cutoff"></i></div>
+          <h6>No paid orders yet</h6>
+          <p>Your order-item cards will appear here once buyers complete payment.</p>
+        </div>
+      </section>
+    </main>
   </div>
-</main>
+</div>
 
+<div th:replace="fragments/footer :: footer"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
 <script>
   (function () {
     var tabs = Array.from(document.querySelectorAll('[data-seller-tab]'));
     var cards = Array.from(document.querySelectorAll('[data-seller-stage]'));
     var emptyState = document.getElementById('sellerOrdersEmpty');
-    if (!tabs.length || !cards.length || !emptyState) return;
+    if (!tabs.length || !emptyState) return;
 
     function applyTab(tabValue) {
       var visibleCount = 0;
@@ -174,29 +407,67 @@
         card.style.display = matches ? '' : 'none';
         if (matches) visibleCount += 1;
       });
-      emptyState.classList.toggle('active', visibleCount === 0);
-      try {
-        localStorage.setItem('sellerOrdersTab', tabValue);
-      } catch (e) {
-        // ignore storage issues
-      }
+      emptyState.classList.toggle('active', visibleCount === 0 && cards.length > 0);
+      try { localStorage.setItem('sellerOrdersTab', tabValue); } catch (e) {}
     }
 
     var initialTab = 'PENDING';
-    try {
-      initialTab = localStorage.getItem('sellerOrdersTab') || 'PENDING';
-    } catch (e) {
-      initialTab = 'PENDING';
-    }
+    try { initialTab = localStorage.getItem('sellerOrdersTab') || 'PENDING'; } catch (e) {}
 
     tabs.forEach(function (tab) {
       tab.addEventListener('click', function () {
         applyTab(tab.getAttribute('data-seller-tab'));
       });
     });
-
     applyTab(initialTab);
   })();
+
+  // Animated count-up for signal values
+  (function(){
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('.signal-value').forEach(function(el, idx){
+      var target = parseInt(el.textContent.replace(/\D/g,''), 10);
+      if (isNaN(target) || target <= 0) return;
+      if (reduceMotion) return;
+      var duration = 1100;
+      var startDelay = 350 + idx * 80;
+      el.textContent = '0';
+      setTimeout(function(){
+        var start = performance.now();
+        function tick(now){
+          var p = Math.min(1, (now - start) / duration);
+          var eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(target * eased).toLocaleString();
+          if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }, startDelay);
+    });
+  })();
+
+  var _sbJustToggled = false;
+  function toggleSellerSidebar() {
+    _sbJustToggled = true;
+    var sb = document.getElementById('sellerSidebar');
+    var bd = document.getElementById('sellerBackdrop');
+    if (!sb) return;
+    var isOpen = sb.classList.toggle('show');
+    if (bd) { bd.classList.toggle('show', isOpen); }
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  document.addEventListener('click', function(e) {
+    if (_sbJustToggled) { _sbJustToggled = false; return; }
+    var sb = document.getElementById('sellerSidebar');
+    var bd = document.getElementById('sellerBackdrop');
+    if (!sb || !sb.classList.contains('show')) return;
+    if (!sb.contains(e.target) && e.target.id !== 'sellerBackdrop') {
+      sb.classList.remove('show');
+      if (bd) bd.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+  });
 </script>
+<script th:src="@{/js/cmp-enhance.js}" defer></script>
+<script th:src="@{/js/cmp-stunning.js}" defer></script>
 </body>
 </html>

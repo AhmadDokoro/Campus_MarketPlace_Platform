@@ -42,6 +42,8 @@
     <link th:href="@{/css/mobile.css}" rel="stylesheet">
     <!-- Enhancement layer: tokens, animations, contrast, responsive helpers -->
     <link th:href="@{/css/cmp-enhance.css}" rel="stylesheet">
+    <!-- Stunning brand layer: aurora, glass, sheen, gradients -->
+    <link th:href="@{/css/cmp-stunning.css}" rel="stylesheet">
     <!-- AOS (Animate on Scroll) -->
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <style>
@@ -415,7 +417,7 @@
     </style>
 </head>
 
-<body class="home-market-bg">
+<body class="home-market-bg cmp-aurora">
 
 <!-- Include header fragment -->
 <div th:replace="fragments/header :: header"></div>
@@ -647,6 +649,7 @@
         }
     })(window.jQuery || {});
  </script>
+ <script th:src="@{/js/cmp-stunning.js}" defer></script>
 </body>
 
 </html>
