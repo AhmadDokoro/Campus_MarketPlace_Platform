@@ -7,291 +7,1047 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
     <link th:href="@{/css/mobile.css}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link th:href="@{/css/cmp-enhance.css}" rel="stylesheet">
+    <link th:href="@{/css/cmp-stunning.css}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        body { background: linear-gradient(180deg, #f9fafb 0%, #ffffff 45%, #f6f3ff 100%); font-family: 'Poppins', sans-serif; }
+        body.cmp-aurora{
+            font-family: 'Inter','Poppins',sans-serif !important;
+            color: #2E2740 !important;
+            background: linear-gradient(180deg, #faf8ff 0%, #f3eefb 50%, #faf8ff 100%) !important;
+            min-height: 100vh;
+        }
+        body.cmp-aurora > *:not(.cmp-aurora-host){ position: relative; z-index: 1; }
 
-        /* ── Breadcrumb ── */
-        .breadcrumb-area { background: rgba(75,46,131,0.04); border-bottom: 1px solid rgba(75,46,131,0.08); }
-        .breadcrumb-area a { color: #4B2E83; font-weight: 500; }
-        .breadcrumb-area a:hover { color: #ffb347; text-decoration: none; }
-        .breadcrumb-area .breadcrumb-item.active { color: #6c757d; }
+        /* ────────────────────────────────────────────────────────
+           Breadcrumb — light brand pill
+        ──────────────────────────────────────────────────────── */
+        .pd-breadcrumb{
+            padding: 22px 0 4px;
+        }
+        .pd-breadcrumb .crumb{
+            display: inline-flex; align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,.6);
+            -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+            border: 1px solid rgba(232,224,245,.85);
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: .82rem;
+            color: #6B6280;
+            font-weight: 500;
+        }
+        .pd-breadcrumb .crumb a{
+            color: #4A2C8A;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color .2s ease;
+        }
+        .pd-breadcrumb .crumb a:hover{ color: #C9A800; }
+        .pd-breadcrumb .crumb .sep{ color: #B8B0C4; }
+        .pd-breadcrumb .crumb .active{
+            color: #2D1B69;
+            font-weight: 700;
+        }
 
-        /* ── Product Image ── */
-        .product-detail-img {
-            border-radius: 18px;
+        /* ────────────────────────────────────────────────────────
+           Detail grid
+        ──────────────────────────────────────────────────────── */
+        .pd-shell{ padding: 18px 0 60px; }
+        .pd-shell .container{ max-width: 1240px; }
+
+        .pd-grid{
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+            gap: 36px;
+            align-items: flex-start;
+        }
+
+        /* ────────────────────────────────────────────────────────
+           Image stage — keep image hover (scale 1.08)
+        ──────────────────────────────────────────────────────── */
+        .pd-image-col{
+            position: sticky;
+            top: 24px;
+        }
+        .pd-image-frame{
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 28px;
             overflow: hidden;
-            box-shadow: 0 16px 40px rgba(75,46,131,0.12);
-            background: #fff;
+            background: linear-gradient(135deg, #ffffff 0%, #faf8ff 100%);
+            border: 1px solid rgba(232,224,245,.9);
+            box-shadow:
+                0 30px 70px rgba(45,27,105,.18),
+                0 8px 24px rgba(255,215,0,.12),
+                inset 0 1px 0 rgba(255,255,255,.85);
+            isolation: isolate;
+            transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease;
         }
-        .product-detail-img img {
-            width: 100%;
-            max-height: 480px;
+        .pd-image-frame::before{
+            content: ""; position: absolute;
+            inset: -32px;
+            border-radius: 36px;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(107,78,175,.22), transparent 55%),
+                radial-gradient(circle at 82% 82%, rgba(255,215,0,.20), transparent 55%);
+            filter: blur(28px);
+            z-index: -1;
+            pointer-events: none;
+        }
+        .pd-image-frame img{
+            width: 100%; height: 100%;
             object-fit: cover;
-            transition: transform 0.4s ease;
+            display: block;
+            transition: transform .6s cubic-bezier(.2,.8,.2,1);
         }
-        .product-detail-img:hover img { transform: scale(1.03); }
+        .pd-image-frame:hover img{ transform: scale(1.08); }
+        /* Soft sheen sweep on hover */
+        .pd-image-frame::after{
+            content: ""; position: absolute; inset: 0;
+            background: linear-gradient(115deg,
+                transparent 38%,
+                rgba(255,255,255,.18) 46%,
+                rgba(255,215,0,.22) 50%,
+                rgba(255,255,255,.18) 54%,
+                transparent 62%);
+            filter: blur(6px);
+            opacity: 0;
+            transform: translateX(-120%);
+            transition: transform 2.6s cubic-bezier(.22,1,.36,1), opacity .6s ease;
+            pointer-events: none;
+            mix-blend-mode: screen;
+            z-index: 2;
+        }
+        .pd-image-frame:hover::after{ transform: translateX(120%); opacity: 1; }
 
-        /* ── Product Info ── */
-        .product-info-card {
-            background: #fff;
-            border-radius: 18px;
-            padding: 32px;
-            box-shadow: 0 12px 32px rgba(17,24,39,0.06);
-        }
-        .product-detail-title {
-            font-size: 26px;
-            font-weight: 700;
-            color: #2b2b37;
-            line-height: 1.3;
-        }
-        .product-detail-price {
-            font-size: 30px;
-            font-weight: 800;
-            color: #4B2E83;
-            margin-top: 10px;
-        }
-        .badge-condition {
-            background: linear-gradient(135deg, #4B2E83 0%, #6e45b7 100%);
-            color: #fff;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 5px 14px;
-            border-radius: 999px;
-        }
-        .badge-category {
-            background: linear-gradient(135deg, #ffb347 0%, #ffcc70 100%);
-            color: #3d3d3d;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 5px 14px;
-            border-radius: 999px;
-        }
-        .stock-badge {
-            font-size: 13px;
-            font-weight: 600;
-            padding: 5px 14px;
-            border-radius: 999px;
-        }
-        .stock-in { background: rgba(40,167,69,0.12); color: #28a745; }
-        .stock-low { background: rgba(255,179,71,0.15); color: #e6930a; }
-        .stock-out { background: rgba(196,22,28,0.12); color: #C4161C; }
-
-        .product-description {
-            color: #555;
-            font-size: 15px;
-            line-height: 1.75;
-            margin-top: 18px;
-        }
-
-        /* ── Rating Stars ── */
-        .detail-rating { display: flex; gap: 4px; color: #ffb347; font-size: 18px; text-shadow: 0 2px 6px rgba(75,46,131,0.2); }
-        .detail-rating i { animation: starPulse 2.4s ease-in-out infinite; }
-        .detail-rating i:nth-child(2) { animation-delay: .2s; }
-        .detail-rating i:nth-child(3) { animation-delay: .4s; }
-        .detail-rating i:nth-child(4) { animation-delay: .6s; }
-        .detail-rating i:nth-child(5) { animation-delay: .8s; }
-        @keyframes starPulse { 0%,100%{transform:translateY(0);filter:brightness(1)} 50%{transform:translateY(-2px);filter:brightness(1.2)} }
-
-        /* ── Add to Cart Button ── */
-        .btn-add-cart {
-            background: linear-gradient(135deg, rgba(75,46,131,0.92) 0%, rgba(255,179,71,0.95) 100%);
-            color: #fff;
-            border: none;
-            padding: 14px 36px;
-            border-radius: 999px;
-            font-weight: 700;
-            font-size: 16px;
-            box-shadow: 0 12px 28px rgba(255,179,71,0.35), 0 0 20px rgba(75,46,131,0.25);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-            animation: glowPulse 2.5s ease-in-out infinite;
-        }
-        .btn-add-cart:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 16px 32px rgba(255,179,71,0.45), 0 0 26px rgba(75,46,131,0.35);
-            color: #fff;
-        }
-        @keyframes glowPulse {
-            0%,100% { box-shadow: 0 12px 28px rgba(255,179,71,0.35), 0 0 20px rgba(75,46,131,0.25); }
-            50% { box-shadow: 0 14px 32px rgba(255,179,71,0.5), 0 0 28px rgba(75,46,131,0.35); }
-        }
-
-        /* ── Seller Info Card ── */
-        .seller-card {
-            background: rgba(75,46,131,0.04);
-            border: 1px solid rgba(75,46,131,0.1);
-            border-radius: 14px;
-            padding: 16px 20px;
-            margin-top: 24px;
-        }
-        .seller-avatar {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #4B2E83, #ffb347);
+        .pd-image-strip{
             display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 700;
-            font-size: 16px;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
         }
-        .seller-name { font-weight: 600; color: #2b2b37; font-size: 15px; }
-        .seller-label { font-size: 12px; color: #999; }
+        .pd-meta-chip{
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 8px 14px;
+            background: rgba(255,255,255,.78);
+            -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+            border: 1px solid rgba(232,224,245,.85);
+            border-radius: 999px;
+            color: #4A2C8A;
+            font-family:'Poppins',sans-serif;
+            font-size: .76rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+        .pd-meta-chip i{ color: #FFC107; }
 
-        /* ── Info Row (condition, category, stock) ── */
-        .info-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; align-items: center; }
+        /* ────────────────────────────────────────────────────────
+           Info column
+        ──────────────────────────────────────────────────────── */
+        .pd-info-col{ display: flex; flex-direction: column; gap: 22px; }
 
-        /* ── Divider ── */
-        .detail-divider { border-top: 1px solid rgba(75,46,131,0.08); margin: 20px 0; }
+        .pd-eyebrow{
+            display: inline-flex; align-items: center; gap: 8px;
+            font-family:'Poppins',sans-serif;
+            font-weight: 700; font-size: .72rem;
+            letter-spacing: .22em; text-transform: uppercase;
+            color: #4A2C8A;
+            background: linear-gradient(90deg, rgba(107,78,175,.12), rgba(255,215,0,.18));
+            padding: 6px 14px; border-radius: 999px;
+            border: 1px solid rgba(107,78,175,.22);
+            margin-bottom: 4px;
+            width: fit-content;
+        }
+        .pd-eyebrow i{ color: #FFC107; }
 
-        /* ── Related Products ── */
-        .related-section-title { display: flex; align-items: center; gap: 10px; }
-        .related-section-title i { color: #ffb347; }
-        .related-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+        .pd-title{
+            font-family:'Poppins',sans-serif;
+            font-weight: 900;
+            font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin: 0;
+            background: linear-gradient(135deg, #1A0A3E 0%, #4A2C8A 60%, #6B4EAF 100%);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
 
-        @media (max-width: 1200px) { .related-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-        @media (max-width: 992px) { .related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-        @media (max-width: 576px) { .related-grid { grid-template-columns: 1fr; } }
+        /* Rating pill row */
+        .pd-rating-row{
+            display: inline-flex; align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            background: rgba(255,255,255,.85);
+            border: 1px solid rgba(255,215,0,.45);
+            border-radius: 999px;
+            box-shadow: 0 8px 18px rgba(255,215,0,.15);
+            width: fit-content;
+        }
+        .pd-stars{ display: inline-flex; gap: 3px; color: #FFC107; font-size: 16px; }
+        .pd-rating-text{
+            color: #2D1B69;
+            font-family:'Poppins',sans-serif;
+            font-weight: 700;
+            font-size: .85rem;
+        }
+        .pd-rating-link{
+            border: none;
+            background: linear-gradient(135deg, #2D1B69, #4A2C8A);
+            color: #FFD700;
+            border-radius: 999px;
+            font-family:'Poppins',sans-serif;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            padding: 7px 14px;
+            box-shadow: 0 6px 14px rgba(45,27,105,.3);
+            cursor: pointer;
+            transition: all .25s ease;
+        }
+        .pd-rating-link:hover{
+            background: linear-gradient(135deg, #FFD700, #FFC107);
+            color: #1A0A3E;
+            box-shadow: 0 10px 22px rgba(255,193,7,.45);
+        }
+
+        /* PRICE PANEL — strong, unmissable */
+        .pd-purchase-panel{
+            position: relative;
+            padding: 28px 30px 26px;
+            border-radius: 24px;
+            background: rgba(255,255,255,.92);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            backdrop-filter: blur(20px) saturate(140%);
+            border: 1px solid rgba(232,224,245,.85);
+            box-shadow: 0 20px 48px rgba(45,27,105,.14);
+            overflow: hidden;
+        }
+        .pd-purchase-panel::before{
+            content: ""; position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, #2D1B69, #6B4EAF, #FFD700, #6B4EAF, #2D1B69);
+            background-size: 200% 100%;
+            animation: cmpDividerFlow 6s linear infinite;
+        }
+        .pd-purchase-panel::after{
+            content: ""; position: absolute;
+            top: -50px; right: -50px;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,215,0,.22), transparent 65%);
+            pointer-events: none;
+        }
+        .pd-price-label{
+            display: inline-block;
+            font-family:'Poppins',sans-serif;
+            font-size: .72rem;
+            font-weight: 700;
+            color: #6B4EAF;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .pd-price{
+            display: block;
+            font-family:'Poppins',sans-serif;
+            font-size: clamp(2.4rem, 5vw, 3.4rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            margin: 0 0 14px;
+            background: linear-gradient(135deg, #C9A800 0%, #FFD700 50%, #FFC107 100%);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+        /* Solid fallback that's always visible — sits just behind the gradient */
+        .pd-price-wrap{
+            position: relative;
+            display: inline-block;
+        }
+        .pd-price-wrap::before{
+            content: attr(data-price);
+            position: absolute;
+            inset: 0;
+            font-family:'Poppins',sans-serif;
+            font-size: clamp(2.4rem, 5vw, 3.4rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            color: #C9A800;
+            opacity: 0;
+        }
+
+        .pd-badges{
+            display: flex; flex-wrap: wrap; gap: 8px;
+            margin-bottom: 22px;
+        }
+        .pd-badge{
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-family:'Poppins',sans-serif;
+            font-size: .76rem;
+            font-weight: 700;
+            letter-spacing: .04em;
+            border: 1px solid transparent;
+        }
+        .pd-badge.condition{
+            background: linear-gradient(135deg, #2D1B69, #4A2C8A);
+            color: #fff;
+            box-shadow: 0 6px 14px rgba(45,27,105,.3);
+        }
+        .pd-badge.category{
+            background: linear-gradient(135deg, #FFD700, #FFC107);
+            color: #1A0A3E;
+            box-shadow: 0 6px 14px rgba(255,193,7,.4);
+        }
+        .pd-badge.stock-in{
+            background: rgba(34,197,94,.14);
+            color: #166534;
+            border-color: rgba(34,197,94,.4);
+        }
+        .pd-badge.stock-low{
+            background: rgba(245,158,11,.18);
+            color: #92400E;
+            border-color: rgba(245,158,11,.45);
+        }
+        .pd-badge.stock-out{
+            background: rgba(239,68,68,.14);
+            color: #991B1B;
+            border-color: rgba(239,68,68,.4);
+        }
+
+        .pd-cta-row{
+            display: flex; align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .btn-add-cart{
+            flex: 1;
+            min-height: 56px;
+            padding: 16px 28px;
+            font-family:'Poppins',sans-serif;
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: #1A0A3E;
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            position: relative; overflow: hidden;
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 14px 32px rgba(255,193,7,.45), inset 0 1px 0 rgba(255,255,255,.6);
+            transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s ease, background .3s ease, color .3s ease;
+        }
+        .btn-add-cart::after{
+            content:""; position:absolute; inset:0;
+            background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.55) 50%, transparent 60%);
+            transform: translateX(-120%);
+            transition: transform .9s cubic-bezier(.22,1,.36,1);
+            pointer-events:none;
+        }
+        .btn-add-cart:hover{
+            background: linear-gradient(135deg, #2D1B69 0%, #4A2C8A 100%);
+            color: #FFD700;
+            box-shadow: 0 18px 40px rgba(45,27,105,.5);
+            transform: translateY(-3px);
+        }
+        .btn-add-cart:hover::after{ transform: translateX(120%); }
+        .btn-add-cart:disabled{
+            opacity: .55;
+            background: #E0DBE8;
+            color: #8c84a0;
+            box-shadow: 0 4px 12px rgba(0,0,0,.06);
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-add-cart:disabled::after{ display: none; }
+
+        #detail-cart-msg{
+            font-weight: 700;
+            font-size: .9rem;
+        }
+
+        /* Stat strip — quantity + listing meta */
+        .pd-stat-strip{
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 22px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(107,78,175,.12);
+        }
+        .pd-stat-cell{
+            text-align: left;
+        }
+        .pd-stat-cell .lbl{
+            display: block;
+            font-family:'Poppins',sans-serif;
+            font-size: .68rem;
+            font-weight: 700;
+            color: #6B4EAF;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .pd-stat-cell .val{
+            display: block;
+            font-family:'Poppins',sans-serif;
+            color: #2D1B69;
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: -.01em;
+        }
+
+        /* Description card */
+        .pd-card{
+            background: rgba(255,255,255,.85);
+            -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+            border: 1px solid rgba(232,224,245,.85);
+            border-radius: 20px;
+            padding: 22px 26px;
+            box-shadow: 0 10px 28px rgba(45,27,105,.06);
+        }
+        .pd-card-head{
+            display: flex; align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .pd-card-icon{
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            display: inline-flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #FFD700, #FFC107);
+            color: #1A0A3E;
+            font-size: 14px;
+            box-shadow: 0 6px 14px rgba(255,193,7,.35);
+        }
+        .pd-card-title{
+            font-family:'Poppins',sans-serif;
+            font-weight: 700;
+            font-size: .82rem;
+            color: #4A2C8A;
+            text-transform: uppercase;
+            letter-spacing: .14em;
+            margin: 0;
+        }
+        .pd-description{
+            color: #2E2740;
+            font-size: .98rem;
+            line-height: 1.7;
+            font-weight: 500;
+            margin: 0;
+            padding-left: 14px;
+            border-left: 3px solid #FFD700;
+            white-space: pre-line;
+        }
+        .pd-description.empty{ color: #8c84a0; font-style: italic; }
+
+        /* Seller card */
+        .pd-seller{
+            display: flex; align-items: center; gap: 16px;
+            background: rgba(255,255,255,.85);
+            -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+            border: 1px solid rgba(232,224,245,.85);
+            border-radius: 18px;
+            padding: 18px 22px;
+            box-shadow: 0 10px 24px rgba(45,27,105,.08);
+        }
+        .pd-seller-avatar{
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-family:'Poppins',sans-serif;
+            font-weight: 800; font-size: 22px;
+            background: linear-gradient(135deg, #2D1B69, #6B4EAF);
+            color: #fff;
+            border: 3px solid #FFD700;
+            box-shadow: 0 8px 18px rgba(45,27,105,.3);
+            flex-shrink: 0;
+        }
+        .pd-seller-meta{ min-width: 0; }
+        .pd-seller-label{
+            display: block;
+            font-family:'Poppins',sans-serif;
+            font-size: .68rem;
+            font-weight: 700;
+            color: #6B4EAF;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+        .pd-seller-name{
+            display: block;
+            font-family:'Poppins',sans-serif;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #2D1B69;
+            letter-spacing: -.01em;
+        }
+
+        /* ────────────────────────────────────────────────────────
+           Reviews panel
+        ──────────────────────────────────────────────────────── */
+        .reviews-panel{
+            position: relative;
+            background: rgba(255,255,255,.85);
+            -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+            border: 1px solid rgba(232,224,245,.85);
+            border-radius: 24px;
+            padding: 30px 32px;
+            margin-top: 36px;
+            box-shadow: 0 20px 48px rgba(45,27,105,.12);
+            overflow: hidden;
+        }
+        .reviews-panel::before{
+            content: ""; position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, #6B4EAF, #FFD700, #2D1B69);
+            background-size: 200% 100%;
+            animation: cmpDividerFlow 6s linear infinite;
+        }
+        .reviews-head{
+            display: flex; align-items: flex-start; justify-content: space-between;
+            gap: 16px; flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+        .reviews-title{
+            display: flex; align-items: center; gap: 10px;
+            font-family:'Poppins',sans-serif;
+            font-weight: 800;
+            font-size: 1.4rem;
+            margin: 0;
+            background: linear-gradient(135deg, #2D1B69, #6B4EAF, #FFD700);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            letter-spacing: -.01em;
+        }
+        .reviews-title i{
+            color: #FFC107 !important;
+            -webkit-text-fill-color: #FFC107;
+            background: none;
+        }
+        .reviews-copy{
+            color: #6B6280;
+            font-size: .9rem;
+            margin: 6px 0 0;
+        }
+        .btn-view-all-reviews{
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #2D1B69, #4A2C8A);
+            color: #FFD700;
+            border: none;
+            border-radius: 999px;
+            font-family:'Poppins',sans-serif;
+            font-weight: 700;
+            font-size: .82rem;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(45,27,105,.25);
+            transition: all .25s ease;
+        }
+        .btn-view-all-reviews:hover{
+            background: linear-gradient(135deg, #FFD700, #FFC107);
+            color: #1A0A3E;
+            box-shadow: 0 12px 26px rgba(255,193,7,.45);
+        }
+
+        .review-preview-list{
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+        .review-preview-card{
+            background: rgba(250,248,255,.8);
+            border: 1px solid rgba(232,224,245,.85);
+            border-radius: 18px;
+            padding: 20px 22px;
+            position: relative;
+            transition: border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+        }
+        .review-preview-card::before{
+            content: ""; position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #6B4EAF, #FFD700);
+            border-radius: 18px 0 0 18px;
+        }
+        .review-preview-card:hover{
+            border-color: rgba(107,78,175,.3);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(45,27,105,.1);
+        }
+        .review-preview-top{
+            display: flex; align-items: flex-start; justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(107,78,175,.1);
+        }
+        .reviewer-name{
+            font-family:'Poppins',sans-serif;
+            font-size: .98rem;
+            font-weight: 700;
+            color: #2D1B69;
+        }
+        .review-date{
+            font-size: .78rem;
+            color: #6B4EAF;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .review-stars{
+            display: flex; gap: 3px;
+            color: #FFC107;
+            font-size: .9rem;
+            margin-top: 4px;
+        }
+        .review-comment{
+            margin: 0;
+            color: #2E2740;
+            font-size: .92rem;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .review-empty{
+            padding: 36px 26px;
+            border: 2px dashed rgba(107,78,175,.3);
+            border-radius: 18px;
+            background: rgba(255,255,255,.6);
+            text-align: center;
+            color: #6B6280;
+        }
+        .review-empty i{
+            font-size: 38px;
+            color: #6B4EAF;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        .review-empty p{
+            margin: 0;
+            font-family:'Poppins',sans-serif;
+            font-weight: 600;
+            color: #2D1B69;
+        }
+
+        /* ────────────────────────────────────────────────────────
+           Related products
+        ──────────────────────────────────────────────────────── */
+        .pd-related{
+            margin-top: 44px;
+        }
+        .pd-related-head{
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 22px;
+        }
+        .pd-related-title{
+            font-family:'Poppins',sans-serif;
+            font-weight: 800;
+            font-size: 1.6rem;
+            margin: 0;
+            background: linear-gradient(135deg, #2D1B69, #6B4EAF, #FFD700);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            letter-spacing: -.01em;
+        }
+        .pd-related-grid{
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        /* ────────────────────────────────────────────────────────
+           Modal — branded
+        ──────────────────────────────────────────────────────── */
+        .modal-content{
+            border-radius: 24px !important;
+            border: none !important;
+            background: rgba(255,255,255,.96) !important;
+            -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+            box-shadow: 0 30px 70px rgba(45,27,105,.25) !important;
+            overflow: hidden;
+        }
+        .modal-header{
+            background: linear-gradient(135deg, #1A0A3E 0%, #2D1B69 60%, #4A2C8A 100%) !important;
+            border-bottom: 3px solid #FFD700 !important;
+            padding: 22px 26px !important;
+        }
+        .modal-title{
+            font-family:'Poppins',sans-serif !important;
+            color: #fff !important;
+            font-size: 1.2rem !important;
+            font-weight: 800 !important;
+            letter-spacing: -.02em !important;
+        }
+        .modal-header p{ color: rgba(255,215,0,.85) !important; font-size: .82rem; margin: 4px 0 0 !important; }
+        .modal-header .close{
+            color: #FFD700 !important;
+            opacity: .85;
+            text-shadow: none;
+            font-size: 28px !important;
+            font-weight: 600 !important;
+        }
+        .modal-header .close:hover{ opacity: 1; color: #FFD700 !important; }
+        .modal-footer{
+            background: rgba(250,248,255,.7) !important;
+            border-top: 1px solid rgba(107,78,175,.12) !important;
+            padding: 14px 26px !important;
+        }
+        .modal-review-card{
+            padding: 16px 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(232,224,245,.85);
+            background: rgba(250,248,255,.7);
+            margin-bottom: 12px;
+            transition: border-color .25s ease, transform .25s ease;
+        }
+        .modal-review-card:hover{
+            border-color: rgba(107,78,175,.3);
+            transform: translateY(-1px);
+        }
+        .modal-review-card:last-child{ margin-bottom: 0; }
+        .modal-review-stars{ display: flex; gap: 3px; color: #FFC107; margin-top: 6px; font-size: 14px; }
+
+        .btn-modal-close{
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 9px 18px;
+            background: rgba(45,27,105,.05);
+            border: 1px solid rgba(107,78,175,.25);
+            color: #4A2C8A;
+            border-radius: 999px;
+            font-family:'Poppins',sans-serif;
+            font-weight: 700;
+            font-size: .82rem;
+            cursor: pointer;
+            transition: all .25s ease;
+        }
+        .btn-modal-close:hover{
+            background: linear-gradient(135deg, #2D1B69, #4A2C8A);
+            color: #FFD700;
+            border-color: transparent;
+        }
+
+        /* ────────────────────────────────────────────────────────
+           Responsive
+        ──────────────────────────────────────────────────────── */
+        @media (max-width: 1199.98px){
+            .pd-related-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+        @media (max-width: 991.98px){
+            .pd-grid{ grid-template-columns: 1fr; gap: 24px; }
+            .pd-image-col{ position: static; }
+            .pd-related-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .review-preview-list{ grid-template-columns: 1fr; }
+        }
+        @media (max-width: 767.98px){
+            .pd-shell{ padding: 8px 0 40px; }
+            .pd-purchase-panel{ padding: 22px 20px; border-radius: 20px; }
+            .pd-card{ padding: 18px 20px; border-radius: 18px; }
+            .pd-stat-strip{ grid-template-columns: 1fr 1fr; gap: 14px; }
+            .pd-cta-row{ flex-direction: column; align-items: stretch; }
+            .btn-add-cart{ width: 100%; min-height: 52px; padding: 14px; }
+            .reviews-panel{ padding: 22px 20px; border-radius: 20px; }
+            .reviews-head{ flex-direction: column; align-items: stretch; gap: 12px; }
+            .btn-view-all-reviews{ width: 100%; }
+            .pd-image-frame{ border-radius: 22px; }
+            .pd-related-head{ flex-direction: column; align-items: flex-start; gap: 8px; }
+            .pd-related-title{ font-size: 1.3rem; }
+            .pd-title{ font-size: 1.6rem; }
+            .pd-seller{ padding: 14px 16px; gap: 12px; }
+            .pd-seller-avatar{ width: 48px; height: 48px; font-size: 18px; }
+        }
+        @media (max-width: 575.98px){
+            .pd-related-grid{ grid-template-columns: 1fr; }
+            .pd-breadcrumb .crumb{ font-size: .76rem; padding: 7px 12px; }
+            .pd-rating-row{ width: 100%; flex-wrap: wrap; }
+        }
     </style>
 </head>
-<body>
+<body class="cmp-aurora">
 
-<!-- ── Header Fragment ── -->
 <div th:replace="fragments/header :: header"></div>
 
-<!-- ── Breadcrumb Navigation ── -->
-<div class="breadcrumb-area py-3">
+<!-- Breadcrumb -->
+<div class="pd-breadcrumb">
     <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-transparent mb-0 px-0">
-                <li class="breadcrumb-item"><a th:href="@{/index}"><i class="fas fa-home mr-1"></i>Home</a></li>
-                <li class="breadcrumb-item"><a th:href="@{/products}">Products</a></li>
-                <li class="breadcrumb-item">
-                    <a th:href="@{/products/category/{id}(id=${product.category.categoryId})}"
-                       th:text="${product.category.categoryName}">Category</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page" th:text="${product.title}">Product Title</li>
-            </ol>
-        </nav>
+        <div class="crumb">
+            <a th:href="@{/index}"><i class="fas fa-home"></i> Home</a>
+            <span class="sep">/</span>
+            <a th:href="@{/products}">Products</a>
+            <span class="sep">/</span>
+            <a th:href="@{/products/category/{id}(id=${product.category.categoryId})}"
+               th:text="${product.category.categoryName}">Category</a>
+            <span class="sep">/</span>
+            <span class="active" th:text="${product.title}">Product Title</span>
+        </div>
     </div>
 </div>
 
-<!-- ── Product Detail Section ── -->
-<div class="container py-4">
-    <div class="row">
+<!-- Main detail shell -->
+<section class="pd-shell">
+    <div class="container">
+        <div class="pd-grid">
 
-        <!-- Left: Product Image -->
-        <div class="col-lg-5 col-md-6 mb-4">
-            <div class="product-detail-img">
-                <!-- Show primary image if available, otherwise placeholder -->
-                <img th:if="${product.images != null and !#lists.isEmpty(product.images)}"
-                     th:src="${product.images.get(0).imageUrl}" alt="Product Image">
-                <img th:if="${product.images == null or #lists.isEmpty(product.images)}"
-                     th:src="@{/img/productplaceholder.png}" alt="Product Image">
-            </div>
-        </div>
-
-        <!-- Right: Product Info -->
-        <div class="col-lg-7 col-md-6">
-            <div class="product-info-card">
-
-                <!-- Product Title -->
-                <h1 class="product-detail-title" th:text="${product.title}">Product Title</h1>
-
-                <!-- Rating Stars (static placeholder) -->
-                <div class="detail-rating mt-2">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                    <span style="color:#999; font-size:13px; margin-left:8px;">(No reviews yet)</span>
+            <!-- LEFT: Image -->
+            <div class="pd-image-col">
+                <div class="pd-image-frame">
+                    <img th:if="${product.images != null and !#lists.isEmpty(product.images)}"
+                         th:src="${product.images.get(0).imageUrl}"
+                         th:alt="${product.title}">
+                    <img th:if="${product.images == null or #lists.isEmpty(product.images)}"
+                         th:src="@{/img/productplaceholder.png}"
+                         alt="No image">
                 </div>
 
-                <!-- Price -->
-                <div class="product-detail-price" th:text="'RM ' + ${#numbers.formatDecimal(product.price, 1, 2)}">RM 0.00</div>
-
-                <!-- Badges: condition, category, stock -->
-                <div class="info-badges">
-                    <span class="badge-condition" th:text="${product.condition}">NEW</span>
-                    <span class="badge-category">
-                        <i class="fas fa-tag mr-1"></i>
-                        <span th:text="${product.category.categoryName}">Category</span>
+                <div class="pd-image-strip">
+                    <span class="pd-meta-chip" th:if="${product.productId != null}">
+                        <i class="fas fa-fingerprint"></i> ID #<span th:text="${product.productId}">0</span>
                     </span>
-                    <!-- Stock badge with conditional styling -->
-                    <span class="stock-badge stock-in" th:if="${product.quantity > 5}"
-                          th:text="'In Stock (' + ${product.quantity} + ')'">In Stock</span>
-                    <span class="stock-badge stock-low" th:if="${product.quantity > 0 and product.quantity <= 5}"
-                          th:text="'Low Stock (' + ${product.quantity} + ' left)'">Low Stock</span>
-                    <span class="stock-badge stock-out" th:if="${product.quantity == 0}">Out of Stock</span>
+                    <span class="pd-meta-chip">
+                        <i class="fas fa-shield-alt"></i> Verified seller
+                    </span>
+                    <span class="pd-meta-chip">
+                        <i class="fas fa-bolt"></i> Buyer protected
+                    </span>
                 </div>
+            </div>
 
-                <div class="detail-divider"></div>
+            <!-- RIGHT: Info -->
+            <div class="pd-info-col">
 
-                <!-- Description -->
-                <div th:if="${product.description != null and !product.description.isEmpty()}">
-                    <h6 style="font-weight:700; color:#2b2b37;"><i class="fas fa-align-left mr-2" style="color:#ffb347;"></i>Description</h6>
-                    <p class="product-description" th:text="${product.description}">Product description goes here.</p>
-                </div>
-                <div th:if="${product.description == null or product.description.isEmpty()}">
-                    <p class="product-description" style="font-style:italic; color:#aaa;">No description provided.</p>
-                </div>
+                <span class="pd-eyebrow"><i class="fas fa-tag"></i>Listing detail</span>
 
-                <div class="detail-divider"></div>
+                <h1 class="pd-title" th:text="${product.title}">Product Title</h1>
 
-                <!-- Add to Cart Button -->
-                <div class="d-flex align-items-center gap-3 mt-3">
-                    <button class="btn-add-cart" type="button" id="detail-add-cart-btn"
-                            th:disabled="${product.quantity == 0}"
-                            th:data-product-id="${product.productId}">
-                        <i class="fas fa-cart-plus mr-2"></i>Add to Cart
-                    </button>
-                    <!-- Feedback message shown after adding -->
-                    <span id="detail-cart-msg" style="font-weight:600; font-size:14px; margin-left:12px; display:none;"></span>
-                </div>
-
-                <!-- Seller Info Card -->
-                <div class="seller-card d-flex align-items-center">
-                    <div class="seller-avatar mr-3">
-                        <!-- Show first letter of seller's first name -->
-                        <span th:text="${product.seller.user.firstName != null ? product.seller.user.firstName.substring(0,1).toUpperCase() : 'S'}">S</span>
+                <th:block th:with="avg=${productRating.averageRating()}, count=${productRating.reviewCount()}">
+                    <div class="pd-rating-row">
+                        <div class="pd-stars">
+                            <i th:class="${avg >= 0.75 ? 'fas fa-star' : (avg >= 0.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+                            <i th:class="${avg >= 1.75 ? 'fas fa-star' : (avg >= 1.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+                            <i th:class="${avg >= 2.75 ? 'fas fa-star' : (avg >= 2.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+                            <i th:class="${avg >= 3.75 ? 'fas fa-star' : (avg >= 3.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+                            <i th:class="${avg >= 4.75 ? 'fas fa-star' : (avg >= 4.25 ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+                        </div>
+                        <span class="pd-rating-text"
+                              th:text="${count > 0 ? (#numbers.formatDecimal(avg, 1, 1) + ' / 5 (' + count + (count == 1 ? ' review)' : ' reviews)')) : 'No reviews yet'}">
+                            No reviews yet
+                        </span>
+                        <button type="button"
+                                class="pd-rating-link"
+                                data-toggle="modal"
+                                data-target="#productReviewsModal"
+                                th:if="${count > 0}">
+                            View reviews
+                        </button>
                     </div>
-                    <div>
-                        <div class="seller-label"><i class="fas fa-store mr-1"></i>Sold by</div>
-                        <div class="seller-name"
-                             th:text="${(product.seller.user.firstName != null ? product.seller.user.firstName : '') + ' ' + (product.seller.user.lastName != null ? product.seller.user.lastName : '')}">
-                            Seller Name
+                </th:block>
+
+                <!-- PRICE / BADGES / CTA — the bold purchase panel -->
+                <div class="pd-purchase-panel">
+                    <span class="pd-price-label">Listed price</span>
+                    <span class="pd-price-wrap" th:attr="data-price='RM ' + ${#numbers.formatDecimal(product.price, 1, 2)}">
+                        <span class="pd-price" th:text="'RM ' + ${#numbers.formatDecimal(product.price, 1, 2)}">RM 0.00</span>
+                    </span>
+
+                    <div class="pd-badges">
+                        <span class="pd-badge condition" th:text="${product.condition}">NEW</span>
+                        <span class="pd-badge category">
+                            <i class="fas fa-tag"></i>
+                            <span th:text="${product.category.categoryName}">Category</span>
+                        </span>
+                        <span class="pd-badge stock-in" th:if="${product.quantity > 5}"
+                              th:text="'In Stock · ' + ${product.quantity} + ' available'">In Stock</span>
+                        <span class="pd-badge stock-low" th:if="${product.quantity > 0 and product.quantity <= 5}"
+                              th:text="'Low Stock · ' + ${product.quantity} + ' left'">Low Stock</span>
+                        <span class="pd-badge stock-out" th:if="${product.quantity == 0}">Out of Stock</span>
+                    </div>
+
+                    <div class="pd-cta-row">
+                        <button class="btn-add-cart" type="button" id="detail-add-cart-btn"
+                                th:disabled="${product.quantity == 0}"
+                                th:data-product-id="${product.productId}">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+
+                    <span id="detail-cart-msg" style="display:none; margin-top:12px;"></span>
+
+                    <!-- Stat strip — quick-glance facts -->
+                    <div class="pd-stat-strip">
+                        <div class="pd-stat-cell">
+                            <span class="lbl">Condition</span>
+                            <span class="val" th:text="${product.condition}">NEW</span>
+                        </div>
+                        <div class="pd-stat-cell">
+                            <span class="lbl">Category</span>
+                            <span class="val" th:text="${product.category.categoryName}">Category</span>
+                        </div>
+                        <div class="pd-stat-cell">
+                            <span class="lbl">Quantity</span>
+                            <span class="val" th:text="${product.quantity}">0</span>
                         </div>
                     </div>
                 </div>
+
+                <!-- Description -->
+                <div class="pd-card">
+                    <div class="pd-card-head">
+                        <span class="pd-card-icon"><i class="fas fa-align-left"></i></span>
+                        <h6 class="pd-card-title">Description</h6>
+                    </div>
+                    <p class="pd-description"
+                       th:if="${product.description != null and !product.description.isEmpty()}"
+                       th:text="${product.description}">Product description goes here.</p>
+                    <p class="pd-description empty"
+                       th:if="${product.description == null or product.description.isEmpty()}">
+                        No description provided by the seller.
+                    </p>
+                </div>
+
+                <!-- Seller -->
+                <div class="pd-seller">
+                    <span class="pd-seller-avatar"
+                          th:text="${product.seller.user.firstName != null ? product.seller.user.firstName.substring(0,1).toUpperCase() : 'S'}">S</span>
+                    <div class="pd-seller-meta">
+                        <span class="pd-seller-label"><i class="fas fa-store"></i> Sold by</span>
+                        <span class="pd-seller-name"
+                              th:text="${(product.seller.user.firstName != null ? product.seller.user.firstName : '') + ' ' + (product.seller.user.lastName != null ? product.seller.user.lastName : '')}">
+                            Seller Name
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Reviews -->
+<div class="container pb-4">
+    <div class="reviews-panel">
+        <div class="reviews-head">
+            <div>
+                <h4 class="reviews-title">
+                    <i class="fas fa-star"></i>
+                    <span>Buyer Reviews</span>
+                </h4>
+                <p class="reviews-copy"
+                   th:text="${productRating.reviewCount() > 0 ? 'Real buyer feedback tied to this product only.' : 'This product has not received a review yet.'}">
+                    Real buyer feedback tied to this product only.
+                </p>
+            </div>
+            <button type="button"
+                    class="btn-view-all-reviews"
+                    data-toggle="modal"
+                    data-target="#productReviewsModal"
+                    th:if="${productRating.reviewCount() > 0}">
+                View all reviews
+            </button>
+        </div>
+
+        <div class="review-preview-list" th:if="${productReviews != null and !#lists.isEmpty(productReviews)}">
+            <div class="review-preview-card"
+                 th:each="review, stat : ${productReviews}"
+                 th:if="${stat.index < 2}">
+                <div class="review-preview-top">
+                    <div>
+                        <div class="reviewer-name" th:text="${review.reviewerName}">Reviewer Name</div>
+                        <div class="review-stars">
+                            <i th:each="star : ${#numbers.sequence(1, 5)}"
+                               th:class="${star <= review.rating ? 'fas fa-star' : 'far fa-star'}"></i>
+                        </div>
+                    </div>
+                    <div class="review-date" th:text="${review.createdAt}">01 Jan 2026, 12:00</div>
+                </div>
+                <p class="review-comment"
+                   th:text="${review.comment != null and !review.comment.isEmpty() ? review.comment : 'No comment left.'}">
+                    Review comment
+                </p>
+            </div>
+        </div>
+
+        <div class="review-empty" th:if="${productReviews == null or #lists.isEmpty(productReviews)}">
+            <i class="fas fa-comment-dots"></i>
+            <p>No reviews yet for this product.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Reviews Modal -->
+<div class="modal fade" id="productReviewsModal" tabindex="-1" aria-labelledby="productReviewsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="productReviewsModalLabel">Product Reviews</h5>
+                    <p th:text="${product.title}">Product Title</p>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding:22px 26px; min-height:120px;">
+                <div th:if="${productReviews != null and !#lists.isEmpty(productReviews)}">
+                    <div class="modal-review-card" th:each="review : ${productReviews}">
+                        <div class="review-preview-top">
+                            <div>
+                                <div class="reviewer-name" th:text="${review.reviewerName}">Reviewer Name</div>
+                                <div class="modal-review-stars">
+                                    <i th:each="star : ${#numbers.sequence(1, 5)}"
+                                       th:class="${star <= review.rating ? 'fas fa-star' : 'far fa-star'}"></i>
+                                </div>
+                            </div>
+                            <div class="review-date" th:text="${review.createdAt}">01 Jan 2026, 12:00</div>
+                        </div>
+                        <p class="review-comment"
+                           th:text="${review.comment != null and !review.comment.isEmpty() ? review.comment : 'No comment left.'}">
+                            Review comment
+                        </p>
+                    </div>
+                </div>
+                <div class="review-empty" th:if="${productReviews == null or #lists.isEmpty(productReviews)}">
+                    <i class="fas fa-comment-dots"></i>
+                    <p>No reviews yet for this product.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal-close" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ── Related Products Section ("You May Also Like") ── -->
-<div class="container pb-5" th:if="${relatedProducts != null and !#lists.isEmpty(relatedProducts)}">
-    <div class="detail-divider mb-4"></div>
-    <h4 class="related-section-title mb-4">
-        <i class="fas fa-heart"></i>
-        <span>You May Also Like</span>
-    </h4>
-    <div class="related-grid">
-        <div th:each="p : ${relatedProducts}">
-            <div th:replace="fragments/product-card :: card(${p})"></div>
+<!-- Related Products -->
+<div class="container" th:if="${relatedProducts != null and !#lists.isEmpty(relatedProducts)}">
+    <div class="pd-related">
+        <div class="pd-related-head">
+            <h4 class="pd-related-title">You May Also Like</h4>
+        </div>
+        <div class="pd-related-grid">
+            <div th:each="p : ${relatedProducts}">
+                <div th:replace="fragments/product-card :: card(${p})"></div>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- ── Footer Fragment ── -->
 <div th:replace="fragments/footer :: footer"></div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
 
-<!-- Handles the Add to Cart button click on the product detail page. -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var btn = document.getElementById('detail-add-cart-btn');
@@ -302,9 +1058,8 @@
             var msgEl = document.getElementById('detail-cart-msg');
             var originalHTML = btn.innerHTML;
 
-            // Show loading state on the button.
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Adding...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
             msgEl.style.display = 'none';
 
             fetch('/cart/add', {
@@ -315,38 +1070,37 @@
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 if (data.success) {
-                    // Update header cart badge.
                     var badges = document.querySelectorAll('.cart-badge-count');
                     badges.forEach(function(b) { b.textContent = data.cartCount; });
-                    // Show success feedback.
-                    btn.innerHTML = '<i class="fas fa-check mr-2"></i>Added!';
+                    btn.innerHTML = '<i class="fas fa-check"></i> Added to Cart';
                     msgEl.textContent = data.message;
-                    msgEl.style.color = '#28a745';
-                    msgEl.style.display = 'inline';
-                    // Reset button after 2 seconds.
-                    setTimeout(function() { btn.innerHTML = originalHTML; btn.disabled = false; msgEl.style.display = 'none'; }, 2000);
+                    msgEl.style.color = '#166534';
+                    msgEl.style.display = 'inline-block';
+                    setTimeout(function() {
+                        btn.innerHTML = originalHTML;
+                        btn.disabled = false;
+                        msgEl.style.display = 'none';
+                    }, 2000);
                 } else if (data.redirect) {
-                    // User not logged in — redirect to login.
                     window.location.href = data.redirect;
                 } else {
-                    // Show error message.
                     msgEl.textContent = data.message || 'Could not add to cart.';
-                    msgEl.style.color = '#C4161C';
-                    msgEl.style.display = 'inline';
+                    msgEl.style.color = '#991B1B';
+                    msgEl.style.display = 'inline-block';
                     btn.innerHTML = originalHTML;
                     btn.disabled = false;
                 }
             })
             .catch(function() {
                 msgEl.textContent = 'Something went wrong.';
-                msgEl.style.color = '#C4161C';
-                msgEl.style.display = 'inline';
+                msgEl.style.color = '#991B1B';
+                msgEl.style.display = 'inline-block';
                 btn.innerHTML = originalHTML;
                 btn.disabled = false;
             });
         });
     });
 </script>
+<script th:src="@{/js/cmp-stunning.js}" defer></script>
 </body>
 </html>
-

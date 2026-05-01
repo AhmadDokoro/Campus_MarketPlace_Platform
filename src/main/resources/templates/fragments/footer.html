@@ -1,25 +1,60 @@
-<footer th:fragment="footer">
-    <div class="container-fluid bg-dark text-secondary mt-5 pt-5">
-        <div class="row px-xl-5 pt-5">
+<footer th:fragment="footer" style="background: #0B051D; color: #a19bb3; position: relative; border-top: 5px solid #FFD700; overflow: hidden; margin-top: auto; z-index: 10;">
+
+    <!-- Decorative background glow -->
+    <div style="position: absolute; top: -150px; left: 50%; transform: translateX(-50%); width: 600px; height: 300px; background: radial-gradient(circle, rgba(74, 44, 138, 0.4) 0%, transparent 60%); pointer-events: none;"></div>
+
+    <div class="container-fluid pt-5 pb-4 position-relative">
+        <div class="row px-xl-5 pt-4 pb-3">
+
+            <!-- Brand Section -->
             <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-                <h5 class="text-secondary text-uppercase mb-4">Get In Touch</h5>
-                <p class="mb-4">For inquiries, reach out to us at the contact below.</p>
-                <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>support@umtmarketplace.edu</p>
-            </div>
-            <div class="col-lg-4 col-md-12">
-                <h5 class="text-secondary text-uppercase mb-4">Quick Links</h5>
-                <div class="d-flex flex-column justify-content-start">
-                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>About</a>
-                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Contact</a>
+                <div class="d-flex align-items-center mb-4">
+                    <div style="width: 45px; height: 45px; border-radius: 8px; background: linear-gradient(135deg, #FFD700, #FFA500); display: flex; align-items: center; justify-content: center; transform: rotate(-8deg); box-shadow: 0 4px 15px rgba(255,215,0,0.4); margin-right: 15px;">
+                        <i class="fas fa-bolt text-dark" style="font-size: 24px; transform: rotate(8deg);"></i>
+                    </div>
+                    <h2 class="m-0" style="font-family: 'Poppins', sans-serif; font-weight: 900; color: #fff; letter-spacing: 1px; font-size: 2rem;">UMT<span style="color: #FFD700; font-size: 1.5rem;">MRKT</span></h2>
+                </div>
+                <p class="mb-4" style="line-height: 1.8; font-size: 0.95rem; color: #8F86A5;">A trusted, next-generation campus marketplace built exclusively for UMT academic life. Simple listings, extreme deals, safe exchange.</p>
+                <div class="d-flex align-items-center">
+                    <a class="btn btn-outline-light btn-square mr-2 rounded-circle" href="#" style="border-color: rgba(255,255,255,0.1); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: all 0.3s;" onmouseover="this.style.background='#FFD700'; this.style.color='#0B051D'; this.style.borderColor='#FFD700'" onmouseout="this.style.background='transparent'; this.style.color='#fff'; this.style.borderColor='rgba(255,255,255,0.1)'"><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-outline-light btn-square mr-2 rounded-circle" href="#" style="border-color: rgba(255,255,255,0.1); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: all 0.3s;" onmouseover="this.style.background='#FFD700'; this.style.color='#0B051D'; this.style.borderColor='#FFD700'" onmouseout="this.style.background='transparent'; this.style.color='#fff'; this.style.borderColor='rgba(255,255,255,0.1)'"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-light btn-square mr-2 rounded-circle" href="#" style="border-color: rgba(255,255,255,0.1); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: all 0.3s;" onmouseover="this.style.background='#FFD700'; this.style.color='#0B051D'; this.style.borderColor='#FFD700'" onmouseout="this.style.background='transparent'; this.style.color='#fff'; this.style.borderColor='rgba(255,255,255,0.1)'"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-outline-light btn-square rounded-circle" href="#" style="border-color: rgba(255,255,255,0.1); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: all 0.3s;" onmouseover="this.style.background='#FFD700'; this.style.color='#0B051D'; this.style.borderColor='#FFD700'" onmouseout="this.style.background='transparent'; this.style.color='#fff'; this.style.borderColor='rgba(255,255,255,0.1)'"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
+
+            <!-- Fast Links -->
+            <div class="col-lg-3 col-md-4 mb-5">
+                <h5 class="text-uppercase mb-4" style="color: #fff; font-weight: 800; letter-spacing: 2px;">Marketplace</h5>
+                <div class="d-flex flex-column justify-content-start">
+                    <a class="mb-3 d-flex align-items-center" href="/index" style="color: #8F86A5; text-decoration: none; transition: color 0.3s; font-weight: 500;" onmouseover="this.style.color='#FFD700'" onmouseout="this.style.color='#8F86A5'"><i class="fa fa-angle-right mr-3" style="color: #4A2C8A;"></i>Home</a>
+                    <a class="mb-3 d-flex align-items-center" href="/products" style="color: #8F86A5; text-decoration: none; transition: color 0.3s; font-weight: 500;" onmouseover="this.style.color='#FFD700'" onmouseout="this.style.color='#8F86A5'"><i class="fa fa-angle-right mr-3" style="color: #4A2C8A;"></i>Explorer</a>
+                    <a class="mb-3 d-flex align-items-center" href="/cart" style="color: #8F86A5; text-decoration: none; transition: color 0.3s; font-weight: 500;" onmouseover="this.style.color='#FFD700'" onmouseout="this.style.color='#8F86A5'"><i class="fa fa-angle-right mr-3" style="color: #4A2C8A;"></i>Shopping Cart</a>
+                    <a class="mb-3 d-flex align-items-center" href="/student/orders" style="color: #8F86A5; text-decoration: none; transition: color 0.3s; font-weight: 500;" onmouseover="this.style.color='#FFD700'" onmouseout="this.style.color='#8F86A5'"><i class="fa fa-angle-right mr-3" style="color: #4A2C8A;"></i>Checkout</a>
+                </div>
+            </div>
+
+            <!-- Get In Touch -->
+            <div class="col-lg-5 col-md-8 mb-5">
+                <h5 class="text-uppercase mb-4" style="color: #fff; font-weight: 800; letter-spacing: 2px;">Campus Support</h5>
+                <p class="mb-4" style="line-height: 1.8;">Experiencing issues or want to report a seller? Our dedicated student admins are on standby.</p>
+                <div class="p-4 rounded mb-2" style="background: rgba(255,255,255,0.03); border-left: 4px solid #FFD700;">
+                    <h6 style="color: #fff; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase;">Direct Line</h6>
+                    <p class="m-0" style="color: #FFD700; font-weight: 700; font-size: 1.1rem;"><i class="fa fa-envelope mr-3"></i>support@umtmarketplace.edu</p>
+                </div>
+            </div>
+
         </div>
-        <div class="row border-top mx-xl-5 py-4" style="border-color: rgba(256, 256, 256, .1) !important;">
-            <div class="col-md-6 px-xl-0">
-                <p class="mb-md-0 text-center text-md-left text-secondary">
-                    &copy; UMT Marketplace. All Rights Reserved.
+
+        <!-- Copyright Bottom -->
+        <div class="row mx-xl-5 py-4 mt-2" style="border-top: 1px solid rgba(255,255,255,0.05);">
+            <div class="col-12 text-center text-md-left d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <p class="mb-2 mb-md-0" style="font-size: 0.9rem; font-weight: 500;">
+                    &copy; <span class="font-weight-bold" style="color: #FFD700;">UMT MARKETPLACE</span>. Designed by <span class="font-weight-bold" style="color: #fff;">AHSMART</span>
                 </p>
+                <div class="payments" style="opacity: 0.6; filter: grayscale(100%);">
+                    <img src="img/payments.png" alt="" style="height: 25px;">
+                </div>
             </div>
         </div>
     </div>

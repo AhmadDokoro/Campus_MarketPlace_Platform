@@ -7,49 +7,61 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/mobile.css}" rel="stylesheet" />
+    <link th:href="@{/css/cmp-enhance.css}" rel="stylesheet" />
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root{
-            --primary:#4B2E83;
-            --primary-deep:#2c1f59;
-            --accent:#F2B705;
-            --accent-soft:#fff3c6;
+            --primary:#4A2C8A;
+            --primary-deep:#ffffff;
+            --accent:#ff4e00;
+            --accent-soft:rgba(255, 78, 0, 0.1);
             --blue:#2d6fb7;
-            --teal:#0d9488;
-            --muted:#6b7280;
+            --teal:#0df07a;
+            --muted:#666666;
             --card:#ffffff;
-            --bg:#f6f7fb;
-            --line:rgba(15,23,42,0.08);
-            --line-strong:rgba(75,46,131,0.14);
-            --shadow:0 14px 34px rgba(15,23,42,0.08);
-            --radius:22px;
+            --bg:#f4f6f9;
+            --line:rgba(0,0,0,0.1);
+            --line-strong:rgba(74, 44, 138, 0.2);
+            --shadow:0 10px 30px rgba(0,0,0,0.08);
+            --radius:0px;
         }
 
         *{box-sizing:border-box}
         body{
             margin:0;
-            background:
-                radial-gradient(circle at top left, rgba(75,46,131,0.10), transparent 22%),
-                radial-gradient(circle at top right, rgba(242,183,5,0.12), transparent 18%),
-                linear-gradient(180deg,#fbfbff 0%,var(--bg) 100%);
-            font-family:'Poppins',sans-serif;
-            color:#111827;
+            background: var(--bg);
+            font-family:'Space Grotesk', 'Poppins', sans-serif;
+            color:#222222;
+            min-height: 100vh;
         }
 
-        .page-wrap{padding:28px 14px 40px}
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+            background-size: 50px 50px; pointer-events: none; z-index: -1;
+        }
+
+        .page-wrap{padding:40px 20px; position:relative; z-index:1;}
         .hub{max-width:1120px;margin:0 auto}
 
         .account-hero{
-            margin-bottom:18px;
-            padding:24px;
-            border-radius:30px;
-            background:
-                radial-gradient(circle at top right, rgba(242,183,5,0.22), transparent 24%),
-                radial-gradient(circle at bottom left, rgba(45,111,183,0.14), transparent 26%),
-                linear-gradient(135deg,#ffffff 0%, #f7f1ff 42%, #eef4ff 100%);
-            border:1px solid rgba(132,112,197,0.18);
-            box-shadow:0 26px 60px rgba(75,46,131,0.14);
+            margin-bottom:30px;
+            padding:50px;
+            border-radius: var(--radius);
+            background: var(--card);
+            border:1px solid var(--line-strong);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .account-hero::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, var(--accent), #ff4e00);
         }
 
         .account-top{
@@ -58,7 +70,7 @@
             justify-content:space-between;
             gap:20px;
             flex-wrap:wrap;
-            margin-bottom:18px;
+            margin-bottom:20px;
         }
 
         .account-link{
@@ -66,74 +78,73 @@
             min-width:0;
             display:flex;
             align-items:center;
-            gap:18px;
+            gap:20px;
             text-decoration:none;
-            color:inherit;
-            padding:18px 20px;
-            border-radius:26px;
-            background:
-                linear-gradient(135deg,rgba(255,255,255,0.98),rgba(244,248,255,0.95));
-            border:1px solid rgba(75,46,131,0.14);
-            box-shadow:0 16px 28px rgba(75,46,131,0.08);
-            transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+            color:#fff;
+            padding:20px;
+            border-radius: var(--radius);
+            background: rgba(255,255,255,0.02);
+            border:1px solid var(--line);
+            box-shadow:inset 0 0 20px rgba(242,183,5,0.05);
+            transition:all .3s ease;
         }
 
         .account-link:hover{
             text-decoration:none;
-            color:inherit;
-            transform:translateY(-2px);
-            box-shadow:0 18px 34px rgba(75,46,131,0.13);
-            border-color:rgba(75,46,131,0.28);
-            background:
-                linear-gradient(135deg,rgba(255,255,255,1),rgba(240,245,255,0.96));
+            color:#fff;
+            transform:translateY(-4px);
+            box-shadow:0 10px 30px rgba(242,183,5,0.2);
+            border-color:var(--accent);
+            background: rgba(242,183,5,0.05);
         }
 
         .account-avatar{
-            width:84px;
-            height:84px;
-            border-radius:28px;
+            width:90px;
+            height:90px;
+            border-radius: 0;
             display:flex;
             align-items:center;
             justify-content:center;
             flex-shrink:0;
-            color:#fff;
-            background:
-                radial-gradient(circle at top, rgba(255,255,255,0.20), transparent 40%),
-                linear-gradient(135deg,var(--primary),#7250c2 55%, #f2b705 125%);
-            box-shadow:0 16px 28px rgba(75,46,131,0.20);
+            color:#000;
+            background: var(--accent);
+            box-shadow:0 10px 30px rgba(242,183,5,0.4);
         }
 
-        .account-avatar i{font-size:34px}
+        .account-avatar i{font-size:40px}
         .account-copy{min-width:0}
 
         .account-kicker{
             display:inline-flex;
             align-items:center;
             gap:8px;
-            margin-bottom:8px;
-            padding:7px 12px;
-            border-radius:999px;
-            background:linear-gradient(135deg,rgba(75,46,131,0.13),rgba(242,183,5,0.18));
-            color:var(--primary-deep);
-            font-size:11px;
-            font-weight:800;
-            letter-spacing:.08em;
+            margin-bottom:10px;
+            padding:6px 12px;
+            background:var(--accent-soft);
+            color:var(--accent);
+            font-size:12px;
+            font-weight:900;
+            letter-spacing: .2em;
             text-transform:uppercase;
+            border: 1px solid var(--accent);
         }
 
         .account-copy h1{
             margin:0;
-            font-size:32px;
+            font-size:2.8rem;
+            text-transform: uppercase;
+            font-weight: 900;
             line-height:1;
             letter-spacing:-.05em;
+            color: #fff;
         }
 
         .account-email{
-            margin:8px 0 0;
-            color:#68708d;
-            font-size:13px;
-            font-family:'Space Grotesk',sans-serif;
-            letter-spacing:.05em;
+            margin:10px 0 0;
+            color:var(--muted);
+            font-size:14px;
+            font-weight: 700;
+            letter-spacing:.1em;
             text-transform:uppercase;
         }
 
@@ -150,13 +161,20 @@
             gap:10px;
             padding:12px 14px;
             border-radius:18px;
-            background:linear-gradient(135deg,var(--purple),#6f4dc0);
-            border:1px solid rgba(75,46,131,0.22);
+            background:rgba(255,255,255,0.05);
+            border:1px solid rgba(255,255,255,0.2);
             color:#fff;
             font-size:13px;
             font-weight:700;
             white-space:nowrap;
-            box-shadow:0 14px 24px rgba(75,46,131,0.20);
+            transition: all .2s ease;
+        }
+
+        .account-link:hover .account-arrow {
+            background:#FFD700;
+            border-color:#FFD700;
+            color:#100b1a;
+            box-shadow: 0 4px 10px rgba(255,215,0,0.4);
         }
 
         .utility-actions{
@@ -178,20 +196,23 @@
             font-size:13px;
             font-weight:800;
             border:1px solid transparent;
+            transition: all .2s;
         }
 
         .utility-btn:hover{text-decoration:none}
         .utility-home{
-            background:#fff;
-            color:var(--ink);
-            border-color:rgba(75,46,131,0.12);
+            background:rgba(0,0,0,0.5);
+            color:#fff;
+            border-color:rgba(255,255,255,0.2);
         }
+        .utility-home:hover{background:rgba(255,255,255,0.1);color:#fff}
 
         .utility-details{
-            background:linear-gradient(135deg,var(--orange),var(--yellow));
+            background:linear-gradient(135deg,#ff8c00,#ff4e00);
             color:#fff;
-            box-shadow:0 14px 24px rgba(242,140,31,.18);
+            box-shadow:0 10px 20px rgba(255, 78, 0, 0.4);
         }
+        .utility-details:hover{color:#fff;filter:brightness(1.1);box-shadow:0 15px 25px rgba(255, 78, 0, 0.6)}
 
         .account-actions-nav{
             display:flex;
@@ -199,10 +220,10 @@
             justify-content:center;
             gap:10px;
             flex-wrap:wrap;
-            background:rgba(255,255,255,0.7);
+            background:rgba(0,0,0,0.3);
             padding:12px;
             border-radius:18px;
-            border:1px solid var(--line);
+            border:1px solid rgba(255,255,255,0.1);
         }
 
         .nav-pill{
@@ -211,39 +232,42 @@
             gap:8px;
             padding:10px 18px;
             border-radius:999px;
-            background:#fff;
-            color:#111827;
+            background:rgba(255,255,255,0.05);
+            color:#fff;
             font-size:13px;
             font-weight:700;
             text-decoration:none;
-            border:1px solid rgba(15,23,42,0.06);
-            box-shadow:0 6px 12px rgba(15,23,42,0.04);
-            transition:transform .2s ease, box-shadow .2s ease;
+            border:1px solid rgba(255,255,255,0.1);
+            transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
         }
 
         .nav-pill:hover{
-            color:#111827;
+            color:#100b1a;
+            background:#FFD700;
             text-decoration:none;
             transform:translateY(-2px);
-            box-shadow:0 10px 20px rgba(15,23,42,0.08);
+            box-shadow:0 10px 20px rgba(255,215,0,0.4);
+            border-color:#FFD700;
         }
 
         .nav-pill-seller{
-            background:linear-gradient(135deg,var(--blue),#1f5799);
-            color:#fff;
+            background:linear-gradient(135deg, #FFD700, #ffaa00);
+            color:#100b1a;
             border:none;
+            box-shadow:0 5px 15px rgba(255, 215, 0, 0.3);
         }
 
-        .nav-pill-seller:hover{color:#fff}
+        .nav-pill-seller:hover{color:#100b1a; filter:brightness(1.1); box-shadow:0 10px 25px rgba(255, 215, 0, 0.5);}
 
         .grid{display:grid;grid-template-columns:1fr;gap:18px}
 
         .panel{
-            background:rgba(255,255,255,0.90);
+            background:rgba(0,0,0,0.5);
             border-radius:var(--radius);
-            box-shadow:var(--shadow);
-            border:1px solid var(--line);
+            box-shadow:inset 0 0 20px rgba(0,0,0,0.4), 0 10px 30px rgba(0,0,0,0.6);
+            border:1px solid rgba(255,255,255,0.08);
             padding:24px;
+            backdrop-filter: blur(10px);
         }
 
         .panel-head{
@@ -265,7 +289,7 @@
             margin:0;
             font-size:18px;
             font-weight:800;
-            color:#111827;
+            color:#fff;
         }
 
         .panel-copy{
@@ -280,15 +304,22 @@
             gap:8px;
             padding:11px 14px;
             border-radius:999px;
-            background:#fff;
-            border:1px solid var(--line);
-            color:#111827;
+            background:rgba(255,255,255,0.05);
+            border:1px solid rgba(255,255,255,0.2);
+            color:#fff;
             font-size:13px;
             font-weight:700;
             text-decoration:none;
+            transition: all .2s;
         }
 
-        .panel-link:hover{color:#111827;text-decoration:none}
+        .panel-link:hover{
+            color:#100b1a;
+            background:#FFD700;
+            border-color:#FFD700;
+            text-decoration:none;
+            box-shadow:0 5px 15px rgba(255,215,0,0.4);
+        }
 
         .tracker-panel{padding-bottom:30px}
 
@@ -568,34 +599,801 @@
             padding:0 4px;
         }
 
+        @media (min-width:768px){
+            body{
+                background:
+                    radial-gradient(circle at 10% 10%, rgba(242,183,5,0.12), transparent 26%),
+                    radial-gradient(circle at 92% 8%, rgba(45,111,183,0.10), transparent 22%),
+                    linear-gradient(180deg, #f8f9fa 0%, #f4f6f9 100%);
+                color:#18132b;
+            }
+
+            body::before{
+                background:
+                    linear-gradient(to right, rgba(24,19,43,0.035) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(24,19,43,0.035) 1px, transparent 1px);
+                background-size:34px 34px;
+            }
+
+            .page-wrap{
+                padding:42px 20px 56px;
+            }
+
+            .account-hero{
+                padding:38px 40px 34px;
+                background:linear-gradient(135deg, #1A0A3E 0%, #341f5a 58%, #2d6fb7 100%);
+                border:2px solid #180f2e;
+                box-shadow:18px 18px 0 rgba(74,44,138,0.16);
+                backdrop-filter:none;
+            }
+
+            .account-hero::before{
+                height:6px;
+                background:linear-gradient(90deg, #ff4e00 0%, #F2B705 52%, #2d6fb7 100%);
+            }
+
+            .account-hero::after{
+                content:'';
+                position:absolute;
+                right:-48px;
+                bottom:-62px;
+                width:240px;
+                height:240px;
+                background:linear-gradient(135deg, rgba(242,183,5,0.24), rgba(255,78,0,0.08));
+                clip-path:polygon(40% 0, 100% 0, 100% 100%, 0 100%);
+                pointer-events:none;
+            }
+
+            .account-link{
+                padding:24px 26px;
+                background:rgba(255,255,255,0.08);
+                border:1px solid rgba(242,183,5,0.30);
+                box-shadow:none;
+                color:#fff;
+            }
+
+            .account-link:hover{
+                color:#fff;
+                background:rgba(255,255,255,0.14);
+                border-color:#F2B705;
+                box-shadow:0 14px 28px rgba(26,10,62,0.26);
+            }
+
+            .account-avatar{
+                background:#F2B705;
+                color:#160f2c;
+                box-shadow:none;
+                clip-path:polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+            }
+
+            .account-kicker{
+                background:rgba(255,255,255,0.12);
+                color:#F2B705;
+                border-color:rgba(242,183,5,0.45);
+            }
+
+            .account-copy h1{
+                color:#ffffff;
+            }
+
+            .account-email,
+            .account-copy p{
+                color:rgba(255,255,255,0.82);
+            }
+
+            .account-arrow{
+                border:none;
+                border-radius:0;
+                background:#F2B705;
+                color:#160f2c;
+                font-weight:900;
+                letter-spacing:0.08em;
+                text-transform:uppercase;
+                clip-path:polygon(7% 0, 100% 0, 93% 100%, 0 100%);
+            }
+
+            .account-link:hover .account-arrow{
+                background:#ffffff;
+                border-color:#ffffff;
+                color:#160f2c;
+                box-shadow:none;
+            }
+
+            .utility-actions{
+                margin-bottom:24px;
+                gap:16px;
+            }
+
+            .utility-btn,
+            .nav-pill,
+            .panel-link,
+            .page-wrap .btn-outline-dark,
+            .page-wrap .btn-outline-primary,
+            .page-wrap .btn-primary,
+            .rate-btn{
+                min-height:44px;
+                border-radius:0 !important;
+                font-size:12px;
+                font-weight:900 !important;
+                letter-spacing:0.1em;
+                text-transform:uppercase;
+            }
+
+            .utility-home{
+                background:#ffffff;
+                color:#18132b;
+                border-color:rgba(74,44,138,0.24);
+                box-shadow:6px 6px 0 rgba(74,44,138,0.08);
+            }
+
+            .utility-home:hover{
+                background:#4A2C8A;
+                color:#ffffff;
+                border-color:#4A2C8A;
+            }
+
+            .utility-details{
+                background:linear-gradient(90deg, #ff4e00 0%, #F2B705 100%);
+                color:#160f2c;
+                box-shadow:8px 8px 0 rgba(242,183,5,0.18);
+                clip-path:polygon(6% 0, 100% 0, 94% 100%, 0 100%);
+            }
+
+            .utility-details:hover{
+                color:#160f2c;
+                filter:none;
+                box-shadow:10px 10px 0 rgba(255,78,0,0.18);
+                transform:translateY(-2px);
+            }
+
+            .account-actions-nav{
+                justify-content:flex-start;
+                padding:0;
+                background:transparent;
+                border:none;
+                gap:12px;
+            }
+
+            .nav-pill{
+                background:#ffffff;
+                color:#18132b;
+                border-color:rgba(74,44,138,0.22);
+                box-shadow:6px 6px 0 rgba(74,44,138,0.08);
+            }
+
+            .nav-pill:hover{
+                background:#4A2C8A;
+                color:#ffffff;
+                border-color:#4A2C8A;
+                box-shadow:8px 8px 0 rgba(45,111,183,0.16);
+            }
+
+            .nav-pill-seller{
+                background:linear-gradient(90deg, #ff4e00 0%, #F2B705 100%);
+                color:#160f2c;
+                box-shadow:8px 8px 0 rgba(242,183,5,0.18);
+            }
+
+            .nav-pill-seller:hover{
+                color:#160f2c;
+                filter:none;
+                box-shadow:10px 10px 0 rgba(255,78,0,0.18);
+            }
+
+            .panel{
+                background:#ffffff;
+                border:1px solid rgba(74,44,138,0.16);
+                box-shadow:14px 14px 0 rgba(74,44,138,0.08);
+                backdrop-filter:none;
+                padding:28px;
+            }
+
+            .panel-title h3,
+            .product-title{
+                color:#18132b;
+            }
+
+            .panel-copy,
+            .product-sub,
+            .step .desc,
+            .foot-note{
+                color:#5d6475;
+            }
+
+            .panel-link{
+                background:#18132b;
+                color:#ffffff;
+                border-color:#18132b;
+                box-shadow:none;
+            }
+
+            .panel-link:hover{
+                background:#2d6fb7;
+                color:#ffffff;
+                border-color:#2d6fb7;
+                box-shadow:none;
+            }
+
+            .steps{
+                gap:14px;
+            }
+
+            .step{
+                padding:14px 10px 16px;
+                border-radius:0;
+                border:1px solid rgba(74,44,138,0.14);
+                background:#ffffff;
+            }
+
+            .step:hover{
+                background:#fff6e1;
+                box-shadow:inset 0 0 0 1px rgba(242,183,5,0.30);
+            }
+
+            .step-active{
+                background:linear-gradient(180deg, rgba(255,78,0,0.08), rgba(74,44,138,0.08));
+                box-shadow:inset 0 0 0 2px rgba(74,44,138,0.16);
+            }
+
+            .node{
+                border-radius:0;
+                clip-path:polygon(12% 0, 100% 0, 88% 100%, 0 100%);
+            }
+
+            .count-badge{
+                border-radius:0;
+                clip-path:polygon(15% 0, 100% 0, 85% 100%, 0 100%);
+            }
+
+            .step .name{
+                color:#18132b;
+                font-weight:800;
+                text-transform:uppercase;
+                letter-spacing:0.06em;
+            }
+
+            .connector{
+                flex:0 0 54px;
+                margin-top:36px;
+                background:linear-gradient(90deg, #4A2C8A 0%, #F2B705 100%);
+            }
+
+            .alert-review{
+                border-radius:0;
+                font-weight:800;
+                letter-spacing:0.06em;
+                text-transform:uppercase;
+            }
+
+            .product-card{
+                border:1px solid rgba(74,44,138,0.14);
+                border-radius:0;
+                background:#ffffff;
+                box-shadow:8px 8px 0 rgba(74,44,138,0.06);
+            }
+
+            .product-eyebrow{
+                border-radius:0;
+                background:#18132b;
+                color:#F2B705;
+                letter-spacing:0.08em;
+            }
+
+            .status-pill,
+            .reviewed-badge{
+                border-radius:0;
+                text-transform:uppercase;
+                letter-spacing:0.06em;
+                font-weight:800;
+            }
+
+            .chat-btn,
+            .page-wrap .btn-outline-dark{
+                background:#ffffff;
+                color:#18132b;
+                border:1px solid rgba(24,19,43,0.35);
+            }
+
+            .chat-btn:hover,
+            .page-wrap .btn-outline-dark:hover{
+                background:#18132b;
+                color:#ffffff;
+                border-color:#18132b;
+            }
+
+            .page-wrap .btn-outline-primary{
+                background:#ffffff;
+                color:#4A2C8A;
+                border:1px solid rgba(74,44,138,0.34);
+            }
+
+            .page-wrap .btn-outline-primary:hover{
+                background:#4A2C8A;
+                color:#ffffff;
+                border-color:#4A2C8A;
+            }
+
+            .page-wrap .btn-primary{
+                background:linear-gradient(90deg, #ff4e00 0%, #F2B705 100%);
+                color:#160f2c;
+                border:none;
+                clip-path:polygon(6% 0, 100% 0, 94% 100%, 0 100%);
+            }
+
+            .page-wrap .btn-primary:hover{
+                color:#160f2c;
+                filter:none;
+                box-shadow:10px 10px 0 rgba(255,78,0,0.16);
+            }
+
+            .rate-btn{
+                background:#ffffff;
+                color:#4A2C8A;
+                border:2px solid #4A2C8A;
+            }
+
+            .rate-btn:hover{
+                background:#4A2C8A;
+                color:#ffffff;
+            }
+
+            .review-form-wrap{
+                border-radius:0;
+                border:1px solid rgba(74,44,138,0.22);
+                background:#f8f4ff;
+            }
+
+            .review-form-wrap textarea{
+                border-radius:0 !important;
+                border:1px solid rgba(74,44,138,0.22) !important;
+                background:#ffffff;
+                color:#18132b;
+                font-weight:600;
+            }
+
+            .review-form-wrap textarea::placeholder{
+                color:#7d8191;
+            }
+
+            .empty-products{
+                border-radius:0;
+                border:1px dashed rgba(74,44,138,0.28);
+                background:#ffffff;
+            }
+        }
+
         @media (max-width:991px){
             .account-link{flex-basis:100%}
             .account-arrow{margin-left:0}
         }
 
-        @media (max-width:767px){
-            .page-wrap{padding:18px 12px 32px}
-            .account-hero,.panel{padding:18px}
-            .account-top{margin-bottom:14px}
+        /* ════════════════════════════════════════════════════════════════
+           MOBILE — brand-aligned profile (purple/gold, glass cards)
+           Only applies below 768px; desktop styling above is untouched.
+           ════════════════════════════════════════════════════════════════ */
+        @media (max-width: 767.98px){
+            body{
+                background: linear-gradient(180deg, #faf8ff 0%, #f3eefb 50%, #faf8ff 100%) !important;
+                font-family:'Inter','Poppins',sans-serif !important;
+                color: #2E2740 !important;
+            }
+            body::before{
+                background:
+                    linear-gradient(to right, rgba(74,44,138,0.045) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(74,44,138,0.045) 1px, transparent 1px) !important;
+                background-size: 40px 40px !important;
+            }
+
+            .page-wrap{ padding: 16px 14px 36px !important; }
+
+            /* Hero card — light glass with purple→gold accent strip */
+            .account-hero{
+                padding: 22px 20px !important;
+                background: rgba(255,255,255,.88) !important;
+                -webkit-backdrop-filter: blur(20px) saturate(140%);
+                backdrop-filter: blur(20px) saturate(140%);
+                border: 1px solid rgba(232,224,245,.85) !important;
+                border-radius: 24px !important;
+                box-shadow: 0 16px 38px rgba(45,27,105,.12) !important;
+                position: relative;
+                overflow: hidden;
+            }
+            .account-hero::before{
+                content: ""; position: absolute;
+                top: 0; left: 0; right: 0; height: 4px !important;
+                background: linear-gradient(90deg, #2D1B69, #6B4EAF, #FFD700, #6B4EAF, #2D1B69) !important;
+                background-size: 200% 100%;
+                animation: cmpDividerFlow 6s linear infinite;
+            }
+
+            .account-top{ margin-bottom: 16px; }
             .account-link{
-                padding:16px;
-                align-items:flex-start;
-                flex-wrap:wrap;
+                width: 100%;
+                padding: 16px !important;
+                flex-direction: column;
+                gap: 12px;
+                align-items: center;
+                text-align: center;
+                background: linear-gradient(135deg, rgba(107,78,175,.08), rgba(255,215,0,.06)) !important;
+                border: 1px solid rgba(232,224,245,.85) !important;
+                border-radius: 18px !important;
+                box-shadow: 0 8px 22px rgba(45,27,105,.06) !important;
+                color: #2D1B69 !important;
             }
+            .account-link:hover{
+                color: #2D1B69 !important;
+                background: linear-gradient(135deg, rgba(255,215,0,.16), rgba(107,78,175,.1)) !important;
+                border-color: rgba(255,215,0,.5) !important;
+                transform: translateY(-2px);
+            }
+
             .account-avatar{
-                width:68px;
-                height:68px;
-                border-radius:22px;
+                width: 76px !important; height: 76px !important;
+                border-radius: 50% !important;
+                background: linear-gradient(135deg, #2D1B69, #6B4EAF) !important;
+                color: #fff !important;
+                border: 3px solid #FFD700 !important;
+                box-shadow: 0 8px 18px rgba(45,27,105,.3) !important;
+                margin: 0 auto !important;
             }
-            .account-avatar i{font-size:28px}
-            .account-copy h1{font-size:26px}
-            .steps{gap:0}
-            .connector{flex:0 0 16px}
-            .node{width:42px;height:42px}
-            .node i{font-size:18px}
-            .step .name{font-size:11px}
-            .product-card{align-items:flex-start;flex-direction:column}
-            .product-actions{width:100%;justify-content:flex-start}
+            .account-avatar i{ font-size: 32px; }
+
+            .account-copy{ width: 100%; }
+            .account-kicker{
+                background: rgba(255,215,0,.18) !important;
+                color: #8a6d00 !important;
+                border: 1px solid rgba(255,215,0,.4) !important;
+                font-size: 10.5px !important;
+                letter-spacing: .14em !important;
+                padding: 5px 11px !important;
+                border-radius: 999px !important;
+            }
+            .account-copy h1{
+                font-family:'Poppins',sans-serif !important;
+                font-size: 1.6rem !important;
+                font-weight: 800 !important;
+                color: transparent !important;
+                background: linear-gradient(135deg, #1A0A3E 0%, #4A2C8A 60%, #6B4EAF 100%);
+                -webkit-background-clip: text; background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-transform: none !important;
+                letter-spacing: -.01em !important;
+                word-break: break-word;
+                margin-bottom: 6px !important;
+            }
+            .account-email{
+                color: #6B6280 !important;
+                font-size: .82rem !important;
+                font-weight: 500 !important;
+                letter-spacing: 0 !important;
+                text-transform: none !important;
+            }
+
+            .account-arrow{
+                width: 100%;
+                justify-content: center;
+                padding: 12px !important;
+                font-size: .82rem !important;
+                font-family:'Poppins',sans-serif;
+                font-weight: 700 !important;
+                background: linear-gradient(135deg, #FFD700, #FFC107) !important;
+                color: #1A0A3E !important;
+                border: none !important;
+                border-radius: 12px !important;
+                box-shadow: 0 8px 20px rgba(255,193,7,.4) !important;
+                margin-top: 4px;
+                letter-spacing: .04em;
+                text-transform: none;
+            }
+            .account-link:hover .account-arrow{
+                background: linear-gradient(135deg, #2D1B69, #4A2C8A) !important;
+                color: #FFD700 !important;
+                box-shadow: 0 10px 24px rgba(45,27,105,.35) !important;
+            }
+
+            /* Utility + nav buttons stack full width */
+            .utility-actions, .account-actions-nav{
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-bottom: 14px;
+                padding: 0;
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+            .utility-btn, .nav-pill{
+                width: 100%;
+                padding: 13px 16px !important;
+                justify-content: center;
+                font-family:'Poppins',sans-serif !important;
+                font-weight: 700 !important;
+                font-size: .82rem !important;
+                letter-spacing: .04em !important;
+                text-transform: none !important;
+                border-radius: 12px !important;
+                margin: 0;
+            }
+            .utility-home{
+                background: rgba(255,255,255,.85) !important;
+                color: #2D1B69 !important;
+                border: 1px solid rgba(107,78,175,.25) !important;
+                box-shadow: 0 6px 16px rgba(45,27,105,.06) !important;
+            }
+            .utility-home:hover{
+                background: linear-gradient(135deg, #2D1B69, #4A2C8A) !important;
+                color: #FFD700 !important;
+                border-color: transparent !important;
+            }
+            .utility-details{
+                background: linear-gradient(135deg, #FFD700, #FFC107) !important;
+                color: #1A0A3E !important;
+                border: none !important;
+                box-shadow: 0 10px 22px rgba(255,193,7,.4) !important;
+            }
+            .utility-details:hover{
+                color: #1A0A3E !important;
+                filter: brightness(1.04);
+                box-shadow: 0 14px 28px rgba(255,193,7,.55) !important;
+            }
+            .nav-pill{
+                background: rgba(255,255,255,.85) !important;
+                color: #2D1B69 !important;
+                border: 1px solid rgba(107,78,175,.25) !important;
+                box-shadow: 0 6px 16px rgba(45,27,105,.06) !important;
+            }
+            .nav-pill:hover{
+                background: linear-gradient(135deg, #2D1B69, #4A2C8A) !important;
+                color: #FFD700 !important;
+                border-color: transparent !important;
+                box-shadow: 0 10px 22px rgba(45,27,105,.3) !important;
+            }
+            .nav-pill-seller{
+                background: linear-gradient(135deg, #FFD700, #FFC107) !important;
+                color: #1A0A3E !important;
+                border: none !important;
+                box-shadow: 0 10px 22px rgba(255,193,7,.4) !important;
+            }
+            .nav-pill-seller:hover{
+                color: #1A0A3E !important;
+                filter: brightness(1.04);
+                box-shadow: 0 14px 28px rgba(255,193,7,.55) !important;
+            }
+
+            /* Panels — light glass */
+            .panel{
+                background: rgba(255,255,255,.85) !important;
+                -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+                border: 1px solid rgba(232,224,245,.85) !important;
+                border-radius: 22px !important;
+                box-shadow: 0 14px 32px rgba(45,27,105,.08) !important;
+                padding: 22px 18px !important;
+            }
+            .panel-title h3{
+                color: #2D1B69 !important;
+                font-family:'Poppins',sans-serif !important;
+                font-weight: 800 !important;
+                font-size: 1.05rem !important;
+            }
+            .panel-copy, .product-sub, .step .desc, .foot-note{
+                color: #6B6280 !important;
+            }
+            .panel-head{ flex-direction: column; align-items: stretch; gap: 12px; }
+            .panel-link{
+                width: 100%;
+                justify-content: center;
+                background: linear-gradient(135deg, #2D1B69, #4A2C8A) !important;
+                color: #FFD700 !important;
+                border: none !important;
+                border-radius: 999px !important;
+                padding: 11px 16px !important;
+                font-family:'Poppins',sans-serif;
+                font-weight: 700 !important;
+                font-size: .8rem !important;
+                box-shadow: 0 8px 18px rgba(45,27,105,.25) !important;
+            }
+            .panel-link:hover{
+                background: linear-gradient(135deg, #FFD700, #FFC107) !important;
+                color: #1A0A3E !important;
+                border-color: transparent !important;
+                box-shadow: 0 12px 26px rgba(255,193,7,.45) !important;
+            }
+
+            /* Tracker — horizontal scrollable cards on mobile */
+            .steps{
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                gap: 12px;
+                padding: 4px 4px 14px;
+                margin: 0 -8px;
+                padding-left: 8px;
+                padding-right: 8px;
+                scrollbar-width: none;
+            }
+            .steps::-webkit-scrollbar{ display: none; }
+            .connector{ display: none; }
+
+            button.step, .step{
+                flex: 0 0 116px !important;
+                width: 116px !important;
+                min-width: 116px !important;
+                padding: 14px 8px 12px !important;
+                border-radius: 16px !important;
+                background: rgba(255,255,255,.92) !important;
+                border: 1px solid rgba(232,224,245,.85) !important;
+                box-shadow: 0 6px 14px rgba(45,27,105,.06);
+                transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+            }
+            .step:hover{
+                background: rgba(255,255,255,.96) !important;
+                border-color: rgba(255,215,0,.45) !important;
+                transform: translateY(-2px);
+                box-shadow: 0 10px 22px rgba(45,27,105,.1);
+            }
+            .step-active{
+                background: linear-gradient(135deg, rgba(255,215,0,.16), rgba(107,78,175,.12)) !important;
+                border-color: rgba(255,215,0,.5) !important;
+                box-shadow: 0 10px 22px rgba(255,193,7,.18);
+            }
+            .node{
+                width: 44px !important; height: 44px !important;
+                border-radius: 50% !important;
+                margin: 0 auto;
+            }
+            .node i{ font-size: 18px; }
+            .step .name{
+                color: #2D1B69 !important;
+                font-family:'Poppins',sans-serif !important;
+                font-weight: 700 !important;
+                font-size: .76rem !important;
+                margin-top: 8px !important;
+                letter-spacing: 0 !important;
+                text-transform: none !important;
+            }
+            .step .desc{ display: none; }
+
+            /* Product cards — light glass, full-width */
+            .product-card{
+                flex-direction: column;
+                align-items: stretch;
+                gap: 14px;
+                padding: 16px !important;
+                background: rgba(255,255,255,.92) !important;
+                border: 1px solid rgba(232,224,245,.85) !important;
+                border-radius: 18px !important;
+                box-shadow: 0 8px 22px rgba(45,27,105,.06) !important;
+                position: relative;
+                overflow: hidden;
+            }
+            .product-card::before{
+                content: ""; position: absolute;
+                left: 0; top: 0; bottom: 0;
+                width: 3px;
+                background: linear-gradient(180deg, #6B4EAF, #FFD700);
+                border-radius: 18px 0 0 18px;
+            }
+            .product-main{ width: 100%; }
+            .product-eyebrow{
+                background: rgba(255,215,0,.16) !important;
+                color: #8a6d00 !important;
+                border: 1px solid rgba(255,215,0,.35);
+                font-family:'Poppins',sans-serif;
+                font-weight: 700 !important;
+                font-size: .68rem !important;
+                letter-spacing: .08em !important;
+                padding: 5px 11px !important;
+                border-radius: 999px !important;
+            }
+            .product-title{
+                color: #2D1B69 !important;
+                font-family:'Poppins',sans-serif;
+                font-weight: 800 !important;
+                font-size: .98rem !important;
+                line-height: 1.3 !important;
+            }
+            .product-actions{
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            .status-pill{
+                width: 100%;
+                justify-content: center;
+                padding: 9px 12px !important;
+                border-radius: 999px !important;
+                font-family:'Poppins',sans-serif;
+                font-weight: 700 !important;
+                font-size: .76rem !important;
+                letter-spacing: .04em !important;
+                text-transform: none !important;
+                border: 1px solid transparent;
+            }
+            .chat-btn, .rate-btn, .product-actions .btn{
+                width: 100%;
+                justify-content: center;
+                padding: 11px 14px !important;
+                border-radius: 12px !important;
+                font-family:'Poppins',sans-serif !important;
+                font-weight: 700 !important;
+                font-size: .82rem !important;
+                letter-spacing: .04em !important;
+                text-transform: none !important;
+                margin: 0 !important;
+            }
+            .chat-btn, .product-actions .btn-outline-dark{
+                background: rgba(45,27,105,.06) !important;
+                color: #2D1B69 !important;
+                border: 1px solid rgba(107,78,175,.25) !important;
+                box-shadow: none !important;
+            }
+            .chat-btn:hover, .product-actions .btn-outline-dark:hover{
+                background: linear-gradient(135deg, #2D1B69, #4A2C8A) !important;
+                color: #FFD700 !important;
+                border-color: transparent !important;
+            }
+            .product-actions form{ width: 100%; margin: 0; display: block; }
+            .product-actions form .btn{
+                background: linear-gradient(135deg, #FFD700, #FFC107) !important;
+                color: #1A0A3E !important;
+                border: none !important;
+                box-shadow: 0 8px 18px rgba(255,193,7,.4) !important;
+            }
+            .rate-btn{
+                background: linear-gradient(135deg, #2D1B69, #4A2C8A) !important;
+                color: #FFD700 !important;
+                border: none !important;
+                box-shadow: 0 8px 18px rgba(45,27,105,.25) !important;
+            }
+            .rate-btn:hover{
+                background: linear-gradient(135deg, #FFD700, #FFC107) !important;
+                color: #1A0A3E !important;
+            }
+
+            .review-form-wrap{
+                background: rgba(250,248,255,.7) !important;
+                border: 1px solid rgba(232,224,245,.85) !important;
+                border-radius: 16px !important;
+            }
+            .review-form-wrap textarea{
+                border-radius: 12px !important;
+                border: 1px solid rgba(232,224,245,.85) !important;
+                background: #fff !important;
+                color: #2E2740 !important;
+                padding: 10px 14px !important;
+            }
+            .alert-review{
+                border-radius: 12px !important;
+                font-family:'Poppins',sans-serif;
+                font-weight: 700 !important;
+                font-size: .82rem !important;
+                letter-spacing: 0 !important;
+                text-transform: none !important;
+                padding: 12px 14px !important;
+            }
+
+            .empty-products{
+                background: rgba(255,255,255,.7) !important;
+                border: 2px dashed rgba(107,78,175,.3) !important;
+                border-radius: 18px !important;
+                padding: 22px 16px !important;
+                color: #6B6280 !important;
+            }
+
+            .reviewed-badge{
+                background: rgba(34,197,94,.12) !important;
+                color: #166534 !important;
+                border: 1px solid rgba(34,197,94,.35) !important;
+                font-family:'Poppins',sans-serif;
+                font-weight: 700 !important;
+                font-size: .76rem !important;
+                letter-spacing: 0 !important;
+                text-transform: none !important;
+                padding: 7px 12px !important;
+                border-radius: 999px !important;
+            }
         }
     </style>
 </head>
@@ -603,7 +1401,7 @@
 
 <div class="page-wrap">
     <div class="hub">
-        <section class="account-hero" id="account-overview">
+        <section class="account-hero" id="account-overview" data-aos="fade-down">
             <div class="account-top">
                 <a class="account-link" th:href="@{/user/profile/details}">
                     <span class="account-avatar" aria-hidden="true">
@@ -631,9 +1429,6 @@
             </div>
 
             <div class="account-actions-nav">
-                <a class="nav-pill" th:href="@{/user/profile/details}">
-                    <i class="bi bi-person-vcard"></i> Edit Profile
-                </a>
                 <a class="nav-pill" th:href="@{/orders/history}">
                     <i class="bi bi-receipt"></i> Full Order History
                 </a>
@@ -644,7 +1439,7 @@
         </section>
 
         <div class="grid">
-            <div class="panel tracker-panel">
+            <div class="panel tracker-panel" data-aos="fade-up">
                 <div class="panel-head">
                     <div>
                         <div class="panel-title">
@@ -743,9 +1538,7 @@
 
                 <div class="products-state" data-profile-state="placed">
                     <div class="product-stack">
-                        <div class="product-card"
-                             th:each="item : ${buyerChatItems}"
-                             th:if="${item.deliveryStatus.name() == 'PENDING'}">
+                        <div class="product-card" th:each="item : ${placedItems}">
                             <div class="product-main">
                                 <div class="product-eyebrow" th:text="'Order #' + ${item.orderId}">Order</div>
                                 <div class="product-title" th:text="${item.productTitle}">Product</div>
@@ -769,9 +1562,7 @@
 
                 <div class="products-state" data-profile-state="in_campus">
                     <div class="product-stack">
-                        <div class="product-card"
-                             th:each="item : ${buyerChatItems}"
-                             th:if="${item.deliveryStatus.name() == 'IN_CAMPUS'}">
+                        <div class="product-card" th:each="item : ${inCampusItems}">
                             <div class="product-main">
                                 <div class="product-eyebrow" th:text="'Order #' + ${item.orderId}">Order</div>
                                 <div class="product-title" th:text="${item.productTitle}">Product</div>
@@ -795,9 +1586,7 @@
 
                 <div class="products-state" data-profile-state="delivered">
                     <div class="product-stack">
-                        <div class="product-card"
-                             th:each="item : ${buyerChatItems}"
-                             th:if="${item.deliveryStatus.name() == 'DELIVERED'}">
+                        <div class="product-card" th:each="item : ${deliveredItems}">
                             <div class="product-main">
                                 <div class="product-eyebrow" th:text="'Order #' + ${item.orderId}">Order</div>
                                 <div class="product-title" th:text="${item.productTitle}">Product</div>
@@ -828,64 +1617,51 @@
 
                 <div class="products-state" data-profile-state="received">
                     <div class="product-stack">
-                        <div class="product-card"
-                             th:each="item : ${buyerChatItems}"
-                             th:if="${item.deliveryStatus.name() == 'RECEIVED'}">
+                        <div class="product-card" th:each="item : ${receivedItems}">
                             <div class="product-main" style="width:100%">
                                 <div class="product-eyebrow" th:text="'Order #' + ${item.orderId}">Order</div>
                                 <div class="product-title" th:text="${item.productTitle}">Product</div>
                                 <div class="product-sub" th:text="'Seller: ' + ${item.sellerName}">Seller</div>
 
-                                <div th:if="${!reviewedOrderIds.contains(item.orderId)}">
-                                    <div class="product-actions" style="margin-top:12px">
-                                        <span class="status-pill status-pill-received">
-                                            <i class="bi bi-bag-heart"></i> Received
-                                        </span>
-                                        <a class="btn btn-sm btn-outline-dark chat-btn"
-                                           th:href="@{/chat/order-item/{orderItemId}/page(orderItemId=${item.orderItemId})}">
-                                            <i class="bi bi-chat-left-text"></i> Chat
-                                        </a>
-                                        <button type="button" class="rate-btn"
-                                                th:attr="onclick='toggleRateForm(' + ${item.orderItemId} + ')'">
-                                            <i class="bi bi-star-fill"></i> Rate Seller
-                                        </button>
-                                    </div>
-                                    <div class="review-form-wrap" th:id="'rateForm-' + ${item.orderItemId}">
-                                        <form th:action="@{/reviews/submit}" method="post">
-                                            <input type="hidden" name="orderItemId" th:value="${item.orderItemId}">
-                                            <div style="margin-bottom:8px;font-size:13px;font-weight:700;color:#111827">Rate this seller</div>
-                                            <div class="star-row" th:id="'stars-' + ${item.orderItemId}">
-                                                <button type="button" class="star-btn" data-val="1">&#9733;</button>
-                                                <button type="button" class="star-btn" data-val="2">&#9733;</button>
-                                                <button type="button" class="star-btn" data-val="3">&#9733;</button>
-                                                <button type="button" class="star-btn" data-val="4">&#9733;</button>
-                                                <button type="button" class="star-btn" data-val="5">&#9733;</button>
-                                            </div>
-                                            <input type="hidden" name="rating" th:id="'ratingInput-' + ${item.orderItemId}" value="">
-                                            <textarea name="comment" rows="2"
-                                                      style="width:100%;border-radius:10px;border:1px solid rgba(15,23,42,0.15);padding:8px 12px;font-size:13px;resize:none;margin-bottom:10px"
-                                                      placeholder="Leave a comment (optional)"></textarea>
-                                            <button type="submit" class="btn btn-sm btn-primary"
-                                                    th:attr="onclick='return validateRating(' + ${item.orderItemId} + ')'">
-                                                <i class="bi bi-send-fill"></i> Submit Review
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-
-                                <div th:if="${reviewedOrderIds.contains(item.orderId)}" class="product-actions" style="margin-top:12px">
+                                <div class="product-actions" style="margin-top:12px">
                                     <span class="status-pill status-pill-received">
                                         <i class="bi bi-bag-heart"></i> Received
                                     </span>
-                                    <span class="reviewed-badge">
-                                        <i class="bi bi-patch-check-fill"></i> Reviewed
-                                    </span>
+                                    <a class="btn btn-sm btn-outline-dark chat-btn"
+                                       th:href="@{/chat/order-item/{orderItemId}/page(orderItemId=${item.orderItemId})}">
+                                        <i class="bi bi-chat-left-text"></i> Chat
+                                    </a>
+                                    <button type="button" class="rate-btn"
+                                            th:attr="onclick='toggleRateForm(' + ${item.orderItemId} + ')'">
+                                        <i class="bi bi-star-fill"></i> Rate Seller
+                                    </button>
+                                </div>
+                                <div class="review-form-wrap" th:id="'rateForm-' + ${item.orderItemId}">
+                                    <form th:action="@{/reviews/submit}" method="post">
+                                        <input type="hidden" name="orderItemId" th:value="${item.orderItemId}">
+                                        <div style="margin-bottom:8px;font-size:13px;font-weight:700;color:#111827">Rate this seller</div>
+                                        <div class="star-row" th:id="'stars-' + ${item.orderItemId}">
+                                            <button type="button" class="star-btn" data-val="1">&#9733;</button>
+                                            <button type="button" class="star-btn" data-val="2">&#9733;</button>
+                                            <button type="button" class="star-btn" data-val="3">&#9733;</button>
+                                            <button type="button" class="star-btn" data-val="4">&#9733;</button>
+                                            <button type="button" class="star-btn" data-val="5">&#9733;</button>
+                                        </div>
+                                        <input type="hidden" name="rating" th:id="'ratingInput-' + ${item.orderItemId}" value="">
+                                        <textarea name="comment" rows="2"
+                                                  style="width:100%;border-radius:10px;border:1px solid rgba(15,23,42,0.15);padding:8px 12px;font-size:13px;resize:none;margin-bottom:10px"
+                                                  placeholder="Leave a comment (optional)"></textarea>
+                                        <button type="submit" class="btn btn-sm btn-primary"
+                                                th:attr="onclick='return validateRating(' + ${item.orderItemId} + ')'">
+                                            <i class="bi bi-send-fill"></i> Submit Review
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="empty-products" data-empty-state>
-                        No received products yet.
+                        No received products awaiting review.
                     </div>
                 </div>
             </div>
@@ -992,5 +1768,7 @@
     });
 </script>
 
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js" defer></script>
+<script th:src="@{/js/cmp-enhance.js}" defer></script>
 </body>
 </html>

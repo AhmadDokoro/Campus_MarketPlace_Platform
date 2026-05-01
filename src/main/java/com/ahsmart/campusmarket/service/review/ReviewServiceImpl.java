@@ -3,6 +3,7 @@ package com.ahsmart.campusmarket.service.review;
 import com.ahsmart.campusmarket.model.OrderItem;
 import com.ahsmart.campusmarket.model.Review;
 import com.ahsmart.campusmarket.model.enums.DeliveryStatus;
+import com.ahsmart.campusmarket.payloadDTOs.review.ProductRatingData;
 import com.ahsmart.campusmarket.payloadDTOs.review.ProductReviewDTO;
 import com.ahsmart.campusmarket.repositories.OrderItemRepository;
 import com.ahsmart.campusmarket.repositories.ReviewRepository;
@@ -48,16 +49,16 @@ public class ReviewServiceImpl implements ReviewService {
             throw new IllegalArgumentException("You can only rate a seller after marking the item as received.");
         }
 
-        // Prevent duplicate reviews (one review per order per buyer).
-        Long orderId = orderItem.getOrder().getOrderId();
-        if (reviewRepository.existsByOrder_OrderIdAndReviewer_UserId(orderId, buyerUserId)) {
-            throw new IllegalArgumentException("You have already reviewed this order.");
+        // Prevent duplicate reviews per received order item, including legacy order-level reviews.
+        if (reviewRepository.findReviewedOrderItemIdsByReviewer(buyerUserId).contains(orderItemId)) {
+            throw new IllegalArgumentException("You have already reviewed this item.");
         }
 
         Review review = new Review();
         review.setReviewer(orderItem.getOrder().getBuyer());
         review.setTargetSeller(orderItem.getSeller().getUser());
         review.setOrder(orderItem.getOrder());
+        review.setOrderItem(orderItem);
         review.setRating(rating);
         review.setComment(comment == null ? "" : comment.trim());
         reviewRepository.save(review);
@@ -65,11 +66,11 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public Set<Long> getReviewedOrderIds(Long buyerUserId) {
+    public Set<Long> getReviewedOrderItemIds(Long buyerUserId) {
         if (buyerUserId == null) {
             return Collections.emptySet();
         }
-        return reviewRepository.findReviewedOrderIdsByReviewer(buyerUserId);
+        return reviewRepository.findReviewedOrderItemIdsByReviewer(buyerUserId);
     }
 
     @Override
@@ -79,5 +80,16 @@ public class ReviewServiceImpl implements ReviewService {
             return Collections.emptyList();
         }
         return reviewRepository.findProductReviewsByProductId(productId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ProductRatingData getProductRatingData(Long productId) {
+        if (productId == null) {
+            return new ProductRatingData(0.0, 0L);
+        }
+        Double averageRating = reviewRepository.findAverageRatingByProductId(productId);
+        long reviewCount = reviewRepository.countByProductId(productId);
+        return new ProductRatingData(averageRating == null ? 0.0 : averageRating, reviewCount);
     }
 }

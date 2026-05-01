@@ -7,6 +7,13 @@
   <title>Flagged Products — Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" th:href="@{/css/admin.css(v=2)}">
+  <style>
+    .alerts{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+    .alert{padding:12px 14px;border-radius:12px;border:1px solid rgba(15,23,42,0.08);box-shadow:0 8px 22px rgba(15,23,42,0.05)}
+    .alert.success{background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.25)}
+    .alert.error{background:rgba(196,22,28,0.08);border-color:rgba(196,22,28,0.25)}
+    .alert .label{font-weight:900;margin-right:6px}
+  </style>
 </head>
 
 <body>
@@ -75,6 +82,15 @@
             </div>
             <div>
               <span class="pill suspicious" th:text="${flaggedProducts.size()} + ' suspicious'">0 suspicious</span>
+            </div>
+          </div>
+
+          <div class="alerts" th:if="${success != null or error != null}">
+            <div class="alert success" th:if="${success != null}">
+              <span class="label">Success:</span> <span th:text="${success}">Saved</span>
+            </div>
+            <div class="alert error" th:if="${error != null}">
+              <span class="label">Error:</span> <span th:text="${error}">Error</span>
             </div>
           </div>
 

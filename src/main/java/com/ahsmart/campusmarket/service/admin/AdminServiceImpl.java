@@ -13,12 +13,15 @@ import com.ahsmart.campusmarket.payloadDTOs.admin.CategoryStatsDTO;
 import com.ahsmart.campusmarket.payloadDTOs.admin.FlaggedProductDTO;
 import com.ahsmart.campusmarket.payloadDTOs.admin.SellerStatDTO;
 import com.ahsmart.campusmarket.payloadDTOs.admin.WeeklyListingDTO;
+import com.ahsmart.campusmarket.repositories.CartItemRepository;
 import com.ahsmart.campusmarket.repositories.OrderItemRepository;
 import com.ahsmart.campusmarket.repositories.ProductImageRepository;
 import com.ahsmart.campusmarket.repositories.ProductRepository;
 import com.ahsmart.campusmarket.repositories.SellerRepository;
 import com.ahsmart.campusmarket.repositories.UsersRepository;
 import com.ahsmart.campusmarket.service.product.FileService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,9 +36,12 @@ import java.util.*;
 @Service
 public class AdminServiceImpl implements AdminService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
+
     private final SellerRepository sellerRepository;
     private final UsersRepository usersRepository;
     private final ProductRepository productRepository;
+    private final CartItemRepository cartItemRepository;
     private final OrderItemRepository orderItemRepository;
     private final EmailHelper emailHelper;
     private final ProductImageRepository productImageRepository;
@@ -44,6 +50,7 @@ public class AdminServiceImpl implements AdminService {
     public AdminServiceImpl(SellerRepository sellerRepository,
                             UsersRepository usersRepository,
                             ProductRepository productRepository,
+                            CartItemRepository cartItemRepository,
                             OrderItemRepository orderItemRepository,
                             EmailHelper emailHelper,
                             ProductImageRepository productImageRepository,
@@ -51,6 +58,7 @@ public class AdminServiceImpl implements AdminService {
         this.sellerRepository = sellerRepository;
         this.usersRepository = usersRepository;
         this.productRepository = productRepository;
+        this.cartItemRepository = cartItemRepository;
         this.orderItemRepository = orderItemRepository;
         this.emailHelper = emailHelper;
         this.productImageRepository = productImageRepository;
@@ -255,9 +263,22 @@ public class AdminServiceImpl implements AdminService {
     public void adminDeleteProduct(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
-        productImageRepository.findByProduct_ProductId(productId)
-                .forEach(image -> fileService.deleteImageByUrl(image.getImageUrl()));
+
+        if (orderItemRepository.existsByProduct_ProductId(productId)) {
+            throw new IllegalArgumentException("Cannot delete this product because it already appears in an order.");
+        }
+
+        List<String> imageUrls = productImageRepository.findByProduct_ProductId(productId).stream()
+                .map(ProductImage::getImageUrl)
+                .filter(Objects::nonNull)
+                .toList();
+
+        cartItemRepository.deleteAllByProduct_ProductId(productId);
+        productImageRepository.deleteAllByProduct_ProductId(productId);
         productRepository.delete(product);
+        productRepository.flush();
+
+        deleteImageFilesQuietly(imageUrls);
     }
 
     @Override
@@ -290,5 +311,15 @@ public class AdminServiceImpl implements AdminService {
         );
 
         return sellerRepository.save(seller);
+    }
+
+    private void deleteImageFilesQuietly(List<String> imageUrls) {
+        for (String imageUrl : imageUrls) {
+            try {
+                fileService.deleteImageByUrl(imageUrl);
+            } catch (RuntimeException ex) {
+                logger.warn("Product row deleted but image cleanup failed for {}", imageUrl, ex);
+            }
+        }
     }
 }

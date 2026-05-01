@@ -77,18 +77,22 @@ public class OrderServiceImpl implements OrderService {
 
         long pendingPaymentCount = orders.stream()
                 .filter(order -> order.getStatus() == OrderStatus.PENDING_PAYMENT)
-                .count();
+                .mapToLong(order -> order.getOrderItems() == null ? 0L : order.getOrderItems().size())
+                .sum();
         long placedCount = orders.stream()
                 .filter(order -> order.getStatus() == OrderStatus.PAID)
-                .filter(order -> order.getEffectiveDeliveryStatus() == DeliveryStatus.PENDING)
+                .flatMap(order -> order.getOrderItems().stream())
+                .filter(item -> item.getDeliveryStatus() == DeliveryStatus.PENDING)
                 .count();
         long inCampusCount = orders.stream()
                 .filter(order -> order.getStatus() == OrderStatus.PAID)
-                .filter(order -> order.getEffectiveDeliveryStatus() == DeliveryStatus.IN_CAMPUS)
+                .flatMap(order -> order.getOrderItems().stream())
+                .filter(item -> item.getDeliveryStatus() == DeliveryStatus.IN_CAMPUS)
                 .count();
         long deliveredCount = orders.stream()
                 .filter(order -> order.getStatus() == OrderStatus.PAID)
-                .filter(order -> order.getEffectiveDeliveryStatus() == DeliveryStatus.DELIVERED)
+                .flatMap(order -> order.getOrderItems().stream())
+                .filter(item -> item.getDeliveryStatus() == DeliveryStatus.DELIVERED)
                 .count();
 
         return new BuyerOrderTrackingSummaryDTO(pendingPaymentCount, placedCount, inCampusCount, deliveredCount);

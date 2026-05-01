@@ -10,6 +10,7 @@ import com.ahsmart.campusmarket.model.enums.Condition;
 import com.ahsmart.campusmarket.model.enums.FlaggedStatus;
 import com.ahsmart.campusmarket.model.enums.OrderStatus;
 import com.ahsmart.campusmarket.model.enums.SellerStatus;
+import com.ahsmart.campusmarket.repositories.CartItemRepository;
 import com.ahsmart.campusmarket.repositories.CategoryRepository;
 import com.ahsmart.campusmarket.repositories.OrderItemRepository;
 import com.ahsmart.campusmarket.repositories.ProductImageRepository;
@@ -17,8 +18,8 @@ import com.ahsmart.campusmarket.repositories.ProductRepository;
 import com.ahsmart.campusmarket.repositories.SellerRepository;
 import com.ahsmart.campusmarket.repositories.UsersRepository;
 import com.ahsmart.campusmarket.service.openai.OpenAiService;
-import com.ahsmart.campusmarket.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -32,18 +33,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductImageRepository productImageRepository;
+    private final CartItemRepository cartItemRepository;
     private final CategoryRepository categoryRepository;
     private final UsersRepository usersRepository;
     private final SellerRepository sellerRepository;
     private final FileService fileService;
-    private final OrderService orderService;
     private final OrderItemRepository orderItemRepository;
     private final OpenAiService openAiService;
 
@@ -198,7 +201,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.save(product);
     }
 
-    // Deletes only when there are no active orders for this product.
+    // Deletes only when the product is not part of order history; cart rows are removed first.
     @Override
     @Transactional
     public void deleteProduct(Long userId, Long productId) {
@@ -207,12 +210,16 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findByProductIdAndSeller_SellerId(productId, seller.getSellerId())
                 .orElseThrow(() -> new IllegalArgumentException("Product not found for this seller."));
 
-        if (orderService.hasActiveOrdersForProduct(productId)) {
-            throw new IllegalArgumentException("Cannot delete: product is tied to active orders.");
+        if (orderItemRepository.existsByProduct_ProductId(productId)) {
+            throw new IllegalArgumentException("Cannot delete: product is tied to existing orders.");
         }
 
-        deleteAllImages(productId);
+        List<String> imageUrls = getProductImageUrls(productId);
+        cartItemRepository.deleteAllByProduct_ProductId(productId);
+        productImageRepository.deleteAllByProduct_ProductId(productId);
         productRepository.delete(product);
+        productRepository.flush();
+        deleteImageFilesQuietly(imageUrls);
     }
 
     // Counts active listings using quantity > 0.
@@ -265,13 +272,21 @@ public class ProductServiceImpl implements ProductService {
         productImageRepository.save(productImage);
     }
 
-    // Removes all product images (used before delete).
-    private void deleteAllImages(Long productId) {
-        productImageRepository.findByProduct_ProductId(productId)
-                .forEach(image -> {
-                    fileService.deleteImageByUrl(image.getImageUrl());
-                    productImageRepository.delete(image);
-                });
+    private List<String> getProductImageUrls(Long productId) {
+        return productImageRepository.findByProduct_ProductId(productId).stream()
+                .map(ProductImage::getImageUrl)
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    private void deleteImageFilesQuietly(List<String> imageUrls) {
+        for (String imageUrl : imageUrls) {
+            try {
+                fileService.deleteImageByUrl(imageUrl);
+            } catch (RuntimeException ex) {
+                log.warn("Product row deleted but image cleanup failed for {}", imageUrl, ex);
+            }
+        }
     }
 
     private String extractPublicId(String imageUrl) {

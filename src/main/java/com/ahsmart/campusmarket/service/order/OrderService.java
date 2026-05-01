@@ -40,16 +40,16 @@ public interface OrderService {
     // Lists buyer's orders filtered by a status/delivery filter key (e.g. "pending_payment", "placed", "in_campus", "delivered").
     List<Order> getFilteredOrdersForBuyer(Long userId, String filter);
 
-    // Counts buyer's orders with PENDING_PAYMENT status.
+    // Counts buyer's order items whose parent order is still PENDING_PAYMENT.
     long countPendingPaymentForBuyer(Long userId);
 
-    // Counts buyer's orders that are PAID but delivery is still PENDING (order placed, awaiting dispatch).
+    // Counts buyer's paid order items that are still PENDING (order placed, awaiting dispatch).
     long countPlacedForBuyer(Long userId);
 
-    // Counts buyer's orders with delivery status IN_CAMPUS.
+    // Counts buyer's paid order items currently in campus delivery.
     long countInCampusForBuyer(Long userId);
 
-    // Counts buyer's PAID orders whose order items are all DELIVERED.
+    // Counts buyer's paid order items that are currently DELIVERED.
     long countRecentDeliveredForBuyer(Long userId);
 
     // Loads a single order with full details (items, products, images) for the order detail page.

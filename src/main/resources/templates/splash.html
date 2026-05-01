@@ -2,164 +2,449 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UMT Marketplace</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
     <style>
+        :root{
+            --cmp-purple-deep:#1A0A3E;
+            --cmp-purple-primary:#2D1B69;
+            --cmp-purple-mid:#4A2C8A;
+            --cmp-gold:#FFD700;
+            --cmp-gold-hover:#FFC107;
+        }
+
+        *{ box-sizing:border-box; }
+        html, body{ margin:0; padding:0; height:100%; }
+
         body{
-            margin:0;
-            height:100vh;
-            background: radial-gradient(circle at top, #f9f6ff, #ffffff);
+            font-family:'Inter','Poppins',system-ui,sans-serif;
+            background: radial-gradient(circle at 30% 20%, #3B1F7A 0%, transparent 55%),
+                        radial-gradient(circle at 75% 80%, #5B2EA6 0%, transparent 50%),
+                        linear-gradient(135deg, #1A0A3E 0%, #2D1B69 45%, #4A2C8A 100%);
+            background-size: 200% 200%;
+            animation: splashBgShift 12s ease-in-out infinite;
+            overflow:hidden;
+            color:#fff;
+        }
+
+        @keyframes splashBgShift{
+            0%,100%{ background-position: 0% 50%; }
+            50%    { background-position: 100% 50%; }
+        }
+
+        /* ===== SPLASH SCREEN ===== */
+        .splash-screen{
+            position:fixed;
+            inset:0;
             display:flex;
             align-items:center;
             justify-content:center;
-            font-family: Inter, system-ui, sans-serif;
+            z-index:9999;
+            padding:24px;
+        }
+
+        .splash-screen.fade-out{
+            opacity:0;
+            visibility:hidden;
+            transform:scale(1.02);
+            transition: opacity .7s ease, visibility .7s ease, transform .7s ease;
+        }
+
+        .splash-content{
+            position:relative;
+            z-index:3;
+            max-width: 1200px;
+            width:100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            text-align: left;
+        }
+
+        .splash-text-wrap {
+            flex: 1;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .splash-animation-wrap {
+            flex: 1;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            animation: splashFadeUp 1s ease 0.5s forwards;
+            max-width: 550px;
+        }
+
+        /* ===== LOGO ===== */
+        .splash-logo{
+            margin-bottom: 22px;
+            display:inline-block;
+            position:relative;
+        }
+        .splash-logo::after{
+            content:'';
+            position:absolute;
+            inset:-18px;
+            border-radius:50%;
+            background: radial-gradient(circle, rgba(255,215,0,.35), transparent 65%);
+            z-index:-1;
+            filter: blur(14px);
+            animation: splashHaloPulse 2.8s ease-in-out infinite;
+        }
+        .splash-logo-img{
+            width:120px;
+            height:auto;
+            opacity:0;
+            animation: splashLogoEntry .9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+                       splashLogoFloat 3.4s ease-in-out 1s infinite;
+            filter: drop-shadow(0 10px 24px rgba(0,0,0,0.35)) drop-shadow(0 0 18px rgba(255,215,0,0.35));
+        }
+
+        @keyframes splashLogoEntry{
+            0%   { opacity:0; transform: scale(0.45) rotate(-14deg); }
+            60%  { opacity:1; transform: scale(1.08) rotate(4deg); }
+            100% { opacity:1; transform: scale(1) rotate(0); }
+        }
+        @keyframes splashLogoFloat{
+            0%,100%{ transform: translateY(0); }
+            50%    { transform: translateY(-10px); }
+        }
+        @keyframes splashHaloPulse{
+            0%,100%{ opacity:.55; transform:scale(1); }
+            50%    { opacity:.95; transform:scale(1.15); }
+        }
+
+        /* ===== TITLE ===== */
+        .splash-title{
+            font-family:'Poppins',sans-serif;
+            font-size: clamp(2rem, 7vw, 4rem);
+            font-weight:800;
+            margin:0 0 10px;
+            letter-spacing: 1.5px;
+            line-height:1.05;
+        }
+        .splash-word{
+            display:inline-block;
+            opacity:0;
+            margin-right:14px;
+            transform: translateY(26px);
+            animation: splashWordReveal .65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation-delay: calc(0.55s + var(--i) * 0.22s);
+        }
+        .splash-word:last-child{ margin-right:0; }
+        .splash-highlight{
+            background: linear-gradient(135deg, #FFE066 0%, #FFD700 45%, #FFA500 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            text-shadow: 0 0 38px rgba(255,215,0,.35);
+            position:relative;
+        }
+        .splash-highlight::after{
+            content:'';
+            position:absolute;
+            left:6%;
+            right:6%;
+            bottom:-6px;
+            height:3px;
+            border-radius:3px;
+            background: linear-gradient(90deg, transparent, #FFD700, transparent);
+            transform: scaleX(0);
+            transform-origin: center;
+            animation: splashUnderline .7s ease 1.4s forwards;
+        }
+        @keyframes splashUnderline{ to { transform: scaleX(1); } }
+        @keyframes splashWordReveal{
+            to{ opacity:1; transform: translateY(0); }
+        }
+
+        /* ===== TAGLINE ===== */
+        .splash-tagline{
+            font-family:'Inter',sans-serif;
+            color: rgba(255,255,255,0.78);
+            font-size: clamp(.9rem, 2.4vw, 1.15rem);
+            font-weight:500;
+            margin: 4px 0 0;
+            opacity:0;
+            animation: splashFadeUp .6s ease 1.3s forwards;
+            letter-spacing:.3px;
+        }
+        .splash-tagline .accent{ color:#FFE066; font-weight:600; }
+
+        @keyframes splashFadeUp{
+            from{ opacity:0; transform: translateY(14px); }
+            to  { opacity:1; transform: translateY(0); }
+        }
+
+        /* ===== LOADER ===== */
+        .splash-loader{
+            width: min(240px, 70vw);
+            height:4px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 999px;
+            margin: 34px 0 18px 0;
+            overflow:hidden;
+            opacity:0;
+            animation: splashFadeUp .5s ease 1.6s forwards;
+            backdrop-filter: blur(4px);
+        }
+        .splash-loader-bar{
+            height:100%;
+            width:0;
+            background: linear-gradient(90deg, #FFD700, #FFC107, #FF9B3D, #FFD700);
+            background-size: 200% 100%;
+            border-radius:999px;
+            box-shadow: 0 0 14px rgba(255,215,0,.65);
+            animation: splashLoadBar 2s cubic-bezier(.55,0,.25,1) 1.7s forwards,
+                       splashBarShimmer 1.4s linear 1.7s infinite;
+        }
+        @keyframes splashLoadBar{
+            0%  { width:0; }
+            35% { width:45%; }
+            70% { width:78%; }
+            100%{ width:100%; }
+        }
+        @keyframes splashBarShimmer{
+            0%  { background-position: 200% 0; }
+            100%{ background-position: -200% 0; }
+        }
+
+        /* ===== SUB BRAND ===== */
+        .splash-subbrand{
+            margin-top: 10px;
+            font-family:'Poppins',sans-serif;
+            font-size: .95rem;
+            font-weight:700;
+            letter-spacing: 2.5px;
+            opacity:0;
+            animation: splashFadeUp .5s ease 2s forwards;
+        }
+        .splash-subbrand .by{
+            color: rgba(255,255,255,0.55);
+            font-weight:500;
+            margin-right:8px;
+            letter-spacing:1.5px;
+        }
+        .splash-subbrand .sb-letter{
+            display:inline-block;
+            color:#ffffff;
+            transition: transform .3s ease;
+        }
+        .splash-subbrand .sb-gold{
+            color:#FFD700;
+            text-shadow: 0 0 18px rgba(255,215,0,.6);
+            animation: splashGoldPulse 1.6s ease-in-out 2.3s infinite;
+        }
+        @keyframes splashGoldPulse{
+            0%,100%{ text-shadow: 0 0 12px rgba(255,215,0,.4); transform:translateY(0) scale(1); }
+            50%    { text-shadow: 0 0 30px rgba(255,215,0,.95); transform:translateY(-2px) scale(1.15); }
+        }
+
+        /* ===== PARTICLES ===== */
+        .splash-particles{
+            position:absolute;
+            inset:0;
+            z-index:1;
+            pointer-events:none;
             overflow:hidden;
         }
-
-        .splash-container{
-            text-align:center;
-            transform: scale(1.05);
-            animation: zoomOut 2s ease forwards;
-        }
-
-        /* UMT LOGO */
-        .umt-logo{
-            width:120px;
-            opacity:0;
-            transform:translateY(-30px) scale(0.9);
-        }
-
-        /* PLATFORM NAME */
-        .platform-name span{
-            display:inline-block;
-            font-size:3.6rem;
-            font-weight:900;
-            letter-spacing:2px;
-            opacity:0;
-            transform:translateY(26px);
-            color:#4B2E83;
-        }
-
-        /* SUB BRAND */
-        .subbrand{
-            margin-top:14px;
-        }
-
-        .subbrand span{
-            display:inline-block;
-            font-size:1.2rem;
-            font-weight:700;
-            letter-spacing:2px;
-            opacity:0;
-            transform:translateY(10px);
-        }
-
-        .blue{ color:#4B2E83; }
-        .gold{ color:#F2B705; }
-
-        /* LIGHT SWEEP */
-        .shine{
+        .particle{
             position:absolute;
-            top:0;
-            left:-150%;
-            width:150%;
-            height:100%;
-            background: linear-gradient(
-                    120deg,
-                    transparent,
-                    rgba(242,183,5,0.15),
-                    transparent
-            );
-            animation: shineMove 1.8s ease forwards;
+            left: var(--x);
+            top: var(--y);
+            width: var(--size);
+            height: var(--size);
+            background: radial-gradient(circle, rgba(255,215,0,0.9) 0%, rgba(255,215,0,0) 70%);
+            border-radius:50%;
+            animation: particleFloat var(--dur) ease-in-out var(--delay) infinite;
+            filter: blur(.3px);
+        }
+        @keyframes particleFloat{
+            0%,100% { transform: translate(0,0) scale(1); opacity:.35; }
+            50%     { transform: translate(var(--tx), var(--ty)) scale(1.6); opacity:.9; }
+        }
+
+        /* ===== SHINE SWEEP ===== */
+        .splash-shine{
+            position:absolute;
+            top:0; left:-60%;
+            width:50%; height:100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.12), transparent);
+            animation: splashShine 3.6s ease-in-out 1s infinite;
             pointer-events:none;
+            z-index:2;
+        }
+        @keyframes splashShine{
+            0%   { left:-60%; }
+            55%  { left: 110%; }
+            100% { left: 110%; }
         }
 
-        /* ANIMATIONS */
-        @keyframes zoomOut{
-            0%{opacity:1; transform:scale(1.05);}
-            85%{opacity:1;}
-            100%{opacity:0; transform:scale(0.96);}
+        /* ===== FALLBACK (if JS fails, auto-hide) ===== */
+        .splash-screen{
+            animation: splashFallbackHide 0s 6s forwards;
+        }
+        @keyframes splashFallbackHide{
+            to{ opacity:0; visibility:hidden; pointer-events:none; }
         }
 
-        @keyframes shineMove{
-            to{ left:150%; }
+        /* ===== RESPONSIVE ===== */
+        @media (max-width:991px){
+            .splash-content {
+                flex-direction: column;
+                justify-content: center;
+                text-align: center;
+            }
+            .splash-text-wrap {
+                align-items: center;
+                margin: 0 auto;
+            }
+            .splash-loader {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .splash-animation-wrap {
+                display: flex;
+                max-width: 300px;
+                margin-top: -20px;
+                order: -1; /* Move animation to the top on mobile */
+            }
+        }
+        @media (max-width:576px){
+            .splash-logo-img{ width:88px; }
+            .splash-title{ letter-spacing:1px; }
+            .splash-tagline{ padding: 0 12px; }
+            .splash-subbrand{ font-size:.82rem; letter-spacing:1.8px; }
+            .splash-animation-wrap { max-width: 250px; }
+        }
+        @media (min-width:992px){
+            .splash-logo-img{ width:140px; }
+            .splash-animation-wrap { display: flex; }
+        }
+
+        @media (prefers-reduced-motion: reduce){
+            *,*::before,*::after{
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
+            }
+            .splash-word, .splash-logo-img, .splash-tagline,
+            .splash-loader, .splash-subbrand{ opacity:1 !important; transform:none !important; }
+            .splash-loader-bar{ width:100% !important; }
         }
     </style>
 </head>
 
 <body>
 
-<div class="shine"></div>
+<div class="splash-screen" id="splash-screen">
 
-<div class="splash-container">
-
-    <!-- UMT LOGO -->
-    <img src="/img/umtlogo.png" class="umt-logo" id="umtLogo"/>
-
-    <!-- PLATFORM NAME -->
-    <div class="platform-name" id="platform">
-        <span>U</span><span>M</span><span>T</span>
-        <span>&nbsp;</span>
-        <span>M</span><span>A</span><span>R</span><span>K</span><span>E</span>
-        <span>T</span><span>P</span><span>L</span><span>A</span><span>C</span><span>E</span>
+    <!-- Floating particles -->
+    <div class="splash-particles" aria-hidden="true">
+        <span class="particle" style="--x:8%;--y:18%;--size:6px;--delay:0s;--dur:4.5s;--tx:22px;--ty:-38px;"></span>
+        <span class="particle" style="--x:18%;--y:72%;--size:4px;--delay:.6s;--dur:5s;--tx:-18px;--ty:-30px;"></span>
+        <span class="particle" style="--x:32%;--y:28%;--size:3px;--delay:1.1s;--dur:4.2s;--tx:30px;--ty:18px;"></span>
+        <span class="particle" style="--x:48%;--y:12%;--size:5px;--delay:.3s;--dur:5.4s;--tx:-24px;--ty:36px;"></span>
+        <span class="particle" style="--x:62%;--y:82%;--size:4px;--delay:.9s;--dur:4.8s;--tx:26px;--ty:-26px;"></span>
+        <span class="particle" style="--x:74%;--y:22%;--size:6px;--delay:.2s;--dur:4.6s;--tx:-30px;--ty:24px;"></span>
+        <span class="particle" style="--x:82%;--y:68%;--size:3px;--delay:1.3s;--dur:5.2s;--tx:20px;--ty:-34px;"></span>
+        <span class="particle" style="--x:92%;--y:44%;--size:5px;--delay:.7s;--dur:4.4s;--tx:-22px;--ty:32px;"></span>
+        <span class="particle" style="--x:12%;--y:48%;--size:3px;--delay:1.5s;--dur:5.6s;--tx:28px;--ty:20px;"></span>
+        <span class="particle" style="--x:55%;--y:55%;--size:4px;--delay:.5s;--dur:4.9s;--tx:-26px;--ty:-22px;"></span>
     </div>
 
-    <!-- SUB BRAND -->
-    <div class="subbrand" id="subbrand">
-        <span style="color:#6b7280;margin-right:6px;">by</span>
-        <span class="blue">A</span>
-        <span class="blue">H</span>
-        <span class="gold">$</span>
-        <span class="blue">M</span>
-        <span class="blue">A</span>
-        <span class="blue">R</span>
-        <span class="blue">T</span>
-    </div>
+    <!-- Add dotlottie player script -->
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
 
+    <!-- Shine sweep -->
+    <div class="splash-shine" aria-hidden="true"></div>
+
+    <div class="splash-content">
+
+        <div class="splash-text-wrap">
+            <!-- Logo -->
+            <div class="splash-logo">
+                <img src="/img/umtlogo.png" alt="UMT" class="splash-logo-img"/>
+            </div>
+
+            <!-- Title -->
+            <h1 class="splash-title">
+                <span class="splash-word" style="--i:0">Campus</span>
+                <br>
+                <span class="splash-word splash-highlight" style="--i:1">Marketplace</span>
+            </h1>
+
+            <!-- Tagline -->
+            <p class="splash-tagline">
+                A trusted campus marketplace built for <span class="accent">UMT</span> academic life
+            </p>
+
+            <!-- Loader -->
+            <div class="splash-loader" role="progressbar" aria-label="Loading">
+                <div class="splash-loader-bar"></div>
+            </div>
+
+            <!-- Sub-brand -->
+            <div class="splash-subbrand">
+                <span class="by">by</span>
+                <span class="sb-letter">A</span><span class="sb-letter">H</span><span class="sb-letter sb-gold">$</span><span class="sb-letter">M</span><span class="sb-letter">A</span><span class="sb-letter">R</span><span class="sb-letter">T</span>
+            </div>
+        </div>
+
+        <!-- Lottie Animation -->
+        <div class="splash-animation-wrap">
+            <dotlottie-player
+                src="/animation/Shopping bag.lottie"
+                background="transparent"
+                speed="1"
+                style="width: 100%; height: auto; aspect-ratio: 1/1; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4)) drop-shadow(0 0 30px rgba(255,215,0,0.3)); transform: scale(1.1);"
+                loop
+                autoplay>
+            </dotlottie-player>
+        </div>
+
+    </div>
 </div>
 
 <script>
-    const logo = document.getElementById('umtLogo');
-    const platformLetters = document.querySelectorAll('#platform span');
-    const subbrandLetters = document.querySelectorAll('#subbrand span');
+    (function(){
+        var splash = document.getElementById('splash-screen');
+        var minDisplayMs = 3300;   // ensure animation completes
+        var hardCapMs   = 5200;   // safety cap
+        var startedAt = Date.now();
+        var dismissed = false;
 
-    /* LOGO FIRST */
-    setTimeout(() => {
-        logo.style.transition = 'all 600ms cubic-bezier(.2,.9,.3,1)';
-        logo.style.opacity = '1';
-        logo.style.transform = 'translateY(0) scale(1)';
-    }, 150);
+        function dismiss(){
+            if (dismissed || !splash) return;
+            dismissed = true;
+            splash.classList.add('fade-out');
+            setTimeout(function(){
+                window.location.href = "/index";
+            }, 620);
+        }
 
-    /* PLATFORM NAME */
-    platformLetters.forEach((el, i) => {
-        setTimeout(() => {
-            el.style.transition = 'all 420ms cubic-bezier(.2,.9,.3,1)';
-            el.style.opacity = '1';
-            el.style.transform = 'translateY(0)';
-        }, 500 + i * 110);
-    });
+        function scheduleDismiss(){
+            var elapsed = Date.now() - startedAt;
+            var wait = Math.max(0, minDisplayMs - elapsed);
+            setTimeout(dismiss, wait);
+        }
 
-    /* SUB BRAND */
-    setTimeout(() => {
-        subbrandLetters.forEach((el, i) => {
-            setTimeout(() => {
-                el.style.transition = 'all 320ms ease';
-                el.style.opacity = '1';
-                el.style.transform = 'translateY(0)';
-            }, i * 65);
-        });
-    }, 450 + platformLetters.length * 85);
+        if (document.readyState === 'complete') scheduleDismiss();
+        else window.addEventListener('load', scheduleDismiss);
 
-    /* GOLD PULSE */
-    setTimeout(() => {
-        document.querySelector('.gold').style.textShadow =
-            '0 0 28px rgba(242,183,5,0.9)';
-    }, 900);
-
-    /* REDIRECT */
-    setTimeout(() => {
-        window.location.href = "/index";
-    }, 3500);
+        // Hard cap in case load never fires
+        setTimeout(dismiss, hardCapMs);
+    })();
 </script>
 
 </body>

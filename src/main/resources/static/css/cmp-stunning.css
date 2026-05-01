@@ -1,0 +1,817 @@
+/* ======================================================================
+   Campus Marketplace — STUNNING Layer
+   World-class brand polish on top of cmp-enhance.css.
+   Aurora bg, glassmorphism, gold sheen, gradient text, spotlight,
+   animated borders, dramatic shadows, sectioned brand cards.
+
+   Loads AFTER style.css, mobile.css, cmp-enhance.css.
+   Design tokens come from cmp-enhance.css (--cmp-purple-*, --cmp-gold-*).
+   ====================================================================== */
+
+/* ======================================================================
+   1. AURORA BACKGROUND — flowing gradient mesh under content
+   Use: <body class="cmp-aurora"> ...page... </body>
+   The aurora layer is fixed, behind everything, GPU-cheap.
+   Three glow blobs drift on independent slow paths (snake-like loop).
+   ====================================================================== */
+
+body.cmp-aurora{
+  background: linear-gradient(180deg, #faf8ff 0%, #f3eefb 50%, #faf8ff 100%) !important;
+  position: relative;
+}
+
+/* When aurora is active, neutralize legacy static gradients so motion is visible */
+body.cmp-aurora.home-market-bg{
+  background: linear-gradient(180deg, #faf8ff 0%, #f3eefb 50%, #faf8ff 100%) !important;
+}
+
+body.cmp-aurora::before,
+body.cmp-aurora::after,
+.cmp-aurora-extra{
+  content: "";
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: .55;
+  will-change: transform;
+}
+
+/* Blob 1 — purple, top-left, slow drift */
+body.cmp-aurora::before{
+  width: 620px;
+  height: 620px;
+  top: -120px;
+  left: -160px;
+  background: radial-gradient(circle, #6B4EAF 0%, rgba(107,78,175,0) 70%);
+  animation: cmpAuroraDrift1 32s ease-in-out infinite;
+}
+
+/* Blob 2 — gold, mid-right, faster drift */
+body.cmp-aurora::after{
+  width: 560px;
+  height: 560px;
+  top: 30%;
+  right: -180px;
+  background: radial-gradient(circle, rgba(255,215,0,0.85) 0%, rgba(255,215,0,0) 70%);
+  animation: cmpAuroraDrift2 38s ease-in-out infinite;
+  opacity: .35;
+}
+
+/* Blob 3 — deep purple, bottom-center, slowest */
+.cmp-aurora-extra{
+  width: 720px;
+  height: 720px;
+  bottom: -260px;
+  left: 38%;
+  background: radial-gradient(circle, #2D1B69 0%, rgba(45,27,105,0) 70%);
+  animation: cmpAuroraDrift3 46s ease-in-out infinite;
+  opacity: .42;
+}
+
+/* Auto-inject the third blob via a fixed div users place once */
+.cmp-aurora-host{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.cmp-aurora-host .cmp-aurora-blob{
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  will-change: transform;
+}
+.cmp-aurora-host .cmp-aurora-blob.b1{
+  width: 640px; height: 640px;
+  top: 5%; left: -10%;
+  background: radial-gradient(circle, rgba(107,78,175,.95), rgba(107,78,175,0) 70%);
+  animation: cmpAuroraDrift1 32s ease-in-out infinite;
+  opacity: .85;
+}
+.cmp-aurora-host .cmp-aurora-blob.b2{
+  width: 560px; height: 560px;
+  top: 35%; right: -8%;
+  background: radial-gradient(circle, rgba(255,215,0,.9), rgba(255,215,0,0) 70%);
+  animation: cmpAuroraDrift2 38s ease-in-out infinite;
+  opacity: .6;
+}
+.cmp-aurora-host .cmp-aurora-blob.b3{
+  width: 760px; height: 760px;
+  bottom: -20%; left: 35%;
+  background: radial-gradient(circle, rgba(45,27,105,.95), rgba(45,27,105,0) 70%);
+  animation: cmpAuroraDrift3 46s ease-in-out infinite;
+  opacity: .7;
+}
+.cmp-aurora-host .cmp-aurora-blob.b4{
+  width: 420px; height: 420px;
+  top: 65%; left: 8%;
+  background: radial-gradient(circle, rgba(255,193,7,.85), rgba(255,193,7,0) 70%);
+  animation: cmpAuroraDrift4 28s ease-in-out infinite;
+  opacity: .55;
+}
+
+/* Snake-like, smooth, returning paths. Each drifts then returns. */
+@keyframes cmpAuroraDrift1{
+  0%   { transform: translate(0,0) scale(1); }
+  20%  { transform: translate(160px, 80px) scale(1.08); }
+  40%  { transform: translate(280px, 220px) scale(.95); }
+  60%  { transform: translate(180px, 360px) scale(1.05); }
+  80%  { transform: translate(60px, 220px) scale(1.1); }
+  100% { transform: translate(0,0) scale(1); }
+}
+@keyframes cmpAuroraDrift2{
+  0%   { transform: translate(0,0) scale(1); }
+  25%  { transform: translate(-160px, 120px) scale(1.05); }
+  50%  { transform: translate(-280px, -100px) scale(.92); }
+  75%  { transform: translate(-100px, -240px) scale(1.08); }
+  100% { transform: translate(0,0) scale(1); }
+}
+@keyframes cmpAuroraDrift3{
+  0%   { transform: translate(0,0) scale(1); }
+  20%  { transform: translate(-200px, -80px) scale(1.05); }
+  45%  { transform: translate(-340px, -240px) scale(.92); }
+  70%  { transform: translate(-180px, -360px) scale(1.1); }
+  100% { transform: translate(0,0) scale(1); }
+}
+@keyframes cmpAuroraDrift4{
+  0%   { transform: translate(0,0) scale(1); }
+  30%  { transform: translate(120px, -90px) scale(1.1); }
+  60%  { transform: translate(220px, 60px) scale(.92); }
+  100% { transform: translate(0,0) scale(1); }
+}
+
+/* Make sure the page content sits above aurora */
+body.cmp-aurora > *,
+.cmp-aurora-content{
+  position: relative;
+  z-index: 1;
+}
+
+/* ======================================================================
+   2. GLASS CARDS — frosted, gradient-bordered, sheen on hover
+   ====================================================================== */
+
+.cmp-glass{
+  position: relative;
+  background: rgba(255,255,255,0.72);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: var(--radius-lg, 16px);
+  box-shadow:
+    0 8px 24px rgba(26,10,62,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.85);
+  overflow: hidden;
+  transition: transform .4s var(--ease-default), box-shadow .4s var(--ease-default);
+}
+.cmp-glass:hover{
+  transform: translateY(-6px);
+  box-shadow:
+    0 24px 48px rgba(45,27,105,0.18),
+    0 0 0 1px rgba(107,78,175,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.85);
+}
+
+/* Gradient outline glass — purple/gold ring */
+.cmp-glass-ring{
+  position: relative;
+  background: rgba(255,255,255,0.78);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-radius: var(--radius-lg, 16px);
+  padding: 1.5px;
+  background-image: linear-gradient(rgba(255,255,255,.85), rgba(255,255,255,.85)),
+                    linear-gradient(135deg, #6B4EAF, #FFD700, #2D1B69);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border: 1.5px solid transparent;
+}
+
+/* Dark glass — sits on light aurora, deep purple feel */
+.cmp-glass-dark{
+  background: linear-gradient(135deg, rgba(45,27,105,.92), rgba(26,10,62,.92));
+  color: #fff;
+  border: 1px solid rgba(255,215,0,.18);
+  border-radius: var(--radius-lg, 16px);
+  box-shadow: 0 16px 40px rgba(26,10,62,.35);
+  backdrop-filter: blur(10px);
+}
+
+/* ======================================================================
+   3. GOLD SHEEN — diagonal light sweep across cards on hover
+   Applies to .cmp-sheen AND existing product cards site-wide
+   ====================================================================== */
+
+.cmp-sheen,
+.product-card,
+.product-item,
+.pc-card-new,
+.card.shadow-sm,
+.cmp-product-stunning{
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.cmp-sheen::after,
+.product-card::after,
+.product-item::after,
+.pc-card-new::after,
+.card.shadow-sm::after,
+.cmp-product-stunning::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg,
+    transparent 38%,
+    rgba(255,255,255,0.18) 46%,
+    rgba(255,215,0,0.22) 50%,
+    rgba(255,255,255,0.18) 54%,
+    transparent 62%);
+  filter: blur(6px);
+  opacity: 0;
+  transform: translateX(-120%);
+  transition: transform 2.6s cubic-bezier(.22,1,.36,1), opacity .6s ease;
+  pointer-events: none;
+  z-index: 5;
+  border-radius: inherit;
+  mix-blend-mode: screen;
+}
+.cmp-sheen:hover::after,
+.product-card:hover::after,
+.product-item:hover::after,
+.pc-card-new:hover::after,
+.card.shadow-sm:hover::after,
+.cmp-product-stunning:hover::after{
+  transform: translateX(120%);
+  opacity: 1;
+}
+
+
+/* ======================================================================
+   4. SPOTLIGHT — cursor-following light on hover (JS sets --x/--y)
+   ====================================================================== */
+
+.cmp-spotlight{
+  position: relative;
+  overflow: hidden;
+}
+.cmp-spotlight::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255,215,0,0.18),
+    rgba(107,78,175,0.10) 35%,
+    transparent 60%);
+  opacity: 0;
+  transition: opacity .35s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.cmp-spotlight:hover::before{ opacity: 1; }
+.cmp-spotlight > *{ position: relative; z-index: 2; }
+
+/* ======================================================================
+   5. GRADIENT TEXT & HEADINGS
+   ====================================================================== */
+
+.cmp-text-gradient{
+  background: linear-gradient(135deg, #2D1B69 0%, #6B4EAF 45%, #FFD700 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.cmp-text-gradient-gold{
+  background: linear-gradient(135deg, #C9A800, #FFD700, #FFC107);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.cmp-text-gradient-purple{
+  background: linear-gradient(135deg, #1A0A3E, #4A2C8A, #6B4EAF);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cmp-display{
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+.cmp-display-xl{ font-size: clamp(2.5rem, 6vw, 4.5rem); }
+.cmp-display-lg{ font-size: clamp(2rem, 4.5vw, 3.25rem); }
+.cmp-eyebrow{
+  display: inline-block;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: .78rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: #4A2C8A;
+  background: linear-gradient(90deg, rgba(107,78,175,.12), rgba(255,215,0,.18));
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(107,78,175,.22);
+}
+
+/* ======================================================================
+   6. ANIMATED BORDERS — gradient ring rotates around element
+   ====================================================================== */
+
+.cmp-ring-anim{
+  position: relative;
+  border-radius: var(--radius-lg, 16px);
+  isolation: isolate;
+}
+.cmp-ring-anim::before{
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: conic-gradient(from 0deg,
+    #6B4EAF, #FFD700, #2D1B69, #FFC107, #6B4EAF);
+  z-index: -1;
+  animation: cmpRingSpin 6s linear infinite;
+  opacity: .85;
+}
+.cmp-ring-anim::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  border-radius: inherit;
+  z-index: -1;
+}
+@keyframes cmpRingSpin{ to{ transform: rotate(360deg); } }
+
+/* ======================================================================
+   7. SHARP-ANGLED BRAND BUTTONS
+   ====================================================================== */
+
+.btn-cmp-stunning{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 30px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: .95rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: #1A0A3E;
+  background: linear-gradient(135deg, #FFD700, #FFC107);
+  border: none;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform .3s var(--ease-default), box-shadow .3s var(--ease-default);
+  box-shadow: 0 8px 22px rgba(255,193,7,.45),
+              inset 0 1px 0 rgba(255,255,255,.6);
+}
+.btn-cmp-stunning:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(255,193,7,.55),
+              inset 0 1px 0 rgba(255,255,255,.7);
+  color: #1A0A3E;
+}
+.btn-cmp-stunning::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.5) 50%, transparent 60%);
+  transform: translateX(-120%);
+  transition: transform .9s var(--ease-default);
+}
+.btn-cmp-stunning:hover::after{ transform: translateX(120%); }
+
+.btn-cmp-ghost{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 28px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: .9rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: #2D1B69;
+  background: rgba(255,255,255,.6);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(45,27,105,.25);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all .3s var(--ease-default);
+}
+.btn-cmp-ghost:hover{
+  background: #2D1B69;
+  color: #FFD700;
+  border-color: #2D1B69;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(45,27,105,.3);
+}
+
+/* ======================================================================
+   8. SECTION DIVIDERS & ACCENT STRIPS
+   ====================================================================== */
+
+.cmp-divider-grad{
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, #6B4EAF, #FFD700, #6B4EAF, transparent);
+  background-size: 200% 100%;
+  animation: cmpDividerFlow 6s linear infinite;
+  border: none;
+  margin: 2rem 0;
+}
+@keyframes cmpDividerFlow{
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.cmp-accent-bar{
+  display: inline-block;
+  width: 56px;
+  height: 4px;
+  background: linear-gradient(90deg, #FFD700, #6B4EAF);
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+/* ======================================================================
+   9. BRAND SECTION HEADERS (used in dashboards / forms)
+   ====================================================================== */
+
+.cmp-section-card{
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid rgba(232,224,245,.9);
+  box-shadow: 0 10px 30px rgba(45,27,105,.06);
+  overflow: hidden;
+  margin-bottom: 28px;
+  transition: box-shadow .3s var(--ease-default), transform .3s var(--ease-default);
+}
+.cmp-section-card:hover{
+  box-shadow: 0 18px 40px rgba(45,27,105,.10);
+}
+.cmp-section-card-head{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, #2D1B69, #4A2C8A);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.cmp-section-card-head::after{
+  content:"";
+  position:absolute;
+  right:-40px; top:-40px;
+  width:160px; height:160px;
+  background: radial-gradient(circle, rgba(255,215,0,.35), transparent 70%);
+  pointer-events:none;
+}
+.cmp-section-card-head .cmp-sec-icon{
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #FFD700, #FFC107);
+  color: #1A0A3E;
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(255,215,0,.4);
+  flex-shrink: 0;
+}
+.cmp-section-card-head .cmp-sec-title{
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 0;
+  letter-spacing: .01em;
+}
+.cmp-section-card-head .cmp-sec-sub{
+  font-size: .82rem;
+  opacity: .8;
+  margin: 2px 0 0;
+}
+.cmp-section-card-body{ padding: 26px 24px; }
+
+/* Variant: gold-trim header */
+.cmp-section-card-head.gold{
+  background: linear-gradient(135deg, #1A0A3E, #2D1B69);
+  border-bottom: 3px solid #FFD700;
+}
+
+/* ======================================================================
+   10. STAT CARDS (for dashboards)
+   ====================================================================== */
+
+.cmp-stat{
+  position: relative;
+  padding: 24px;
+  border-radius: 18px;
+  color: #fff;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: 0 10px 28px rgba(26,10,62,.18);
+  transition: transform .35s var(--ease-default), box-shadow .35s var(--ease-default);
+}
+.cmp-stat:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(26,10,62,.28);
+}
+.cmp-stat::before{
+  content:"";
+  position:absolute;
+  top:-30%; right:-20%;
+  width:200px; height:200px;
+  border-radius:50%;
+  background: rgba(255,255,255,.12);
+  z-index:-1;
+}
+.cmp-stat::after{
+  content:"";
+  position:absolute;
+  bottom:-50%; left:-20%;
+  width:240px; height:240px;
+  border-radius:50%;
+  background: rgba(0,0,0,.12);
+  z-index:-1;
+}
+.cmp-stat .cmp-stat-icon{
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.18);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 20px;
+  margin-bottom: 14px;
+}
+.cmp-stat .cmp-stat-label{
+  font-size: .8rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .85;
+  margin: 0;
+}
+.cmp-stat .cmp-stat-value{
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 2.1rem;
+  margin: 4px 0 0;
+  line-height: 1;
+}
+.cmp-stat .cmp-stat-trend{
+  margin-top: 10px;
+  font-size: .8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,.18);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+/* Color variants */
+.cmp-stat.s-purple { background: linear-gradient(135deg, #2D1B69, #4A2C8A); }
+.cmp-stat.s-deep   { background: linear-gradient(135deg, #1A0A3E, #2D1B69); }
+.cmp-stat.s-gold   { background: linear-gradient(135deg, #FFC107, #FFD700); color:#1A0A3E; }
+.cmp-stat.s-gold .cmp-stat-icon{ background: rgba(26,10,62,.15); color:#1A0A3E; }
+.cmp-stat.s-gold .cmp-stat-trend{ background: rgba(26,10,62,.15); color:#1A0A3E; }
+.cmp-stat.s-mix    { background: linear-gradient(135deg, #4A2C8A 0%, #6B4EAF 60%, #C9A800 100%); }
+.cmp-stat.s-rose   { background: linear-gradient(135deg, #6B4EAF, #b25d9f); }
+
+/* ======================================================================
+   11. FORM CONTROLS (light, on-glass)
+   ====================================================================== */
+
+.cmp-field{
+  position: relative;
+  margin-bottom: 22px;
+}
+.cmp-field-label{
+  display: block;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: .85rem;
+  color: #2D1B69;
+  margin-bottom: 8px;
+  letter-spacing: .02em;
+}
+.cmp-field-label .req{ color: #EF4444; margin-left: 2px; }
+.cmp-input-stunning{
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid #E0DBE8;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: .95rem;
+  color: #2E2740;
+  background: #fff;
+  transition: border-color .25s ease, box-shadow .25s ease, transform .15s ease;
+}
+.cmp-input-stunning:focus{
+  outline: none;
+  border-color: #6B4EAF;
+  box-shadow: 0 0 0 4px rgba(107,78,175,.14);
+}
+.cmp-input-stunning::placeholder{ color:#B8B0C4; }
+textarea.cmp-input-stunning{ min-height: 120px; resize: vertical; }
+select.cmp-input-stunning{ appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%234A2C8A'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat:no-repeat;
+  background-position: right 14px center;
+  padding-right: 38px;
+}
+
+.cmp-input-icon{
+  position: relative;
+}
+.cmp-input-icon i{
+  position: absolute;
+  left: 14px; top: 50%;
+  transform: translateY(-50%);
+  color: #6B4EAF;
+  pointer-events: none;
+}
+.cmp-input-icon .cmp-input-stunning{ padding-left: 42px; }
+
+/* Drag-drop image zone */
+.cmp-dropzone{
+  border: 2px dashed rgba(107,78,175,.4);
+  border-radius: 18px;
+  padding: 40px 24px;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(241,238,246,.6), rgba(255,248,225,.4));
+  transition: all .3s var(--ease-default);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.cmp-dropzone:hover,
+.cmp-dropzone.dragover{
+  border-color: #FFD700;
+  background: linear-gradient(135deg, rgba(232,224,245,.8), rgba(255,248,225,.7));
+  box-shadow: 0 0 0 6px rgba(255,215,0,.12), 0 12px 30px rgba(45,27,105,.12);
+  transform: translateY(-2px);
+}
+.cmp-dropzone .cmp-drop-icon{
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2D1B69, #4A2C8A);
+  color: #FFD700;
+  font-size: 26px;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 22px rgba(45,27,105,.3);
+  animation: cmpFloat 3.5s ease-in-out infinite;
+}
+
+/* ======================================================================
+   12. FLOATING SHAPES (decorative)
+   ====================================================================== */
+
+.cmp-shape{
+  position: absolute;
+  pointer-events: none;
+  opacity: .25;
+  filter: blur(.3px);
+  animation: cmpFloat 6s ease-in-out infinite;
+}
+.cmp-shape.gold{ color: #FFD700; }
+.cmp-shape.purple{ color: #6B4EAF; }
+
+/* ======================================================================
+   13. PRODUCT CARD STUNNING — overrides for the product grid feel
+   ====================================================================== */
+
+.cmp-product-stunning{
+  position: relative;
+  background: rgba(255,255,255,.85);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  border: 1px solid rgba(232,224,245,.9);
+  overflow: hidden;
+  transition: transform .4s var(--ease-default), box-shadow .4s var(--ease-default), border-color .4s ease;
+  isolation: isolate;
+}
+.cmp-product-stunning::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(107,78,175,0), rgba(255,215,0,0));
+  transition: background .4s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+.cmp-product-stunning:hover{
+  transform: translateY(-8px);
+  border-color: rgba(107,78,175,.4);
+  box-shadow:
+    0 24px 48px rgba(45,27,105,.18),
+    0 0 0 1px rgba(255,215,0,.25);
+}
+.cmp-product-stunning:hover::before{
+  background: linear-gradient(135deg, rgba(107,78,175,.06), rgba(255,215,0,.08));
+}
+.cmp-product-stunning > *{ position: relative; z-index: 1; }
+
+/* ======================================================================
+   14. STICKY ACTION BAR (used on add-product, product-detail)
+   ====================================================================== */
+
+.cmp-sticky-bar{
+  position: sticky;
+  bottom: 0;
+  background: rgba(255,255,255,.85);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  border-top: 1px solid rgba(45,27,105,.12);
+  padding: 16px 24px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-end;
+  z-index: 50;
+  box-shadow: 0 -8px 24px rgba(26,10,62,.06);
+}
+
+/* ======================================================================
+   15. BADGES & CHIPS
+   ====================================================================== */
+
+.cmp-chip{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: .02em;
+}
+.cmp-chip.purple{ background: rgba(107,78,175,.12); color: #2D1B69; border: 1px solid rgba(107,78,175,.25); }
+.cmp-chip.gold  { background: rgba(255,215,0,.18);  color: #8a6d00; border: 1px solid rgba(255,215,0,.4); }
+.cmp-chip.success{ background: rgba(34,197,94,.12); color:#166534; border: 1px solid rgba(34,197,94,.3); }
+.cmp-chip.warn  { background: rgba(245,158,11,.14); color:#92400E; border: 1px solid rgba(245,158,11,.35); }
+.cmp-chip.danger{ background: rgba(239,68,68,.12);  color:#991B1B; border: 1px solid rgba(239,68,68,.3); }
+
+/* ======================================================================
+   16. SCROLLBAR THEME
+   ====================================================================== */
+
+.cmp-aurora ::-webkit-scrollbar{ width: 10px; height: 10px; }
+.cmp-aurora ::-webkit-scrollbar-track{ background: transparent; }
+.cmp-aurora ::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg, #6B4EAF, #2D1B69);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.cmp-aurora ::-webkit-scrollbar-thumb:hover{
+  background: linear-gradient(180deg, #FFD700, #6B4EAF);
+  background-clip: padding-box;
+}
+
+/* ======================================================================
+   17. RESPONSIVE — calm aurora on mobile, smaller blobs
+   ====================================================================== */
+
+@media (max-width: 767.98px){
+  body.cmp-aurora::before{ width: 360px; height: 360px; filter: blur(70px); }
+  body.cmp-aurora::after { width: 320px; height: 320px; filter: blur(70px); }
+  .cmp-aurora-host .cmp-aurora-blob{ filter: blur(60px); }
+  .cmp-aurora-host .cmp-aurora-blob.b1{ width:340px; height:340px; }
+  .cmp-aurora-host .cmp-aurora-blob.b2{ width:300px; height:300px; }
+  .cmp-aurora-host .cmp-aurora-blob.b3{ width:420px; height:420px; }
+  .cmp-aurora-host .cmp-aurora-blob.b4{ display:none; }
+
+  .cmp-display-xl{ font-size: clamp(2rem, 8vw, 2.8rem); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  body.cmp-aurora::before,
+  body.cmp-aurora::after,
+  .cmp-aurora-host .cmp-aurora-blob,
+  .cmp-divider-grad,
+  .cmp-ring-anim::before,
+  .cmp-dropzone .cmp-drop-icon{
+    animation: none !important;
+  }
+}
+
+/* ======================================================================
+   18. SPOTLIGHT JS HOOK SCRIPT — lives inline; classes target via JS later
+   ====================================================================== */
+/* Pair this with the small JS in cmp-stunning.js (added to pages that use it) */

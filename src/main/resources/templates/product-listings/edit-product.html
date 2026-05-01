@@ -3,757 +3,850 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Product</title>
+    <title th:text="'Edit ' + ${product.title} + ' — Campus Marketplace'">Edit Product — Campus Marketplace</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/css/mobile.css}" rel="stylesheet">
+    <link th:href="@{/css/cmp-enhance.css}" rel="stylesheet">
+    <link th:href="@{/css/cmp-stunning.css}" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --bg: #f3f5ff;
-            --ink: #1d2240;
-            --muted: #6b7293;
-            --line: #d9def2;
-            --panel: #ffffff;
-            --accent: #f28c1f;
-            --accent-dark: #e2b106;
-            --dark: #4b2e83;
-            --dark-soft: #295f98;
-            --success: #0f766e;
-            --danger: #b42318;
-            --shadow: 0 20px 50px rgba(75, 46, 131, 0.10);
+        body.cmp-aurora{
+            font-family: 'Inter', 'Poppins', sans-serif;
+            color: #2E2740;
+            min-height: 100vh;
         }
 
-        * { box-sizing: border-box; }
-
-        body {
-            margin: 0;
-            font-family: "Plus Jakarta Sans", sans-serif;
-            color: var(--ink);
-            background:
-                radial-gradient(circle at top right, rgba(242, 140, 31, 0.18), transparent 20%),
-                radial-gradient(circle at top left, rgba(75, 46, 131, 0.10), transparent 24%),
-                linear-gradient(180deg, #fbfbff 0%, var(--bg) 100%);
+        /* ── Page hero ─────────────────────────────────────────── */
+        .ap-hero{
+            padding: 56px 0 36px;
+            position: relative;
         }
-
-        .page {
-            max-width: 1240px;
-            margin: 0 auto;
-            padding: 24px 18px 36px;
-        }
-
-        .top-rail {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 14px;
-            margin-bottom: 22px;
-            padding: 16px 18px;
-            border-radius: 24px;
-            background: rgba(255, 255, 255, 0.82);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(12px);
-            flex-wrap: wrap;
-        }
-
-        .rail-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex-wrap: wrap;
-        }
-
-        .rail-mark {
-            width: 46px;
-            height: 46px;
-            border-radius: 16px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--dark);
-            color: #fff;
-        }
-
-        .rail-title strong {
-            display: block;
-            font-size: 18px;
-            line-height: 1.1;
-        }
-
-        .rail-title span {
-            display: block;
-            margin-top: 4px;
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        .rail-badge,
-        .dash-link,
-        .btn-accent,
-        .btn-ghost {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+        .ap-hero .container{ max-width: 1180px; }
+        .ap-back{
+            display: inline-flex; align-items: center; gap: 8px;
+            color: #4A2C8A; font-weight: 600; font-size: .9rem;
             text-decoration: none;
+            padding: 8px 14px;
             border-radius: 999px;
-            font-weight: 800;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            background: rgba(255,255,255,.55);
+            -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+            border: 1px solid rgba(107,78,175,.2);
+            transition: all .25s var(--ease-default);
         }
-
-        .rail-badge {
-            padding: 10px 14px;
-            background: var(--dark);
-            color: #fff;
-            font-size: 12px;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-
-        .dash-link {
-            padding: 13px 18px;
-            background: #fff;
-            color: var(--ink);
-            border: 1px solid var(--line);
-        }
-
-        .dash-link:hover,
-        .btn-ghost:hover {
-            color: var(--ink);
+        .ap-back:hover{
+            background: linear-gradient(135deg,#2D1B69,#4A2C8A);
+            color: #FFD700;
+            transform: translateX(-4px);
             text-decoration: none;
-            transform: translateY(-1px);
+        }
+        .ap-eyebrow{
+            display: inline-flex; align-items:center; gap:8px;
+            font-family:'Poppins',sans-serif;
+            font-weight: 700; font-size: .78rem;
+            letter-spacing: .22em; text-transform: uppercase;
+            color: #4A2C8A;
+            background: linear-gradient(90deg, rgba(107,78,175,.12), rgba(255,215,0,.18));
+            padding: 7px 16px; border-radius: 999px;
+            border: 1px solid rgba(107,78,175,.22);
+            margin-bottom: 18px;
+        }
+        .ap-eyebrow i{ color:#FFC107; }
+        .ap-title{
+            font-family:'Poppins',sans-serif;
+            font-weight: 900;
+            font-size: clamp(2.2rem, 5vw, 3.6rem);
+            letter-spacing: -0.025em;
+            line-height: 1.05;
+            margin: 0 0 12px;
+            background: linear-gradient(135deg, #1A0A3E 0%, #4A2C8A 50%, #6B4EAF 100%);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .ap-title .gold{
+            background: linear-gradient(135deg, #C9A800, #FFD700, #FFC107);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .ap-sub{
+            color: #6B6280;
+            font-size: 1.05rem;
+            font-weight: 500;
+            max-width: 620px;
         }
 
-        .layout {
-            display: grid;
-            grid-template-columns: minmax(0, 1.52fr) minmax(320px, 0.95fr);
-            gap: 24px;
-        }
+        /* ── Form layout ───────────────────────────────────────── */
+        .ap-shell{ padding-bottom: 80px; }
+        .ap-shell .container{ max-width: 1180px; }
 
-        .panel {
-            border-radius: 30px;
+        .ap-section{
+            background: rgba(255,255,255,.92);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            backdrop-filter: blur(20px) saturate(140%);
+            border: 1px solid rgba(232,224,245,.85);
+            border-radius: 24px;
+            box-shadow: 0 14px 40px rgba(45,27,105,.08);
+            margin-bottom: 26px;
             overflow: hidden;
-            background: var(--panel);
-            box-shadow: var(--shadow);
+            transition: box-shadow .35s var(--ease-default), transform .35s var(--ease-default);
         }
-
-        .form-panel {
-            border: 1px solid rgba(75, 46, 131, 0.08);
+        .ap-section:hover{ box-shadow: 0 22px 56px rgba(45,27,105,.14); }
+        .ap-section-head{
+            display: flex; align-items: center; gap: 16px;
+            padding: 22px 28px;
+            position: relative;
+            overflow: hidden;
+            color: #fff;
         }
-
-        .panel-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 14px;
-            padding: 24px 28px 18px;
-            border-bottom: 1px solid #eceff3;
-            flex-wrap: wrap;
+        .ap-section-head::after{
+            content:""; position:absolute;
+            right:-60px; top:-60px;
+            width: 220px; height: 220px;
+            background: radial-gradient(circle, rgba(255,215,0,.4), transparent 70%);
+            pointer-events: none;
         }
+        .ap-section-head.s-purple{ background: linear-gradient(135deg, #2D1B69 0%, #4A2C8A 100%); }
+        .ap-section-head.s-deep  { background: linear-gradient(135deg, #1A0A3E 0%, #2D1B69 100%); border-bottom: 3px solid #FFD700; }
+        .ap-section-head.s-mix   { background: linear-gradient(135deg, #4A2C8A 0%, #6B4EAF 60%, #C9A800 100%); }
 
-        .panel-head h1 {
+        .ap-sec-icon{
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            display: inline-flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #FFD700, #FFC107);
+            color: #1A0A3E;
+            font-size: 20px;
+            box-shadow: 0 8px 18px rgba(255,215,0,.4);
+            flex-shrink: 0;
+            position: relative; z-index: 1;
+        }
+        .ap-sec-title{
+            font-family:'Poppins',sans-serif;
+            font-weight: 700;
+            font-size: 1.15rem;
             margin: 0;
-            font-size: 30px;
-            line-height: 1;
-            letter-spacing: -0.05em;
+            position: relative; z-index: 1;
+        }
+        .ap-sec-sub{
+            font-size: .82rem;
+            opacity: .85;
+            margin: 2px 0 0;
+            font-weight: 400;
+            position: relative; z-index: 1;
+        }
+        .ap-sec-step{
+            margin-left: auto;
+            font-family:'Poppins',sans-serif;
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: rgba(255,255,255,.18);
+            position: relative; z-index: 1;
+        }
+        .ap-section-body{ padding: 28px 32px 30px; }
+
+        /* ── Fields ─────────────────────────────────────────────── */
+        .ap-field{ margin-bottom: 22px; }
+        .ap-label{
+            display: block;
+            font-family:'Poppins',sans-serif;
+            font-weight: 600;
+            font-size: .82rem;
+            color: #2D1B69;
+            margin-bottom: 8px;
+            letter-spacing: .03em;
+        }
+        .ap-label .req{ color: #EF4444; margin-left: 3px; }
+        .ap-help{
+            display: block;
+            margin-top: 6px;
+            font-size: .78rem;
+            color: #8c84a0;
+        }
+        .ap-input,
+        .ap-section-body .form-control,
+        .ap-section-body .custom-select{
+            width: 100%;
+            padding: 13px 16px !important;
+            border: 1.5px solid #E0DBE8 !important;
+            border-radius: 12px !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: .95rem !important;
+            color: #2E2740 !important;
+            background: #fff !important;
+            transition: border-color .25s ease, box-shadow .25s ease, transform .15s ease !important;
+            box-shadow: none !important;
+            height: auto !important;
+        }
+        .ap-input:focus,
+        .ap-section-body .form-control:focus,
+        .ap-section-body .custom-select:focus{
+            outline: none !important;
+            border-color: #6B4EAF !important;
+            box-shadow: 0 0 0 4px rgba(107,78,175,.14) !important;
+        }
+        .ap-input::placeholder,
+        .ap-section-body .form-control::placeholder{ color:#B8B0C4 !important; }
+        textarea.ap-input,
+        .ap-section-body textarea.form-control{ min-height: 130px; resize: vertical; }
+        .ap-section-body .custom-select{
+            appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%234A2C8A'><path d='M7 10l5 5 5-5z'/></svg>") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 14px center !important;
+            padding-right: 38px !important;
         }
 
-        .panel-head p {
-            margin: 6px 0 0;
-            color: var(--muted);
-            font-size: 13px;
+        .ap-input-prefix{ position: relative; }
+        .ap-input-prefix .ap-currency{
+            position: absolute;
+            left: 16px; top: 50%;
+            transform: translateY(-50%);
+            font-weight: 700;
+            color: #4A2C8A;
+            font-size: .95rem;
+            letter-spacing: .04em;
+            pointer-events: none;
         }
+        .ap-input-prefix .form-control{ padding-left: 50px !important; }
 
-        .head-chip {
+        /* ── Image swap zone — current vs new ───────────────────── */
+        .ep-image-grid{
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+        .ep-image-card{
+            background: linear-gradient(135deg, rgba(241,238,246,.5), rgba(255,248,225,.3));
+            border: 1px solid rgba(232,224,245,.85);
+            border-radius: 18px;
+            padding: 16px;
+            transition: border-color .25s ease, box-shadow .25s ease;
+        }
+        .ep-image-card:hover{
+            border-color: rgba(107,78,175,.35);
+            box-shadow: 0 8px 22px rgba(45,27,105,.08);
+        }
+        .ep-image-label{
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 10px 13px;
-            border-radius: 999px;
-            background: var(--dark);
-            color: #fff;
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .panel-body {
-            padding: 26px 28px 30px;
-        }
-
-        .alert-soft {
-            border: none;
-            border-radius: 18px;
-            padding: 15px 16px;
+            font-family:'Poppins',sans-serif;
             font-weight: 700;
-        }
-
-        .alert-success.alert-soft { background: rgba(15, 118, 110, 0.12); color: var(--success); }
-        .alert-danger.alert-soft { background: rgba(180, 35, 24, 0.10); color: var(--danger); }
-
-        .section + .section {
-            margin-top: 28px;
-            padding-top: 26px;
-            border-top: 1px solid #eceff3;
-        }
-
-        .section-bar {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .section-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 14px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--dark);
-            color: #fff;
-        }
-
-        .section-bar strong {
-            display: block;
-            font-size: 18px;
-            line-height: 1.1;
-        }
-
-        .section-bar span {
-            display: block;
-            margin-top: 4px;
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        .field {
-            margin-bottom: 18px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        .form-control,
-        .custom-select {
-            min-height: 56px;
-            border-radius: 18px;
-            border: 1px solid var(--line);
-            padding: 15px 16px;
-            font-size: 15px;
-            background: #fbfbff;
-        }
-
-        textarea.form-control {
-            min-height: 148px;
-            resize: vertical;
-        }
-
-        .form-control:focus,
-        .custom-select:focus {
-            border-color: rgba(75, 46, 131, 0.34);
-            box-shadow: 0 0 0 0.2rem rgba(75, 46, 131, 0.12);
-            background: #fff;
-        }
-
-        .image-stage {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 14px;
-        }
-
-        .image-card {
-            border-radius: 24px;
-            padding: 16px;
-            background: #fbfbff;
-            border: 1px solid #edf1f5;
-        }
-
-        .image-card strong {
-            display: block;
+            font-size: .72rem;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: #4A2C8A;
+            background: rgba(107,78,175,.08);
+            padding: 5px 12px;
+            border-radius: 999px;
             margin-bottom: 12px;
-            font-size: 14px;
         }
-
-        .image-frame {
-            height: 230px;
-            border-radius: 18px;
+        .ep-image-label.is-new{
+            color: #8a6d00;
+            background: rgba(255,215,0,.18);
+        }
+        .ep-image-frame{
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 14px;
             overflow: hidden;
-            background: linear-gradient(135deg, #dfe5ec, #eef2f7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: linear-gradient(135deg, #2D1B69, #4A2C8A);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: inset 0 0 0 1px rgba(255,215,0,.18);
         }
-
-        .image-frame img {
-            width: 100%;
-            height: 100%;
+        .ep-image-frame img{
+            width: 100%; height: 100%;
             object-fit: cover;
             display: block;
         }
-
-        .new-image-frame img {
-            display: none;
-        }
-
-        .image-empty {
+        .ep-image-frame .ep-empty{
+            color: rgba(255,215,0,.7);
             text-align: center;
-            color: #788394;
-            padding: 28px;
-            line-height: 1.6;
-        }
-
-        .image-empty i {
-            display: block;
-            font-size: 30px;
-            margin-bottom: 12px;
-        }
-
-        .replace-shell {
-            margin-top: 14px;
-            border-radius: 24px;
-            border: 1px dashed #cbd3dc;
-            background: #fbfbff;
+            font-size: .85rem;
             padding: 18px;
         }
-
-        .btn-accent {
-            border: none;
-            padding: 14px 20px;
-            background: linear-gradient(135deg, #f28c1f, #f2c230);
-            color: #fff;
-            box-shadow: 0 16px 30px rgba(242, 140, 31, 0.24);
-        }
-
-        .btn-accent:hover {
-            color: #fff;
-            text-decoration: none;
-            transform: translateY(-1px);
-        }
-
-        .btn-ghost {
-            border: 1px solid var(--line);
-            padding: 14px 20px;
-            background: #fff;
-            color: var(--ink);
-        }
-
-        .actions {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 14px;
-            margin-top: 28px;
-            padding-top: 24px;
-            border-top: 1px solid #eceff3;
-            flex-wrap: wrap;
-        }
-
-        .action-tools {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .visual-panel {
-            padding: 22px;
-            background: linear-gradient(180deg, var(--dark) 0%, var(--dark-soft) 100%);
-            color: #fff;
-        }
-
-        .visual-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 18px;
-        }
-
-        .visual-top strong {
-            font-size: 20px;
-            line-height: 1.05;
-            letter-spacing: -0.04em;
-        }
-
-        .visual-kicker {
-            padding: 9px 12px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.08);
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-
-        .snapshot-card {
-            border-radius: 26px;
-            overflow: hidden;
-            background: #fff;
-            color: var(--ink);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.24);
-        }
-
-        .snapshot-top {
-            display: grid;
-            grid-template-columns: 92px minmax(0, 1fr);
-            gap: 14px;
-            padding: 18px;
-            border-bottom: 1px solid #edf1f5;
-        }
-
-        .snapshot-thumb {
-            width: 92px;
-            height: 92px;
-            border-radius: 22px;
-            overflow: hidden;
-            background: linear-gradient(135deg, #e6ebff, #eef4ff);
-        }
-
-        .snapshot-thumb img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .ep-image-frame .ep-empty i{
             display: block;
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #FFD700;
+            opacity: .7;
         }
+        .ep-new-frame img{ display: none; }
 
-        .snapshot-meta strong {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 18px;
-            line-height: 1.25;
-            letter-spacing: -0.03em;
-        }
-
-        .snapshot-meta span {
-            display: block;
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .snapshot-stats {
-            padding: 18px;
-        }
-
-        .stat-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            padding: 14px 15px;
+        /* ── Dropzone ─────────────────────────────────────────────── */
+        .ap-dropzone{
+            position: relative;
+            border: 2px dashed rgba(107,78,175,.4);
             border-radius: 18px;
-            background: linear-gradient(135deg, #f4f2ff, #eef5ff);
+            padding: 32px 22px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(241,238,246,.6), rgba(255,248,225,.4));
+            transition: all .3s var(--ease-default);
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .ap-dropzone:hover,
+        .ap-dropzone.dragover{
+            border-color: #FFD700;
+            background: linear-gradient(135deg, rgba(232,224,245,.8), rgba(255,248,225,.7));
+            box-shadow: 0 0 0 6px rgba(255,215,0,.12), 0 14px 32px rgba(45,27,105,.12);
+            transform: translateY(-2px);
+        }
+        .ap-drop-icon{
+            width: 64px; height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2D1B69, #4A2C8A);
+            color: #FFD700;
+            font-size: 24px;
+            display: inline-flex; align-items: center; justify-content: center;
+            margin-bottom: 12px;
+            box-shadow: 0 10px 22px rgba(45,27,105,.3);
+            animation: cmpFloat 3.5s ease-in-out infinite;
+        }
+        .ap-drop-title{
+            font-family:'Poppins',sans-serif;
+            font-weight: 700;
+            color: #2D1B69;
+            font-size: 1rem;
+            margin: 0 0 4px;
+        }
+        .ap-drop-sub{ color: #8c84a0; font-size: .85rem; margin: 0; }
+        .ap-drop-pill{
+            display: inline-block;
+            margin-top: 12px;
+            padding: 7px 16px;
+            background: linear-gradient(135deg, #FFD700, #FFC107);
+            color: #1A0A3E;
+            font-weight: 700;
+            font-size: .8rem;
+            border-radius: 999px;
+            box-shadow: 0 6px 16px rgba(255,193,7,.4);
+        }
+        .ap-dropzone input[type="file"]{
+            position: absolute; inset: 0;
+            opacity: 0; cursor: pointer;
+        }
+        .ap-file-chosen{
+            display: none;
+            margin-top: 14px;
+            padding: 10px 14px;
+            background: rgba(34,197,94,.12);
+            color: #166534;
+            border: 1px solid rgba(34,197,94,.3);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: .85rem;
+        }
+        .ap-file-chosen.show{ display: inline-block; }
+
+        /* ── Sticky action bar ───────────────────────────────────── */
+        .ap-actionbar{
+            position: sticky;
+            bottom: 0;
+            margin: 0 -15px -1px;
+            padding: 16px 28px;
+            background: rgba(255,255,255,.85);
+            -webkit-backdrop-filter: blur(20px) saturate(160%);
+            backdrop-filter: blur(20px) saturate(160%);
+            border-top: 1px solid rgba(45,27,105,.12);
+            display: flex; gap: 12px;
+            align-items: center;
+            justify-content: flex-end;
+            z-index: 50;
+            box-shadow: 0 -8px 24px rgba(26,10,62,.06);
+            border-radius: 22px 22px 0 0;
+        }
+        .ap-actionbar .ap-status{
+            margin-right: auto;
+            display: inline-flex; align-items: center; gap: 8px;
+            font-family:'Poppins',sans-serif;
+            font-weight: 700;
+            font-size: .8rem;
+            color: #166534;
+            padding: 8px 14px;
+            background: rgba(34,197,94,.12);
+            border: 1px solid rgba(34,197,94,.3);
+            border-radius: 999px;
+        }
+        .ap-actionbar .ap-status .dot{
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #22C55E;
+            box-shadow: 0 0 0 4px rgba(34,197,94,.18);
+            animation: cmpPulse 1.6s ease-in-out infinite;
+        }
+        .ap-btn-ghost{
+            padding: 12px 22px;
+            font-family:'Poppins',sans-serif;
+            font-weight: 700;
+            font-size: .88rem;
+            letter-spacing: .04em;
+            color: #2D1B69;
+            background: rgba(255,255,255,.7);
+            border: 1.5px solid rgba(45,27,105,.25);
+            border-radius: 12px;
+            display: inline-flex; align-items: center; gap: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all .25s var(--ease-default);
+        }
+        .ap-btn-ghost:hover{
+            background: #2D1B69;
+            color: #FFD700;
+            border-color: #2D1B69;
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+        .ap-btn-publish{
+            padding: 13px 30px;
+            font-family:'Poppins',sans-serif;
+            font-weight: 800;
+            font-size: .95rem;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: #1A0A3E;
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 12px 28px rgba(255,193,7,.45), inset 0 1px 0 rgba(255,255,255,.6);
+            display: inline-flex; align-items: center; gap: 10px;
+            cursor: pointer;
+            position: relative; overflow: hidden;
+            transition: all .3s var(--ease-default);
+        }
+        .ap-btn-publish::after{
+            content:""; position:absolute; inset:0;
+            background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.55) 50%, transparent 60%);
+            transform: translateX(-120%);
+            transition: transform .9s var(--ease-default);
+        }
+        .ap-btn-publish:hover{
+            transform: translateY(-3px);
+            box-shadow: 0 18px 38px rgba(255,193,7,.55);
+        }
+        .ap-btn-publish:hover::after{ transform: translateX(120%); }
+
+        /* ── Alerts ─────────────────────────────────────────────── */
+        .ap-alert{
+            border-radius: 14px;
+            border: none;
+            padding: 14px 18px;
+            font-weight: 600;
+            font-size: .92rem;
+            margin-bottom: 22px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .ap-alert.ok{
+            background: rgba(34,197,94,.12);
+            color: #166534;
+            border-left: 4px solid #22C55E;
+        }
+        .ap-alert.err{
+            background: rgba(239,68,68,.10);
+            color: #991B1B;
+            border-left: 4px solid #EF4444;
         }
 
-        .stat-row + .stat-row {
-            margin-top: 10px;
+        /* ── Live snapshot side card ─────────────────────────────── */
+        .ap-preview-card{
+            position: sticky; top: 24px;
+            background: linear-gradient(135deg, rgba(255,255,255,.92), rgba(248,246,252,.92));
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            backdrop-filter: blur(20px) saturate(140%);
+            border: 1px solid rgba(232,224,245,.85);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 18px 44px rgba(45,27,105,.10);
+            overflow: hidden;
         }
-
-        .stat-row span:first-child {
-            color: var(--muted);
-            font-size: 13px;
+        .ap-preview-eyebrow{
+            display: inline-flex; align-items:center; gap:6px;
+            font-family:'Poppins',sans-serif;
+            font-weight: 700; font-size: .72rem;
+            letter-spacing: .2em; text-transform: uppercase;
+            color: #6B4EAF;
+            margin-bottom: 14px;
+        }
+        .ap-preview-stage{
+            position: relative;
+            border-radius: 18px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #2D1B69, #4A2C8A);
+            min-height: 220px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: inset 0 0 0 1px rgba(255,215,0,.18);
+        }
+        .ap-preview-stage img{
+            width: 100%;
+            aspect-ratio: 1.3;
+            object-fit: cover;
+        }
+        .ap-preview-empty{
+            color: rgba(255,215,0,.7);
+            text-align: center;
+            font-size: .85rem;
+            padding: 24px;
+        }
+        .ap-preview-empty i{
+            display: block;
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #FFD700;
+            opacity: .7;
+        }
+        .ep-stat-list{
+            list-style: none;
+            margin: 18px 0 0;
+            padding: 0;
+            display: grid;
+            gap: 8px;
+        }
+        .ep-stat-row{
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: rgba(107,78,175,.06);
+            border: 1px solid rgba(107,78,175,.15);
+            font-size: .88rem;
+        }
+        .ep-stat-row .lbl{
+            color: #6B4EAF;
+            font-weight: 700;
+            font-family:'Poppins',sans-serif;
+            font-size: .75rem;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+        .ep-stat-row .val{
+            color: #2D1B69;
             font-weight: 700;
         }
-
-        .stat-row span:last-child {
-            font-size: 14px;
-            font-weight: 800;
-            color: var(--ink);
-        }
-
-        .visual-strip {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 12px;
+        .ap-tip{
             margin-top: 18px;
-        }
-
-        .visual-box {
-            min-height: 108px;
-            border-radius: 22px;
-            padding: 16px 14px;
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .visual-box i {
-            display: inline-flex;
-            width: 40px;
-            height: 40px;
+            padding: 14px 16px;
+            background: linear-gradient(135deg, rgba(255,215,0,.14), rgba(255,193,7,.08));
+            border: 1px solid rgba(255,215,0,.4);
             border-radius: 14px;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 14px;
-            background: rgba(255, 255, 255, 0.10);
-            color: #fff;
+            font-size: .85rem;
+            color: #6b5400;
+            display: flex; gap: 10px; align-items: flex-start;
         }
+        .ap-tip i{ color: #C9A800; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
 
-        .visual-box strong {
-            display: block;
-            font-size: 13px;
-            line-height: 1.35;
+        /* ── Responsive ─────────────────────────────────────────── */
+        @media (max-width: 991.98px){
+            .ap-preview-col{ display: none; }
         }
-
-        .footer-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 14px;
-            margin-top: 24px;
-            padding: 16px 18px;
-            border-radius: 24px;
-            background: rgba(255, 255, 255, 0.82);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: var(--shadow);
-            flex-wrap: wrap;
-        }
-
-        .footer-bar strong {
-            display: block;
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .footer-bar p {
-            color: var(--muted);
-            font-size: 13px;
-            margin: 0;
-        }
-
-        @media (max-width: 991px) {
-            .layout { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 767px) {
-            .page { padding: 16px 12px 26px; }
-            .top-rail, .panel-head, .panel-body, .visual-panel, .footer-bar { padding-left: 18px; padding-right: 18px; }
-            .image-stage, .visual-strip { grid-template-columns: 1fr; }
-            .actions, .footer-bar { align-items: stretch; }
-            .action-tools, .action-tools a, .action-tools button, .footer-bar .dash-link { width: 100%; }
+        @media (max-width: 767.98px){
+            .ap-hero{ padding: 32px 0 22px; }
+            .ap-section-body{ padding: 22px; }
+            .ap-section-head{ padding: 18px 20px; gap: 12px; }
+            .ap-sec-step{ display: none; }
+            .ep-image-grid{ grid-template-columns: 1fr; gap: 14px; }
+            .ap-actionbar{ flex-wrap: wrap; padding: 14px 18px; }
+            .ap-actionbar .ap-status{ width: 100%; margin: 0 0 6px; justify-content: center; }
+            .ap-btn-publish, .ap-btn-ghost{ width: 100%; justify-content: center; }
+            .ap-back{ font-size: .82rem; }
         }
     </style>
 </head>
-<body>
-<div class="page">
-    <div class="top-rail">
-        <div class="rail-left">
-            <span class="rail-mark"><i class="fas fa-pen"></i></span>
-            <div class="rail-title">
-                <strong>Edit Product</strong>
-                <span>Seller product editor</span>
+<body class="cmp-aurora">
+
+<!-- ── Hero ──────────────────────────────────────────────────────── -->
+<section class="ap-hero">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-start flex-wrap" style="gap:18px;">
+            <div>
+                <span class="ap-eyebrow"><i class="fas fa-pen"></i>Seller workspace</span>
+                <h1 class="ap-title">Refine this <span class="gold">listing</span></h1>
+                <p class="ap-sub">Tighten the title, freshen the photo, adjust the price. Small edits often unlock a sale.</p>
             </div>
+            <a class="ap-back" th:href="@{/seller/dashboard}">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
         </div>
-        <div class="d-flex align-items-center flex-wrap" style="gap:12px;">
-            <span class="rail-badge"><i class="fas fa-circle" style="font-size:8px;"></i>Live Edit</span>
-            <a class="dash-link" th:href="@{/seller/dashboard}"><i class="fas fa-arrow-left"></i>Back to Dashboard</a>
-        </div>
+        <hr class="cmp-divider-grad" style="margin-top: 28px;">
     </div>
+</section>
 
-    <div class="layout">
-        <section class="panel form-panel">
-            <div class="panel-head">
-                <div>
-                    <h1>Edit Listing</h1>
-                    <p>Sharper layout. Same edit logic.</p>
+<!-- ── Form shell ────────────────────────────────────────────────── -->
+<section class="ap-shell">
+    <div class="container">
+        <div class="row">
+            <!-- Form column -->
+            <div class="col-lg-8">
+                <div th:if="${success != null}" class="ap-alert ok">
+                    <i class="fas fa-check-circle"></i><span th:text="${success}">Product updated successfully.</span>
                 </div>
-                <div class="head-chip"><i class="fas fa-sliders-h"></i>Product Editor</div>
-            </div>
-
-            <div class="panel-body">
-                <div th:if="${success != null}" class="alert alert-success alert-soft" th:text="${success}">Product updated successfully.</div>
-                <div th:if="${error != null}" class="alert alert-danger alert-soft" th:text="${error}">Error message</div>
+                <div th:if="${error != null}" class="ap-alert err">
+                    <i class="fas fa-exclamation-circle"></i><span th:text="${error}">Error message</span>
+                </div>
 
                 <form th:action="@{'/seller/products/' + ${product.productId} + '/edit'}" method="post" enctype="multipart/form-data">
-                    <div class="section">
-                        <div class="section-bar">
-                            <span class="section-icon"><i class="fas fa-tag"></i></span>
+
+                    <!-- ─── Section 1: The Basics ─── -->
+                    <div class="ap-section">
+                        <div class="ap-section-head s-purple">
+                            <span class="ap-sec-icon"><i class="fas fa-tag"></i></span>
                             <div>
-                                <strong>Product Details</strong>
-                                <span>Update the listing fields</span>
+                                <div class="ap-sec-title">The Basics</div>
+                                <p class="ap-sec-sub">Title, condition, and the story behind it.</p>
                             </div>
+                            <div class="ap-sec-step">01</div>
                         </div>
+                        <div class="ap-section-body">
 
-                        <div class="form-row">
-                            <div class="col-md-8">
-                                <div class="field">
-                                    <label for="title">Title</label>
-                                    <input type="text" class="form-control" id="title" name="title" th:value="${product.title}" required>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="ap-field">
+                                        <label class="ap-label" for="title">Title <span class="req">*</span></label>
+                                        <input type="text" class="form-control" id="title" name="title"
+                                               th:value="${product.title}"
+                                               placeholder="TI-84 calculator, barely used" required>
+                                        <span class="ap-help">Short and specific. Buyers scan titles fast.</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="field">
-                                    <label for="condition">Condition</label>
-                                    <select class="custom-select" id="condition" name="condition" required>
-                                        <option th:each="c : ${conditions}" th:value="${c}" th:text="${c}" th:selected="${product.condition == c}">NEW</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <label for="description">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="4" th:text="${product.description}"></textarea>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="col-md-4">
-                                <div class="field">
-                                    <label for="price">Price (RM)</label>
-                                    <input type="number" step="0.01" min="0.01" class="form-control" id="price" name="price" th:value="${product.price}" required>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="field">
-                                    <label for="quantity">Quantity</label>
-                                    <input type="number" min="1" class="form-control" id="quantity" name="quantity" th:value="${product.quantity}" required>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="field">
-                                    <label for="categoryId">Category</label>
-                                    <select class="custom-select" id="categoryId" name="categoryId" required>
-                                        <option th:each="cat : ${categories}" th:value="${cat.categoryId}" th:text="${cat.categoryName}" th:selected="${product.category != null and product.category.categoryId == cat.categoryId}">Category</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section">
-                        <div class="section-bar">
-                            <span class="section-icon"><i class="fas fa-camera"></i></span>
-                            <div>
-                                <strong>Image Replacement</strong>
-                                <span>Current and new preview</span>
-                            </div>
-                        </div>
-
-                        <div class="image-stage">
-                            <div class="image-card">
-                                <strong>Current</strong>
-                                <div class="image-frame">
-                                    <img th:if="${product.images != null and !#lists.isEmpty(product.images)}" th:src="${product.images.get(0).imageUrl}" alt="Current product image">
-                                    <div class="image-empty" th:if="${product.images == null or #lists.isEmpty(product.images)}">
-                                        <i class="far fa-image"></i>
-                                        No image attached yet.
+                                <div class="col-md-4">
+                                    <div class="ap-field">
+                                        <label class="ap-label" for="condition">Condition <span class="req">*</span></label>
+                                        <select class="custom-select" id="condition" name="condition" required>
+                                            <option th:each="c : ${conditions}" th:value="${c}" th:text="${c}"
+                                                    th:selected="${product.condition == c}">NEW</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="image-card">
-                                <strong>New Preview</strong>
-                                <div class="image-frame new-image-frame">
-                                    <img id="newImagePreview" alt="New image preview">
-                                    <div class="image-empty" id="newImageEmpty">
-                                        <i class="fas fa-sparkles"></i>
-                                        New image preview appears here.
+                            <div class="ap-field" style="margin-bottom:0;">
+                                <label class="ap-label" for="description">Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="4"
+                                          th:text="${product.description}"
+                                          placeholder="Why should someone buy this? What's included? Any flaws?"></textarea>
+                                <span class="ap-help">2–3 short paragraphs perform best. Honest > fancy.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ─── Section 2: Pricing & Inventory ─── -->
+                    <div class="ap-section">
+                        <div class="ap-section-head s-mix">
+                            <span class="ap-sec-icon"><i class="fas fa-coins"></i></span>
+                            <div>
+                                <div class="ap-sec-title">Pricing &amp; Inventory</div>
+                                <p class="ap-sec-sub">Adjust value. Track the stock.</p>
+                            </div>
+                            <div class="ap-sec-step">02</div>
+                        </div>
+                        <div class="ap-section-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="ap-field">
+                                        <label class="ap-label" for="price">Price <span class="req">*</span></label>
+                                        <div class="ap-input-prefix">
+                                            <span class="ap-currency">RM</span>
+                                            <input type="number" step="0.01" min="0.01" class="form-control"
+                                                   id="price" name="price" th:value="${product.price}"
+                                                   placeholder="0.00" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="ap-field">
+                                        <label class="ap-label" for="quantity">Quantity <span class="req">*</span></label>
+                                        <input type="number" min="1" class="form-control"
+                                               id="quantity" name="quantity"
+                                               th:value="${product.quantity}"
+                                               placeholder="1" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="ap-field">
+                                        <label class="ap-label" for="categoryId">Category <span class="req">*</span></label>
+                                        <select class="custom-select" id="categoryId" name="categoryId" required>
+                                            <option th:each="cat : ${categories}" th:value="${cat.categoryId}"
+                                                    th:text="${cat.categoryName}"
+                                                    th:selected="${product.category != null and product.category.categoryId == cat.categoryId}">Category</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="replace-shell">
-                            <label for="image">Replace image</label>
-                            <input type="file" class="form-control-file" id="image" name="image" accept="image/*">
+                    <!-- ─── Section 3: Image ─── -->
+                    <div class="ap-section">
+                        <div class="ap-section-head s-deep">
+                            <span class="ap-sec-icon"><i class="fas fa-camera-retro"></i></span>
+                            <div>
+                                <div class="ap-sec-title">Cover Image</div>
+                                <p class="ap-sec-sub">Swap in a sharper photo if you have one.</p>
+                            </div>
+                            <div class="ap-sec-step">03</div>
+                        </div>
+                        <div class="ap-section-body">
+
+                            <div class="ep-image-grid">
+                                <div class="ep-image-card">
+                                    <span class="ep-image-label"><i class="fas fa-image"></i>Current image</span>
+                                    <div class="ep-image-frame">
+                                        <img th:if="${product.images != null and !#lists.isEmpty(product.images)}"
+                                             th:src="${product.images.get(0).imageUrl}" alt="Current product image">
+                                        <div class="ep-empty" th:if="${product.images == null or #lists.isEmpty(product.images)}">
+                                            <i class="far fa-image"></i>
+                                            No image attached yet.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ep-image-card">
+                                    <span class="ep-image-label is-new"><i class="fas fa-magic"></i>New preview</span>
+                                    <div class="ep-image-frame ep-new-frame">
+                                        <img id="newImagePreview" alt="New image preview">
+                                        <div class="ep-empty" id="newImageEmpty">
+                                            <i class="far fa-image"></i>
+                                            Pick a new file below to preview here.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ap-dropzone" id="ap-drop">
+                                <div class="ap-drop-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                <p class="ap-drop-title">Drop a replacement image here</p>
+                                <p class="ap-drop-sub">or click anywhere in this box to browse</p>
+                                <span class="ap-drop-pill">PNG, JPG, WebP — leave blank to keep the current</span>
+                                <input type="file" class="form-control-file" id="image" name="image" accept="image/*">
+                            </div>
+                            <div class="ap-file-chosen" id="apFileChosen">
+                                <i class="fas fa-check-circle"></i> <span id="apFileName">image.jpg</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="actions">
-                        <div class="rail-badge"><i class="fas fa-check"></i>Ready to Save</div>
-                        <div class="action-tools">
-                            <a class="btn-ghost" th:href="@{/seller/dashboard}"><i class="fas fa-arrow-left"></i>Back to Dashboard</a>
-                            <button type="submit" class="btn-accent"><i class="fas fa-save"></i>Save Changes</button>
-                        </div>
+                    <!-- ─── Sticky action bar ─── -->
+                    <div class="ap-actionbar">
+                        <span class="ap-status">
+                            <span class="dot"></span> Ready to save
+                        </span>
+                        <a class="ap-btn-ghost" th:href="@{/seller/dashboard}">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        <button type="submit" class="ap-btn-publish">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
                     </div>
+
                 </form>
             </div>
-        </section>
 
-        <aside class="panel visual-panel">
-            <div class="visual-top">
-                <div>
-                    <strong>Listing Snapshot</strong>
-                </div>
-                <span class="visual-kicker">Visual</span>
-            </div>
-
-            <div class="snapshot-card">
-                <div class="snapshot-top">
-                    <div class="snapshot-thumb">
-                        <img th:if="${product.images != null and !#lists.isEmpty(product.images)}" th:src="${product.images.get(0).imageUrl}" alt="Product thumbnail">
-                        <img th:if="${product.images == null or #lists.isEmpty(product.images)}" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Empty thumbnail">
+            <!-- Live snapshot column -->
+            <div class="col-lg-4 ap-preview-col">
+                <div class="ap-preview-card">
+                    <div class="ap-preview-eyebrow">
+                        <i class="fas fa-eye"></i> Listing snapshot
                     </div>
-                    <div class="snapshot-meta">
-                        <strong th:text="${product.title}">Product title</strong>
-                        <span th:text="${product.category != null ? product.category.categoryName : 'No category'}">Category</span>
-                        <span th:text="${product.condition != null ? product.condition : 'No condition'}">Condition</span>
+                    <div class="ap-preview-stage">
+                        <img id="previewImage"
+                             th:if="${product.images != null and !#lists.isEmpty(product.images)}"
+                             th:src="${product.images.get(0).imageUrl}"
+                             alt="Selected product preview">
+                        <div class="ap-preview-empty" id="previewEmpty"
+                             th:if="${product.images == null or #lists.isEmpty(product.images)}">
+                            <i class="far fa-image"></i>
+                            Replace the cover image to see how it will look on the marketplace.
+                        </div>
+                    </div>
+
+                    <ul class="ep-stat-list">
+                        <li class="ep-stat-row">
+                            <span class="lbl">Listing ID</span>
+                            <span class="val" th:text="'#' + ${product.productId}">#0</span>
+                        </li>
+                        <li class="ep-stat-row">
+                            <span class="lbl">Current price</span>
+                            <span class="val" th:text="'RM ' + ${#numbers.formatDecimal(product.price, 1, 2)}">RM 0.00</span>
+                        </li>
+                        <li class="ep-stat-row">
+                            <span class="lbl">Quantity</span>
+                            <span class="val" th:text="${product.quantity}">0</span>
+                        </li>
+                        <li class="ep-stat-row">
+                            <span class="lbl">Category</span>
+                            <span class="val" th:text="${product.category != null ? product.category.categoryName : '—'}">Category</span>
+                        </li>
+                    </ul>
+
+                    <div class="ap-tip">
+                        <i class="fas fa-lightbulb"></i>
+                        <span><strong>Pro tip:</strong> A fresh photo and tighter title can lift views fast — even without changing price.</span>
                     </div>
                 </div>
-                <div class="snapshot-stats">
-                    <div class="stat-row"><span>Listing ID</span><span th:text="'#' + ${product.productId}">#0</span></div>
-                    <div class="stat-row"><span>Current price</span><span th:text="'RM ' + ${#numbers.formatDecimal(product.price, 1, 2)}">RM 0.00</span></div>
-                    <div class="stat-row"><span>Quantity</span><span th:text="${product.quantity}">0</span></div>
-                </div>
             </div>
-
-            <div class="visual-strip">
-                <div class="visual-box">
-                    <i class="fas fa-pen"></i>
-                    <strong>Fast field updates</strong>
-                </div>
-                <div class="visual-box">
-                    <i class="fas fa-image"></i>
-                    <strong>Clear image swap zone</strong>
-                </div>
-                <div class="visual-box">
-                    <i class="fas fa-columns"></i>
-                    <strong>Direct dashboard return</strong>
-                </div>
-            </div>
-        </aside>
-    </div>
-
-    <div class="footer-bar">
-        <div>
-            <strong>Seller-only edit page</strong>
-            <p>Compact top rail, stronger contrast, direct workflow.</p>
         </div>
-        <a class="dash-link" th:href="@{/seller/dashboard}"><i class="fas fa-columns"></i>Return to Seller Dashboard</a>
     </div>
-</div>
+</section>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
+<script th:src="@{/js/cmp-stunning.js}" defer></script>
 <script>
-    const editImageInput = document.getElementById('image');
+    const editImageInput  = document.getElementById('image');
     const newImagePreview = document.getElementById('newImagePreview');
-    const newImageEmpty = document.getElementById('newImageEmpty');
+    const newImageEmpty   = document.getElementById('newImageEmpty');
+    const sidePreview     = document.getElementById('previewImage');
+    const sideEmpty       = document.getElementById('previewEmpty');
+    const dropzone        = document.getElementById('ap-drop');
+    const fileChosen      = document.getElementById('apFileChosen');
+    const fileNameEl      = document.getElementById('apFileName');
+
+    // ── Drag-and-drop visuals ─────────────────────────────────
+    if (dropzone) {
+        ['dragenter','dragover'].forEach(function(ev){
+            dropzone.addEventListener(ev, function(e){ e.preventDefault(); dropzone.classList.add('dragover'); });
+        });
+        ['dragleave','drop'].forEach(function(ev){
+            dropzone.addEventListener(ev, function(e){ e.preventDefault(); dropzone.classList.remove('dragover'); });
+        });
+        dropzone.addEventListener('drop', function(e){
+            if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length){
+                editImageInput.files = e.dataTransfer.files;
+                editImageInput.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        });
+    }
 
     if (editImageInput) {
         editImageInput.addEventListener('change', function(event) {
             const file = event.target.files && event.target.files[0];
             if (!file) {
-                newImagePreview.style.display = 'none';
-                newImagePreview.removeAttribute('src');
-                newImageEmpty.style.display = 'block';
+                if (newImagePreview) { newImagePreview.style.display = 'none'; newImagePreview.removeAttribute('src'); }
+                if (newImageEmpty) newImageEmpty.style.display = 'block';
+                if (fileChosen) fileChosen.classList.remove('show');
                 return;
             }
 
+            if (fileNameEl) fileNameEl.textContent = file.name;
+            if (fileChosen) fileChosen.classList.add('show');
+
             const reader = new FileReader();
             reader.onload = function(loadEvent) {
-                newImagePreview.src = loadEvent.target.result;
-                newImagePreview.style.display = 'block';
-                newImageEmpty.style.display = 'none';
+                if (newImagePreview) {
+                    newImagePreview.src = loadEvent.target.result;
+                    newImagePreview.style.display = 'block';
+                }
+                if (newImageEmpty) newImageEmpty.style.display = 'none';
+                // Mirror to side snapshot too.
+                if (sidePreview) {
+                    sidePreview.src = loadEvent.target.result;
+                    sidePreview.style.display = 'block';
+                }
+                if (sideEmpty) sideEmpty.style.display = 'none';
             };
             reader.readAsDataURL(file);
         });

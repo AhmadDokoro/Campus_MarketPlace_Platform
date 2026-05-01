@@ -35,6 +35,11 @@ public class Review {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
+    // Item-level review anchor. Legacy rows may be null because reviews were previously stored per order.
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_item_id")
+    private OrderItem orderItem;
+
     @Column(name = "rating", nullable = false)
     private Integer rating;
 

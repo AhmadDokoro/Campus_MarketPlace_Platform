@@ -13,12 +13,15 @@ import java.util.Set;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    // Checks if a review already exists for this order by this buyer (prevents duplicates).
-    boolean existsByOrder_OrderIdAndReviewer_UserId(Long orderId, Long reviewerId);
-
-    // Returns order IDs already reviewed by this buyer for the profile page UI.
-    @Query("SELECT r.order.orderId FROM Review r WHERE r.reviewer.userId = :reviewerId")
-    Set<Long> findReviewedOrderIdsByReviewer(@Param("reviewerId") Long reviewerId);
+    // Returns reviewed order item ids for the buyer profile. Legacy order-level reviews are mapped back by order + seller.
+    @Query("SELECT DISTINCT oi.orderItemId FROM Review r " +
+            "JOIN r.order o " +
+            "JOIN o.orderItems oi " +
+            "JOIN oi.seller s " +
+            "JOIN s.user sellerUser " +
+            "WHERE r.reviewer.userId = :reviewerId " +
+            "AND (r.orderItem = oi OR (r.orderItem IS NULL AND sellerUser.userId = r.targetSeller.userId))")
+    Set<Long> findReviewedOrderItemIdsByReviewer(@Param("reviewerId") Long reviewerId);
 
     // Returns the average rating for a seller — used by SellerRatingHelper for product card stars.
     @Query("SELECT AVG(CAST(r.rating AS double)) FROM Review r WHERE r.targetSeller.userId = :sellerUserId")
@@ -27,13 +30,47 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     // Counts total reviews received by a seller — used alongside the average for the star display.
     long countByTargetSeller_UserId(Long sellerUserId);
 
-    // Returns all reviews from orders that contained a specific product — used for the seller sales-history modal.
+    // Returns the average rating for a specific product using item-level reviews and legacy order-level fallback.
+    @Query("SELECT AVG(CAST(r.rating AS double)) " +
+            "FROM Review r " +
+            "WHERE (r.orderItem IS NOT NULL AND r.orderItem.product.productId = :productId) " +
+            "OR (r.orderItem IS NULL AND EXISTS (" +
+            "  SELECT oi.orderItemId FROM OrderItem oi " +
+            "  JOIN oi.seller s " +
+            "  JOIN s.user sellerUser " +
+            "  WHERE oi.order.orderId = r.order.orderId " +
+            "  AND oi.product.productId = :productId " +
+            "  AND sellerUser.userId = r.targetSeller.userId" +
+            "))")
+    Double findAverageRatingByProductId(@Param("productId") Long productId);
+
+    // Returns the total review count for a specific product using the same matching rules as product review listing.
+    @Query("SELECT COUNT(r) " +
+            "FROM Review r " +
+            "WHERE (r.orderItem IS NOT NULL AND r.orderItem.product.productId = :productId) " +
+            "OR (r.orderItem IS NULL AND EXISTS (" +
+            "  SELECT oi.orderItemId FROM OrderItem oi " +
+            "  JOIN oi.seller s " +
+            "  JOIN s.user sellerUser " +
+            "  WHERE oi.order.orderId = r.order.orderId " +
+            "  AND oi.product.productId = :productId " +
+            "  AND sellerUser.userId = r.targetSeller.userId" +
+            "))")
+    long countByProductId(@Param("productId") Long productId);
+
+    // Returns all reviews for a specific sold product. Legacy order-level reviews fall back to order + seller matching.
     @Query("SELECT new com.ahsmart.campusmarket.payloadDTOs.review.ProductReviewDTO(" +
             "r.reviewId, r.reviewer.firstName, r.reviewer.lastName, r.rating, r.comment, r.createdAt) " +
             "FROM Review r " +
-            "WHERE r.order.orderId IN (" +
-            "  SELECT oi.order.orderId FROM OrderItem oi WHERE oi.product.productId = :productId" +
-            ") " +
+            "WHERE (r.orderItem IS NOT NULL AND r.orderItem.product.productId = :productId) " +
+            "OR (r.orderItem IS NULL AND EXISTS (" +
+            "  SELECT oi.orderItemId FROM OrderItem oi " +
+            "  JOIN oi.seller s " +
+            "  JOIN s.user sellerUser " +
+            "  WHERE oi.order.orderId = r.order.orderId " +
+            "  AND oi.product.productId = :productId " +
+            "  AND sellerUser.userId = r.targetSeller.userId" +
+            ")) " +
             "ORDER BY r.createdAt DESC")
     List<ProductReviewDTO> findProductReviewsByProductId(@Param("productId") Long productId);
 }
