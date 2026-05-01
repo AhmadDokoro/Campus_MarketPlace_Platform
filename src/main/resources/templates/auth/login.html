@@ -4,258 +4,391 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login — Campus Marketplace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link th:href="@{/css/authentication.css}" rel="stylesheet" />
     <link th:href="@{/css/mobile.css}" rel="stylesheet" />
+    <link th:href="@{/css/cmp-enhance.css}" rel="stylesheet" />
+    <link th:href="@{/css/cmp-stunning.css}" rel="stylesheet" />
     <style>
-        /* ── Reset ──────────────────────────────────────────────── */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { height: 100%; }
 
-        body.login-body {
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            background: #0f0824;
-            padding: 0;
+        body.login-body{
+            font-family: 'Inter','Poppins',sans-serif;
+            background: linear-gradient(180deg, #faf8ff 0%, #f3eefb 50%, #faf8ff 100%);
             min-height: 100vh;
+            color: #2E2740;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        /* ── Outer shell ────────────────────────────────────────── */
-        .lp-shell {
-            display: flex;
+        .lp-shell{
+            display: grid;
+            grid-template-columns: 1.05fr 1fr;
             min-height: 100vh;
-            width: 100%;
+            position: relative;
+            z-index: 1;
         }
 
-        /* ════════════════════════════════════════════════════════
-           LEFT — Decorative panel
-        ════════════════════════════════════════════════════════ */
-        .lp-deco {
-            flex: 0 0 44%;
+        /* ════ LEFT — Deep purple deco panel ════ */
+        .lp-deco{
             position: relative;
             overflow: hidden;
-            background: linear-gradient(155deg, #4B2E83 0%, #2d1a57 55%, #170c30 100%);
+            background:
+                radial-gradient(circle at 18% 20%, rgba(255,215,0,.18), transparent 55%),
+                radial-gradient(circle at 80% 78%, rgba(107,78,175,.5), transparent 55%),
+                linear-gradient(160deg, #1A0A3E 0%, #2D1B69 55%, #4A2C8A 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 56px 44px;
+            color: #fff;
         }
-
-        /* Blurred blob accents */
-        .lp-blob {
+        .lp-deco::before{
+            content:""; position:absolute;
+            top:0; left:0; right:0; height: 4px;
+            background: linear-gradient(90deg, #6B4EAF, #FFD700, #6B4EAF);
+            background-size: 200% 100%;
+            animation: cmpDividerFlow 6s linear infinite;
+        }
+        .lp-blob{
             position: absolute;
             border-radius: 50%;
-            filter: blur(64px);
+            filter: blur(70px);
             pointer-events: none;
         }
-        .lp-blob--1 { width:380px; height:380px; background:#F2B705; opacity:.14; top:-100px; left:-100px; }
-        .lp-blob--2 { width:300px; height:300px; background:#8b5cf6; opacity:.18; bottom:-80px; right:-80px; }
-        .lp-blob--3 { width:220px; height:220px; background:#F2B705; opacity:.09; bottom:100px; left:-50px; }
+        .lp-blob--1{ width: 380px; height: 380px; background: rgba(255,215,0,.25); top: -90px; left: -110px; }
+        .lp-blob--2{ width: 320px; height: 320px; background: rgba(107,78,175,.5); bottom: -70px; right: -60px; }
+        .lp-blob--3{ width: 240px; height: 240px; background: rgba(255,193,7,.18); bottom: 110px; left: -40px; }
 
-        /* Geometric triangle / mountain shapes (sketch-inspired) */
-        .lp-triangle { position:absolute; width:0; height:0; pointer-events:none; }
-        .lp-tri--1 {
-            border-left:110px solid transparent; border-right:110px solid transparent;
-            border-bottom:180px solid rgba(242,183,5,0.13);
-            top:50px; right:70px;
-        }
-        .lp-tri--2 {
-            border-left:75px solid transparent; border-right:75px solid transparent;
-            border-bottom:130px solid rgba(255,255,255,0.07);
-            top:105px; right:180px;
-        }
-        .lp-tri--3 {
-            border-left:90px solid transparent; border-right:90px solid transparent;
-            border-bottom:150px solid rgba(139,92,246,0.1);
-            top:20px; left:40px;
+        .lp-grid-overlay{
+            position: absolute; inset: 0;
+            background:
+                linear-gradient(to right, rgba(255,255,255,.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,.04) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            opacity: .6;
         }
 
-        /* Floating accent dots */
-        .lp-dot {
-            position:absolute; border-radius:50%; pointer-events:none;
-            background:rgba(255,255,255,0.14);
+        .lp-deco__content{
+            position: relative; z-index: 2;
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center;
+            max-width: 420px;
         }
-        .lp-dot--a { width:8px;  height:8px;  top:18%; left:12%; }
-        .lp-dot--b { width:13px; height:13px; top:33%; right:18%; background:rgba(242,183,5,.3); }
-        .lp-dot--c { width:6px;  height:6px;  top:62%; left:28%; }
-        .lp-dot--d { width:18px; height:18px; bottom:22%; right:22%; background:rgba(242,183,5,.18); }
-        .lp-dot--e { width:5px;  height:5px;  top:78%; left:8%; }
-        .lp-dot--f { width:10px; height:10px; top:48%; left:6%; background:rgba(242,183,5,.22); }
-        .lp-dot--g { width:7px;  height:7px;  bottom:40%; right:10%; }
-
-        /* Bottom wave */
-        .lp-wave {
-            position:absolute; bottom:0; left:0; right:0;
-            pointer-events:none; opacity:.1;
+        .lp-eyebrow-deco{
+            display: inline-flex; align-items: center; gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700; font-size: .72rem;
+            letter-spacing: .22em; text-transform: uppercase;
+            color: #FFD700;
+            background: rgba(255,215,0,.1);
+            padding: 7px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,215,0,.35);
+            margin-bottom: 24px;
         }
-
-        /* Deco content (above all shapes) */
-        .lp-deco__content {
-            position:relative; z-index:1;
-            display:flex; flex-direction:column; align-items:center; text-align:center;
-        }
-
-        .lp-deco__logo {
-            width:108px; height:auto;
-            filter: brightness(0) invert(1) drop-shadow(0 0 24px rgba(242,183,5,.4));
-            opacity:.95;
-            margin-bottom:22px;
+        .lp-deco__logo{
+            width: 96px; height: auto;
+            margin-bottom: 22px;
+            filter: drop-shadow(0 0 24px rgba(255,215,0,.4));
             animation: floatLogo 4s ease-in-out infinite;
         }
-        @keyframes floatLogo {
-            0%,100% { transform:translateY(0); }
-            50%      { transform:translateY(-9px); }
+        @keyframes floatLogo{
+            0%,100%{ transform: translateY(0); }
+            50%   { transform: translateY(-8px); }
+        }
+        .lp-deco__name{
+            font-family:'Poppins',sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            line-height: 1.05;
+            margin-bottom: 12px;
+        }
+        .lp-deco__name .gold{
+            background: linear-gradient(135deg, #FFD700, #FFC107);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .lp-deco__tagline{
+            font-size: .95rem;
+            color: rgba(255,255,255,.78);
+            line-height: 1.6;
+            max-width: 320px;
         }
 
-        .lp-deco__name {
-            font-size:1.55rem; font-weight:900;
-            color:#F2B705; letter-spacing:.3px; margin-bottom:8px; line-height:1.2;
+        .lp-pills{
+            display: flex; flex-direction: column;
+            gap: 10px;
+            margin-top: 32px;
+            width: 100%; max-width: 320px;
         }
-        .lp-deco__tagline {
-            font-size:.9rem; color:rgba(255,255,255,.65);
-            line-height:1.65; max-width:270px;
+        .lp-pill{
+            display: flex; align-items: center; gap: 12px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,215,0,.18);
+            border-radius: 14px;
+            padding: 12px 16px;
+            font-size: .85rem;
+            color: rgba(255,255,255,.85);
+            font-weight: 500;
+            text-align: left;
+            transition: all .25s ease;
+        }
+        .lp-pill:hover{
+            background: rgba(255,215,0,.08);
+            border-color: rgba(255,215,0,.35);
+            transform: translateX(3px);
+        }
+        .lp-pill__icon{
+            width: 32px; height: 32px;
+            border-radius: 10px;
+            display: inline-flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #FFD700, #FFC107);
+            color: #1A0A3E;
+            font-size: 14px;
+            flex-shrink: 0;
         }
 
-        /* Feature pill list */
-        .lp-pills { display:flex; flex-direction:column; gap:10px; margin-top:36px; width:100%; max-width:280px; }
-        .lp-pill {
-            display:flex; align-items:center; gap:10px;
-            background:rgba(255,255,255,.07);
-            border:1px solid rgba(255,255,255,.11);
-            border-radius:40px; padding:9px 18px;
-            font-size:.83rem; color:rgba(255,255,255,.82);
-            backdrop-filter:blur(4px);
+        /* ════ RIGHT — Form panel ════ */
+        .lp-form-panel{
+            display: flex; align-items: center; justify-content: center;
+            padding: 48px 32px;
+            position: relative;
+            background: transparent;
         }
-        .lp-pill__icon { font-size:15px; flex-shrink:0; }
-
-        /* ════════════════════════════════════════════════════════
-           RIGHT — Form panel
-        ════════════════════════════════════════════════════════ */
-        .lp-form-panel {
-            flex:1;
-            display:flex; align-items:center; justify-content:center;
-            padding:48px 32px;
-            background:#ffffff;
+        .lp-form-panel::before{
+            content: ""; position: absolute;
+            top: 12%; right: -120px;
+            width: 320px; height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(107,78,175,.18), transparent 60%);
+            filter: blur(60px);
+            pointer-events: none;
+        }
+        .lp-form-panel::after{
+            content: ""; position: absolute;
+            bottom: 8%; left: -80px;
+            width: 280px; height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,215,0,.15), transparent 60%);
+            filter: blur(60px);
+            pointer-events: none;
         }
 
-        .lp-form-inner {
-            width:100%; max-width:390px;
+        .lp-form-inner{
+            width: 100%; max-width: 440px;
+            position: relative; z-index: 1;
+            background: rgba(255,255,255,.85);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            backdrop-filter: blur(20px) saturate(140%);
+            border: 1px solid rgba(232,224,245,.85);
+            border-radius: 24px;
+            padding: 40px 36px;
+            box-shadow: 0 24px 56px rgba(45,27,105,.14);
             animation: slideUp 480ms cubic-bezier(.2,.9,.2,1) both;
         }
-        @keyframes slideUp {
-            from { opacity:0; transform:translateY(22px); }
-            to   { opacity:1; transform:translateY(0); }
+        @keyframes slideUp{
+            from{ opacity: 0; transform: translateY(22px); }
+            to  { opacity: 1; transform: translateY(0); }
+        }
+        .lp-form-inner::before{
+            content: ""; position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #2D1B69, #6B4EAF, #FFD700, #6B4EAF, #2D1B69);
+            background-size: 200% 100%;
+            animation: cmpDividerFlow 6s linear infinite;
+            border-radius: 24px 24px 0 0;
         }
 
-        /* Mobile-only logo (hidden on desktop because deco panel shows it) */
-        .lp-mobile-logo { display:none; text-align:center; margin-bottom:24px; }
-        .lp-mobile-logo img { width:58px; height:auto; }
-
-        /* Headings */
-        .lp-eyebrow {
-            font-size:.75rem; font-weight:700; letter-spacing:.14em;
-            text-transform:uppercase; color:#F2B705; margin-bottom:6px;
+        .lp-mobile-logo{
+            display: none;
+            text-align: center;
+            margin-bottom: 22px;
         }
-        .lp-heading {
-            font-size:1.85rem; font-weight:900; color:#1a0f35;
-            letter-spacing:-.3px; margin-bottom:6px; line-height:1.2;
-        }
-        .lp-sub {
-            font-size:.88rem; color:#6b7280; margin-bottom:30px; line-height:1.5;
+        .lp-mobile-logo img{
+            width: 64px; height: auto;
+            filter: drop-shadow(0 6px 14px rgba(45,27,105,.25));
         }
 
-        /* Field */
-        .lp-field { margin-bottom:18px; }
-        .lp-field label {
-            display:block; font-size:.84rem; font-weight:700;
-            color:#374151; margin-bottom:7px;
+        .lp-eyebrow{
+            display: inline-flex; align-items: center; gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700; font-size: .72rem;
+            letter-spacing: .22em; text-transform: uppercase;
+            color: #4A2C8A;
+            background: linear-gradient(90deg, rgba(107,78,175,.12), rgba(255,215,0,.18));
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(107,78,175,.22);
+            margin-bottom: 14px;
         }
-        .lp-field__wrap { position:relative; }
-        .lp-field__icon {
-            position:absolute; left:13px; top:50%; transform:translateY(-50%);
-            font-size:15px; color:#9ca3af; pointer-events:none; line-height:1;
+        .lp-heading{
+            font-family:'Poppins',sans-serif;
+            font-size: clamp(1.7rem, 3vw, 2.1rem);
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #1A0A3E 0%, #4A2C8A 60%, #6B4EAF 100%);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .lp-field input {
-            width:100%; padding:13px 42px 13px 40px;
-            border-radius:12px; border:1.5px solid #e5e7eb;
-            background:#f9fafb; font-size:.95rem; color:#111827;
-            outline:none; font-family:inherit;
-            transition:border-color 200ms, box-shadow 200ms, background 200ms;
-        }
-        .lp-field input::placeholder { color:#9ca3af; }
-        .lp-field input:focus {
-            border-color:#4B2E83;
-            background:#fff;
-            box-shadow:0 0 0 4px rgba(75,46,131,.1);
-        }
-
-        /* Password show/hide toggle */
-        .lp-toggle {
-            position:absolute; right:11px; top:50%; transform:translateY(-50%);
-            background:none; border:none; cursor:pointer;
-            font-size:16px; color:#9ca3af; padding:4px; line-height:1;
-            transition:color 160ms;
-        }
-        .lp-toggle:hover { color:#4B2E83; }
-
-        /* Error banner */
-        .lp-error {
-            display:flex; align-items:center; gap:8px;
-            background:#fef2f2; border:1px solid #fecaca;
-            border-radius:10px; padding:11px 14px;
-            margin-bottom:16px; font-size:.87rem;
-            color:#991b1b; font-weight:600;
+        .lp-sub{
+            font-size: .92rem;
+            color: #6B6280;
+            margin-bottom: 28px;
+            line-height: 1.5;
         }
 
-        /* LOGIN button */
-        .lp-btn {
-            display:block; width:100%;
-            padding:15px;
-            border-radius:50px; border:none;
-            background:linear-gradient(90deg, #F2B705 0%, #d9a200 100%);
-            color:#1a0f35; font-size:1rem; font-weight:900;
-            letter-spacing:.1em; cursor:pointer; font-family:inherit;
-            box-shadow:0 8px 30px rgba(242,183,5,.32);
-            transition:transform 200ms, box-shadow 200ms, filter 200ms;
-            margin-top:6px;
+        .lp-field{ margin-bottom: 18px; }
+        .lp-field label{
+            display: block;
+            font-family:'Poppins',sans-serif;
+            font-size: .8rem;
+            font-weight: 600;
+            color: #2D1B69;
+            margin-bottom: 8px;
+            letter-spacing: .03em;
         }
-        .lp-btn:hover {
-            transform:translateY(-3px);
-            box-shadow:0 18px 44px rgba(242,183,5,.4);
-            filter:brightness(1.04);
+        .lp-field__wrap{ position: relative; }
+        .lp-field__icon{
+            position: absolute; left: 16px; top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #6B4EAF;
+            pointer-events: none;
+            line-height: 1;
         }
-        .lp-btn:active { transform:translateY(0); box-shadow:0 4px 16px rgba(242,183,5,.3); }
-
-        /* Register link row */
-        .lp-register {
-            text-align:center; margin-top:22px;
-            font-size:.88rem; color:#6b7280;
+        .lp-field input{
+            width: 100%;
+            padding: 14px 46px 14px 44px;
+            border: 1.5px solid #E0DBE8;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: .95rem;
+            color: #2E2740;
+            background: #fff;
+            outline: none;
+            transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
         }
-        .lp-register a {
-            color:#4B2E83; font-weight:700; text-decoration:none;
-            transition:color 160ms;
-        }
-        .lp-register a:hover { color:#F2B705; }
-
-        /* Divider */
-        .lp-divider {
-            display:flex; align-items:center; gap:12px;
-            margin:22px 0; color:#d1d5db; font-size:.8rem;
-        }
-        .lp-divider::before, .lp-divider::after {
-            content:''; flex:1; height:1px; background:#e5e7eb;
+        .lp-field input::placeholder{ color: #B8B0C4; }
+        .lp-field input:focus{
+            border-color: #6B4EAF;
+            box-shadow: 0 0 0 4px rgba(107,78,175,.14);
         }
 
-        /* ── Mobile ─────────────────────────────────────────────── */
-        @media (max-width:860px) {
-            .lp-shell       { flex-direction:column; }
-            .lp-deco        { flex:0 0 auto; padding:36px 24px; min-height:auto; }
-            .lp-deco__logo  { width:78px; margin-bottom:14px; }
-            .lp-deco__name  { font-size:1.25rem; }
-            .lp-pills       { display:none; }
-            .lp-tri--1, .lp-tri--2, .lp-tri--3 { display:none; }
-            .lp-form-panel  { padding:36px 22px; }
-            .lp-mobile-logo { display:block; }
-            .lp-heading     { font-size:1.55rem; }
+        .lp-toggle{
+            position: absolute; right: 12px; top: 50%;
+            transform: translateY(-50%);
+            background: none; border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #8c84a0;
+            padding: 6px;
+            line-height: 1;
+            transition: color .2s ease;
+        }
+        .lp-toggle:hover{ color: #4A2C8A; }
+
+        .lp-error{
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(239,68,68,.10);
+            color: #991B1B;
+            border-radius: 12px;
+            border-left: 4px solid #EF4444;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            font-size: .88rem;
+            font-weight: 600;
+        }
+
+        .lp-btn{
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%;
+            padding: 14px 24px;
+            font-family: 'Poppins', sans-serif;
+            font-size: .95rem;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: #1A0A3E;
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 12px 28px rgba(255,193,7,.45), inset 0 1px 0 rgba(255,255,255,.6);
+            position: relative; overflow: hidden;
+            transition: transform .25s ease, box-shadow .25s ease;
+            margin-top: 6px;
+        }
+        .lp-btn::after{
+            content:""; position:absolute; inset:0;
+            background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.55) 50%, transparent 60%);
+            transform: translateX(-120%);
+            transition: transform .9s cubic-bezier(.22,1,.36,1);
+        }
+        .lp-btn:hover{
+            transform: translateY(-3px);
+            box-shadow: 0 18px 38px rgba(255,193,7,.55);
+        }
+        .lp-btn:hover::after{ transform: translateX(120%); }
+        .lp-btn:active{ transform: translateY(-1px); }
+
+        .lp-divider{
+            display: flex; align-items: center;
+            gap: 14px;
+            margin: 22px 0;
+            color: #B8B0C4;
+            font-size: .78rem;
+            font-weight: 600;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+        .lp-divider::before, .lp-divider::after{
+            content: ''; flex: 1; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(107,78,175,.25), transparent);
+        }
+
+        .lp-register{
+            text-align: center;
+            font-size: .9rem;
+            color: #6B6280;
+        }
+        .lp-register a{
+            color: #4A2C8A;
+            font-weight: 700;
+            text-decoration: none;
+            transition: color .2s ease;
+        }
+        .lp-register a:hover{ color: #C9A800; text-decoration: underline; }
+
+        /* ── Mobile ── */
+        @media (max-width: 991.98px){
+            .lp-shell{ grid-template-columns: 1fr; }
+            .lp-deco{
+                padding: 36px 24px 30px;
+                min-height: auto;
+            }
+            .lp-deco__logo{ width: 70px; margin-bottom: 14px; }
+            .lp-deco__name{ font-size: 1.5rem; }
+            .lp-pills{ display: none; }
+            .lp-form-panel{ padding: 32px 18px 48px; }
+            .lp-form-inner{ padding: 28px 22px; }
+            .lp-mobile-logo{ display: block; }
+        }
+        @media (max-width: 575.98px){
+            .lp-deco{ padding: 28px 18px 22px; }
+            .lp-deco__tagline{ font-size: .88rem; }
+            .lp-eyebrow-deco{ font-size: .65rem; padding: 6px 12px; }
+            .lp-form-inner{ border-radius: 20px; padding: 24px 18px; }
+            .lp-heading{ font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -263,118 +396,91 @@
 <body class="login-body">
 <div class="lp-shell">
 
-    <!-- ══════════════════════════════════════════════════════════
-         LEFT — Decorative panel
-    ══════════════════════════════════════════════════════════════ -->
+    <!-- LEFT — Decorative panel -->
     <div class="lp-deco">
-
-        <!-- Background layers -->
+        <div class="lp-grid-overlay"></div>
         <div class="lp-blob lp-blob--1"></div>
         <div class="lp-blob lp-blob--2"></div>
         <div class="lp-blob lp-blob--3"></div>
 
-        <div class="lp-triangle lp-tri--1"></div>
-        <div class="lp-triangle lp-tri--2"></div>
-        <div class="lp-triangle lp-tri--3"></div>
-
-        <div class="lp-dot lp-dot--a"></div>
-        <div class="lp-dot lp-dot--b"></div>
-        <div class="lp-dot lp-dot--c"></div>
-        <div class="lp-dot lp-dot--d"></div>
-        <div class="lp-dot lp-dot--e"></div>
-        <div class="lp-dot lp-dot--f"></div>
-        <div class="lp-dot lp-dot--g"></div>
-
-        <svg class="lp-wave" viewBox="0 0 1440 100" preserveAspectRatio="none"
-             xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,50 C360,100 720,0 1080,50 C1260,75 1380,20 1440,50 L1440,100 L0,100 Z"
-                  fill="rgba(255,255,255,1)"/>
-        </svg>
-
-        <!-- Content -->
         <div class="lp-deco__content">
+            <span class="lp-eyebrow-deco"><i class="bi bi-mortarboard-fill"></i>UMT Campus Marketplace</span>
             <img th:src="@{/img/umtlogo.png}" alt="UMT Logo" class="lp-deco__logo" />
 
-            <div class="lp-deco__name">Campus Marketplace</div>
+            <div class="lp-deco__name">Welcome to <span class="gold">Campus Market</span></div>
             <p class="lp-deco__tagline">
-                Your trusted student e-commerce platform — buy, sell and connect within the UMT community.
+                Your trusted student marketplace — buy, sell, and connect within the UMT community.
             </p>
 
             <div class="lp-pills">
                 <div class="lp-pill">
-                    <span class="lp-pill__icon">🛍️</span>
+                    <span class="lp-pill__icon"><i class="bi bi-bag-heart-fill"></i></span>
                     Buy &amp; sell campus goods
                 </div>
                 <div class="lp-pill">
-                    <span class="lp-pill__icon">🔒</span>
+                    <span class="lp-pill__icon"><i class="bi bi-shield-check"></i></span>
                     Verified student accounts only
                 </div>
                 <div class="lp-pill">
-                    <span class="lp-pill__icon">💬</span>
+                    <span class="lp-pill__icon"><i class="bi bi-chat-dots-fill"></i></span>
                     Real-time buyer–seller chat
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- ══════════════════════════════════════════════════════════
-         RIGHT — Form panel
-    ══════════════════════════════════════════════════════════════ -->
+    <!-- RIGHT — Form panel -->
     <div class="lp-form-panel">
         <div class="lp-form-inner">
 
-            <!-- Mobile-only logo (deco panel hidden on small screens) -->
             <div class="lp-mobile-logo">
                 <img th:src="@{/img/umtlogo.png}" alt="UMT Logo" />
             </div>
 
-            <p class="lp-eyebrow">UMT Campus Marketplace</p>
-            <h1 class="lp-heading">Welcome Back 👋</h1>
-            <p class="lp-sub">Sign in to your account to continue.</p>
+            <span class="lp-eyebrow"><i class="bi bi-stars"></i>Sign in</span>
+            <h1 class="lp-heading">Welcome back 👋</h1>
+            <p class="lp-sub">Sign in to your account to continue exploring the marketplace.</p>
 
             <form method="post" th:action="@{/signin}">
 
-                <!-- Email -->
                 <div class="lp-field">
                     <label for="email">Email</label>
                     <div class="lp-field__wrap">
-                        <span class="lp-field__icon">✉️</span>
+                        <span class="lp-field__icon"><i class="bi bi-envelope-fill"></i></span>
                         <input id="email" type="text" name="email"
                                placeholder="your@umt.edu.my"
                                autocomplete="email" required />
                     </div>
                 </div>
 
-                <!-- Password -->
                 <div class="lp-field">
                     <label for="password">Password</label>
                     <div class="lp-field__wrap">
-                        <span class="lp-field__icon">🔐</span>
+                        <span class="lp-field__icon"><i class="bi bi-lock-fill"></i></span>
                         <input id="password" type="password" name="password"
                                placeholder="Enter your password"
                                autocomplete="current-password" required />
-                        <button type="button" class="lp-toggle" onclick="togglePwd()" title="Show / hide">
-                            👁
+                        <button type="button" class="lp-toggle" onclick="togglePwd()" title="Show / hide" aria-label="Show or hide password">
+                            <i class="bi bi-eye-fill" id="pwdToggleIcon"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- Error banner -->
                 <div th:if="${error}" class="lp-error">
-                    <span>⚠️</span>
+                    <i class="bi bi-exclamation-circle-fill"></i>
                     <span th:text="${error}">Invalid email or password.</span>
                 </div>
 
-                <!-- Submit -->
-                <button type="submit" class="lp-btn">LOGIN</button>
+                <button type="submit" class="lp-btn">
+                    <i class="bi bi-box-arrow-in-right"></i> Sign in
+                </button>
 
             </form>
 
             <div class="lp-divider">or</div>
 
             <div class="lp-register">
-                Don't have an account?&nbsp;
+                Don't have an account?
                 <a th:href="@{/registerUser}">Create one</a>
             </div>
 
@@ -383,9 +489,16 @@
 
 </div>
 <script>
-    function togglePwd() {
+    function togglePwd(){
         var f = document.getElementById('password');
-        f.type = f.type === 'password' ? 'text' : 'password';
+        var icon = document.getElementById('pwdToggleIcon');
+        if (f.type === 'password'){
+            f.type = 'text';
+            if (icon){ icon.classList.remove('bi-eye-fill'); icon.classList.add('bi-eye-slash-fill'); }
+        } else {
+            f.type = 'password';
+            if (icon){ icon.classList.remove('bi-eye-slash-fill'); icon.classList.add('bi-eye-fill'); }
+        }
     }
 </script>
 </body>

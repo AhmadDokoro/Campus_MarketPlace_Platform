@@ -3,75 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account</title>
+    <title>Create Account — Campus Marketplace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link th:href="@{/css/authentication.css}" rel="stylesheet" />
     <link th:href="@{/css/mobile.css}" rel="stylesheet" />
-
+    <link th:href="@{/css/cmp-enhance.css}" rel="stylesheet" />
+    <link th:href="@{/css/cmp-stunning.css}" rel="stylesheet" />
     <style>
-        :root {
-            --register-bg: #050505;
-            --register-bg-alt: #000000;
-            --register-card: rgba(15, 15, 15, 0.85);
-            --register-card-strong: #111111;
-            --register-text: #ffffff;
-            --register-muted: #888888;
-            --register-border: rgba(255, 255, 255, 0.1);
-            --register-accent: #F2B705;
-            --register-accent-soft: rgba(242, 183, 5, 0.1);
-            --register-gold: #F2B705;
-            --register-shadow: 0 40px 80px rgba(0, 0, 0, 0.8);
-            --register-shadow-soft: 0 20px 40px rgba(0, 0, 0, 0.6);
-            --register-danger: #ff4a4a;
-            --register-success: #0df07a;
-        }
+        *{ box-sizing: border-box; }
+        html, body{ min-height: 100%; }
 
-        * {
-            box-sizing: border-box;
-        }
-
-        html, body {
-            min-height: 100%;
-        }
-
-        body.signup-body {
-            position: relative;
+        body.signup-body{
             margin: 0;
             padding: 40px 20px;
+            font-family: 'Inter','Poppins',sans-serif;
+            color: #2E2740;
+            background: linear-gradient(180deg, #faf8ff 0%, #f3eefb 50%, #faf8ff 100%);
+            position: relative;
             overflow-x: hidden;
-            font-family: 'Space Grotesk', Inter, "Segoe UI", sans-serif;
-            color: var(--register-text);
-            background: #050505;
+            min-height: 100vh;
         }
-
-        body.signup-body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background:
-                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        body.signup-body::after {
-            content: "";
-            position: fixed;
+        body.signup-body::before{
+            content: ""; position: fixed;
+            top: -120px; left: -120px;
+            width: 480px; height: 480px;
             border-radius: 50%;
-            pointer-events: none;
+            background: radial-gradient(circle, rgba(107,78,175,.45), transparent 70%);
             filter: blur(80px);
+            pointer-events: none;
             z-index: 0;
-            width: 40vw; height: 40vh;
-            top: 10%; right: -10%;
-            background: rgba(242, 183, 5, 0.1);
-            animation: floatBlob 15s ease-in-out infinite alternate;
+        }
+        body.signup-body::after{
+            content: ""; position: fixed;
+            bottom: -120px; right: -120px;
+            width: 520px; height: 520px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,215,0,.35), transparent 70%);
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .signup-wrapper {
+        .signup-wrapper{
             position: relative;
             z-index: 1;
-            max-width: 800px;
+            max-width: 880px;
             margin: 0 auto;
             min-height: calc(100vh - 80px);
             display: flex;
@@ -79,426 +58,386 @@
             justify-content: center;
         }
 
-        .signup-card {
+        .signup-card{
             width: 100%;
-            padding: 40px;
-            border-radius: 0; /* Brutalist shape */
-            background: rgba(10, 10, 10, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: var(--register-shadow);
-            backdrop-filter: blur(20px);
-            animation: cardIn 0.5s ease both;
+            padding: 44px 44px 36px;
+            border-radius: 28px;
+            background: rgba(255,255,255,.88);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            backdrop-filter: blur(20px) saturate(140%);
+            border: 1px solid rgba(232,224,245,.85);
+            box-shadow: 0 24px 60px rgba(45,27,105,.14);
+            animation: cardIn 0.5s cubic-bezier(.22,1,.36,1) both;
             position: relative;
+            overflow: hidden;
+        }
+        .signup-card::before{
+            content: ""; position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, #2D1B69, #6B4EAF, #FFD700, #6B4EAF, #2D1B69);
+            background-size: 200% 100%;
+            animation: cmpDividerFlow 6s linear infinite;
         }
 
-        .signup-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 3px;
-            background: linear-gradient(90deg, #F2B705, #ff4e00);
+        .signup-header{ margin-bottom: 26px; }
+        .signup-eyebrow{
+            display: inline-flex; align-items: center; gap: 8px;
+            font-family:'Poppins',sans-serif;
+            font-weight: 700; font-size: .72rem;
+            letter-spacing: .22em; text-transform: uppercase;
+            color: #4A2C8A;
+            background: linear-gradient(90deg, rgba(107,78,175,.12), rgba(255,215,0,.18));
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(107,78,175,.22);
+            margin-bottom: 16px;
         }
-
-        .signup-header {
-            margin-bottom: 30px;
-            animation: fadeUp 520ms ease both;
-        }
-
-        .signup-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            padding: 6px 12px;
-            background: var(--register-accent-soft);
-            color: var(--register-accent);
-            font-size: 0.75rem;
-            font-weight: 800;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-        }
-
-        .signup-title {
-            margin: 15px 0 10px;
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
-            line-height: 1;
+        .signup-eyebrow i{ color: #FFC107; }
+        .signup-title{
+            font-family:'Poppins',sans-serif;
+            margin: 0 0 10px;
+            font-size: clamp(2rem, 4vw, 2.8rem);
             font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: -0.05em;
-            color: var(--register-text);
+            letter-spacing: -0.025em;
+            line-height: 1.05;
+            background: linear-gradient(135deg, #1A0A3E 0%, #4A2C8A 50%, #6B4EAF 100%);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-
-        .signup-header .muted {
+        .signup-title .gold{
+            background: linear-gradient(135deg, #C9A800, #FFD700, #FFC107);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .signup-header .muted{
             margin: 0;
-            color: var(--register-muted);
+            color: #6B6280;
             font-size: 1rem;
-            line-height: 1.6;
+            line-height: 1.55;
+            max-width: 520px;
         }
 
-        .progress-wrapper {
+        /* ── Progress steps ── */
+        .progress-wrapper{
             display: grid;
             grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
             align-items: center;
-            gap: 15px;
-            margin-bottom: 30px;
-            animation: fadeUp 560ms ease both;
+            gap: 12px;
+            margin-bottom: 28px;
+            animation: fadeUp 560ms cubic-bezier(.22,1,.36,1) both;
             animation-delay: 90ms;
         }
 
-        .progress-step {
+        .progress-step{
             position: relative;
             display: flex;
             align-items: center;
-            gap: 15px;
-            min-height: 60px;
-            padding: 12px 15px;
-            border-radius: 0;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            background: rgba(255, 255, 255, 0.02);
-            transition: all 0.3s ease;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(232,224,245,.8);
+            background: rgba(255,255,255,.7);
+            transition: all .3s ease;
+            min-height: 64px;
         }
-
-        .progress-step.active {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.1);
+        .progress-step.active{
+            background: rgba(107,78,175,.06);
+            border-color: rgba(107,78,175,.25);
         }
-
-        .progress-step.current {
+        .progress-step.current{
             transform: translateY(-2px);
-            background: linear-gradient(135deg, rgba(242, 183, 5, 0.1), rgba(242, 183, 5, 0.02));
-            border-color: var(--register-accent);
-            box-shadow: 0 10px 20px rgba(242, 183, 5, 0.1);
+            background: linear-gradient(135deg, rgba(255,215,0,.18), rgba(107,78,175,.1));
+            border-color: rgba(255,215,0,.5);
+            box-shadow: 0 12px 28px rgba(255,193,7,.25);
         }
 
-        .progress-index {
-            width: 40px;
-            height: 40px;
+        .progress-index{
+            width: 40px; height: 40px;
             flex: 0 0 40px;
-            display: grid;
-            place-items: center;
-            background: #222;
-            color: #888;
-            font-size: 0.9rem;
-            font-weight: 900;
-        }
-
-        .progress-step.active .progress-index,
-        .progress-step.current .progress-index {
-            background: var(--register-accent);
-            color: #000;
-        }
-
-        .progress-copy {
-            min-width: 0;
-        }
-
-        .progress-kicker {
-            display: block;
-            font-size: 0.7rem;
+            display: grid; place-items: center;
+            border-radius: 12px;
+            background: rgba(107,78,175,.08);
+            color: #6B4EAF;
+            font-family:'Poppins',sans-serif;
+            font-size: .9rem;
             font-weight: 800;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--register-muted);
+            transition: all .3s ease;
+        }
+        .progress-step.active .progress-index{
+            background: linear-gradient(135deg, #2D1B69, #4A2C8A);
+            color: #FFD700;
+        }
+        .progress-step.current .progress-index{
+            background: linear-gradient(135deg, #FFD700, #FFC107);
+            color: #1A0A3E;
+            box-shadow: 0 6px 14px rgba(255,193,7,.4);
         }
 
-        .progress-name {
+        .progress-copy{ min-width: 0; }
+        .progress-kicker{
+            display: block;
+            font-family:'Poppins',sans-serif;
+            font-size: .65rem;
+            font-weight: 700;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: #8c84a0;
+        }
+        .progress-name{
             display: block;
             margin-top: 3px;
-            color: var(--register-text);
-            font-size: 0.9rem;
+            color: #2D1B69;
+            font-family:'Poppins',sans-serif;
+            font-size: .9rem;
+            font-weight: 700;
+        }
+        .progress-arrow{
+            color: #6B4EAF;
+            font-size: 1.1rem;
             font-weight: 800;
-            text-transform: uppercase;
+            opacity: .5;
         }
 
-        .progress-arrow {
-            color: #444;
-            font-size: 1.2rem;
-            font-weight: 900;
-        }
+        /* ── Forms ── */
+        .register-form{ display: grid; gap: 20px; }
 
-        .register-form {
-            display: grid;
-            gap: 20px;
+        .error-banner{
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: rgba(239,68,68,.10);
+            color: #991B1B;
+            border-left: 4px solid #EF4444;
+            font-weight: 600;
+            font-size: .92rem;
+            display: flex; align-items: center; gap: 10px;
         }
+        .error-banner p{ margin: 0; }
 
-        .error-banner {
-            padding: 15px 20px;
-            background: rgba(255, 74, 74, 0.1);
-            border: 1px solid var(--register-danger);
-            color: var(--register-danger);
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-        }
-
-        .error-banner p {
-            margin: 0;
-            font-size: 0.9rem;
-        }
-
-        .form-step {
+        .form-step{
             display: none;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            animation: stepIn 260ms ease both;
+            padding: 28px;
+            background: rgba(255,255,255,.6);
+            border: 1px solid rgba(232,224,245,.8);
+            border-radius: 20px;
+            animation: stepIn .35s cubic-bezier(.22,1,.36,1) both;
         }
+        .form-step.active{ display: block; }
 
-        .form-step.active {
-            display: block;
+        .step-head{
+            margin-bottom: 22px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(107,78,175,.12);
         }
-
-        .step-head {
-            margin-bottom: 25px;
-            border-bottom: 1px solid #222;
-            padding-bottom: 15px;
-        }
-
-        .step-title {
+        .step-title{
             margin: 0;
-            font-size: 1.5rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            color: var(--register-text);
+            font-family:'Poppins',sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -.01em;
+            color: #2D1B69;
+        }
+        .step-description{
+            margin: 8px 0 0;
+            color: #6B6280;
+            font-size: .9rem;
+            line-height: 1.55;
         }
 
-        .step-description {
-            margin: 10px 0 0;
-            color: var(--register-muted);
-            font-size: 0.95rem;
-        }
+        .form-grid{ display: grid; gap: 18px; }
+        .two-col{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .form-field{ display: flex; flex-direction: column; gap: 7px; }
+        .field-span-full{ grid-column: 1 / -1; }
 
-        .form-grid {
-            display: grid;
-            gap: 20px;
-        }
-
-        .two-col {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        .form-field {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .field-span-full {
-            grid-column: 1 / -1;
-        }
-
-        .form-label {
+        .form-label{
             margin: 0;
-            color: #aaa;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+            font-family:'Poppins',sans-serif;
+            color: #2D1B69;
+            font-size: .8rem;
+            font-weight: 600;
+            letter-spacing: .03em;
         }
 
         .form-input,
-        .form-select {
-            min-height: 55px;
+        .form-select{
+            min-height: 52px;
             width: 100%;
-            padding: 15px 20px;
-            border-radius: 0;
-            border: 1px solid #333;
-            background: #111;
-            color: var(--register-text);
-            font-size: 1rem;
-            font-family: inherit;
-            transition: all 0.3s;
+            padding: 13px 16px;
+            border: 1.5px solid #E0DBE8;
+            border-radius: 12px;
+            background: #fff;
+            color: #2E2740;
+            font-family: 'Inter', sans-serif;
+            font-size: .95rem;
+            transition: border-color .25s ease, box-shadow .25s ease;
         }
-
-        .form-input::placeholder {
-            color: #444;
-        }
-
+        .form-input::placeholder{ color: #B8B0C4; }
         .form-input:focus,
-        .form-select:focus {
+        .form-select:focus{
             outline: none;
-            border-color: var(--register-accent);
-            background: #0a0a0a;
-            box-shadow: inset 4px 0 0 var(--register-accent);
+            border-color: #6B4EAF;
+            box-shadow: 0 0 0 4px rgba(107,78,175,.14);
+        }
+        .form-select{
+            appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%234A2C8A'><path d='M7 10l5 5 5-5z'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 38px;
         }
 
-        .password-rules {
+        .password-rules{
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 15px;
-            margin-top: 10px;
+            gap: 12px;
+            margin-top: 8px;
         }
-
-        .rule-chip {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 15px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid #222;
-            color: #777;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            transition: all 0.3s;
+        .rule-chip{
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: rgba(107,78,175,.05);
+            border: 1px solid rgba(232,224,245,.85);
+            color: #6B6280;
+            font-size: .8rem;
+            font-weight: 600;
+            transition: all .25s ease;
         }
-
-        .rule-chip.valid {
-            background: rgba(13, 240, 122, 0.1);
-            border-color: var(--register-success);
-            color: var(--register-success);
+        .rule-chip.valid{
+            background: rgba(34,197,94,.10);
+            border-color: rgba(34,197,94,.35);
+            color: #166534;
         }
-
-        .rule-dot {
-            width: 8px;
-            height: 8px;
+        .rule-dot{
+            width: 8px; height: 8px;
             flex: 0 0 8px;
+            border-radius: 50%;
             background: currentColor;
-            opacity: 0.3;
+            opacity: .35;
         }
+        .rule-chip.valid .rule-dot{ opacity: 1; }
 
-        .rule-chip.valid .rule-dot {
-            opacity: 1;
+        .password-status{
+            min-height: 18px;
+            margin: 12px 0 0;
+            font-size: .82rem;
+            font-weight: 600;
+            color: #8c84a0;
         }
+        .password-status.valid{ color: #166534; }
+        .password-status.invalid{ color: #991B1B; }
 
-        .password-status {
-            min-height: 20px;
-            margin: 15px 0 0;
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--register-muted);
-        }
-
-        .password-status.valid {
-            color: var(--register-success);
-        }
-
-        .password-status.invalid {
-            color: var(--register-danger);
-        }
-
-        .step-actions {
+        .step-actions{
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 15px;
-            margin-top: 30px;
+            gap: 14px;
+            margin-top: 26px;
             padding-top: 20px;
-            border-top: 1px solid #222;
+            border-top: 1px solid rgba(107,78,175,.12);
         }
+        .step-spacer{ flex: 1; }
 
-        .step-spacer {
-            flex: 1;
-        }
-
-        .btn,
-        .btn-secondary {
-            min-height: 55px;
-            padding: 0 30px;
-            font-size: 1rem;
-            font-weight: 900;
+        .btn{
+            min-height: 50px;
+            padding: 0 28px;
+            font-family:'Poppins',sans-serif;
+            font-size: .9rem;
+            font-weight: 800;
+            letter-spacing: .06em;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
             cursor: pointer;
-            border-radius: 0;
-            transition: all 0.3s;
-            clip-path: polygon(4% 0, 100% 0, 96% 100%, 0 100%);
+            border-radius: 12px;
+            transition: all .3s cubic-bezier(.22,1,.36,1);
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn {
+        .btn-primary{
             border: none;
+            color: #1A0A3E;
+            background: linear-gradient(135deg, #FFD700, #FFC107);
+            box-shadow: 0 12px 28px rgba(255,193,7,.45), inset 0 1px 0 rgba(255,255,255,.6);
         }
-
-        .btn:hover,
-        .btn-secondary:hover {
-            transform: scale(1.02);
+        .btn-primary::after{
+            content:""; position:absolute; inset:0;
+            background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.55) 50%, transparent 60%);
+            transform: translateX(-120%);
+            transition: transform .9s cubic-bezier(.22,1,.36,1);
         }
-
-        .btn-primary {
-            color: #000;
-            background: var(--register-accent);
+        .btn-primary:hover{
+            transform: translateY(-3px);
+            box-shadow: 0 18px 38px rgba(255,193,7,.55);
+            color: #1A0A3E;
         }
-
-        .btn-primary:hover {
-            background: #fff;
-            box-shadow: 0 0 30px rgba(242, 183, 5, 0.4);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.3;
+        .btn-primary:hover::after{ transform: translateX(120%); }
+        .btn-primary:disabled{
+            opacity: .55;
             cursor: not-allowed;
             transform: none;
-            box-shadow: none;
-            background: #444;
-            color: #888;
+            box-shadow: 0 4px 10px rgba(0,0,0,.06);
+            background: #E0DBE8;
+            color: #8c84a0;
+        }
+        .btn-primary:disabled::after{ display: none; }
+
+        .btn-secondary{
+            border: 1.5px solid rgba(107,78,175,.3);
+            background: rgba(255,255,255,.7);
+            color: #2D1B69;
+        }
+        .btn-secondary:hover{
+            background: linear-gradient(135deg, #2D1B69, #4A2C8A);
+            color: #FFD700;
+            border-color: #2D1B69;
+            transform: translateY(-2px);
         }
 
-        .btn-secondary {
-            border: 1px solid #444;
-            background: transparent;
-            color: #aaa;
-            clip-path: none;
-        }
-
-        .btn-secondary:hover {
-            background: #222;
-            color: #fff;
-            border-color: #666;
-        }
-
-        .auth-link {
-            margin: 25px 0 0;
+        .auth-link{
+            margin: 24px 0 0;
             text-align: center;
-            color: var(--register-muted);
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            color: #6B6280;
+            font-size: .9rem;
         }
-
-        .auth-link a {
-            color: var(--register-accent);
-            font-weight: 800;
+        .auth-link a{
+            color: #4A2C8A;
+            font-weight: 700;
             text-decoration: none;
-            padding-bottom: 2px;
-            border-bottom: 1px solid transparent;
-            transition: border-color 0.3s;
+            transition: color .2s ease;
+        }
+        .auth-link a:hover{ color: #C9A800; text-decoration: underline; }
+
+        @keyframes cardIn{
+            from{ opacity: 0; transform: translateY(30px); }
+            to  { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes stepIn{
+            from{ opacity: 0; transform: translateY(15px); }
+            to  { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeUp{
+            from{ opacity: 0; transform: translateY(15px); }
+            to  { opacity: 1; transform: translateY(0); }
         }
 
-        .auth-link a:hover {
-            border-color: var(--register-accent);
-        }
-
-        @keyframes cardIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes stepIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes floatBlob {
-            0% { transform: translateY(0) translateX(0); }
-            100% { transform: translateY(-30px) translateX(30px); }
-        }
-
-        @media (max-width: 768px) {
-            body.signup-body { padding: 20px 15px; }
-            .signup-card { padding: 25px; }
-            .signup-title { font-size: 2rem; }
-            .form-step { padding: 20px; }
-            .progress-wrapper { grid-template-columns: 1fr; gap: 10px; }
-            .progress-arrow { justify-self: center; transform: rotate(90deg); }
-            .two-col, .password-rules { grid-template-columns: 1fr; }
-            .step-actions { flex-direction: column-reverse; align-items: stretch; gap: 15px; }
-            .btn, .btn-secondary { width: 100%; clip-path: none; }
+        @media (max-width: 767.98px){
+            body.signup-body{ padding: 20px 14px; }
+            .signup-card{ padding: 28px 22px 26px; border-radius: 22px; }
+            .signup-title{ font-size: 1.7rem; }
+            .form-step{ padding: 20px 18px; border-radius: 16px; }
+            .progress-wrapper{
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .progress-arrow{ display: none; }
+            .progress-step{ padding: 12px 14px; min-height: 0; }
+            .two-col, .password-rules{ grid-template-columns: 1fr; }
+            .step-actions{
+                flex-direction: column-reverse;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .btn{ width: 100%; }
         }
     </style>
 </head>
@@ -508,8 +447,8 @@
 <div class="signup-wrapper">
     <div class="signup-card">
         <div class="signup-header">
-            <span class="signup-eyebrow">Student Registration</span>
-            <h2 class="signup-title">Create your account</h2>
+            <span class="signup-eyebrow"><i class="bi bi-mortarboard-fill"></i>Student Registration</span>
+            <h2 class="signup-title">Create your <span class="gold">account</span></h2>
             <p class="muted">A simple three-step flow for joining the campus marketplace.</p>
         </div>
 
@@ -541,34 +480,35 @@
 
         <form class="register-form" th:action="@{/registerUser}" method="post" th:object="${userForm}">
             <div class="error-banner" th:if="${error}">
+                <i class="bi bi-exclamation-circle-fill"></i>
                 <p th:text="${error}"></p>
             </div>
 
             <div class="form-step active">
                 <div class="step-head">
-                    <h3 class="step-title">Account Information</h3>
+                    <h3 class="step-title">Account information</h3>
                     <p class="step-description">Add your basic details and confirm your password before moving forward.</p>
                 </div>
 
                 <div class="form-grid two-col">
                     <div class="form-field">
-                        <label class="form-label" for="firstName">First Name</label>
+                        <label class="form-label" for="firstName">First name</label>
                         <input id="firstName" class="form-input" type="text" th:field="*{firstName}" placeholder="Enter your first name" />
                     </div>
                     <div class="form-field">
-                        <label class="form-label" for="lastName">Last Name</label>
+                        <label class="form-label" for="lastName">Last name</label>
                         <input id="lastName" class="form-input" type="text" th:field="*{lastName}" placeholder="Enter your last name" />
                     </div>
                     <div class="form-field field-span-full">
                         <label class="form-label" for="email">Email</label>
-                        <input id="email" class="form-input" type="email" th:field="*{email}" placeholder="student@umt.edu" />
+                        <input id="email" class="form-input" type="email" th:field="*{email}" placeholder="student@umt.edu.my" />
                     </div>
                     <div class="form-field">
                         <label class="form-label" for="password">Password</label>
                         <input id="password" class="form-input" type="password" th:field="*{password}" autocomplete="new-password" placeholder="Use more than 8 characters" />
                     </div>
                     <div class="form-field">
-                        <label class="form-label" for="confirmPassword">Confirm Password</label>
+                        <label class="form-label" for="confirmPassword">Confirm password</label>
                         <input id="confirmPassword" class="form-input" type="password" autocomplete="new-password" placeholder="Re-enter your password" />
                     </div>
                 </div>
@@ -589,14 +529,14 @@
                 <div class="step-actions">
                     <div class="step-spacer"></div>
                     <button id="accountContinueButton" type="button" class="btn btn-primary" onclick="nextStep()" disabled>
-                        Continue
+                        Continue <i class="bi bi-arrow-right"></i>
                     </button>
                 </div>
             </div>
 
             <div class="form-step">
                 <div class="step-head">
-                    <h3 class="step-title">Academic Profile</h3>
+                    <h3 class="step-title">Academic profile</h3>
                     <p class="step-description">Add the student details used inside the marketplace and verification flow.</p>
                 </div>
 
@@ -623,14 +563,14 @@
                 </div>
 
                 <div class="step-actions">
-                    <button type="button" class="btn-secondary" onclick="prevStep()">Back</button>
-                    <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()"><i class="bi bi-arrow-left"></i> Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">Continue <i class="bi bi-arrow-right"></i></button>
                 </div>
             </div>
 
             <div class="form-step">
                 <div class="step-head">
-                    <h3 class="step-title">Mentor Information</h3>
+                    <h3 class="step-title">Mentor information</h3>
                     <p class="step-description">Choose the mentor linked to this account for the next stage of the process.</p>
                 </div>
 
@@ -649,8 +589,8 @@
                 </div>
 
                 <div class="step-actions">
-                    <button type="button" class="btn-secondary" onclick="prevStep()">Back</button>
-                    <button class="btn btn-primary" type="submit">Create Account</button>
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()"><i class="bi bi-arrow-left"></i> Back</button>
+                    <button class="btn btn-primary" type="submit"><i class="bi bi-check-circle-fill"></i> Create account</button>
                 </div>
             </div>
         </form>
@@ -678,7 +618,6 @@
         steps.forEach((step, i) => {
             step.classList.toggle("active", i === index);
         });
-
         progress.forEach((item, i) => {
             item.classList.toggle("active", i <= index);
             item.classList.toggle("current", i === index);
@@ -703,25 +642,21 @@
             passwordMessage.classList.add("invalid");
             return ready;
         }
-
         if (!lengthOk) {
             passwordMessage.textContent = "Password must be longer than 8 characters.";
             passwordMessage.classList.add("invalid");
             return ready;
         }
-
         if (!confirmValue) {
             passwordMessage.textContent = "Confirm your password to continue.";
             passwordMessage.classList.add("invalid");
             return ready;
         }
-
         if (!matchOk) {
             passwordMessage.textContent = "Passwords do not match yet.";
             passwordMessage.classList.add("invalid");
             return ready;
         }
-
         passwordMessage.textContent = "Password confirmed. You can continue.";
         passwordMessage.classList.add("valid");
         return ready;
@@ -732,7 +667,6 @@
             confirmPasswordInput.focus();
             return;
         }
-
         if (currentStep < steps.length - 1) {
             currentStep++;
             showStep(currentStep);
