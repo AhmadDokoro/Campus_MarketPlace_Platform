@@ -250,4 +250,9 @@ main, .cmp-page-enter { animation: cmpFadeInUp .45s var(--ease-default); }
 .cmp-on-white   { color: var(--cmp-gray-800); }
 
 /* AOS safety — hide initial state cleanly if AOS JS fails */
+html:not(.aos-init) [data-aos] {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
 [data-aos]{ will-change: opacity, transform; }

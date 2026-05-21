@@ -41,14 +41,20 @@ public class AuthenticationController {
 
     // landing page
     @GetMapping("/")
-    public String home() {
+    public String home(HttpSession session) {
+        if (isAdmin(session)) {
+            return "redirect:/admin/dashboard";
+        }
         return "splash"; // return index template
     }
 
 
 
     @GetMapping("/index")
-    public String indexPage(Model model) {
+    public String indexPage(Model model, HttpSession session) {
+        if (isAdmin(session)) {
+            return "redirect:/admin/dashboard";
+        }
         // Load top categories and featured products for the homepage.
         java.util.List<com.ahsmart.campusmarket.model.Category> topCategories = categoryService.getTopCategories(7);
         // Single GROUP BY query replaces the previous N per-category COUNT loop.
@@ -188,6 +194,17 @@ public class AuthenticationController {
             model.addAttribute("error", ex.getMessage());
             return "auth/requestVerification";
         }
+    }
+
+    private boolean isAdmin(HttpSession session) {
+        Object role = session.getAttribute("role");
+        if (role == null) {
+            return false;
+        }
+        if (role instanceof Role) {
+            return role == Role.ADMIN;
+        }
+        return "ADMIN".equalsIgnoreCase(role.toString());
     }
 
 }

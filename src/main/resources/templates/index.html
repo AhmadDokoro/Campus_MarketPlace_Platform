@@ -45,7 +45,7 @@
     <!-- Stunning brand layer: aurora, glass, sheen, gradients -->
     <link th:href="@{/css/cmp-stunning.css}" rel="stylesheet">
     <!-- AOS (Animate on Scroll) -->
-    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link th:href="@{/lib/aos/aos.css}" rel="stylesheet">
     <style>
         .home-market-bg{
             background:
@@ -534,7 +534,7 @@
 <div class="container-fluid pt-5 pb-3 home-products">
     <div class="d-flex align-items-center justify-content-between mx-xl-5 mb-4">
         <h2 class="section-title position-relative text-uppercase mb-0"><span class="bg-secondary pr-3"><i class="fas fa-fire section-icon"></i>Products</span></h2>
-        <a class="btn btn-outline-primary" th:href="@{/products}"><i class="fas fa-store mr-2"></i>View all</a>
+        <a class="btn btn-outline-primary" th:href="@{/products}"><i class="fas fa-store mr-2"></i>Explore Products</a>
     </div>
     <div class="row px-xl-5 product-grid">
         <div class="product-card-col" th:each="p, stat : ${featuredProducts}" th:if="${stat.index < 10}"
@@ -573,7 +573,7 @@
 <div class="container-fluid pt-5 pb-3 home-products">
     <div class="d-flex align-items-center justify-content-between mx-xl-5 mb-4">
         <h2 class="section-title position-relative text-uppercase mb-0"><span class="bg-secondary pr-3"><i class="fas fa-gem section-icon"></i>More Discoveries</span></h2>
-        <a class="btn btn-outline-primary" th:href="@{/products}"><i class="fas fa-store mr-2"></i>Explore More</a>
+        <a class="btn btn-outline-primary" th:href="@{/products}"><i class="fas fa-store mr-2"></i>Explore Products</a>
     </div>
     <div class="row px-xl-5 product-grid">
         <div class="product-card-col" th:each="p, stat : ${featuredProducts}" th:if="${stat.index >= 10 and stat.index < 20}"
@@ -589,7 +589,7 @@
 <a href="#" class="btn btn-primary back-to-top cmp-animate-float"><i class="fa fa-angle-double-up"></i></a>
 
 <!-- AOS + enhancement JS -->
-<script src="https://unpkg.com/aos@2.3.4/dist/aos.js" defer></script>
+<script th:src="@{/lib/aos/aos.js}" defer></script>
 <script th:src="@{/js/cmp-enhance.js}" defer></script>
 
 <!-- Keep JS includes if necessary (not modifying behavior scripts) -->

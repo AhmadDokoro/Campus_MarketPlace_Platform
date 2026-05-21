@@ -35,7 +35,9 @@
       "Bash(unzip -o __TRACKED_VAR__/__TRACKED_VAR__.skill -d __TRACKED_VAR__/extracted)",
       "Read(//c/c/Users/PC/Desktop/Projects/Campus Marketplace Platform/campusmarket/src/main/resources/**)",
       "Read(//c/c/Users/PC/Desktop/Projects/Campus Marketplace Platform/campusmarket/src/main/resources/static/**)",
-      "Bash(unzip -o .claude/skills/cmp-splash/cmp-splash.skill -d .claude/skills/cmp-splash/extracted)"
+      "Bash(unzip -o .claude/skills/cmp-splash/cmp-splash.skill -d .claude/skills/cmp-splash/extracted)",
+      "Bash(git checkout *)",
+      "Bash(git stash *)"
     ]
   }
 }

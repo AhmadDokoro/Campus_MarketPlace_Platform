@@ -9,7 +9,7 @@
     <link th:href="@{/css/style.css}" rel="stylesheet" />
     <link th:href="@{/css/mobile.css}" rel="stylesheet" />
     <link th:href="@{/css/cmp-enhance.css}" rel="stylesheet" />
-    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link th:href="@{/lib/aos/aos.css}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -213,6 +213,26 @@
             box-shadow:0 10px 20px rgba(255, 78, 0, 0.4);
         }
         .utility-details:hover{color:#fff;filter:brightness(1.1);box-shadow:0 15px 25px rgba(255, 78, 0, 0.6)}
+
+        .utility-logout{
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.35);
+        }
+        .utility-logout:hover{
+            background: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.35);
+        }
+
+        .steps-hint{
+            display:inline-flex; align-items:center; gap:8px;
+            font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+            color: var(--muted); text-transform: uppercase;
+            margin: 0 0 12px;
+        }
+        .steps-hint i{ color: var(--accent); font-size: 14px; }
 
         .account-actions-nav{
             display:flex;
@@ -1420,11 +1440,14 @@
             </div>
 
             <div class="utility-actions">
+                <a class="utility-btn utility-details" th:href="@{/user/profile/details}">
+                    <i class="bi bi-pencil-square"></i> Edit Profile
+                </a>
                 <a class="utility-btn utility-home" th:href="@{/index}">
                     <i class="bi bi-house-door"></i> Back to Home
                 </a>
-                <a class="utility-btn utility-details" th:href="@{/user/profile/details}">
-                    <i class="bi bi-pencil-square"></i> Edit Profile
+                <a class="utility-btn utility-logout" th:href="@{/logout}">
+                    <i class="bi bi-box-arrow-right"></i> Logout
                 </a>
             </div>
 
@@ -1433,7 +1456,7 @@
                     <i class="bi bi-receipt"></i> Full Order History
                 </a>
                 <a class="nav-pill nav-pill-seller" th:href="@{/user/start-selling}">
-                    <i class="bi bi-shop-window"></i> Seller Dashboard
+                    <i class="bi bi-shop-window"></i> Sell on Campus
                 </a>
             </div>
         </section>
@@ -1450,6 +1473,10 @@
                     <a th:href="@{/orders/history}" class="panel-link">View all orders <i class="bi bi-arrow-right"></i></a>
                 </div>
 
+                <div class="steps-hint" aria-hidden="true">
+                    <i class="bi bi-hand-index-thumb"></i>
+                    Tap a stage to filter your orders below
+                </div>
                 <div class="steps" aria-label="Order tracking steps">
                     <button type="button" class="step" data-profile-tab="pending_payment">
                         <div class="node node-pending">
@@ -1768,7 +1795,7 @@
     });
 </script>
 
-<script src="https://unpkg.com/aos@2.3.4/dist/aos.js" defer></script>
+<script th:src="@{/lib/aos/aos.js}" defer></script>
 <script th:src="@{/js/cmp-enhance.js}" defer></script>
 </body>
 </html>

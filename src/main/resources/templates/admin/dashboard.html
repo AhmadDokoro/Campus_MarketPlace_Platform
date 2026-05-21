@@ -17,7 +17,7 @@
   <!-- Mobile-only overrides (does not affect desktop) -->
   <link rel="stylesheet" th:href="@{/css/mobile.css}">
   <link rel="stylesheet" th:href="@{/css/cmp-enhance.css}">
-  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/lib/aos/aos.css}">
 </head>
 
 <body>
@@ -338,7 +338,7 @@ next correction                   <li th:each="cat, stat : ${topCategories}" cla
   </script>
 
   <script th:src="@{/js/admin.js(v=2)}"></script>
-  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js" defer></script>
+  <script th:src="@{/lib/aos/aos.js}" defer></script>
   <script th:src="@{/js/cmp-enhance.js}" defer></script>
   <script>
     function toggleAdminSidebar() {

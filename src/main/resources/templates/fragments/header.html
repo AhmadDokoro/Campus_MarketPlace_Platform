@@ -147,9 +147,11 @@
 
                         <!-- Right-side utilities: cart visible only when logged in (desktop only) -->
                         <div class="navbar-nav ml-auto py-0 d-none d-lg-block" th:if="${session.userId != null}">
-                            <a th:href="@{/cart}" class="btn px-0 ml-3 header-cart-link">
+                            <a th:href="@{/cart}" class="btn px-0 ml-3 header-cart-link" aria-label="View shopping cart">
+                                <span class="header-cart-aura" aria-hidden="true"></span>
                                 <i class="fas fa-shopping-cart header-cart-icon"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle cart-badge-count" style="padding-bottom: 2px;">0</span>
+                                <span class="cart-label-text">Cart</span>
+                                <span class="cart-badge-count">0</span>
                             </a>
                         </div>
                     </div>
@@ -365,29 +367,80 @@
         }
         .header-cart-link{
             color: #ffffff !important;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 18px 8px 14px !important;
+            margin-left: 12px !important;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(255,215,0,0.18), rgba(255,78,0,0.18));
+            border: 2px solid rgba(255, 215, 0, 0.75);
+            box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.15), 0 6px 18px rgba(255, 153, 0, 0.45);
+            transition: transform .25s ease, box-shadow .3s ease, background .3s ease;
+            text-decoration: none !important;
+        }
+        .header-cart-link:hover{
+            background: linear-gradient(135deg, #FFD700, #FF9900);
+            transform: translateY(-2px);
+            box-shadow: 0 0 0 6px rgba(255, 215, 0, 0.25), 0 10px 28px rgba(255, 153, 0, 0.7);
         }
         .header-cart-icon{
             color: #ffffff;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+            font-size: 22px;
+            filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.9));
             transition: color .25s ease, filter .25s ease, transform .25s ease;
+            position: relative;
+            z-index: 2;
         }
         .header-cart-link:hover .header-cart-icon{
             color: #100b1a;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-            transform: translateY(-2px) scale(1.1);
+            transform: scale(1.1);
+        }
+        .header-cart-link .cart-label-text{
+            font-weight: 800;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            text-transform: uppercase;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+            position: relative;
+            z-index: 2;
+            transition: color .25s ease;
+        }
+        .header-cart-link:hover .cart-label-text{
+            color: #100b1a;
+            text-shadow: none;
         }
         .header-cart-link .cart-badge-count {
             background: #ef4444;
-            color: white;
-            border: 2px solid #1f2937 !important;
-            font-weight: bold;
-            font-size: 11px;
+            color: #fff;
+            border: 2px solid #ffffff !important;
+            font-weight: 800;
+            font-size: 12px;
+            min-width: 22px;
+            height: 22px;
+            line-height: 18px;
+            padding: 0 5px;
+            border-radius: 999px;
             position: absolute;
-            top: -4px;
+            top: -8px;
             right: -8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.35), 0 4px 10px rgba(0,0,0,0.35);
+            z-index: 3;
+            text-align: center;
         }
-        .header-cart-link { position: relative; display: inline-flex; align-items: center; }
+        /* Static aura behind the cart pill — no animation, no blur (zero render cost) */
+        .header-cart-aura{
+            position: absolute;
+            inset: -2px;
+            border-radius: 999px;
+            background: radial-gradient(circle, rgba(255,215,0,0.35) 0%, rgba(255,153,0,0.15) 55%, rgba(255,153,0,0) 80%);
+            z-index: 0;
+            pointer-events: none;
+        }
 
         .header-search-wrap{position:relative}
         .search-results{display:none;position:absolute;top:calc(100% + 8px);left:0;z-index:1050;width:100%;background:#fff;border-radius:8px;border:1px solid rgba(15,23,42,0.1);max-height:400px;overflow:auto;box-shadow:0 10px 25px rgba(0,0,0,0.15)}

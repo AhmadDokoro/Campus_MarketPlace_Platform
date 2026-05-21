@@ -4,7 +4,7 @@
   function initAOS(){
     if (typeof window.AOS !== 'undefined') {
       window.AOS.init({
-        duration: 750,
+        duration: 400,
         easing: 'ease-out-cubic',
         once: true,
         offset: 60,
