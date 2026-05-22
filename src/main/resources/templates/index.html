@@ -53,7 +53,7 @@
                 radial-gradient(circle at 90% 10%, rgba(75,46,131,0.18), transparent 45%),
                 linear-gradient(180deg, #f9fafb 0%, #ffffff 45%, #f6f3ff 100%);
         }
-        .category-scroll{display:flex;gap:20px;overflow-x:auto;padding:10px 0 20px;scroll-snap-type:x mandatory}
+        .category-scroll{display:flex;gap:20px;overflow-x:auto;padding:10px 0 20px;scroll-snap-type:x mandatory; -webkit-overflow-scrolling: touch;}
         .category-scroll::-webkit-scrollbar{height:8px}
         .category-scroll::-webkit-scrollbar-thumb{background:#c9ccd1;border-radius:999px}
         .category-scroll::-webkit-scrollbar-track{background:transparent;border-radius:999px}
@@ -307,10 +307,15 @@
             height: 200%;
             background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
             transform: rotate(45deg);
+            -webkit-animation: heroSweep 5s infinite;
             animation: heroSweep 5s infinite;
             pointer-events: none;
         }
 
+        @-webkit-keyframes heroSweep {
+            0% { -webkit-transform: rotate(45deg) translateX(-100%); transform: rotate(45deg) translateX(-100%); }
+            20%, 100% { -webkit-transform: rotate(45deg) translateX(100%); transform: rotate(45deg) translateX(100%); }
+        }
         @keyframes heroSweep {
             0% { transform: rotate(45deg) translateX(-100%); }
             20%, 100% { transform: rotate(45deg) translateX(100%); }
