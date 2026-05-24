@@ -155,6 +155,7 @@ function renderCharts(){
       },
       options:{
         responsive:true,
+        maintainAspectRatio:false,
         plugins:{legend:{display:false}},
         scales:{
           x:{grid:{display:false}, ticks:{font:{size:12}}},

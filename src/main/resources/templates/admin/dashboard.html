@@ -191,7 +191,9 @@
               </div>
             </div>
             <div class="panel-body">
-              <canvas id="chartListings" height="110"></canvas>
+              <div style="position: relative; width: 100%; height: 260px; min-height: 260px;">
+                <canvas id="chartListings"></canvas>
+              </div>
             </div>
           </div>
 
@@ -222,7 +224,7 @@
               </div>
               <div class="panel-body">
                 <ul class="category-list" id="topCategories">
-next correction                   <li th:each="cat, stat : ${topCategories}" class="cat-row"
+                  <li th:each="cat, stat : ${topCategories}" class="cat-row"
                       th:classappend="${stat.index >= 5 ? 'extra-category' : ''}"
                       th:style="${stat.index >= 5 ? 'display: none;' : ''}">
                     <span class="cat-rank" th:text="${stat.index + 1}">1</span>

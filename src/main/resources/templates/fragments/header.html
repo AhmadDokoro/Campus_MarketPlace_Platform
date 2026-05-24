@@ -106,7 +106,7 @@
                     </button>
 
                     <!-- Mobile-only search bar (hidden on desktop via mobile.css) - Positioned between menu and cart -->
-                    <div class="mobile-nav-search mx-auto d-lg-none d-block" style="padding: 0; display: block; width: 75%; max-width: 300px;" id="mobile-search-container">
+                    <div class="mobile-nav-search mx-auto d-lg-none d-block" style="padding: 0; display: block; flex-grow: 1; max-width: 280px; min-width: 0;" id="mobile-search-container">
                         <div class="input-group" style="height: 38px; border-radius: 999px; border: 2px solid rgba(255, 214, 102, 0.4); box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
                             <input type="text"
                                    class="form-control border-0"
@@ -162,6 +162,10 @@
 
 
     <style>
+        header {
+            position: relative;
+            z-index: 1020;
+        }
         .header-top-strip{
             background: #14082e; /* Deep UMT purple base */
             box-shadow: inset 0 -1px 0 rgba(255,255,255,0.05);
@@ -456,6 +460,27 @@
             50%{background-position:100% 50%}
             100%{background-position:0% 50%}
         }
+
+        .sticky-header-active {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 1030 !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12) !important;
+            animation: stickySlideDownSmooth 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+        }
+
+        @keyframes stickySlideDownSmooth {
+            from {
+                transform: translateY(-100%);
+                opacity: 0.5;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
     </style>
 
     <script>
@@ -542,6 +567,38 @@
         } else {
             setupHeaderSearch();
         }
+
+        /* ── Mobile search results: use fixed positioning to escape any stacking/overflow clipping ── */
+        function fixMobileSearchDropdown(){
+            var input   = document.getElementById('mobile-search-input');
+            var results = document.getElementById('mobile-search-results');
+            if(!input || !results) return;
+
+            results.style.position = 'fixed';
+            results.style.zIndex   = '99999';
+            results.style.top      = 'auto';
+            results.style.left     = 'auto';
+
+            function reposition(){
+                var rect = input.getBoundingClientRect();
+                var container = input.closest('.mobile-nav-search');
+                var cRect = container ? container.getBoundingClientRect() : rect;
+                results.style.top   = (rect.bottom + 4) + 'px';
+                results.style.left  = cRect.left + 'px';
+                results.style.width = cRect.width + 'px';
+            }
+
+            input.addEventListener('focus',  reposition);
+            input.addEventListener('input',  reposition);
+            window.addEventListener('resize', reposition);
+            window.addEventListener('scroll', reposition, true);
+        }
+
+        if(document.readyState === 'loading'){
+            document.addEventListener('DOMContentLoaded', fixMobileSearchDropdown);
+        } else {
+            fixMobileSearchDropdown();
+        }
     </script>
 
     <!-- Fetches current cart count on page load to keep the header badge in sync. -->
@@ -560,5 +617,52 @@
         } else {
             loadCartBadge();
         }
+
+        // Sticky Header Logic (Shows after 1 second of no scrolling when scrolled down)
+        document.addEventListener('DOMContentLoaded', function() {
+            var header = document.querySelector('header');
+            if(!header) return;
+
+            var scrollTimer;
+            var isSticky = false;
+            var headerPlaceholder = document.createElement('div');
+            headerPlaceholder.style.display = 'none';
+            header.parentNode.insertBefore(headerPlaceholder, header);
+
+            window.addEventListener('scroll', function() {
+                var currentScrollY = window.scrollY;
+                var threshold = 250; // Distance to scroll down before logic applies
+
+                if (currentScrollY > threshold) {
+                    // Start or restart the scroll timer
+                    clearTimeout(scrollTimer);
+
+                    // While scrolling, make sure it's not sticky
+                    if (isSticky) {
+                        header.classList.remove('sticky-header-active');
+                        headerPlaceholder.style.display = 'none';
+                        isSticky = false;
+                    }
+
+                    scrollTimer = setTimeout(function() {
+                        // After 1 second of stopping, show the header
+                        var hHeight = header.offsetHeight;
+                        headerPlaceholder.style.height = hHeight + 'px';
+                        headerPlaceholder.style.display = 'block';
+
+                        header.classList.add('sticky-header-active');
+                        isSticky = true;
+                    }, 1000);
+                } else {
+                    // When near the top, reset everything
+                    clearTimeout(scrollTimer);
+                    if (isSticky) {
+                        header.classList.remove('sticky-header-active');
+                        headerPlaceholder.style.display = 'none';
+                        isSticky = false;
+                    }
+                }
+            });
+        });
     </script>
 </header>
