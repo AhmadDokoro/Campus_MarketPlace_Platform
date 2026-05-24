@@ -591,7 +591,39 @@
 <!-- Include footer fragment -->
 <div th:replace="fragments/footer :: footer"></div>
 
-<a href="#" class="btn btn-primary back-to-top cmp-animate-float"><i class="fa fa-angle-double-up"></i></a>
+<a href="#" class="btn btn-primary back-to-top cmp-animate-float" style="bottom: 80px;"><i class="fa fa-angle-double-up"></i></a>
+
+<!-- ══ Mobile Bottom Navigation Bar (hidden on desktop via CSS) ══ -->
+<nav class="mob-bottom-nav d-lg-none" id="mobBottomNav" aria-label="Mobile navigation">
+    <a th:href="@{/index}" class="mob-nav-item mob-nav-active">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+    </a>
+    <a th:href="@{/products}" class="mob-nav-item">
+        <i class="fas fa-search"></i>
+        <span>Browse</span>
+    </a>
+    <a th:href="@{/products}" class="mob-nav-item mob-nav-center">
+        <span class="mob-nav-center-btn"><i class="fas fa-store"></i></span>
+        <span>Shop</span>
+    </a>
+    <a th:if="${session.userId != null}" th:href="@{/cart}" class="mob-nav-item">
+        <i class="fas fa-shopping-cart"></i>
+        <span>Cart</span>
+    </a>
+    <a th:unless="${session.userId != null}" th:href="@{/signin}" class="mob-nav-item">
+        <i class="fas fa-sign-in-alt"></i>
+        <span>Login</span>
+    </a>
+    <a th:if="${session.userId != null}" th:href="@{/user/profile}" class="mob-nav-item">
+        <i class="fas fa-user-circle"></i>
+        <span>Profile</span>
+    </a>
+    <a th:unless="${session.userId != null}" th:href="@{/}" class="mob-nav-item">
+        <i class="fas fa-info-circle"></i>
+        <span>About</span>
+    </a>
+</nav>
 
 <!-- AOS + enhancement JS -->
 <script th:src="@{/lib/aos/aos.js}" defer></script>

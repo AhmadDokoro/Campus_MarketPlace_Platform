@@ -988,302 +988,314 @@
         }
 
         /* ════════════════════════════════════════════════════════════════
-           MOBILE — brand-aligned profile (purple/gold, glass cards)
+           MOBILE — Dark Luxury profile (deep purple / gold)
            Only applies below 768px; desktop styling above is untouched.
            ════════════════════════════════════════════════════════════════ */
         @media (max-width: 767.98px){
             body{
-                background: linear-gradient(180deg, #faf8ff 0%, #f3eefb 50%, #faf8ff 100%) !important;
-                font-family:'Inter','Poppins',sans-serif !important;
-                color: #2E2740 !important;
+                background: linear-gradient(160deg, #07001a 0%, #100828 45%, #0a0520 100%) !important;
+                font-family:'Poppins','Inter',sans-serif !important;
+                color: #e8e0f0 !important;
             }
             body::before{
                 background:
-                    linear-gradient(to right, rgba(74,44,138,0.045) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(74,44,138,0.045) 1px, transparent 1px) !important;
-                background-size: 40px 40px !important;
+                    radial-gradient(ellipse at 20% 0%, rgba(107,78,175,0.18) 0%, transparent 55%),
+                    radial-gradient(ellipse at 80% 100%, rgba(242,183,5,0.08) 0%, transparent 50%) !important;
+                background-size: 100% 100% !important;
             }
 
-            .page-wrap{ padding: 16px 14px 36px !important; }
+            .page-wrap{ padding: 0 0 90px !important; }
 
-            /* Hero card — light glass with purple→gold accent strip */
+            /* ── Hero card — dark glass with gold strip ── */
             .account-hero{
-                padding: 22px 20px !important;
-                background: rgba(255,255,255,.88) !important;
-                -webkit-backdrop-filter: blur(20px) saturate(140%);
-                backdrop-filter: blur(20px) saturate(140%);
-                border: 1px solid rgba(232,224,245,.85) !important;
-                border-radius: 24px !important;
-                box-shadow: 0 16px 38px rgba(45,27,105,.12) !important;
+                padding: 0 !important;
+                background: linear-gradient(160deg, #130630 0%, #1c0b42 60%, #120520 100%) !important;
+                border: none !important;
+                border-radius: 0 !important;
+                box-shadow: 0 8px 32px rgba(0,0,0,.6) !important;
                 position: relative;
                 overflow: hidden;
             }
             .account-hero::before{
                 content: ""; position: absolute;
-                top: 0; left: 0; right: 0; height: 4px !important;
-                background: linear-gradient(90deg, #2D1B69, #6B4EAF, #FFD700, #6B4EAF, #2D1B69) !important;
-                background-size: 200% 100%;
-                animation: cmpDividerFlow 6s linear infinite;
+                top: 0; left: 0; right: 0; height: 3px !important;
+                background: linear-gradient(90deg, #ff4e00, #F2B705, #fff, #F2B705, #ff4e00) !important;
+                background-size: 300% 100%;
+                animation: cmpDividerFlow 4s linear infinite;
             }
+            .account-hero::after{ display: none; }
 
-            .account-top{ margin-bottom: 16px; }
+            /* ── Avatar + name block ── */
+            .account-top{
+                padding: 28px 20px 0 !important;
+                margin-bottom: 0 !important;
+                flex-direction: column;
+                align-items: center;
+            }
             .account-link{
                 width: 100%;
-                padding: 16px !important;
+                padding: 0 !important;
                 flex-direction: column;
-                gap: 12px;
+                gap: 10px;
                 align-items: center;
                 text-align: center;
-                background: linear-gradient(135deg, rgba(107,78,175,.08), rgba(255,215,0,.06)) !important;
-                border: 1px solid rgba(232,224,245,.85) !important;
-                border-radius: 18px !important;
-                box-shadow: 0 8px 22px rgba(45,27,105,.06) !important;
-                color: #2D1B69 !important;
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+                color: #fff !important;
             }
-            .account-link:hover{
-                color: #2D1B69 !important;
-                background: linear-gradient(135deg, rgba(255,215,0,.16), rgba(107,78,175,.1)) !important;
-                border-color: rgba(255,215,0,.5) !important;
-                transform: translateY(-2px);
-            }
+            .account-link:hover{ color:#fff !important; transform: none; }
 
             .account-avatar{
-                width: 76px !important; height: 76px !important;
+                width: 88px !important; height: 88px !important;
                 border-radius: 50% !important;
-                background: linear-gradient(135deg, #2D1B69, #6B4EAF) !important;
-                color: #fff !important;
-                border: 3px solid #FFD700 !important;
-                box-shadow: 0 8px 18px rgba(45,27,105,.3) !important;
+                background: linear-gradient(135deg, #2D1B69 0%, #4A2C8A 100%) !important;
+                color: #F2B705 !important;
+                border: 3px solid #F2B705 !important;
+                box-shadow: 0 0 0 6px rgba(242,183,5,.15), 0 12px 28px rgba(0,0,0,.5) !important;
                 margin: 0 auto !important;
+                flex-shrink: 0;
             }
-            .account-avatar i{ font-size: 32px; }
+            .account-avatar i{ font-size: 38px; }
 
             .account-copy{ width: 100%; }
             .account-kicker{
-                background: rgba(255,215,0,.18) !important;
-                color: #8a6d00 !important;
-                border: 1px solid rgba(255,215,0,.4) !important;
-                font-size: 10.5px !important;
-                letter-spacing: .14em !important;
-                padding: 5px 11px !important;
+                background: rgba(242,183,5,.15) !important;
+                color: #F2B705 !important;
+                border: 1px solid rgba(242,183,5,.35) !important;
+                font-size: 10px !important;
+                letter-spacing: .18em !important;
+                padding: 4px 12px !important;
                 border-radius: 999px !important;
             }
             .account-copy h1{
                 font-family:'Poppins',sans-serif !important;
-                font-size: 1.6rem !important;
-                font-weight: 800 !important;
-                color: transparent !important;
-                background: linear-gradient(135deg, #1A0A3E 0%, #4A2C8A 60%, #6B4EAF 100%);
-                -webkit-background-clip: text; background-clip: text;
-                -webkit-text-fill-color: transparent;
-                text-transform: none !important;
-                letter-spacing: -.01em !important;
+                font-size: 1.75rem !important;
+                font-weight: 900 !important;
+                color: #ffffff !important;
+                background: none !important;
+                -webkit-background-clip: unset; background-clip: unset;
+                -webkit-text-fill-color: #ffffff;
+                text-transform: uppercase !important;
+                letter-spacing: .04em !important;
                 word-break: break-word;
-                margin-bottom: 6px !important;
+                margin-bottom: 4px !important;
             }
             .account-email{
-                color: #6B6280 !important;
-                font-size: .82rem !important;
+                color: rgba(255,255,255,.52) !important;
+                font-size: .78rem !important;
                 font-weight: 500 !important;
                 letter-spacing: 0 !important;
                 text-transform: none !important;
             }
 
             .account-arrow{
-                width: 100%;
-                justify-content: center;
-                padding: 12px !important;
-                font-size: .82rem !important;
-                font-family:'Poppins',sans-serif;
-                font-weight: 700 !important;
-                background: linear-gradient(135deg, #FFD700, #FFC107) !important;
-                color: #1A0A3E !important;
-                border: none !important;
-                border-radius: 12px !important;
-                box-shadow: 0 8px 20px rgba(255,193,7,.4) !important;
-                margin-top: 4px;
-                letter-spacing: .04em;
-                text-transform: none;
-            }
-            .account-link:hover .account-arrow{
-                background: linear-gradient(135deg, #2D1B69, #4A2C8A) !important;
-                color: #FFD700 !important;
-                box-shadow: 0 10px 24px rgba(45,27,105,.35) !important;
+                display: none !important;
             }
 
-            /* Utility + nav buttons stack full width */
-            .utility-actions, .account-actions-nav{
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-                margin-bottom: 14px;
-                padding: 0;
+            /* ── Quick-stats row below avatar ── */
+            .account-top::after{
+                content: '';
+                display: block;
+                width: 48px; height: 2px;
+                background: linear-gradient(90deg, #F2B705, #ff4e00);
+                border-radius: 4px;
+                margin: 10px auto 0;
+            }
+
+            /* ── Utility buttons — row of 2 ── */
+            .utility-actions{
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 10px !important;
+                margin: 20px 16px 0 !important;
+                padding: 0 !important;
                 background: transparent !important;
                 border: none !important;
-                box-shadow: none !important;
             }
-            .utility-btn, .nav-pill{
-                width: 100%;
-                padding: 13px 16px !important;
+            .utility-btn{
+                padding: 12px 10px !important;
                 justify-content: center;
                 font-family:'Poppins',sans-serif !important;
                 font-weight: 700 !important;
-                font-size: .82rem !important;
+                font-size: .78rem !important;
                 letter-spacing: .04em !important;
-                text-transform: none !important;
+                text-transform: uppercase !important;
                 border-radius: 12px !important;
                 margin: 0;
             }
-            .utility-home{
-                background: rgba(255,255,255,.85) !important;
-                color: #2D1B69 !important;
-                border: 1px solid rgba(107,78,175,.25) !important;
-                box-shadow: 0 6px 16px rgba(45,27,105,.06) !important;
-            }
-            .utility-home:hover{
-                background: linear-gradient(135deg, #2D1B69, #4A2C8A) !important;
-                color: #FFD700 !important;
-                border-color: transparent !important;
-            }
+            .utility-home{ display: none !important; }
             .utility-details{
-                background: linear-gradient(135deg, #FFD700, #FFC107) !important;
-                color: #1A0A3E !important;
+                background: linear-gradient(135deg, #F2B705, #ff8c00) !important;
+                color: #0a0014 !important;
                 border: none !important;
-                box-shadow: 0 10px 22px rgba(255,193,7,.4) !important;
+                box-shadow: 0 8px 20px rgba(242,183,5,.35) !important;
             }
-            .utility-details:hover{
-                color: #1A0A3E !important;
-                filter: brightness(1.04);
-                box-shadow: 0 14px 28px rgba(255,193,7,.55) !important;
+            .utility-logout{
+                background: rgba(239,68,68,.12) !important;
+                color: #ff6b6b !important;
+                border: 1px solid rgba(239,68,68,.3) !important;
             }
-            .nav-pill{
-                background: rgba(255,255,255,.85) !important;
-                color: #2D1B69 !important;
-                border: 1px solid rgba(107,78,175,.25) !important;
-                box-shadow: 0 6px 16px rgba(45,27,105,.06) !important;
-            }
-            .nav-pill:hover{
-                background: linear-gradient(135deg, #2D1B69, #4A2C8A) !important;
-                color: #FFD700 !important;
-                border-color: transparent !important;
-                box-shadow: 0 10px 22px rgba(45,27,105,.3) !important;
-            }
-            .nav-pill-seller{
-                background: linear-gradient(135deg, #FFD700, #FFC107) !important;
-                color: #1A0A3E !important;
-                border: none !important;
-                box-shadow: 0 10px 22px rgba(255,193,7,.4) !important;
-            }
-            .nav-pill-seller:hover{
-                color: #1A0A3E !important;
-                filter: brightness(1.04);
-                box-shadow: 0 14px 28px rgba(255,193,7,.55) !important;
+            .utility-logout:hover{
+                background: #ef4444 !important;
+                color: #fff !important;
             }
 
-            /* Panels — light glass */
+            /* ── Nav pills ── */
+            .account-actions-nav{
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 10px !important;
+                margin: 14px 16px 20px !important;
+                padding: 0 !important;
+                background: transparent !important;
+                border: none !important;
+            }
+            .nav-pill{
+                width: 100%;
+                padding: 12px 10px !important;
+                justify-content: center;
+                font-family:'Poppins',sans-serif !important;
+                font-weight: 700 !important;
+                font-size: .78rem !important;
+                letter-spacing: .04em !important;
+                text-transform: uppercase !important;
+                border-radius: 12px !important;
+                background: rgba(255,255,255,.06) !important;
+                color: rgba(255,255,255,.85) !important;
+                border: 1px solid rgba(255,255,255,.1) !important;
+                box-shadow: none !important;
+            }
+            .nav-pill:hover{
+                background: rgba(242,183,5,.15) !important;
+                color: #F2B705 !important;
+                border-color: rgba(242,183,5,.3) !important;
+            }
+            .nav-pill-seller{
+                background: linear-gradient(135deg, #F2B705, #ff8c00) !important;
+                color: #0a0014 !important;
+                border: none !important;
+                box-shadow: 0 8px 18px rgba(242,183,5,.3) !important;
+            }
+            .nav-pill-seller:hover{ color: #0a0014 !important; filter: brightness(1.05); }
+
+            /* ── Panels — dark glass ── */
             .panel{
-                background: rgba(255,255,255,.85) !important;
-                -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
-                border: 1px solid rgba(232,224,245,.85) !important;
-                border-radius: 22px !important;
-                box-shadow: 0 14px 32px rgba(45,27,105,.08) !important;
-                padding: 22px 18px !important;
+                background: rgba(255,255,255,.04) !important;
+                -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+                border: 1px solid rgba(255,255,255,.08) !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                padding: 22px 16px !important;
+                margin: 0 !important;
             }
             .panel-title h3{
-                color: #2D1B69 !important;
+                color: #ffffff !important;
                 font-family:'Poppins',sans-serif !important;
                 font-weight: 800 !important;
-                font-size: 1.05rem !important;
+                font-size: 1rem !important;
             }
             .panel-copy, .product-sub, .step .desc, .foot-note{
-                color: #6B6280 !important;
+                color: rgba(255,255,255,.45) !important;
             }
             .panel-head{ flex-direction: column; align-items: stretch; gap: 12px; }
             .panel-link{
                 width: 100%;
                 justify-content: center;
-                background: linear-gradient(135deg, #2D1B69, #4A2C8A) !important;
-                color: #FFD700 !important;
-                border: none !important;
-                border-radius: 999px !important;
+                background: rgba(242,183,5,.12) !important;
+                color: #F2B705 !important;
+                border: 1px solid rgba(242,183,5,.25) !important;
+                border-radius: 10px !important;
                 padding: 11px 16px !important;
-                font-family:'Poppins',sans-serif;
                 font-weight: 700 !important;
-                font-size: .8rem !important;
-                box-shadow: 0 8px 18px rgba(45,27,105,.25) !important;
+                font-size: .78rem !important;
+                box-shadow: none !important;
             }
             .panel-link:hover{
-                background: linear-gradient(135deg, #FFD700, #FFC107) !important;
-                color: #1A0A3E !important;
-                border-color: transparent !important;
-                box-shadow: 0 12px 26px rgba(255,193,7,.45) !important;
+                background: #F2B705 !important;
+                color: #0a0014 !important;
+                border-color: #F2B705 !important;
             }
 
-            /* Tracker — horizontal scrollable cards on mobile */
+            /* ── Tracker steps — horizontal dark cards ── */
             .steps{
-                display: flex;
-                flex-wrap: nowrap;
-                overflow-x: auto;
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
                 -webkit-overflow-scrolling: touch;
-                gap: 12px;
-                padding: 4px 4px 14px;
-                margin: 0 -8px;
-                padding-left: 8px;
-                padding-right: 8px;
+                gap: 10px !important;
+                padding: 4px 2px 14px !important;
+                margin: 0 !important;
                 scrollbar-width: none;
             }
             .steps::-webkit-scrollbar{ display: none; }
             .connector{ display: none; }
 
             button.step, .step{
-                flex: 0 0 116px !important;
-                width: 116px !important;
-                min-width: 116px !important;
-                padding: 14px 8px 12px !important;
-                border-radius: 16px !important;
-                background: rgba(255,255,255,.92) !important;
-                border: 1px solid rgba(232,224,245,.85) !important;
-                box-shadow: 0 6px 14px rgba(45,27,105,.06);
-                transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+                flex: 0 0 100px !important;
+                width: 100px !important;
+                min-width: 100px !important;
+                padding: 14px 6px 12px !important;
+                border-radius: 14px !important;
+                background: rgba(255,255,255,.05) !important;
+                border: 1px solid rgba(255,255,255,.1) !important;
+                box-shadow: none !important;
+                transition: transform .2s ease, border-color .2s ease;
             }
             .step:hover{
-                background: rgba(255,255,255,.96) !important;
-                border-color: rgba(255,215,0,.45) !important;
+                background: rgba(255,255,255,.09) !important;
+                border-color: rgba(242,183,5,.35) !important;
                 transform: translateY(-2px);
-                box-shadow: 0 10px 22px rgba(45,27,105,.1);
             }
             .step-active{
-                background: linear-gradient(135deg, rgba(255,215,0,.16), rgba(107,78,175,.12)) !important;
-                border-color: rgba(255,215,0,.5) !important;
-                box-shadow: 0 10px 22px rgba(255,193,7,.18);
+                background: linear-gradient(160deg, rgba(242,183,5,.18), rgba(107,78,175,.14)) !important;
+                border-color: rgba(242,183,5,.45) !important;
+                box-shadow: 0 6px 18px rgba(242,183,5,.12) !important;
             }
             .node{
-                width: 44px !important; height: 44px !important;
+                width: 42px !important; height: 42px !important;
                 border-radius: 50% !important;
                 margin: 0 auto;
             }
-            .node i{ font-size: 18px; }
+            .node-pending{ background:rgba(242,183,5,.15) !important; border:2px solid rgba(242,183,5,.35) !important; }
+            .node-pending i{ color:#F2B705 !important; }
+            .node-placed{ background:rgba(107,78,175,.15) !important; border:2px solid rgba(107,78,175,.35) !important; }
+            .node-placed i{ color:#9c74e8 !important; }
+            .node-campus{ background:rgba(59,130,246,.15) !important; border:2px solid rgba(59,130,246,.35) !important; }
+            .node-campus i{ color:#60a5fa !important; }
+            .node-delivered{ background:rgba(40,167,69,.15) !important; border:2px solid rgba(40,167,69,.35) !important; }
+            .node-delivered i{ color:#4ade80 !important; }
+            .node-received{ background:rgba(20,184,166,.15) !important; border:2px solid rgba(20,184,166,.35) !important; }
+            .node-received i{ color:#2dd4bf !important; }
+            .node i{ font-size: 17px; }
             .step .name{
-                color: #2D1B69 !important;
+                color: rgba(255,255,255,.85) !important;
                 font-family:'Poppins',sans-serif !important;
                 font-weight: 700 !important;
-                font-size: .76rem !important;
+                font-size: .7rem !important;
                 margin-top: 8px !important;
                 letter-spacing: 0 !important;
                 text-transform: none !important;
             }
             .step .desc{ display: none; }
 
-            /* Product cards — light glass, full-width */
+            /* ── Product stack — 2 columns ── */
+            .product-stack{
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 10px !important;
+            }
+
+            /* ── Product cards — dark ── */
             .product-card{
                 flex-direction: column;
                 align-items: stretch;
-                gap: 14px;
-                padding: 16px !important;
-                background: rgba(255,255,255,.92) !important;
-                border: 1px solid rgba(232,224,245,.85) !important;
-                border-radius: 18px !important;
-                box-shadow: 0 8px 22px rgba(45,27,105,.06) !important;
+                gap: 10px;
+                padding: 12px !important;
+                background: rgba(255,255,255,.05) !important;
+                border: 1px solid rgba(255,255,255,.08) !important;
+                border-radius: 14px !important;
+                box-shadow: none !important;
                 position: relative;
                 overflow: hidden;
             }
@@ -1291,28 +1303,37 @@
                 content: ""; position: absolute;
                 left: 0; top: 0; bottom: 0;
                 width: 3px;
-                background: linear-gradient(180deg, #6B4EAF, #FFD700);
-                border-radius: 18px 0 0 18px;
+                background: linear-gradient(180deg, #F2B705, #ff4e00);
+                border-radius: 14px 0 0 14px;
             }
             .product-main{ width: 100%; }
             .product-eyebrow{
-                background: rgba(255,215,0,.16) !important;
-                color: #8a6d00 !important;
-                border: 1px solid rgba(255,215,0,.35);
-                font-family:'Poppins',sans-serif;
+                background: rgba(242,183,5,.12) !important;
+                color: #F2B705 !important;
+                border: 1px solid rgba(242,183,5,.25) !important;
                 font-weight: 700 !important;
-                font-size: .68rem !important;
-                letter-spacing: .08em !important;
-                padding: 5px 11px !important;
+                font-size: .62rem !important;
+                letter-spacing: .04em !important;
+                padding: 3px 8px !important;
                 border-radius: 999px !important;
+                display: inline-block;
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
             .product-title{
-                color: #2D1B69 !important;
-                font-family:'Poppins',sans-serif;
-                font-weight: 800 !important;
-                font-size: .98rem !important;
+                color: #ffffff !important;
+                font-family:'Poppins',sans-serif !important;
+                font-weight: 700 !important;
+                font-size: .82rem !important;
                 line-height: 1.3 !important;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
             }
+            .product-sub{ color: rgba(255,255,255,.45) !important; }
             .product-actions{
                 width: 100%;
                 display: flex;
@@ -1322,102 +1343,114 @@
             .status-pill{
                 width: 100%;
                 justify-content: center;
-                padding: 9px 12px !important;
+                padding: 8px 12px !important;
                 border-radius: 999px !important;
-                font-family:'Poppins',sans-serif;
                 font-weight: 700 !important;
-                font-size: .76rem !important;
-                letter-spacing: .04em !important;
+                font-size: .73rem !important;
                 text-transform: none !important;
-                border: 1px solid transparent;
             }
+            .status-pill-placed{ background:rgba(107,78,175,.2) !important; color:#c4adff !important; }
+            .status-pill-campus{ background:rgba(59,130,246,.2) !important; color:#93c5fd !important; }
+            .status-pill-delivered{ background:rgba(40,167,69,.2) !important; color:#86efac !important; }
+            .status-pill-pending{ background:rgba(242,183,5,.2) !important; color:#F2B705 !important; }
+            .status-pill-received{ background:rgba(20,184,166,.2) !important; color:#5eead4 !important; }
+
             .chat-btn, .rate-btn, .product-actions .btn{
                 width: 100%;
                 justify-content: center;
-                padding: 11px 14px !important;
-                border-radius: 12px !important;
-                font-family:'Poppins',sans-serif !important;
+                padding: 10px 14px !important;
+                border-radius: 10px !important;
                 font-weight: 700 !important;
-                font-size: .82rem !important;
-                letter-spacing: .04em !important;
+                font-size: .78rem !important;
+                letter-spacing: .03em !important;
                 text-transform: none !important;
                 margin: 0 !important;
             }
             .chat-btn, .product-actions .btn-outline-dark{
-                background: rgba(45,27,105,.06) !important;
-                color: #2D1B69 !important;
-                border: 1px solid rgba(107,78,175,.25) !important;
+                background: rgba(255,255,255,.06) !important;
+                color: rgba(255,255,255,.8) !important;
+                border: 1px solid rgba(255,255,255,.15) !important;
                 box-shadow: none !important;
             }
             .chat-btn:hover, .product-actions .btn-outline-dark:hover{
-                background: linear-gradient(135deg, #2D1B69, #4A2C8A) !important;
-                color: #FFD700 !important;
-                border-color: transparent !important;
+                background: rgba(242,183,5,.15) !important;
+                color: #F2B705 !important;
+                border-color: rgba(242,183,5,.3) !important;
             }
             .product-actions form{ width: 100%; margin: 0; display: block; }
             .product-actions form .btn{
-                background: linear-gradient(135deg, #FFD700, #FFC107) !important;
-                color: #1A0A3E !important;
+                background: linear-gradient(135deg, #F2B705, #ff8c00) !important;
+                color: #0a0014 !important;
                 border: none !important;
-                box-shadow: 0 8px 18px rgba(255,193,7,.4) !important;
+                box-shadow: 0 6px 16px rgba(242,183,5,.3) !important;
             }
             .rate-btn{
-                background: linear-gradient(135deg, #2D1B69, #4A2C8A) !important;
-                color: #FFD700 !important;
-                border: none !important;
-                box-shadow: 0 8px 18px rgba(45,27,105,.25) !important;
+                background: rgba(242,183,5,.12) !important;
+                color: #F2B705 !important;
+                border: 1px solid rgba(242,183,5,.3) !important;
             }
             .rate-btn:hover{
-                background: linear-gradient(135deg, #FFD700, #FFC107) !important;
-                color: #1A0A3E !important;
+                background: #F2B705 !important;
+                color: #0a0014 !important;
             }
 
             .review-form-wrap{
-                background: rgba(250,248,255,.7) !important;
-                border: 1px solid rgba(232,224,245,.85) !important;
-                border-radius: 16px !important;
+                background: rgba(255,255,255,.04) !important;
+                border: 1px solid rgba(255,255,255,.1) !important;
+                border-radius: 12px !important;
             }
             .review-form-wrap textarea{
-                border-radius: 12px !important;
-                border: 1px solid rgba(232,224,245,.85) !important;
-                background: #fff !important;
-                color: #2E2740 !important;
-                padding: 10px 14px !important;
+                border-radius: 8px !important;
+                border: 1px solid rgba(255,255,255,.12) !important;
+                background: rgba(255,255,255,.06) !important;
+                color: #e8e0f0 !important;
+                padding: 10px 12px !important;
             }
+            .review-form-wrap textarea::placeholder{ color: rgba(255,255,255,.3) !important; }
             .alert-review{
-                border-radius: 12px !important;
-                font-family:'Poppins',sans-serif;
+                border-radius: 10px !important;
                 font-weight: 700 !important;
-                font-size: .82rem !important;
-                letter-spacing: 0 !important;
+                font-size: .8rem !important;
                 text-transform: none !important;
-                padding: 12px 14px !important;
             }
 
             .empty-products{
-                background: rgba(255,255,255,.7) !important;
-                border: 2px dashed rgba(107,78,175,.3) !important;
-                border-radius: 18px !important;
+                background: rgba(255,255,255,.03) !important;
+                border: 1px dashed rgba(255,255,255,.15) !important;
+                border-radius: 14px !important;
                 padding: 22px 16px !important;
-                color: #6B6280 !important;
+                color: rgba(255,255,255,.4) !important;
             }
+            .empty-products .fw-bold{ color: rgba(255,255,255,.65) !important; }
 
             .reviewed-badge{
-                background: rgba(34,197,94,.12) !important;
-                color: #166534 !important;
-                border: 1px solid rgba(34,197,94,.35) !important;
-                font-family:'Poppins',sans-serif;
+                background: rgba(20,184,166,.15) !important;
+                color: #2dd4bf !important;
+                border: 1px solid rgba(20,184,166,.3) !important;
                 font-weight: 700 !important;
-                font-size: .76rem !important;
-                letter-spacing: 0 !important;
+                font-size: .73rem !important;
                 text-transform: none !important;
-                padding: 7px 12px !important;
+                padding: 6px 11px !important;
                 border-radius: 999px !important;
             }
+
+            .steps-hint{ color: rgba(255,255,255,.35) !important; }
+            .steps-hint i{ color: #F2B705 !important; }
+
+            .foot-note{ padding: 14px 16px 0 !important; }
+
+            .hub{ padding: 0 !important; }
+        }
+        @media (max-width: 767px) {
+            .page-wrap { padding: 0 0 90px !important; }
+            .account-hero { border-radius: 0 !important; }
+            .account-copy h1 { font-size: 1.5rem !important; }
         }
     </style>
 </head>
 <body>
+
+<div th:replace="fragments/header :: header"></div>
 
 <div class="page-wrap">
     <div class="hub">
@@ -1702,6 +1735,30 @@
 </div>
 
 <div th:replace="fragments/footer :: footer"></div>
+
+<!-- ══ Mobile Bottom Navigation Bar ══ -->
+<nav class="mob-bottom-nav d-lg-none" id="mobBottomNav" aria-label="Mobile navigation">
+    <a th:href="@{/index}" class="mob-nav-item">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+    </a>
+    <a th:href="@{/products}" class="mob-nav-item">
+        <i class="fas fa-search"></i>
+        <span>Browse</span>
+    </a>
+    <a th:href="@{/products}" class="mob-nav-item mob-nav-center">
+        <span class="mob-nav-center-btn"><i class="fas fa-store"></i></span>
+        <span>Shop</span>
+    </a>
+    <a th:href="@{/cart}" class="mob-nav-item">
+        <i class="fas fa-shopping-cart"></i>
+        <span>Cart</span>
+    </a>
+    <a th:href="@{/user/profile}" class="mob-nav-item mob-nav-active">
+        <i class="fas fa-user-circle"></i>
+        <span>Profile</span>
+    </a>
+</nav>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>

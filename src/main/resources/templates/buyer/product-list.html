@@ -129,8 +129,9 @@
         }
         @media (max-width: 1400px){.product-grid{grid-template-columns:repeat(4, minmax(0,1fr))}}
         @media (max-width: 1200px){.product-grid{grid-template-columns:repeat(3, minmax(0,1fr))}}
-        @media (max-width: 992px) {.product-grid{grid-template-columns:repeat(2, minmax(0,1fr))}}
-        @media (max-width: 576px) {.product-grid{grid-template-columns:repeat(2, minmax(0,1fr)); gap: 10px;}}
+        @media (max-width: 992px) {.product-grid{grid-template-columns:repeat(2, minmax(0,1fr)) !important; gap:12px !important;}}
+        @media (max-width: 767px) {.product-grid{grid-template-columns:repeat(2, minmax(0,1fr)) !important; gap:10px !important;}}
+        @media (max-width: 576px) {.product-grid{grid-template-columns:repeat(2, minmax(0,1fr)) !important; gap:8px !important;}}
 
         /* ── MOBILE polish (mobile-only; does not touch laptop layout) ── */
         @media (max-width: 767.98px){
@@ -172,10 +173,6 @@
             }
             .pagination .page-item{ margin: 0 !important; }
         }
-        @media (max-width: 360px){
-            .product-grid{ grid-template-columns: 1fr !important; gap: 14px; }
-        }
-
         /* Pagination */
         .pagination .page-link {
             background: rgba(255,255,255,0.05);
@@ -231,7 +228,7 @@
 
         <div class="col-12">
             <div class="product-grid" th:if="${page != null and !page.content.isEmpty()}">
-                <div th:each="p, stat : ${page.content}" data-aos="zoom-in" th:attr="data-aos-delay=${(stat.index % 5) * 50}">
+                <div th:each="p, stat : ${page.content}" data-aos="fade-up" th:attr="data-aos-delay=${(stat.index % 5) * 50}">
                     <div th:replace="fragments/product-card :: card(${p})"></div>
                 </div>
             </div>
@@ -261,6 +258,39 @@
 </div>
 
 <div th:replace="fragments/footer :: footer"></div>
+
+<!-- ══ Mobile Bottom Navigation Bar ══ -->
+<nav class="mob-bottom-nav d-lg-none" id="mobBottomNav" aria-label="Mobile navigation">
+    <a th:href="@{/index}" class="mob-nav-item">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+    </a>
+    <a th:href="@{/products}" class="mob-nav-item mob-nav-active">
+        <i class="fas fa-search"></i>
+        <span>Browse</span>
+    </a>
+    <a th:href="@{/products}" class="mob-nav-item mob-nav-center">
+        <span class="mob-nav-center-btn"><i class="fas fa-store"></i></span>
+        <span>Shop</span>
+    </a>
+    <a th:if="${session.userId != null}" th:href="@{/cart}" class="mob-nav-item">
+        <i class="fas fa-shopping-cart"></i>
+        <span>Cart</span>
+    </a>
+    <a th:unless="${session.userId != null}" th:href="@{/signin}" class="mob-nav-item">
+        <i class="fas fa-sign-in-alt"></i>
+        <span>Login</span>
+    </a>
+    <a th:if="${session.userId != null}" th:href="@{/user/profile}" class="mob-nav-item">
+        <i class="fas fa-user-circle"></i>
+        <span>Profile</span>
+    </a>
+    <a th:unless="${session.userId != null}" th:href="@{/}" class="mob-nav-item">
+        <i class="fas fa-info-circle"></i>
+        <span>About</span>
+    </a>
+</nav>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
 <script th:src="@{/lib/aos/aos.js}" defer></script>
