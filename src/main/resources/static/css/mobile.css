@@ -2713,9 +2713,12 @@
         overflow: visible !important;
     }
 
-    /* Mobile search results — escalate z-index, dark theme */
+    /* Mobile search results — full-width, dark theme, high z-index */
     #mobile-search-results.search-results {
         position: fixed !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: auto !important;
         z-index: 99999 !important;
         border-radius: 12px !important;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
@@ -2725,15 +2728,38 @@
         background: #0f0625 !important;
     }
 
+    /* .search-item is the class the JS generates — style it for dark theme */
+    #mobile-search-results.search-results .search-item {
+        color: rgba(255, 255, 255, 0.9) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+        background: transparent !important;
+    }
+    #mobile-search-results.search-results .search-item:hover {
+        background: rgba(242, 183, 5, 0.12) !important;
+        color: #F2B705 !important;
+    }
+    #mobile-search-results.search-results .search-title {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+    #mobile-search-results.search-results .search-price {
+        color: #F2B705 !important;
+        font-weight: 700 !important;
+    }
+    #mobile-search-results.search-results .search-empty {
+        color: rgba(255, 255, 255, 0.55) !important;
+        padding: 14px 16px !important;
+        font-size: 13px !important;
+    }
+
+    /* legacy .search-result-item selector kept for compatibility */
     #mobile-search-results.search-results .search-result-item {
         color: #fff !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
     }
-
     #mobile-search-results.search-results .search-result-item:hover {
         background: rgba(242, 183, 5, 0.12) !important;
     }
-
     #mobile-search-results.search-results .search-result-item span,
     #mobile-search-results.search-results .search-result-item p,
     #mobile-search-results.search-results .search-result-item strong,

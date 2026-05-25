@@ -52,7 +52,7 @@ public class Product {
     private BigDecimal price;
 
     @NotNull
-    @Min(1)
+    @Min(0)
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 

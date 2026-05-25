@@ -4,125 +4,561 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Confirmed — Campus Marketplace</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
-    <link th:href="@{/css/style.css}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
-        body{background:linear-gradient(180deg,#f9fafb 0%,#fff 45%,#f6f3ff 100%);font-family:'Poppins',sans-serif}
+        /* ── RESET ─────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .confirm-container{max-width:640px;margin:60px auto;text-align:center;padding:0 20px}
+        /* ── SCENE ─────────────────────────────────────── */
+        html, body {
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            padding: 14px;
+            background:
+                radial-gradient(ellipse 60% 50% at 20% 20%, rgba(75,46,131,0.09) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 60% at 80% 80%, rgba(255,179,71,0.1) 0%, transparent 60%),
+                linear-gradient(160deg, #f4f0fb 0%, #fff9f2 55%, #eef1ff 100%);
+        }
 
-        /* Success Icon */
-        .confirm-icon{width:100px;height:100px;border-radius:50%;margin:0 auto 24px;display:flex;align-items:center;justify-content:center;
-            background:linear-gradient(135deg,rgba(40,167,69,0.15),rgba(16,185,129,0.15));
-            box-shadow:0 12px 30px rgba(40,167,69,0.12);animation:popIn .5s cubic-bezier(.22,1,.36,1)}
-        .confirm-icon i{font-size:48px;color:#28a745}
-        @keyframes popIn{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+        /* ── OUTER CARD ────────────────────────────────── */
+        .outer-card {
+            width: min(1180px, calc(100vw - 28px));
+            height: min(690px, calc(100vh - 28px));
+            background: #ffffff;
+            border-radius: 26px;
+            box-shadow:
+                0 4px 6px rgba(0,0,0,0.02),
+                0 20px 60px rgba(75,46,131,0.11),
+                0 40px 100px rgba(75,46,131,0.07);
+            display: flex;
+            flex-direction: column;
+            padding: 18px;
+            gap: 14px;
+            animation: outerIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        @keyframes outerIn {
+            from { opacity: 0; transform: translateY(32px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0)    scale(1);    }
+        }
 
-        .confirm-title{font-size:28px;font-weight:800;color:#2b2b37;margin-bottom:8px}
-        .confirm-subtitle{font-size:15px;color:#888;margin-bottom:32px}
+        /* ── TOP BAR (logo) ────────────────────────────── */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            padding: 0 4px;
+        }
+        .brand-icon {
+            width: 28px; height: 28px;
+            background: #FFB347;
+            border-radius: 7px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .brand-icon i { color: #fff; font-size: 14px; }
+        .brand-name { font-size: 13px; font-weight: 700; color: #2b1a5e; }
+        .brand-name em { font-style: normal; color: #FFB347; }
+        .brand-sep {
+            margin-left: auto;
+            font-size: 10.5px;
+            color: rgba(43,26,94,0.28);
+            letter-spacing: 0.05em;
+        }
 
-        /* Order Detail Card */
-        .confirm-card{background:#fff;border-radius:18px;padding:28px;box-shadow:0 8px 28px rgba(17,24,39,0.06);text-align:left;margin-bottom:24px}
-        .confirm-card h6{font-weight:700;color:#2b2b37;font-size:16px;margin-bottom:16px}
-        .confirm-card h6 i{color:#ffb347;margin-right:8px}
-        .confirm-row{display:flex;justify-content:space-between;padding:8px 0;font-size:14px;color:#555;border-bottom:1px solid rgba(75,46,131,0.05)}
-        .confirm-row:last-child{border-bottom:none}
-        .confirm-row .label{color:#888}
-        .confirm-row .value{font-weight:600;color:#2b2b37}
-        .confirm-total{display:flex;justify-content:space-between;padding:14px 0 0;font-size:20px;font-weight:800;color:#4B2E83;border-top:2px solid rgba(75,46,131,0.08)}
+        /* ── INNER GRID ────────────────────────────────── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            flex: 1;
+            min-height: 0;
+        }
 
-        /* Status Badges */
-        .badge-paid{background:rgba(40,167,69,0.12);color:#28a745;font-weight:600;padding:5px 14px;border-radius:999px;font-size:12px}
-        .badge-pending{background:rgba(255,179,71,0.15);color:#e6930a;font-weight:600;padding:5px 14px;border-radius:999px;font-size:12px}
+        /* ── BORDER WRAPPER: LEFT (rotating conic gradient) */
+        .left-border {
+            position: relative;
+            border-radius: 20px;
+            padding: 2.5px;
+            overflow: hidden;
+            isolation: isolate;
+        }
+        .left-border::before {
+            content: '';
+            position: absolute;
+            /* 200%×200% square centered, rotates to sweep all edges */
+            width: 200%; height: 200%;
+            top: -50%; left: -50%;
+            background: conic-gradient(
+                from 0deg,
+                #4B2E83  0deg,
+                #7c4dff 50deg,
+                #c084fc 100deg,
+                #FFB347 160deg,
+                #ff8c00 210deg,
+                #ff6b9d 270deg,
+                #4B2E83 360deg
+            );
+            animation: spinConic 5s linear infinite;
+            z-index: -1;
+        }
+        @keyframes spinConic { to { transform: rotate(360deg); } }
 
-        /* Items list */
-        .confirm-item{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid rgba(75,46,131,0.04)}
-        .confirm-item:last-child{border-bottom:none}
-        .confirm-item-img{width:50px;height:50px;border-radius:8px;overflow:hidden;flex-shrink:0;margin-right:12px;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
-        .confirm-item-img img{width:100%;height:100%;object-fit:cover}
-        .confirm-item-title{font-weight:600;font-size:13px;color:#2b2b37}
-        .confirm-item-meta{font-size:11px;color:#888}
-        .confirm-item-price{font-weight:700;font-size:14px;color:#4B2E83;white-space:nowrap;margin-left:auto}
+        /* ── BORDER WRAPPER: RIGHT (shifting amber gradient) */
+        .right-border {
+            position: relative;
+            border-radius: 13px;
+            padding: 2px;
+            overflow: hidden;
+            isolation: isolate;
+        }
+        .right-border::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, #FFB347, #ff8c00, #f97316, #fbbf24, #FFB347);
+            background-size: 300% 300%;
+            animation: shiftAmber 2.8s ease-in-out infinite;
+            z-index: -1;
+        }
+        @keyframes shiftAmber {
+            0%, 100% { background-position: 0% 50%; }
+            50%       { background-position: 100% 50%; }
+        }
 
-        /* Action Buttons */
-        .btn-view-orders{background:#4B2E83;color:#fff;border:none;padding:12px 32px;border-radius:999px;font-weight:600;font-size:15px;
-            text-decoration:none;display:inline-block;transition:transform .2s,box-shadow .2s;box-shadow:0 8px 20px rgba(75,46,131,0.2)}
-        .btn-view-orders:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(75,46,131,0.3);color:#fff;text-decoration:none}
-        .btn-continue-shop{color:#4B2E83;font-weight:600;font-size:14px;text-decoration:none;margin-left:20px}
-        .btn-continue-shop:hover{color:#ffb347;text-decoration:none}
+        /* ── INNER CARDS ───────────────────────────────── */
+        .left-card {
+            position: relative;
+            height: 100%;
+            background: linear-gradient(155deg, #f8f5ff 0%, #f1ecff 100%);
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 22px;
+            overflow: hidden;
+        }
+        .right-card {
+            position: relative;
+            height: 100%;
+            background: #fffdf8;
+            border-radius: 11px;
+            display: flex;
+            flex-direction: column;
+            padding: 18px 20px;
+            overflow: hidden;
+        }
+
+        /* ── CARD HEAD ROW ──────────────────────────────── */
+        .ch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 12px;
+            margin-bottom: 14px;
+            flex-shrink: 0;
+        }
+        .ch.left-ch  { border-bottom: 1px solid rgba(75,46,131,0.08); }
+        .ch.right-ch { border-bottom: 1px solid rgba(255,179,71,0.14); }
+
+        .ch-ico {
+            width: 26px; height: 26px;
+            border-radius: 7px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        .ch-ico.pur { background: rgba(75,46,131,0.1); color: #4B2E83; }
+        .ch-ico.amb { background: rgba(255,179,71,0.16); color: #c97000; }
+
+        .ch-lbl {
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+        }
+        .ch-lbl.pur { color: rgba(75,46,131,0.48); }
+        .ch-lbl.amb { color: rgba(180,100,0,0.52); }
+
+        /* ── SUCCESS BLOCK ──────────────────────────────── */
+        .success-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding-bottom: 14px;
+            margin-bottom: 14px;
+            border-bottom: 1px dashed rgba(75,46,131,0.1);
+            flex-shrink: 0;
+        }
+
+        /* Checkmark with rings */
+        .ck-shell {
+            position: relative;
+            width: 60px; height: 60px;
+            margin-bottom: 11px;
+        }
+        /* Expanding rings */
+        .ck-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1.5px solid rgba(75,46,131,0.2);
+            top: 50%; left: 50%;
+            transform: translate(-50%,-50%) scale(0.5);
+            opacity: 0;
+        }
+        .ck-ring-a {
+            width: 76px; height: 76px;
+            animation: expandRing 0.8s ease-out 0.5s forwards;
+        }
+        .ck-ring-b {
+            width: 96px; height: 96px;
+            animation: expandRing 1s ease-out 0.68s forwards;
+        }
+        @keyframes expandRing {
+            0%   { transform: translate(-50%,-50%) scale(0.4); opacity: 0; }
+            50%  { opacity: 0.7; }
+            100% { transform: translate(-50%,-50%) scale(1); opacity: 0; }
+        }
+        .ck-circle {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(140deg, #22c55e 0%, #15803d 100%);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 6px 18px rgba(34,197,94,0.32);
+            animation: ckPop 0.55s cubic-bezier(0.34,1.56,0.64,1) 0.15s both;
+        }
+        .ck-circle i { font-size: 30px; color: #fff; }
+        @keyframes ckPop {
+            from { transform: scale(0) rotate(-15deg); opacity: 0; }
+            to   { transform: scale(1) rotate(0deg);  opacity: 1; }
+        }
+
+        .conf-title  { font-size: 19px; font-weight: 800; color: #2b1a5e; margin-bottom: 3px; }
+        .conf-sub    { font-size: 11px; color: rgba(43,26,94,0.4); line-height: 1.5; }
+
+        /* ── DETAIL ROWS ────────────────────────────────── */
+        .detail-rows {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 3px;
+            overflow: hidden;
+        }
+        .dr {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 7px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            gap: 8px;
+            opacity: 0;
+            animation: slideFromLeft 0.38s ease forwards;
+        }
+        .dr:nth-child(1) { background: rgba(75,46,131,0.04); animation-delay: 0.52s; }
+        .dr:nth-child(2) { background: transparent;           animation-delay: 0.67s; }
+        .dr:nth-child(3) { background: rgba(75,46,131,0.04); animation-delay: 0.82s; }
+        .dr:nth-child(4) { background: transparent;           animation-delay: 0.97s; }
+        @keyframes slideFromLeft {
+            from { opacity: 0; transform: translateX(-10px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        .dr-lbl { color: rgba(43,26,94,0.4); white-space: nowrap; flex-shrink: 0; }
+        .dr-val { font-weight: 600; color: #2b1a5e; text-align: right; }
+        .dr-val.mono {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: rgba(43,26,94,0.48);
+            letter-spacing: 0.04em;
+        }
+
+        /* Pills */
+        .pill {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 9px; border-radius: 999px;
+            font-size: 10.5px; font-weight: 600;
+        }
+        .pill.paid {
+            background: rgba(34,197,94,0.1);
+            border: 1px solid rgba(34,197,94,0.22);
+            color: #15803d;
+        }
+        .pill.paid::before {
+            content: '';
+            width: 5px; height: 5px; border-radius: 50%;
+            background: #22c55e;
+            animation: livePulse 2s ease-in-out infinite;
+        }
+        @keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
+        .pill.pending {
+            background: rgba(255,179,71,0.1);
+            border: 1px solid rgba(255,179,71,0.28);
+            color: #b45309;
+        }
+
+        /* ── ITEMS LIST ─────────────────────────────────── */
+        .items-list {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            overflow: hidden;
+        }
+
+        .o-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 10px;
+            border-radius: 10px;
+            background: rgba(255,179,71,0.06);
+            border: 1px solid rgba(255,179,71,0.12);
+            flex-shrink: 0;
+            opacity: 0;
+            animation: slideFromRight 0.38s ease forwards;
+        }
+        .o-item:nth-child(1) { animation-delay: 0.52s; }
+        .o-item:nth-child(2) { animation-delay: 0.7s; }
+        .o-item:nth-child(3) { animation-delay: 0.88s; }
+        .o-item:nth-child(4) { animation-delay: 1.06s; }
+        @keyframes slideFromRight {
+            from { opacity: 0; transform: translateX(10px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        .o-img {
+            width: 44px; height: 44px;
+            border-radius: 8px; overflow: hidden; flex-shrink: 0;
+            border: 1px solid rgba(255,179,71,0.18);
+            background: #fef3cd;
+        }
+        .o-img img { width: 100%; height: 100%; object-fit: cover; }
+
+        .o-info { flex: 1; min-width: 0; }
+        .o-name {
+            font-size: 12.5px; font-weight: 600; color: #2b1a5e;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            margin-bottom: 2px;
+        }
+        .o-meta { font-size: 10.5px; color: rgba(43,26,94,0.38); }
+        .o-price { font-size: 13px; font-weight: 700; color: #c97000; white-space: nowrap; }
+
+        /* Total */
+        .total-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 10px 0;
+            margin-top: 8px;
+            border-top: 1.5px solid rgba(255,179,71,0.16);
+            flex-shrink: 0;
+        }
+        .total-lbl {
+            font-size: 9.5px; font-weight: 700;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            color: rgba(43,26,94,0.32);
+        }
+        .total-amt {
+            font-size: 24px; font-weight: 800; color: #4B2E83;
+            letter-spacing: -0.01em;
+        }
+
+        /* ── ACTIONS BAR ────────────────────────────────── */
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+            opacity: 0;
+            animation: fadeUp 0.45s ease 0.9s forwards;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-primary {
+            flex: 1;
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+            padding: 13px 20px;
+            background: linear-gradient(135deg, #4B2E83, #6b41bf);
+            color: #fff; font-weight: 600; font-size: 13px;
+            border-radius: 11px; text-decoration: none; border: none; cursor: pointer;
+            box-shadow: 0 5px 18px rgba(75,46,131,0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(75,46,131,0.34);
+            color: #fff; text-decoration: none;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+            padding: 12px 20px;
+            background: transparent; color: rgba(43,26,94,0.48);
+            font-weight: 600; font-size: 13px;
+            border-radius: 11px; border: 1.5px solid rgba(75,46,131,0.13);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .btn-secondary:hover {
+            border-color: rgba(75,46,131,0.36);
+            color: #4B2E83;
+            background: rgba(75,46,131,0.04);
+            text-decoration: none;
+        }
+
+        /* ── MOBILE (portrait, fits screen) ────────────── */
+        @media (max-width: 620px) {
+            body { overflow-y: auto; align-items: flex-start; padding: 10px; }
+            html, body { height: auto; }
+
+            .outer-card {
+                width: 100%; height: auto;
+                padding: 14px; gap: 12px;
+                border-radius: 20px;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            /* Fixed heights for portrait fit */
+            .left-border { height: auto; }
+            .right-border { height: auto; }
+            .left-card, .right-card { height: auto; }
+
+            .success-block { padding-bottom: 10px; margin-bottom: 10px; }
+            .ck-shell { width: 52px; height: 52px; }
+            .ck-circle { width: 52px; height: 52px; }
+            .ck-circle i { font-size: 26px; }
+            .conf-title { font-size: 17px; }
+            .total-amt { font-size: 20px; }
+            .actions { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
 
-<div class="confirm-container">
+<div class="outer-card">
 
-    <!-- Success Icon -->
-    <div class="confirm-icon"><i class="bi bi-check-lg"></i></div>
-    <h2 class="confirm-title">Order Confirmed!</h2>
-    <p class="confirm-subtitle">Thank you for your purchase. Your order has been placed successfully.</p>
-
-    <!-- Order Info Card -->
-    <div class="confirm-card">
-        <h6><i class="bi bi-receipt"></i>Order Details</h6>
-        <div class="confirm-row">
-            <span class="label">Order Number</span>
-            <span class="value">#<span th:text="${order.orderId}">0</span></span>
-        </div>
-        <div class="confirm-row">
-            <span class="label">Date</span>
-            <span class="value" th:text="${#temporals.format(order.createdAt, 'dd MMM yyyy, hh:mm a')}">01 Jan 2026</span>
-        </div>
-        <div class="confirm-row">
-            <span class="label">Payment Status</span>
-            <span>
-                <span class="badge-paid" th:if="${order.status.name() == 'PAID'}"><i class="bi bi-check-circle mr-1"></i>Paid</span>
-                <span class="badge-pending" th:if="${order.status.name() == 'PENDING_PAYMENT'}"><i class="bi bi-hourglass-split mr-1"></i>Pending</span>
-            </span>
-        </div>
-        <div class="confirm-row" th:if="${payment != null and payment.providerReference != null}">
-            <span class="label">Transaction Ref</span>
-            <span class="value" th:text="${payment.providerReference}">TBP-xxx</span>
-        </div>
-        <div class="confirm-row" th:if="${order.status.name() == 'PAID' and payment == null}">
-            <span class="label">Payment Method</span>
-                <span class="info-value"><i class="bi bi-cash-stack mr-1"></i>Cash on Delivery</span>
-        </div>
+    <!-- ── TOP BAR ── -->
+    <div class="top-bar">
+        <div class="brand-icon"><i class="bi bi-lightning-fill"></i></div>
+        <span class="brand-name">UMT<em>MRKT</em></span>
+        <span class="brand-sep">Campus Marketplace</span>
     </div>
 
-    <!-- Items Card -->
-    <div class="confirm-card">
-        <h6><i class="bi bi-box-seam"></i>Items Ordered</h6>
-        <div th:each="item : ${order.orderItems}" class="confirm-item">
-            <div class="confirm-item-img">
-                <img th:if="${item.product.images != null and !#lists.isEmpty(item.product.images)}" th:src="${item.product.images.get(0).imageUrl}" alt="">
-                <img th:if="${item.product.images == null or #lists.isEmpty(item.product.images)}" th:src="@{/img/productplaceholder.png}" alt="">
+    <!-- ── TWO SUB-CARDS ── -->
+    <div class="cards-grid">
+
+        <!-- LEFT: Order Confirmed + Details -->
+        <div class="left-border">
+            <div class="left-card">
+
+                <!-- Card header -->
+                <div class="ch left-ch">
+                    <div class="ch-ico pur"><i class="bi bi-receipt"></i></div>
+                    <span class="ch-lbl pur">Order Details</span>
+                </div>
+
+                <!-- Success block -->
+                <div class="success-block">
+                    <div class="ck-shell">
+                        <div class="ck-ring ck-ring-a"></div>
+                        <div class="ck-ring ck-ring-b"></div>
+                        <div class="ck-circle"><i class="bi bi-check-lg"></i></div>
+                    </div>
+                    <div class="conf-title">Order Confirmed!</div>
+                    <div class="conf-sub">Your purchase has been placed successfully.</div>
+                </div>
+
+                <!-- Detail rows -->
+                <div class="detail-rows">
+                    <div class="dr">
+                        <span class="dr-lbl">Order Number</span>
+                        <span class="dr-val">#<span th:text="${order.orderId}">0</span></span>
+                    </div>
+                    <div class="dr">
+                        <span class="dr-lbl">Date</span>
+                        <span class="dr-val" th:text="${#temporals.format(order.createdAt, 'dd MMM yyyy, hh:mm a')}">01 Jan 2026</span>
+                    </div>
+                    <div class="dr">
+                        <span class="dr-lbl">Payment Status</span>
+                        <span>
+                            <span class="pill paid" th:if="${order.status.name() == 'PAID'}">Paid</span>
+                            <span class="pill pending" th:if="${order.status.name() == 'PENDING_PAYMENT'}">Pending</span>
+                        </span>
+                    </div>
+                    <div class="dr" th:if="${payment != null and payment.providerReference != null}">
+                        <span class="dr-lbl">Transaction Ref</span>
+                        <span class="dr-val mono" th:text="${payment.providerReference}">TBP-xxx</span>
+                    </div>
+                    <div class="dr" th:if="${order.status.name() == 'PAID' and payment == null}">
+                        <span class="dr-lbl">Payment Method</span>
+                        <span class="dr-val">Cash on Delivery</span>
+                    </div>
+                </div>
+
             </div>
-            <div>
-                <div class="confirm-item-title" th:text="${item.product.title}">Product</div>
-                <div class="confirm-item-meta" th:text="'Qty: ' + ${item.quantity} + ' × RM ' + ${#numbers.formatDecimal(item.unitPrice, 1, 2)}">Qty</div>
+        </div><!-- /left-border -->
+
+        <!-- RIGHT: Items Ordered -->
+        <div class="right-border">
+            <div class="right-card">
+
+                <!-- Card header -->
+                <div class="ch right-ch">
+                    <div class="ch-ico amb"><i class="bi bi-box-seam"></i></div>
+                    <span class="ch-lbl amb">Items Ordered</span>
+                </div>
+
+                <!-- Items -->
+                <div class="items-list">
+                    <div th:each="item : ${order.orderItems}" class="o-item">
+                        <div class="o-img">
+                            <img th:if="${item.product.images != null and !#lists.isEmpty(item.product.images)}"
+                                 th:src="${item.product.images.get(0).imageUrl}" alt="">
+                            <img th:if="${item.product.images == null or #lists.isEmpty(item.product.images)}"
+                                 th:src="@{/img/productplaceholder.png}" alt="">
+                        </div>
+                        <div class="o-info">
+                            <div class="o-name" th:text="${item.product.title}">Product Name</div>
+                            <div class="o-meta" th:text="'Qty: ' + ${item.quantity} + '  ×  RM ' + ${#numbers.formatDecimal(item.unitPrice, 1, 2)}">Qty</div>
+                        </div>
+                        <div class="o-price" th:text="'RM ' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}">RM 0.00</div>
+                    </div>
+                </div>
+
+                <!-- Total -->
+                <div class="total-row">
+                    <span class="total-lbl">Total Paid</span>
+                    <span class="total-amt" th:text="'RM ' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}">RM 0.00</span>
+                </div>
+
             </div>
-            <div class="confirm-item-price" th:text="'RM ' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}">RM 0.00</div>
-        </div>
-        <div class="confirm-total">
-            <span>Total</span>
-            <span th:text="'RM ' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}">RM 0.00</span>
-        </div>
+        </div><!-- /right-border -->
+
+    </div><!-- /cards-grid -->
+
+    <!-- ── ACTIONS ── -->
+    <div class="actions">
+        <a th:href="@{/orders/history}" class="btn-primary">
+            <i class="bi bi-list-check"></i> View My Orders
+        </a>
+        <a th:href="@{/products}" class="btn-secondary">
+            <i class="bi bi-arrow-left"></i> Continue Shopping
+        </a>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="mt-4 mb-5">
-        <a th:href="@{/orders/history}" class="btn-view-orders"><i class="bi bi-list-check mr-2"></i>View My Orders</a>
-        <a th:href="@{/products}" class="btn-continue-shop"><i class="fas fa-arrow-left mr-1"></i>Continue Shopping</a>
-    </div>
-</div>
+</div><!-- /outer-card -->
 
-<div th:replace="fragments/footer :: footer"></div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
