@@ -17,6 +17,7 @@ import com.ahsmart.campusmarket.repositories.ProductImageRepository;
 import com.ahsmart.campusmarket.repositories.ProductRepository;
 import com.ahsmart.campusmarket.repositories.SellerRepository;
 import com.ahsmart.campusmarket.repositories.UsersRepository;
+import com.ahsmart.campusmarket.service.embedding.EmbeddingService;
 import com.ahsmart.campusmarket.service.openai.OpenAiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +50,7 @@ public class ProductServiceImpl implements ProductService {
     private final FileService fileService;
     private final OrderItemRepository orderItemRepository;
     private final OpenAiService openAiService;
+    private final EmbeddingService embeddingService;
 
     // Validates input, uploads the image, and persists product + primary image.
     @Override
@@ -114,6 +116,8 @@ public class ProductServiceImpl implements ProductService {
         product.setCondition(condition);
         FlaggedStatus flaggedStatus = openAiService.detectFraud(normalizedTitle, description, price);
         product.setFlaggedStatus(flaggedStatus);
+
+        generateAndSetEmbedding(product, normalizedTitle, category.getCategoryName(), description);
 
         Product savedProduct = productRepository.save(product);
 
@@ -189,10 +193,13 @@ public class ProductServiceImpl implements ProductService {
 
         product.setCategory(category);
         product.setTitle(normalizedTitle);
-        product.setDescription(description == null || description.isBlank() ? null : description.trim());
+        String normalizedDescription = description == null || description.isBlank() ? null : description.trim();
+        product.setDescription(normalizedDescription);
         product.setPrice(price);
         product.setQuantity(quantity);
         product.setCondition(condition);
+
+        generateAndSetEmbedding(product, normalizedTitle, category.getCategoryName(), normalizedDescription);
 
         if (imageFile != null && !imageFile.isEmpty()) {
             replacePrimaryImage(product, imageFile);
@@ -286,6 +293,18 @@ public class ProductServiceImpl implements ProductService {
             } catch (RuntimeException ex) {
                 log.warn("Product row deleted but image cleanup failed for {}", imageUrl, ex);
             }
+        }
+    }
+
+    private void generateAndSetEmbedding(Product product, String title, String categoryName, String description) {
+        try {
+            StringBuilder sb = new StringBuilder(title);
+            if (categoryName != null) sb.append(" ").append(categoryName);
+            if (description != null && !description.isBlank()) sb.append(" ").append(description);
+            List<Double> vector = embeddingService.generateEmbedding(sb.toString());
+            product.setEmbedding(embeddingService.toJson(vector));
+        } catch (Exception e) {
+            log.warn("Embedding generation failed, product saved without embedding: {}", e.getMessage());
         }
     }
 

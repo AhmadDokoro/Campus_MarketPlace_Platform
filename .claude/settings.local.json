@@ -62,7 +62,16 @@
       "PowerShell(cd \"C:\\\\Users\\\\PC\\\\Desktop\\\\Projects\\\\Campus Marketplace Platform\\\\campusmarket\"; .\\\\mvnw.cmd package -DskipTests -q; Write-Host \"BUILD:$LASTEXITCODE\")",
       "PowerShell(cd \"C:\\\\Users\\\\PC\\\\Desktop\\\\Projects\\\\Campus Marketplace Platform\\\\campusmarket\"; Start-Process java -ArgumentList \"-jar\",\"target\\\\campusmarket-0.0.1-SNAPSHOT.jar\" -WindowStyle Hidden; Start-Sleep -Seconds 12; try { $r = Invoke-WebRequest -Uri \"http://localhost:8080\" -TimeoutSec 5 -UseBasicParsing; \"UP $\\($r.StatusCode\\)\" } catch { \"WAITING\" })",
       "PowerShell($i=0; do { Start-Sleep 2; $i++; try { $r = Invoke-WebRequest \"http://localhost:8080\" -TimeoutSec 3 -UseBasicParsing -EA Stop; \"UP after ${i}x2s\"; break } catch {} } while \\($i -lt 20\\))",
-      "PowerShell(Out-Null *)"
+      "PowerShell(Out-Null *)",
+      "Bash(dir)",
+      "Bash(.\\\\mvnw.cmd compile *)",
+      "Bash(Get-ChildItem -Path \"src/main/java\" -Recurse -Filter \"*AdminController*\")",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "PowerShell(\\(Get-Content \"C:\\\\Users\\\\PC\\\\Desktop\\\\Projects\\\\Campus Marketplace Platform\\\\campusmarket\\\\src\\\\main\\\\resources\\\\static\\\\css\\\\admin.css\" | Measure-Object -Line\\).Lines)",
+      "PowerShell(Get-CimInstance *)",
+      "PowerShell(.\\\\mvnw.cmd package -DskipTests 2>&1 | Select-Object -Last 5)",
+      "PowerShell(Start-Process -FilePath \"java\" -ArgumentList \"-jar\", \"target\\\\campusmarket-0.0.1-SNAPSHOT.jar\" -WindowStyle Hidden)",
+      "PowerShell(Start-Sleep -Seconds 15; try { $r = Invoke-WebRequest -Uri \"http://localhost:8080\" -UseBasicParsing -TimeoutSec 5; \"Server is UP - Status: $\\($r.StatusCode\\)\" } catch { \"Server not ready: $\\($_.Exception.Message\\)\" })"
     ]
   }
 }

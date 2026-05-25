@@ -180,6 +180,32 @@
           </div>
         </section>
 
+        <!-- ── Embedding Backfill ─────────────────────────────── -->
+        <div th:if="${embeddingSuccess}" class="alert-banner alert-success" data-aos="fade-up">
+          <span th:text="${embeddingSuccess}">Success</span>
+        </div>
+        <div th:if="${embeddingError}" class="alert-banner alert-danger" data-aos="fade-up">
+          <span th:text="${embeddingError}">Error</span>
+        </div>
+
+        <section class="section fade-in" style="animation-delay:.05s">
+          <div class="panel" data-aos="fade-up">
+            <div class="panel-header">
+              <div>
+                <h3>AI Recommendations</h3>
+                <p class="muted small" style="margin:2px 0 0">Generate embeddings for products missing them to power semantic recommendations.</p>
+              </div>
+              <div class="panel-actions">
+                <form th:action="@{/admin/refreshEmbeddings}" method="post" style="margin:0" id="embeddingForm">
+                  <button type="submit" class="btn small" id="refreshEmbeddingsBtn">
+                    Refresh Missing Embeddings
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- ── Analytics ──────────────────────────────────────── -->
         <section id="analytics" class="section analytics fade-in" style="animation-delay:.1s">
 
@@ -339,6 +365,20 @@
     /*]]>*/
   </script>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var form = document.getElementById('embeddingForm');
+      if (form) {
+        form.addEventListener('submit', function() {
+          var btn = document.getElementById('refreshEmbeddingsBtn');
+          setTimeout(function() {
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+          }, 50);
+        });
+      }
+    });
+  </script>
   <script th:src="@{/js/admin.js(v=2)}"></script>
   <script th:src="@{/lib/aos/aos.js}" defer></script>
   <script th:src="@{/js/cmp-enhance.js}" defer></script>

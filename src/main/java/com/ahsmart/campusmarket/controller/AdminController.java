@@ -6,6 +6,7 @@ import com.ahsmart.campusmarket.model.enums.SellerStatus;
 import com.ahsmart.campusmarket.model.enums.Role;
 import com.ahsmart.campusmarket.payloadDTOs.admin.WeeklyListingDTO;
 import com.ahsmart.campusmarket.service.admin.AdminService;
+import com.ahsmart.campusmarket.service.embedding.EmbeddingService;
 import com.ahsmart.campusmarket.service.mentor.MentorService;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -24,9 +25,9 @@ public class AdminController {
 
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class); // logger
 
-    private final AdminService adminService; // admin service
-
+    private final AdminService adminService;
     private final MentorService mentorService;
+    private final EmbeddingService embeddingService;
 
     private boolean isAdmin(HttpSession session) {
         Object roleObj = session.getAttribute("role");
@@ -220,5 +221,25 @@ public class AdminController {
             model.addAttribute("mentors", mentorService.getAllMentors());
             return "admin/manageMentors";
         }
+    }
+
+    // ------------------- Embedding Backfill -------------------
+
+    @PostMapping("/refreshEmbeddings")
+    public String refreshEmbeddings(HttpSession session,
+                                    org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        if (!isAdmin(session)) {
+            return "redirect:/signin";
+        }
+        try {
+            int updated = embeddingService.backfillMissingEmbeddings();
+            redirectAttributes.addFlashAttribute("embeddingSuccess",
+                    "Embeddings refreshed successfully. " + updated + " product(s) updated.");
+        } catch (Exception e) {
+            logger.error("Embedding backfill failed", e);
+            redirectAttributes.addFlashAttribute("embeddingError",
+                    "Embedding refresh failed: " + e.getMessage());
+        }
+        return "redirect:/admin/dashboard";
     }
 }

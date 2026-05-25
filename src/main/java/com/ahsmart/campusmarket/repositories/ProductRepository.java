@@ -80,6 +80,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                                       @Param("excludeId") Long excludeId,
                                       Pageable pageable);
 
+    // Fetches only product IDs and embedding JSON for cosine similarity calculation (lightweight).
+    @Query("SELECT p.productId, p.embedding FROM Product p WHERE p.embedding IS NOT NULL AND p.productId <> :excludeId")
+    List<Object[]> findAllEmbeddings(@Param("excludeId") Long excludeId);
+
+    // Returns products that have no embedding yet, with category eagerly loaded for text generation.
+    @Query("SELECT p FROM Product p LEFT JOIN FETCH p.category WHERE p.embedding IS NULL")
+    List<Product> findAllWithoutEmbedding();
+
     // Returns (YEARWEEK, count) pairs for products created in the last 8 weeks — admin weekly chart.
     @Query(value = "SELECT YEARWEEK(created_at, 1) AS yw, COUNT(*) AS cnt " +
             "FROM products " +
