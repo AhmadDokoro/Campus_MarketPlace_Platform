@@ -4,6 +4,7 @@ import com.ahsmart.campusmarket.model.Product;
 import com.ahsmart.campusmarket.model.ProductImage;
 import com.ahsmart.campusmarket.service.category.CategoryService;
 import com.ahsmart.campusmarket.service.product.ProductService;
+import com.ahsmart.campusmarket.service.recommendation.RecommendationService;
 import com.ahsmart.campusmarket.service.review.ReviewService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,17 +20,19 @@ import java.util.List;
 @Controller
 public class ExploreProductsController {
 
-    // Serves product browsing pages for buyers.
     private final ProductService productService;
     private final CategoryService categoryService;
     private final ReviewService reviewService;
+    private final RecommendationService recommendationService;
 
     public ExploreProductsController(ProductService productService,
                                      CategoryService categoryService,
-                                     ReviewService reviewService) {
+                                     ReviewService reviewService,
+                                     RecommendationService recommendationService) {
         this.productService = productService;
         this.categoryService = categoryService;
         this.reviewService = reviewService;
+        this.recommendationService = recommendationService;
     }
 
     // Loads the main explore page with pagination and optional title search filter.
@@ -98,9 +101,11 @@ public class ExploreProductsController {
             model.addAttribute("productRating", reviewService.getProductRatingData(productId));
             model.addAttribute("productReviews", reviewService.getReviewsByProductId(productId));
 
-            // Fetch up to 4 related products from the same category for "You May Also Like" section.
-            List<Product> relatedProducts = productService.getRelatedProducts(
-                    product.getCategory().getCategoryId(), product.getProductId(), 4);
+            List<Product> relatedProducts = recommendationService.getRecommendations(product.getProductId(), 4);
+            if (relatedProducts.isEmpty()) {
+                relatedProducts = productService.getRelatedProducts(
+                        product.getCategory().getCategoryId(), product.getProductId(), 4);
+            }
             model.addAttribute("relatedProducts", relatedProducts);
 
             return "product-listings/product-detail";

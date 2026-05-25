@@ -643,30 +643,158 @@
         }
 
         /* ────────────────────────────────────────────────────────
-           Related products
+           Related products — AI recommendation showcase
         ──────────────────────────────────────────────────────── */
-        .pd-related{
-            margin-top: 44px;
+        .pd-reco-section{
+            position: relative;
+            margin-top: 48px;
+            padding-bottom: 32px;
         }
-        .pd-related-head{
-            display: flex; align-items: center; gap: 12px;
-            margin-bottom: 22px;
+        .pd-reco-section::before{
+            content: "";
+            position: absolute;
+            top: -60px; left: 50%; transform: translateX(-50%);
+            width: 600px; height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(107,78,175,.10) 0%, rgba(255,215,0,.06) 40%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
         }
-        .pd-related-title{
-            font-family:'Poppins',sans-serif;
-            font-weight: 800;
-            font-size: 1.6rem;
+
+        .pd-reco-panel{
+            position: relative;
+            background: rgba(255,255,255,.88);
+            -webkit-backdrop-filter: blur(22px) saturate(140%);
+            backdrop-filter: blur(22px) saturate(140%);
+            border: 1px solid rgba(232,224,245,.85);
+            border-radius: 28px;
+            padding: 36px 34px 40px;
+            box-shadow:
+                0 24px 56px rgba(45,27,105,.12),
+                0 0 0 1px rgba(255,255,255,.6) inset;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .pd-reco-panel::before{
+            content: ""; position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, #6B4EAF, #FFD700, #2D1B69, #FFD700, #6B4EAF);
+            background-size: 300% 100%;
+            animation: cmpDividerFlow 6s linear infinite;
+        }
+        .pd-reco-panel::after{
+            content: ""; position: absolute;
+            top: -80px; right: -80px;
+            width: 260px; height: 260px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,215,0,.14), transparent 65%);
+            pointer-events: none;
+        }
+
+        .pd-reco-header{
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 1;
+        }
+        .pd-reco-header-left{
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        .pd-reco-icon{
+            width: 52px; height: 52px;
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #2D1B69 0%, #4A2C8A 100%);
+            color: #FFD700;
+            font-size: 22px;
+            flex-shrink: 0;
+            box-shadow:
+                0 10px 24px rgba(45,27,105,.35),
+                inset 0 1px 0 rgba(255,255,255,.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .pd-reco-icon::after{
+            content: "";
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, transparent 40%, rgba(255,215,0,.25) 50%, transparent 60%);
+            animation: pdRecoIconSheen 3s ease-in-out infinite;
+        }
+        @keyframes pdRecoIconSheen{
+            0%,100%{ transform: translateX(-100%); }
+            50%{ transform: translateX(100%); }
+        }
+        .pd-reco-title-group{ display: flex; flex-direction: column; gap: 4px; }
+        .pd-reco-title{
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            font-size: 1.55rem;
             margin: 0;
-            background: linear-gradient(135deg, #2D1B69, #6B4EAF, #FFD700);
+            background: linear-gradient(135deg, #1A0A3E 0%, #4A2C8A 50%, #C9A800 100%);
             -webkit-background-clip: text; background-clip: text;
             -webkit-text-fill-color: transparent;
             color: transparent;
-            letter-spacing: -.01em;
+            letter-spacing: -.02em;
+            line-height: 1.2;
         }
-        .pd-related-grid{
+        .pd-reco-subtitle{
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: .78rem;
+            font-weight: 600;
+            color: #6B6280;
+            letter-spacing: .01em;
+        }
+        .pd-reco-subtitle i{
+            color: #6B4EAF;
+            font-size: 10px;
+        }
+
+        .pd-reco-badge{
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-family: 'Poppins', sans-serif;
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, rgba(255,215,0,.15), rgba(107,78,175,.10));
+            color: #4A2C8A;
+            border: 1px solid rgba(107,78,175,.18);
+            white-space: nowrap;
+            flex-shrink: 0;
+            align-self: flex-start;
+        }
+        .pd-reco-badge i{ color: #FFD700; font-size: 11px; }
+
+        .pd-reco-grid{
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 22px;
+            gap: 24px;
+            position: relative;
+            z-index: 1;
+        }
+        .pd-reco-card-wrap{
+            position: relative;
+            min-width: 0;
+        }
+
+        .pd-reco-divider{
+            margin-top: 32px;
+            height: 3px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, transparent, #6B4EAF, #FFD700, #6B4EAF, transparent);
+            background-size: 200% 100%;
+            animation: cmpDividerFlow 6s linear infinite;
+            opacity: .4;
         }
 
         /* ────────────────────────────────────────────────────────
@@ -744,12 +872,12 @@
            Responsive
         ──────────────────────────────────────────────────────── */
         @media (max-width: 1199.98px){
-            .pd-related-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .pd-reco-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
         }
         @media (max-width: 991.98px){
             .pd-grid{ grid-template-columns: 1fr; gap: 24px; }
             .pd-image-col{ position: static; }
-            .pd-related-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .pd-reco-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
             .review-preview-list{ grid-template-columns: 1fr; }
         }
         @media (max-width: 767.98px){
@@ -763,16 +891,21 @@
             .reviews-head{ flex-direction: column; align-items: stretch; gap: 12px; }
             .btn-view-all-reviews{ width: 100%; }
             .pd-image-frame{ border-radius: 22px; }
-            .pd-related-head{ flex-direction: column; align-items: flex-start; gap: 8px; }
-            .pd-related-title{ font-size: 1.3rem; }
             .pd-title{ font-size: 1.6rem; }
             .pd-seller{ padding: 14px 16px; gap: 12px; }
             .pd-seller-avatar{ width: 48px; height: 48px; font-size: 18px; }
+            .pd-reco-panel{ padding: 24px 18px 28px; border-radius: 22px; }
+            .pd-reco-header{ flex-direction: column; gap: 12px; }
+            .pd-reco-icon{ width: 44px; height: 44px; border-radius: 12px; font-size: 18px; }
+            .pd-reco-title{ font-size: 1.25rem; }
+            .pd-reco-section{ margin-top: 32px; padding-bottom: 40px; }
+            .pd-reco-section::before{ width: 300px; height: 300px; }
         }
         @media (max-width: 575.98px){
-            .pd-related-grid{ grid-template-columns: 1fr; }
+            .pd-reco-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
             .pd-breadcrumb .crumb{ font-size: .76rem; padding: 7px 12px; }
             .pd-rating-row{ width: 100%; flex-wrap: wrap; }
+            .pd-reco-badge{ display: none; }
         }
     </style>
 </head>
@@ -1026,16 +1159,39 @@
     </div>
 </div>
 
-<!-- Related Products -->
-<div class="container" th:if="${relatedProducts != null and !#lists.isEmpty(relatedProducts)}">
-    <div class="pd-related">
-        <div class="pd-related-head">
-            <h4 class="pd-related-title">You May Also Like</h4>
-        </div>
-        <div class="pd-related-grid">
-            <div th:each="p : ${relatedProducts}">
-                <div th:replace="fragments/product-card :: card(${p})"></div>
+<!-- AI-Powered Recommendations -->
+<div class="pd-reco-section" th:if="${relatedProducts != null and !#lists.isEmpty(relatedProducts)}">
+    <div class="container">
+        <div class="pd-reco-panel" data-aos="fade-up">
+
+            <div class="pd-reco-header">
+                <div class="pd-reco-header-left">
+                    <div class="pd-reco-icon">
+                        <i class="bi bi-stars"></i>
+                    </div>
+                    <div class="pd-reco-title-group">
+                        <h4 class="pd-reco-title">You May Also Like</h4>
+                        <span class="pd-reco-subtitle">
+                            <i class="fas fa-circle"></i>
+                            AI-powered picks based on this product
+                        </span>
+                    </div>
+                </div>
+                <span class="pd-reco-badge">
+                    <i class="fas fa-bolt"></i> Smart Match
+                </span>
             </div>
+
+            <div class="pd-reco-grid">
+                <div class="pd-reco-card-wrap"
+                     th:each="p, stat : ${relatedProducts}"
+                     data-aos="fade-up"
+                     th:attr="data-aos-delay=${stat.index * 80}">
+                    <div th:replace="fragments/product-card :: card(${p})"></div>
+                </div>
+            </div>
+
+            <div class="pd-reco-divider"></div>
         </div>
     </div>
 </div>
