@@ -630,6 +630,7 @@
             header.parentNode.insertBefore(headerPlaceholder, header);
 
             window.addEventListener('scroll', function() {
+                if (window.innerWidth <= 767) return; // disabled on mobile
                 var currentScrollY = window.scrollY;
                 var threshold = 250; // Distance to scroll down before logic applies
 
