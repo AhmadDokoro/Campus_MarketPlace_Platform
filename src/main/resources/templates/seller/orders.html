@@ -196,6 +196,48 @@
       .order-card{flex-direction:column}
       .order-actions{justify-content:flex-start; width:100%}
     }
+
+  /* Mobile-only: hidden above 450px */
+  .seller-mob-nav { display: none; }
+
+  @media (max-width: 450px) {
+    body { padding-bottom: 80px; }
+    .seller-mob-nav {
+      display: flex !important;
+      position: fixed !important;
+      bottom: 0 !important; left: 0 !important; right: 0 !important;
+      z-index: 9999 !important;
+      height: 64px !important;
+      background: #ffffff;
+      border-top: 1.5px solid rgba(107,78,175,.14);
+      box-shadow: 0 -4px 20px rgba(45,27,105,.10);
+      padding: 0 4px max(env(safe-area-inset-bottom), 4px);
+      justify-content: space-around;
+      align-items: stretch;
+    }
+    .mob-nav-item {
+      display: flex !important;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      flex: 1;
+      min-height: 44px;
+      padding: 4px;
+      text-decoration: none;
+      color: #9b8fc0;
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: .02em;
+      -webkit-tap-highlight-color: transparent;
+      border-radius: 8px;
+    }
+    .mob-nav-item i { font-size: 20px; line-height: 1; }
+    .mob-nav-item span { line-height: 1; display: block; }
+    .mob-nav-item:hover { text-decoration: none; }
+    .mob-nav-item.mob-nav-active { color: #C9A800 !important; background: rgba(255,215,0,.09); }
+    .mob-nav-item.mob-nav-active i { filter: drop-shadow(0 0 5px rgba(255,193,7,.55)); }
+  }
   </style>
 </head>
 <body class="cmp-aurora">
@@ -385,6 +427,13 @@
   </div>
 </div>
 
+<nav class="seller-mob-nav" aria-label="Seller navigation">
+  <a class="mob-nav-item" th:href="@{/seller/dashboard}"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a>
+  <a class="mob-nav-item mob-nav-active" th:href="@{/seller/orders}"><i class="bi bi-receipt-cutoff"></i><span>Orders</span></a>
+  <a class="mob-nav-item" th:href="@{/seller/sales-history}"><i class="bi bi-clock-history"></i><span>Sales</span></a>
+  <a class="mob-nav-item" th:href="@{/index}"><i class="bi bi-shop"></i><span>Storefront</span></a>
+  <a class="mob-nav-item" th:href="@{/user/profile}"><i class="bi bi-person-circle"></i><span>Profile</span></a>
+</nav>
 <div th:replace="fragments/footer :: footer"></div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
