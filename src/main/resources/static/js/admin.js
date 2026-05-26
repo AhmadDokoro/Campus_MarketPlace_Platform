@@ -143,12 +143,12 @@ function renderCharts(){
         datasets:[{
           label:'Listings',
           data: weeklyCounts,
-          borderColor:'#4B2E83',
-          backgroundColor:'rgba(75,46,131,0.08)',
+          borderColor:'#4A2C8A',
+          backgroundColor:'rgba(107,78,175,.12)',
           tension:0.4,
           pointRadius:4,
-          pointBackgroundColor:'#4B2E83',
-          pointBorderColor:'#fff',
+          pointBackgroundColor:'#FFD700',
+          pointBorderColor:'#4A2C8A',
           pointBorderWidth:2,
           fill:true
         }]
@@ -159,7 +159,7 @@ function renderCharts(){
         plugins:{legend:{display:false}},
         scales:{
           x:{grid:{display:false}, ticks:{font:{size:12}}},
-          y:{beginAtZero:true, grid:{color:'rgba(0,0,0,0.04)'}, ticks:{font:{size:12}}}
+          y:{beginAtZero:true, grid:{color:'rgba(107,78,175,.06)'}, ticks:{font:{size:12}}}
         }
       }
     });
@@ -174,7 +174,8 @@ function renderCharts(){
         labels:['Approved','Pending','Rejected'],
         datasets:[{
           data:[approved, pending, rejected],
-          backgroundColor:['rgba(34,197,94,0.85)','rgba(242,183,5,0.85)','rgba(196,22,28,0.85)'],
+          backgroundColor:['#22C55E','#FFD700','#EF4444'],
+          hoverBackgroundColor:['#2AD96A','#FFE033','#F26B6B'],
           borderWidth:2,
           borderColor:'#fff'
         }]
@@ -195,9 +196,9 @@ function renderCharts(){
 // ===== small toast CSS injection (runtime) =====
 const styleToast = document.createElement('style');
 styleToast.textContent = `
-.toast{position:fixed;right:20px;bottom:20px;background:#111827;color:white;padding:10px 14px;border-radius:10px;opacity:0;transform:translateY(6px);transition:all 280ms;z-index:9999}
+.toast{position:fixed;right:20px;bottom:20px;background:#2E2740;color:white;padding:10px 14px;border-radius:12px;opacity:0;transform:translateY(6px);transition:all 280ms;z-index:9999;font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;box-shadow:0 8px 24px rgba(45,27,105,.2)}
 .toast.visible{opacity:1;transform:none}
-.toast.success{background:var(--success)}
-.toast.danger{background:var(--danger)}
+.toast.success{background:var(--cmp-success,#22C55E)}
+.toast.danger{background:var(--cmp-danger,#EF4444)}
 `;
 document.head.appendChild(styleToast);
