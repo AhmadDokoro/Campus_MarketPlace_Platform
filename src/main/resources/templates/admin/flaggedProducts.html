@@ -5,24 +5,78 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Flagged Products — Admin</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <link rel="stylesheet" th:href="@{/css/admin.css(v=2)}">
+  <link rel="stylesheet" th:href="@{/css/cmp-enhance.css}">
+  <link rel="stylesheet" th:href="@{/lib/aos/aos.css}">
+  <link rel="stylesheet" th:href="@{/css/mobile.css}">
   <style>
-    .alerts{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
-    .alert{padding:12px 14px;border-radius:12px;border:1px solid rgba(15,23,42,0.08);box-shadow:0 8px 22px rgba(15,23,42,0.05)}
-    .alert.success{background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.25)}
-    .alert.error{background:rgba(196,22,28,0.08);border-color:rgba(196,22,28,0.25)}
-    .alert .label{font-weight:900;margin-right:6px}
+    .alerts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .alert {
+      padding: 14px 18px; border-radius: 16px;
+      border: 1px solid rgba(232,224,245,.6);
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 4px 14px rgba(45,27,105,.06);
+    }
+    .alert.success { background: rgba(34,197,94,.08); border-color: rgba(34,197,94,.3); }
+    .alert.error { background: rgba(239,68,68,.08); border-color: rgba(239,68,68,.3); }
+    .alert .label { font-family: 'Poppins', sans-serif; font-weight: 800; margin-right: 6px; }
+
+    /* Page header */
+    .overview-header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 900; font-size: 26px;
+      background: linear-gradient(135deg, #1A0A3E, #4A2C8A, #C9A800);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; color: transparent;
+      margin: 0 0 6px;
+    }
   </style>
 </head>
 
 <body>
+
+  <!-- Mobile topbar -->
+  <div class="admin-mobile-topbar" style="display:none;">
+    <div class="brand-logo">
+      <div class="logo-square"><i class="bi bi-lightning-charge-fill"></i></div>
+      <span class="brand-name">Campus Marketplace</span>
+    </div>
+    <button class="admin-mobile-menu-btn" onclick="toggleAdminSidebar()" aria-label="Open navigation menu">
+      <i class="bi bi-list"></i> Menu
+    </button>
+  </div>
+
+  <div class="admin-sidebar-backdrop" id="adminBackdrop" onclick="toggleAdminSidebar()"></div>
+
+  <aside class="admin-mobile-sidebar" id="adminMobileSidebar">
+    <button class="close-btn" onclick="toggleAdminSidebar()"><i class="bi bi-x-lg"></i> Close</button>
+    <div class="brand">
+      <div class="logo-square"><i class="bi bi-lightning-charge-fill"></i></div>
+      <div class="brand-text">
+        <div class="title">Campus</div>
+        <div class="subtitle">Marketplace</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="nav-item" th:href="@{/admin/dashboard}"><span class="icon"><i class="bi bi-house-fill"></i></span> Overview</a>
+      <a class="nav-item" th:href="@{/admin/dashboard#analytics}"><span class="icon"><i class="bi bi-graph-up"></i></span> Analytics</a>
+      <a class="nav-item" th:href="@{/admin/pendingSellers}"><span class="icon"><i class="bi bi-person-badge"></i></span> Seller Verification</a>
+      <a class="nav-item" th:href="@{/admin/mentors}"><span class="icon"><i class="bi bi-people"></i></span> Manage Mentors</a>
+      <a class="nav-item active" th:href="@{/admin/flaggedProducts}"><span class="icon"><i class="bi bi-flag-fill"></i></span> Flagged Products</a>
+      <a class="nav-item" th:href="@{/admin/categories}"><span class="icon"><i class="bi bi-folder2-open"></i></span> Categories</a>
+      <a class="nav-item danger" th:href="@{/logout}"><span class="icon"><i class="bi bi-box-arrow-right"></i></span> Logout</a>
+    </nav>
+  </aside>
+
   <div class="admin-app">
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="brand">
-        <div class="logo-square">CM</div>
+        <div class="logo-square"><i class="bi bi-lightning-charge-fill"></i></div>
         <div class="brand-text">
           <div class="title">Campus</div>
           <div class="subtitle">Marketplace</div>
@@ -30,14 +84,14 @@
       </div>
 
       <nav class="nav">
-        <a class="nav-item" th:href="@{/admin/dashboard}"><span class="icon">🏠</span> Overview</a>
-        <a class="nav-item" th:href="@{/admin/dashboard#analytics}"><span class="icon">📈</span> Analytics</a>
-        <a class="nav-item" th:href="@{/admin/pendingSellers}"><span class="icon">📝</span> Seller Verification</a>
-        <a class="nav-item" th:href="@{/admin/mentors}"><span class="icon">👥</span> Manage Mentors</a>
-        <a class="nav-item active" th:href="@{/admin/flaggedProducts}"><span class="icon">🚩</span> View Flagged Products</a>
-        <a class="nav-item" th:href="@{/admin/categories}"><span class="icon">🗂️</span> Categories</a>
+        <a class="nav-item" th:href="@{/admin/dashboard}"><span class="icon"><i class="bi bi-house-fill"></i></span> Overview</a>
+        <a class="nav-item" th:href="@{/admin/dashboard#analytics}"><span class="icon"><i class="bi bi-graph-up"></i></span> Analytics</a>
+        <a class="nav-item" th:href="@{/admin/pendingSellers}"><span class="icon"><i class="bi bi-person-badge"></i></span> Seller Verification</a>
+        <a class="nav-item" th:href="@{/admin/mentors}"><span class="icon"><i class="bi bi-people"></i></span> Manage Mentors</a>
+        <a class="nav-item active" th:href="@{/admin/flaggedProducts}"><span class="icon"><i class="bi bi-flag-fill"></i></span> Flagged Products</a>
+        <a class="nav-item" th:href="@{/admin/categories}"><span class="icon"><i class="bi bi-folder2-open"></i></span> Categories</a>
         <div class="nav-spacer"></div>
-        <a class="nav-item danger" th:href="@{/logout}"><span class="icon">🔒</span> Logout</a>
+        <a class="nav-item danger" th:href="@{/logout}"><span class="icon"><i class="bi bi-box-arrow-right"></i></span> Logout</a>
       </nav>
 
       <div class="sidebar-footer">
@@ -53,7 +107,7 @@
       <header class="topbar">
         <div class="topbar-left">
           <div class="page-breadcrumb">
-            <span class="breadcrumb-icon">🏠</span>
+            <span class="breadcrumb-icon"><i class="bi bi-house"></i></span>
             <span class="breadcrumb-sep">/</span>
             <a th:href="@{/admin/dashboard}" class="breadcrumb-link">Dashboard</a>
             <span class="breadcrumb-sep">/</span>
@@ -75,7 +129,7 @@
       <section class="content">
         <section class="section fade-in">
 
-          <div class="overview-header" style="margin-bottom:18px">
+          <div class="overview-header" style="margin-bottom:18px" data-aos="fade-up">
             <div>
               <h1>Flagged Products</h1>
               <p class="muted">Products automatically flagged as suspicious. Review and approve or remove them.</p>
@@ -99,7 +153,7 @@
 
               <!-- Empty state -->
               <div th:if="${flaggedProducts.isEmpty()}" class="fp-empty">
-                <div class="fp-empty-icon">✅</div>
+                <div class="fp-empty-icon"><i class="bi bi-check-circle-fill"></i></div>
                 <div class="fp-empty-text">No flagged products right now.</div>
                 <div class="muted small">All products are clear. Check back later.</div>
               </div>
@@ -107,7 +161,8 @@
               <!-- Flagged product list -->
               <div th:unless="${flaggedProducts.isEmpty()}" class="fp-list">
 
-                <div th:each="p : ${flaggedProducts}" class="fp-item" th:id="|fp-wrap-${p.productId}|">
+                <div th:each="p, stat : ${flaggedProducts}" class="fp-item" th:id="|fp-wrap-${p.productId}|"
+                     data-aos="fade-up" th:attr="data-aos-delay=${stat.index * 60}">
 
                   <!-- Summary row (clickable) -->
                   <div class="fp-summary" th:onclick="|toggleFpDetail('fp-detail-${p.productId}', this)|">
@@ -115,22 +170,22 @@
                       <img th:if="${p.primaryImageUrl != null}"
                            th:src="${p.primaryImageUrl}"
                            class="fp-thumb" alt="product" />
-                      <div th:unless="${p.primaryImageUrl != null}" class="fp-thumb fp-thumb-placeholder">📦</div>
+                      <div th:unless="${p.primaryImageUrl != null}" class="fp-thumb fp-thumb-placeholder"><i class="bi bi-box-seam"></i></div>
                     </div>
                     <div class="fp-summary-info">
                       <span class="fp-title" th:text="${p.title}">Product Title</span>
                       <span class="fp-meta muted small">
                         <span th:text="${p.categoryName}">Category</span>
-                        &nbsp;·&nbsp;
+                        &nbsp;&middot;&nbsp;
                         <span th:text="${p.sellerName}">Seller</span>
-                        &nbsp;·&nbsp;
+                        &nbsp;&middot;&nbsp;
                         <span th:text="${p.conditionName}">Condition</span>
                       </span>
                     </div>
                     <div class="fp-summary-right">
                       <span class="fp-price" th:text="'RM ' + ${#numbers.formatDecimal(p.price, 1, 2)}">RM 0.00</span>
                       <span class="pill suspicious">Suspicious</span>
-                      <span class="fp-chevron">▼</span>
+                      <span class="fp-chevron"><i class="bi bi-chevron-down"></i></span>
                     </div>
                   </div>
 
@@ -141,7 +196,7 @@
                         <img th:if="${p.primaryImageUrl != null}"
                              th:src="${p.primaryImageUrl}"
                              class="fp-detail-img" alt="product image" />
-                        <div th:unless="${p.primaryImageUrl != null}" class="fp-detail-img fp-img-placeholder">📦</div>
+                        <div th:unless="${p.primaryImageUrl != null}" class="fp-detail-img fp-img-placeholder"><i class="bi bi-box-seam"></i></div>
                       </div>
                       <div class="fp-detail-meta">
                         <div class="fp-detail-row">
@@ -176,11 +231,11 @@
                     </div>
                     <div class="fp-actions">
                       <form th:action="|/admin/flaggedProducts/${p.productId}/approve|" method="post" style="display:inline">
-                        <button type="submit" class="btn fp-approve-btn">✅ Approve Product</button>
+                        <button type="submit" class="btn fp-approve-btn"><i class="bi bi-check-circle"></i> Approve Product</button>
                       </form>
                       <form th:action="|/admin/flaggedProducts/${p.productId}/delete|" method="post" style="display:inline"
                             onsubmit="return confirm('Permanently delete this product? This cannot be undone.')">
-                        <button type="submit" class="btn danger">🗑️ Delete Product</button>
+                        <button type="submit" class="btn danger"><i class="bi bi-trash3"></i> Delete Product</button>
                       </form>
                     </div>
                   </div>
@@ -204,14 +259,30 @@
         var isOpen = detail.style.display !== 'none';
 
         document.querySelectorAll('.fp-detail').forEach(function(d) { d.style.display = 'none'; });
-        document.querySelectorAll('.fp-chevron').forEach(function(c) { c.textContent = '▼'; });
+        document.querySelectorAll('.fp-chevron').forEach(function(c) {
+            var icon = c.querySelector('i');
+            if (icon) { icon.className = 'bi bi-chevron-down'; }
+        });
         document.querySelectorAll('.fp-summary').forEach(function(s) { s.classList.remove('fp-summary-open'); });
 
         if (!isOpen) {
             detail.style.display = 'block';
-            chevron.textContent = '▲';
+            var icon = chevron.querySelector('i');
+            if (icon) { icon.className = 'bi bi-chevron-up'; }
             summaryEl.classList.add('fp-summary-open');
         }
+    }
+  </script>
+  <script th:src="@{/lib/aos/aos.js}" defer></script>
+  <script th:src="@{/js/cmp-enhance.js}" defer></script>
+  <script>
+    function toggleAdminSidebar() {
+      var sb = document.getElementById('adminMobileSidebar');
+      var bd = document.getElementById('adminBackdrop');
+      if (!sb) return;
+      var isOpen = sb.classList.toggle('show');
+      if (bd) bd.classList.toggle('show', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
     }
   </script>
 </body>
