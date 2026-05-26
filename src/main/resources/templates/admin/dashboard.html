@@ -50,6 +50,52 @@
     .stat-flagged .stat-icon { background: rgba(245,158,11,.12); color: #F59E0B; }
     .stat-sales .stat-icon { background: rgba(34,197,94,.12); color: #22C55E; }
     #chartListings { max-height: 260px; }
+
+    .overview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .btn-report-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 24px;
+      background: linear-gradient(135deg, #FFD700, #FFC107);
+      color: #1A0A3E;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(255, 215, 0, .25);
+      transition: transform .2s, box-shadow .2s;
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .btn-report-download:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 215, 0, .35);
+      color: #1A0A3E;
+      text-decoration: none;
+    }
+    .btn-report-download::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+      transition: left .5s;
+    }
+    .btn-report-download:hover::after { left: 100%; }
+    .btn-report-download i { font-size: 18px; }
+
+    @media (max-width: 575.98px) {
+      .btn-report-download { width: 100%; justify-content: center; padding: 13px 20px; }
+    }
   </style>
 </head>
 
@@ -152,6 +198,9 @@
               <h1>Admin Dashboard</h1>
               <p class="muted">Live system overview — users, sellers, listings and sales.</p>
             </div>
+            <a th:href="@{/admin/report/download}" class="btn-report-download">
+              <i class="bi bi-file-earmark-pdf-fill"></i> Download Report
+            </a>
           </div>
 
           <div class="cards-grid">

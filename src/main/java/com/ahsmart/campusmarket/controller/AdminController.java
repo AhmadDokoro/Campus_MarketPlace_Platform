@@ -8,6 +8,8 @@ import com.ahsmart.campusmarket.payloadDTOs.admin.WeeklyListingDTO;
 import com.ahsmart.campusmarket.service.admin.AdminService;
 import com.ahsmart.campusmarket.service.embedding.EmbeddingService;
 import com.ahsmart.campusmarket.service.mentor.MentorService;
+import com.ahsmart.campusmarket.service.report.AdminReportService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +30,7 @@ public class AdminController {
     private final AdminService adminService;
     private final MentorService mentorService;
     private final EmbeddingService embeddingService;
+    private final AdminReportService adminReportService;
 
     private boolean isAdmin(HttpSession session) {
         Object roleObj = session.getAttribute("role");
@@ -241,5 +244,28 @@ public class AdminController {
                     "Embedding refresh failed: " + e.getMessage());
         }
         return "redirect:/admin/dashboard";
+    }
+
+    // ------------------- PDF Report Download -------------------
+
+    @GetMapping("/report/download")
+    public void downloadReport(HttpSession session, HttpServletResponse response) {
+        if (!isAdmin(session)) {
+            try { response.sendRedirect("/signin"); } catch (Exception ignored) {}
+            return;
+        }
+        try {
+            byte[] pdf = adminReportService.generateReport();
+            String filename = "CampusMarketplace_Report_" + java.time.LocalDate.now() + ".pdf";
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+            response.setContentLength(pdf.length);
+            response.getOutputStream().write(pdf);
+            response.getOutputStream().flush();
+        } catch (Exception e) {
+            logger.error("Report generation failed", e);
+            try { response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Report generation failed"); }
+            catch (Exception ignored) {}
+        }
     }
 }
