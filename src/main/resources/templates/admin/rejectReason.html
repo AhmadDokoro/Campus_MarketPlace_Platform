@@ -3,89 +3,354 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reject Seller  Provide Reason</title>
+  <title>Reject Seller – Provide Reason</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/cmp-enhance.css}">
+  <link rel="stylesheet" th:href="@{/lib/aos/aos.css}">
 
   <style>
-    :root {
-      --bg:#f4f6fb;
-      --card:#ffffff;
-      --muted:#6b7280;
-      --primary:#4B2E83;
-      --accent:#F2B705;
-      --danger:#C4161C;
-      --radius:14px;
-      --shadow:0 10px 30px rgba(21,24,35,0.08);
+    /* === CMP Aurora Background === */
+    .cmp-aurora {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #faf8ff 0%, #f3eefb 50%, #faf8ff 100%);
+      position: relative;
+      overflow-x: hidden;
+      font-family: 'Inter', system-ui, sans-serif;
+      color: #2E2740;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+    .cmp-aurora::before {
+      content: "";
+      position: fixed;
+      width: 500px; height: 500px;
+      top: -100px; right: -100px;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(circle, rgba(107,78,175,.2), transparent 70%);
+    }
+    .cmp-aurora::after {
+      content: "";
+      position: fixed;
+      width: 400px; height: 400px;
+      bottom: -50px; left: -50px;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(circle, rgba(255,215,0,.15), transparent 70%);
     }
 
-    body{margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);padding:28px}
-    .wrap{max-width:920px;margin:0 auto}
+    /* === Main Card === */
+    .rr-card {
+      max-width: 550px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.6);
+      border-radius: 24px;
+      box-shadow: 0 12px 40px rgba(26,10,62,0.1), 0 2px 8px rgba(26,10,62,0.04);
+      overflow: hidden;
+    }
 
-    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
-    .title h1{margin:0;font-size:22px;letter-spacing:-0.2px}
-    .title .sub{margin-top:6px;color:var(--muted);font-size:0.95rem}
+    /* === Gradient Top Bar === */
+    .rr-top-bar {
+      height: 6px;
+      background: linear-gradient(90deg, #EF4444, #DC2626, #4A2C8A, #1A0A3E);
+      background-size: 200% 100%;
+      animation: gradientShift 4s ease-in-out infinite;
+    }
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
 
-    .back-btn{background:linear-gradient(90deg,var(--accent),var(--primary));color:#fff;padding:10px 14px;border-radius:10px;border:none;font-weight:700;cursor:pointer;text-decoration:none;box-shadow:0 8px 24px rgba(75,46,131,0.08);transition:transform .12s ease}
-    .back-btn:hover{transform:translateY(-2px)}
+    .rr-body {
+      padding: 36px 32px 32px;
+    }
 
-    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+    /* === Icon Header === */
+    .rr-icon-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .rr-icon-circle {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(239,68,68,0.05));
+      border: 2px solid rgba(239,68,68,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .rr-icon-circle i {
+      font-size: 32px;
+      color: #EF4444;
+    }
 
-    .seller-line{display:flex;flex-wrap:wrap;gap:10px;align-items:center;color:#111827;font-weight:700}
-    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(75,46,131,0.12);background:#fbfaff;color:#4B2E83;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800}
+    /* === Title === */
+    .rr-title {
+      text-align: center;
+      margin: 0 0 6px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 900;
+      font-size: 24px;
+      background: linear-gradient(135deg, #EF4444, #1A0A3E);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .rr-subtitle {
+      text-align: center;
+      color: #6B6280;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
 
-    label{display:block;margin-top:16px;margin-bottom:8px;font-weight:800;color:#111827}
-    textarea{width:100%;min-height:140px;border-radius:12px;border:1px solid rgba(15,23,42,0.12);padding:12px 14px;font-family:inherit;font-size:14px;resize:vertical;outline:none}
-    textarea:focus{border-color:rgba(75,46,131,0.45);box-shadow:0 0 0 4px rgba(75,46,131,0.10)}
+    /* === Seller Info Pills === */
+    .rr-seller-info {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .rr-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 16px;
+      border-radius: 999px;
+      background: rgba(74,44,138,0.06);
+      border: 1px solid rgba(74,44,138,0.15);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #4A2C8A;
+    }
+    .rr-pill i { font-size: 14px; color: #6B4EAF; }
 
-    .hint{margin-top:8px;color:var(--muted);font-size:13px}
+    /* === Error Alert === */
+    .rr-error {
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      font-weight: 600;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(239,68,68,0.06);
+      border: 1px solid rgba(239,68,68,0.2);
+      color: #b91c1c;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .rr-error i { font-size: 16px; }
 
-    .error{margin-top:12px;background:#fff3f2;color:#b45309;padding:10px 12px;border-radius:10px;border:1px solid rgba(196,22,28,0.18)}
+    /* === Form Elements === */
+    .rr-label {
+      display: block;
+      margin-bottom: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: #2E2740;
+    }
+    .rr-textarea {
+      width: 100%;
+      min-height: 140px;
+      border-radius: 14px;
+      border: 1.5px solid rgba(74,44,138,0.15);
+      padding: 14px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: #2E2740;
+      resize: vertical;
+      outline: none;
+      background: rgba(255,255,255,0.6);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      box-sizing: border-box;
+    }
+    .rr-textarea::placeholder {
+      color: #9f95b0;
+    }
+    .rr-textarea:focus {
+      border-color: rgba(74,44,138,0.45);
+      box-shadow: 0 0 0 4px rgba(74,44,138,0.08);
+    }
+    .rr-char-counter {
+      text-align: right;
+      margin-top: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #6B6280;
+      transition: color 0.2s ease;
+    }
+    .rr-char-counter.near-limit { color: #F59E0B; }
+    .rr-char-counter.at-limit { color: #EF4444; }
 
-    .actions{display:flex;justify-content:flex-end;gap:12px;margin-top:18px}
-    .btn{padding:10px 14px;border-radius:10px;border:none;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
-    .btn-cancel{background:transparent;border:1px solid rgba(15,23,42,0.10);color:#111827}
-    .btn-reject{background:var(--danger);color:#fff}
+    /* === Action Buttons === */
+    .rr-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .rr-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: 12px;
+      border: none;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+    .rr-btn i { font-size: 16px; }
+    .rr-btn-cancel {
+      background: transparent;
+      border: 1.5px solid rgba(46,39,64,0.12);
+      color: #2E2740;
+    }
+    .rr-btn-cancel:hover {
+      border-color: rgba(46,39,64,0.25);
+      background: rgba(46,39,64,0.03);
+      transform: translateY(-1px);
+    }
+    .rr-btn-reject {
+      background: linear-gradient(135deg, #EF4444, #DC2626);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(239,68,68,0.25);
+    }
+    .rr-btn-reject:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(239,68,68,0.4);
+    }
+
+    /* === Responsive === */
+    @media (max-width: 600px) {
+      .rr-body { padding: 24px 20px 24px; }
+      .rr-title { font-size: 20px; }
+      .rr-actions { flex-direction: column-reverse; }
+      .rr-btn { width: 100%; justify-content: center; }
+    }
   </style>
 </head>
-<body>
-  <div class="wrap">
+<body class="cmp-aurora">
 
-    <div class="topbar">
-      <div class="title">
-        <h1>Reject Seller Application</h1>
-        <div class="sub">Provide a clear reason. The seller will see this message on their rejection page.</div>
-      </div>
-      <a class="back-btn" th:href="@{/admin/getSellerDetailsForReview(sellerId=${seller.sellerId})}"> Back to Review</a>
-    </div>
+  <div class="rr-card" data-aos="fade-up" data-aos-duration="600">
+    <div class="rr-top-bar"></div>
+    <div class="rr-body">
 
-    <div class="card">
-      <div class="seller-line">
-        <span th:text="${seller.user.firstName + ' ' + seller.user.lastName}"></span>
-        <span class="pill" th:text="${seller.user.academicId}"></span>
-        <span class="pill" th:text="${seller.user.email}"></span>
+      <!-- Icon Header -->
+      <div class="rr-icon-wrap" data-aos="fade-up" data-aos-duration="500" data-aos-delay="100">
+        <div class="rr-icon-circle">
+          <i class="bi bi-x-octagon-fill"></i>
+        </div>
       </div>
 
-      <div th:if="${error}" class="error" th:text="${error}"></div>
+      <!-- Title -->
+      <h1 class="rr-title" data-aos="fade-up" data-aos-duration="500" data-aos-delay="150">Reject Seller</h1>
+      <p class="rr-subtitle" data-aos="fade-up" data-aos-duration="500" data-aos-delay="200">
+        Provide a clear reason. The seller will see this message on their rejection page.
+      </p>
 
-      <form th:action="@{/admin/seller/{id}/reject(id=${seller.sellerId})}" method="post">
-        <label for="rejectionReason">Rejection reason</label>
+      <!-- Seller Info Pills -->
+      <div class="rr-seller-info" data-aos="fade-up" data-aos-duration="500" data-aos-delay="250">
+        <span class="rr-pill">
+          <i class="bi bi-person-fill"></i>
+          <span th:text="${seller.user.firstName + ' ' + seller.user.lastName}"></span>
+        </span>
+        <span class="rr-pill">
+          <i class="bi bi-mortarboard-fill"></i>
+          <span th:text="${seller.user.academicId}"></span>
+        </span>
+        <span class="rr-pill">
+          <i class="bi bi-envelope-fill"></i>
+          <span th:text="${seller.user.email}"></span>
+        </span>
+      </div>
+
+      <!-- Error Message -->
+      <div th:if="${error}" class="rr-error" data-aos="fade-up" data-aos-duration="400">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span th:text="${error}"></span>
+      </div>
+
+      <!-- Rejection Form -->
+      <form th:action="@{/admin/seller/{id}/reject(id=${seller.sellerId})}" method="post" data-aos="fade-up" data-aos-duration="500" data-aos-delay="300">
+        <label class="rr-label" for="rejectionReason">
+          <i class="bi bi-chat-square-text-fill" style="color:#6B4EAF;margin-right:6px;"></i>
+          Rejection Reason
+        </label>
         <textarea id="rejectionReason"
+                  class="rr-textarea"
                   name="rejectionReason"
                   maxlength="500"
                   required
-                  placeholder="Write the reason here..."
+                  placeholder="Describe why this application is being rejected..."
                   th:text="${rejectionReason}"></textarea>
-        <div class="hint">Maximum 500 characters. This is required.</div>
+        <div class="rr-char-counter" id="charCounter">0 / 500</div>
 
-        <div class="actions">
-          <a class="btn btn-cancel" th:href="@{/admin/getSellerDetailsForReview(sellerId=${seller.sellerId})}">Cancel</a>
-          <button type="submit" class="btn btn-reject">Reject Seller</button>
+        <div class="rr-actions">
+          <a class="rr-btn rr-btn-cancel" th:href="@{/admin/getSellerDetailsForReview(sellerId=${seller.sellerId})}">
+            <i class="bi bi-arrow-left"></i> Cancel
+          </a>
+          <button type="submit" class="rr-btn rr-btn-reject">
+            <i class="bi bi-x-circle-fill"></i> Reject Seller
+          </button>
         </div>
       </form>
-    </div>
 
+    </div>
   </div>
+
+  <!-- Scripts -->
+  <script th:src="@{/lib/aos/aos.js}"></script>
+  <script th:src="@{/js/cmp-enhance.js}"></script>
+  <script>
+    AOS.init({ duration: 600, once: true, offset: 30 });
+
+    // Character counter
+    (function() {
+      var textarea = document.getElementById('rejectionReason');
+      var counter = document.getElementById('charCounter');
+      if (!textarea || !counter) return;
+
+      function updateCounter() {
+        var len = textarea.value.length;
+        counter.textContent = len + ' / 500';
+        counter.classList.remove('near-limit', 'at-limit');
+        if (len >= 500) {
+          counter.classList.add('at-limit');
+        } else if (len >= 400) {
+          counter.classList.add('near-limit');
+        }
+      }
+
+      textarea.addEventListener('input', updateCounter);
+      updateCounter();
+    })();
+  </script>
 </body>
 </html>
-
