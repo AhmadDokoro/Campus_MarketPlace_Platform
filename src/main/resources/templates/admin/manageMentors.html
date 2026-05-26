@@ -1,83 +1,350 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Mentors  Admin</title>
-    <link th:href="@{/css/style.css}" rel="stylesheet" />
-    <style>
-        :root{--bg:#f4f6fb;--card:#ffffff;--muted:#6b7280;--accent:#F2B705;--accent-2:#4B2E83}
-        body{font-family:Inter,system-ui,Arial;background:var(--bg);margin:24px}
-        .wrap{max-width:1000px;margin:0 auto}
-        .header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-        .back-btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:10px 14px;border-radius:10px;border:none;font-weight:700;cursor:pointer;text-decoration:none}
-        .card{background:var(--card);padding:18px;border-radius:14px;box-shadow:0 10px 30px rgba(21,24,35,0.06)}
-        table{width:100%;border-collapse:collapse;margin-top:12px}
-        th,td{padding:10px;border-bottom:1px solid #eee;text-align:left}
-        .muted{color:var(--muted)}
-        .row{display:flex;gap:12px;flex-wrap:wrap}
-        .row input{padding:10px;border:1px solid #ddd;border-radius:10px;min-width:260px}
-        .btn{padding:10px 14px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
-        .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff}
-        .btn-danger{background:#C4161C;color:#fff}
-        .msg{margin-top:12px;padding:10px;border-radius:10px}
-        .msg-error{background:#fff3f2;color:#b45309}
-        .msg-success{background:#ecfdf5;color:#047857}
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Manage Mentors — Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/admin.css(v=2)}">
+  <link rel="stylesheet" th:href="@{/css/mobile.css}">
+  <link rel="stylesheet" th:href="@{/css/cmp-enhance.css}">
+  <link rel="stylesheet" th:href="@{/lib/aos/aos.css}">
+  <style>
+    /* Page-specific styles */
+    .overview-header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 900; font-size: 26px;
+      background: linear-gradient(135deg, #1A0A3E, #4A2C8A, #C9A800);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; color: transparent;
+      margin: 0 0 6px;
+    }
+    .mentor-panel {
+      background: rgba(255,255,255,.82);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      backdrop-filter: blur(16px) saturate(140%);
+      border: 1px solid rgba(232,224,245,.85);
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: 0 12px 36px rgba(45,27,105,.08);
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .mentor-panel::before {
+      content: ""; position: absolute;
+      top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, #6B4EAF, #FFD700, #2D1B69, #FFD700, #6B4EAF);
+      background-size: 300% 100%;
+      animation: cmpDividerFlow 6s linear infinite;
+    }
+    @keyframes cmpDividerFlow {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .mentor-panel h3 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800; font-size: 16px;
+      margin: 0 0 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .mentor-panel h3 i {
+      color: #6B4EAF; font-size: 20px;
+    }
+    .form-row {
+      display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;
+    }
+    .form-group { flex: 1; min-width: 200px; }
+    .form-group label {
+      display: block; font-family: 'Poppins', sans-serif;
+      font-weight: 700; font-size: 11px;
+      text-transform: uppercase; letter-spacing: .08em;
+      color: #6B6280; margin-bottom: 6px;
+    }
+    .form-input {
+      width: 100%; padding: 12px 16px;
+      border: 1.5px solid #E0DBE8; border-radius: 12px;
+      font-family: 'Inter', sans-serif; font-size: 14px;
+      color: #2E2740; background: #fff;
+      transition: all .2s;
+      box-sizing: border-box;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: #6B4EAF;
+      box-shadow: 0 0 0 4px rgba(107,78,175,.14);
+    }
+    .btn-add {
+      font-family: 'Poppins', sans-serif; font-weight: 700;
+      font-size: 13px; padding: 12px 22px;
+      background: linear-gradient(135deg, #FFD700, #FFC107);
+      color: #1A0A3E; border: none; border-radius: 12px;
+      cursor: pointer; white-space: nowrap;
+      box-shadow: 0 6px 18px rgba(255,193,7,.3);
+      transition: all .25s; position: relative; overflow: hidden;
+    }
+    .btn-add:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(255,193,7,.4);
+    }
+    .btn-delete {
+      font-family: 'Poppins', sans-serif; font-weight: 700;
+      font-size: 12px; padding: 6px 14px;
+      background: #EF4444; color: #fff;
+      border: none; border-radius: 10px; cursor: pointer;
+      box-shadow: 0 4px 12px rgba(239,68,68,.25);
+      transition: all .2s;
+    }
+    .btn-delete:hover { transform: translateY(-1px); background: #dc2626; }
+    .msg {
+      padding: 14px 18px; border-radius: 14px;
+      font-size: 14px; font-weight: 600; margin-bottom: 16px;
+      border: 1px solid;
+    }
+    .msg-success { background: rgba(34,197,94,.08); color: #166534; border-color: rgba(34,197,94,.3); }
+    .msg-error { background: rgba(239,68,68,.08); color: #991b1b; border-color: rgba(239,68,68,.3); }
+    .mentor-avatar {
+      width: 32px; height: 32px; border-radius: 10px;
+      background: linear-gradient(135deg, #2D1B69, #4A2C8A);
+      color: #FFD700; font-weight: 800; font-size: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .empty-msg {
+      text-align: center; padding: 32px;
+      color: #6B6280; font-size: 14px;
+    }
+    .mentor-table {
+      width: 100%; border-collapse: separate; border-spacing: 0 8px;
+    }
+    .mentor-table thead th {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700; font-size: 11px;
+      text-transform: uppercase; letter-spacing: .08em;
+      color: #6B6280; padding: 0 14px 8px; text-align: left;
+    }
+    .mentor-table tbody tr {
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(45,27,105,.04);
+      transition: all .2s;
+    }
+    .mentor-table tbody tr:hover {
+      box-shadow: 0 4px 16px rgba(45,27,105,.1);
+    }
+    .mentor-table tbody td {
+      padding: 12px 14px; vertical-align: middle;
+      border-top: 1px solid rgba(232,224,245,.6);
+      border-bottom: 1px solid rgba(232,224,245,.6);
+    }
+    .mentor-table tbody td:first-child {
+      border-left: 1px solid rgba(232,224,245,.6);
+      border-top-left-radius: 14px;
+      border-bottom-left-radius: 14px;
+    }
+    .mentor-table tbody td:last-child {
+      border-right: 1px solid rgba(232,224,245,.6);
+      border-top-right-radius: 14px;
+      border-bottom-right-radius: 14px;
+    }
+    .mentor-name-cell {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .mentor-name-cell span {
+      font-weight: 700; color: #2E2740; font-size: 14px;
+    }
+    .mentor-email {
+      color: #6B6280; font-size: 13px;
+    }
+    .mentor-note {
+      margin-top: 12px; color: #6B6280; font-size: 13px;
+      font-style: italic;
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-    <div class="header">
-        <div>
-            <h2 style="margin:0">Manage Mentors</h2>
-            <div class="muted" style="margin-top:6px">Add mentors and manage the mentor list used during registration.</div>
-        </div>
-        <a th:href="@{/admin/dashboard}" class="back-btn"> Back to Dashboard</a>
-    </div>
 
-    <div class="card">
+  <!-- Mobile-only admin top navigation bar (hidden on desktop via mobile.css) -->
+  <div class="admin-mobile-topbar" style="display:none;">
+    <div class="brand-logo">
+      <div class="logo-square">CM</div>
+      <span class="brand-name">Campus Marketplace</span>
+    </div>
+    <button class="admin-mobile-menu-btn" onclick="toggleAdminSidebar()" aria-label="Open navigation menu">
+      &#9776; Menu
+    </button>
+  </div>
+
+  <!-- Mobile sidebar backdrop -->
+  <div class="admin-sidebar-backdrop" id="adminBackdrop" onclick="toggleAdminSidebar()"></div>
+
+  <!-- Mobile slide-out sidebar -->
+  <aside class="admin-mobile-sidebar" id="adminMobileSidebar">
+    <button class="close-btn" onclick="toggleAdminSidebar()">&#x2715; Close</button>
+    <div class="brand">
+      <div class="logo-square">CM</div>
+      <div class="brand-text">
+        <div class="title">Campus</div>
+        <div class="subtitle">Marketplace</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="nav-item" th:href="@{/admin/dashboard}"><span class="icon">&#127968;</span> Overview</a>
+      <a class="nav-item" th:href="@{/admin/pendingSellers}"><span class="icon">&#128221;</span> Seller Verification</a>
+      <a class="nav-item active" th:href="@{/admin/mentors}"><span class="icon">&#128101;</span> Manage Mentors</a>
+      <a class="nav-item" th:href="@{/admin/flaggedProducts}"><span class="icon">&#128681;</span> Flagged Products</a>
+      <a class="nav-item" th:href="@{/admin/categories}"><span class="icon">&#128193;</span> Categories</a>
+      <a class="nav-item danger" th:href="@{/logout}"><span class="icon">&#128274;</span> Logout</a>
+    </nav>
+  </aside>
+
+  <div class="admin-app">
+
+    <!-- SIDEBAR (desktop only) -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo-square">CM</div>
+        <div class="brand-text">
+          <div class="title">Campus</div>
+          <div class="subtitle">Marketplace</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a class="nav-item" th:href="@{/admin/dashboard}"><span class="icon">&#127968;</span> Overview</a>
+        <a class="nav-item" th:href="@{/admin/pendingSellers}"><span class="icon">&#128221;</span> Seller Verification</a>
+        <a class="nav-item active" th:href="@{/admin/mentors}"><span class="icon">&#128101;</span> Manage Mentors</a>
+        <a class="nav-item" th:href="@{/admin/flaggedProducts}"><span class="icon">&#128681;</span> Flagged Products</a>
+        <a class="nav-item" th:href="@{/admin/categories}"><span class="icon">&#128193;</span> Categories</a>
+        <div class="nav-spacer"></div>
+        <a class="nav-item danger" th:href="@{/logout}"><span class="icon">&#128274;</span> Logout</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div>Version 1.0</div>
+        <div class="small muted">UMT &bull; Campus Marketplace</div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="page-breadcrumb">
+            <span class="breadcrumb-icon">&#128101;</span>
+            <span class="breadcrumb-sep">/</span>
+            <span class="breadcrumb-current">Manage Mentors</span>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <div class="profile">
+            <div class="admin-avatar">A</div>
+            <div class="admin-meta">
+              <div class="admin-name">SEO Admin</div>
+              <div class="admin-role">Student Entrepreneurship Officer</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <section class="content">
+
+        <!-- Overview header -->
+        <section class="section overview fade-in">
+          <div class="overview-header">
+            <div>
+              <h1>Manage Mentors</h1>
+              <p class="muted">Add mentors and manage the mentor list used during registration.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Flash messages -->
         <div th:if="${error}" class="msg msg-error" th:text="${error}"></div>
         <div th:if="${success}" class="msg msg-success" th:text="${success}"></div>
 
-        <form th:action="@{/admin/mentors}" method="post">
-            <div class="row">
-                <input type="text" name="mentorName" placeholder="Mentor name" required />
-                <input type="email" name="mentorEmail" placeholder="Mentor email" required />
-                <button class="btn btn-primary" type="submit">Add Mentor</button>
+        <!-- Add Mentor panel -->
+        <div class="mentor-panel" data-aos="fade-up">
+          <h3><i class="bi bi-person-plus-fill"></i> Add New Mentor</h3>
+          <form th:action="@{/admin/mentors}" method="post">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Mentor Name</label>
+                <input class="form-input" type="text" name="mentorName" placeholder="Enter mentor name" required />
+              </div>
+              <div class="form-group">
+                <label>Mentor Email</label>
+                <input class="form-input" type="email" name="mentorEmail" placeholder="Enter mentor email" required />
+              </div>
+              <div style="display:flex;align-items:flex-end;">
+                <button class="btn-add" type="submit"><i class="bi bi-plus-circle" style="margin-right:6px;"></i> Add Mentor</button>
+              </div>
             </div>
-        </form>
+          </form>
+        </div>
 
-        <table>
+        <!-- Existing Mentors panel -->
+        <div class="mentor-panel" data-aos="fade-up" data-aos-delay="80">
+          <h3><i class="bi bi-people-fill"></i> Existing Mentors</h3>
+
+          <table class="mentor-table" th:if="${mentors != null and !#lists.isEmpty(mentors)}">
             <thead>
-            <tr>
+              <tr>
                 <th>#</th>
-                <th>Mentor Name</th>
-                <th>Mentor Email</th>
-                <th>Action</th>
-            </tr>
+                <th>Mentor</th>
+                <th>Email</th>
+                <th style="text-align:right;">Action</th>
+              </tr>
             </thead>
             <tbody>
-            <tr th:each="mentor, iter : ${mentors}">
-                <td th:text="${iter.count}"></td>
-                <td th:text="${mentor.mentorName}"></td>
-                <td th:text="${mentor.mentorEmail}"></td>
+              <tr th:each="mentor, iter : ${mentors}">
+                <td style="color:#6B6280;font-weight:700;" th:text="${iter.count}"></td>
                 <td>
-                    <form th:action="@{/admin/mentors/{id}/delete(id=${mentor.mentorId})}" method="post" style="margin:0">
-                        <button class="btn btn-danger" type="submit">Delete</button>
-                    </form>
+                  <div class="mentor-name-cell">
+                    <div class="mentor-avatar" th:text="${#strings.substring(mentor.mentorName, 0, 1).toUpperCase()}">A</div>
+                    <span th:text="${mentor.mentorName}"></span>
+                  </div>
                 </td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(mentors)}">
-                <td colspan="4" class="muted" style="padding:18px;text-align:center">No mentors added yet</td>
-            </tr>
+                <td class="mentor-email" th:text="${mentor.mentorEmail}"></td>
+                <td style="text-align:right;">
+                  <form th:action="@{/admin/mentors/{id}/delete(id=${mentor.mentorId})}" method="post" style="margin:0;display:inline;">
+                    <button class="btn-delete" type="submit"><i class="bi bi-trash3" style="margin-right:4px;"></i> Delete</button>
+                  </form>
+                </td>
+              </tr>
             </tbody>
-        </table>
+          </table>
 
-        <div class="muted" style="margin-top:12px;font-size:0.95rem">
+          <div th:if="${mentors == null or #lists.isEmpty(mentors)}" class="empty-msg">
+            <i class="bi bi-inbox" style="font-size:28px;display:block;margin-bottom:8px;color:#B8A9D4;"></i>
+            No mentors added yet. Use the form above to add one.
+          </div>
+
+          <div class="mentor-note">
             Note: mentors cannot be deleted if they are assigned to any user.
+          </div>
         </div>
-    </div>
-</div>
+
+      </section>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script th:src="@{/js/admin.js(v=2)}"></script>
+  <script th:src="@{/lib/aos/aos.js}" defer></script>
+  <script th:src="@{/js/cmp-enhance.js}" defer></script>
+  <script>
+    function toggleAdminSidebar() {
+      var sb = document.getElementById('adminMobileSidebar');
+      var bd = document.getElementById('adminBackdrop');
+      if (!sb) return;
+      var isOpen = sb.classList.toggle('show');
+      if (bd) bd.classList.toggle('show', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    }
+  </script>
 </body>
 </html>
-
