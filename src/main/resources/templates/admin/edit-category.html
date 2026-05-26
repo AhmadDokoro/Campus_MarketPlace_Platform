@@ -5,84 +5,358 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Edit Category — Admin</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link th:href="@{/css/admin.css}" rel="stylesheet" />
+    <link th:href="@{/css/cmp-enhance.css}" rel="stylesheet" />
+    <link th:href="@{/lib/aos/aos.css}" rel="stylesheet" />
 
     <style>
-        :root{
-            --umt-purple:#4B2E83;
-            --umt-orange:#F2B705;
-            --umt-blue:#2563eb;
-            --umt-red:#C4161C;
-            --bg:#f4f6fb;
-            --card:#ffffff;
-            --muted:#6b7280;
-            --shadow:0 10px 30px rgba(21,24,35,0.08);
-            --radius:16px;
+        /* ── CMP Aurora Background ── */
+        .cmp-aurora {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #faf8ff 0%, #f3eefb 50%, #faf8ff 100%);
+            position: relative;
+            overflow-x: hidden;
+            margin: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
-        body{margin:0;font-family:Inter,system-ui,Arial;background:var(--bg)}
-        .page{max-width:900px;margin:0 auto;padding:24px}
+        .cmp-aurora::before, .cmp-aurora::after {
+            content: "";
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .cmp-aurora::before {
+            width: 500px; height: 500px;
+            top: -100px; right: -100px;
+            background: radial-gradient(circle, rgba(107,78,175,.2), transparent 70%);
+        }
+        .cmp-aurora::after {
+            width: 400px; height: 400px;
+            bottom: -50px; left: -50px;
+            background: radial-gradient(circle, rgba(255,215,0,.15), transparent 70%);
+        }
 
-        .top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-        .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(75,46,131,0.14);background:#fbfaff;color:var(--umt-purple);border-radius:999px;padding:7px 12px;font-weight:800;font-size:12px}
-        h1{margin:8px 0 0;font-size:22px;letter-spacing:-0.2px;color:#111827}
-        .muted{color:var(--muted);margin:6px 0 0}
-        .back a{color:var(--umt-blue);text-decoration:none;font-weight:900}
-        .back a:hover{text-decoration:underline}
+        /* ── Page Container ── */
+        .cmp-page {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 48px 24px;
+            position: relative;
+            z-index: 1;
+        }
 
-        .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(15,23,42,0.06)}
-        .card-body{padding:18px}
+        /* ── Header ── */
+        .cmp-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .cmp-header-left h1 {
+            margin: 0 0 6px 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2D1B69, #6B4EAF, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+        .cmp-header-left .cmp-subtitle {
+            color: #6B6280;
+            font-size: 14px;
+            margin: 0;
+            font-weight: 500;
+        }
+        .cmp-back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: transparent;
+            color: #4A2C8A;
+            font-weight: 700;
+            font-size: 13px;
+            border-radius: 12px;
+            text-decoration: none;
+            border: 1.5px solid rgba(107,78,175,.25);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .cmp-back-btn:hover {
+            background: rgba(107,78,175,.08);
+            border-color: rgba(107,78,175,.4);
+            transform: translateY(-1px);
+            color: #4A2C8A;
+            text-decoration: none;
+        }
 
-        label{display:block;margin:10px 0 6px;font-weight:900;color:#111827;font-size:13px}
-        input, textarea{width:100%;border-radius:12px;border:1px solid rgba(15,23,42,0.12);padding:10px 12px;font-family:inherit;font-size:14px;outline:none;background:#fff}
-        textarea{min-height:130px;resize:vertical}
-        input:focus, textarea:focus{border-color:rgba(75,46,131,0.45);box-shadow:0 0 0 4px rgba(75,46,131,0.10)}
+        /* ── Flash Messages ── */
+        .cmp-alert {
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: rgba(255,255,255,.82);
+            backdrop-filter: blur(12px) saturate(140%);
+            -webkit-backdrop-filter: blur(12px) saturate(140%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            border: 1.5px solid rgba(239,68,68,.4);
+            color: #991B1B;
+        }
+        .cmp-alert .cmp-alert-icon {
+            color: #EF4444;
+            font-size: 20px;
+        }
+        .cmp-alert-label {
+            font-weight: 800;
+            font-family: 'Poppins', sans-serif;
+        }
 
-        .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
-        .btn{border:none;cursor:pointer;border-radius:12px;padding:10px 14px;font-weight:900;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
-        .btn-primary{background:linear-gradient(90deg,var(--umt-orange),var(--umt-purple));color:#111827;box-shadow:0 10px 24px rgba(75,46,131,0.12)}
-        .btn-outline{background:transparent;border:1px solid rgba(15,23,42,0.12);color:#111827}
+        /* ── Glassmorphic Card ── */
+        .cmp-card {
+            background: rgba(255,255,255,.82);
+            backdrop-filter: blur(16px) saturate(140%);
+            -webkit-backdrop-filter: blur(16px) saturate(140%);
+            border: 1px solid rgba(232,224,245,.85);
+            border-radius: 22px;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(45,27,105,.06), 0 2px 8px rgba(45,27,105,.04);
+        }
 
-        .alert{padding:10px 12px;border-radius:12px;border:1px solid rgba(196,22,28,0.25);background:rgba(196,22,28,0.08);margin-bottom:12px}
-        .alert b{margin-right:6px}
+        /* ── Card Top Bar (animated gradient) ── */
+        .cmp-card-bar {
+            height: 4px;
+            background: linear-gradient(90deg, #2D1B69, #6B4EAF, #FFD700, #FFC107, #6B4EAF, #2D1B69);
+            background-size: 300% 100%;
+            animation: cmpDividerFlow 6s ease infinite;
+        }
+        @keyframes cmpDividerFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ── Card Header ── */
+        .cmp-card-header {
+            padding: 24px 28px 0 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .cmp-card-header .cmp-card-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2D1B69, #6B4EAF);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFD700;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .cmp-card-header h3 {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: #2E2740;
+        }
+        .cmp-card-header p {
+            margin: 2px 0 0 0;
+            color: #6B6280;
+            font-size: 13px;
+        }
+
+        /* ── Card Body ── */
+        .cmp-card-body {
+            padding: 20px 28px 28px 28px;
+        }
+
+        /* ── Form Styles ── */
+        .cmp-form-group {
+            margin-bottom: 16px;
+        }
+        .cmp-form-group label {
+            display: block;
+            margin: 0 0 6px 0;
+            font-weight: 700;
+            color: #2E2740;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.2px;
+        }
+        .cmp-input, .cmp-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #E0DBE8;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2E2740;
+            background: rgba(255,255,255,.9);
+            outline: none;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+            box-sizing: border-box;
+        }
+        .cmp-textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+        .cmp-input:focus, .cmp-textarea:focus {
+            border-color: #6B4EAF;
+            box-shadow: 0 0 0 4px rgba(107,78,175,.14);
+        }
+        .cmp-input::placeholder, .cmp-textarea::placeholder {
+            color: #A09AAE;
+        }
+
+        /* ── Buttons ── */
+        .cmp-btn {
+            border: none;
+            cursor: pointer;
+            border-radius: 12px;
+            padding: 11px 22px;
+            font-weight: 700;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .cmp-btn-gold {
+            background: linear-gradient(135deg, #FFD700, #FFC107);
+            color: #2E2740;
+            box-shadow: 0 4px 16px rgba(255,215,0,.25);
+        }
+        .cmp-btn-gold::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+            transition: left 0.5s ease;
+        }
+        .cmp-btn-gold:hover::before {
+            left: 100%;
+        }
+        .cmp-btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(255,215,0,.35);
+        }
+        .cmp-btn-ghost {
+            background: transparent;
+            border: 1.5px solid rgba(107,78,175,.25);
+            color: #4A2C8A;
+            font-weight: 700;
+        }
+        .cmp-btn-ghost:hover {
+            background: rgba(107,78,175,.08);
+            border-color: rgba(107,78,175,.4);
+            transform: translateY(-1px);
+            color: #4A2C8A;
+            text-decoration: none;
+        }
+
+        .cmp-form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .cmp-page { padding: 24px 14px; }
+            .cmp-header { flex-direction: column; gap: 12px; }
+            .cmp-header-left h1 { font-size: 22px; }
+            .cmp-card-body { padding: 16px 18px 20px 18px; }
+            .cmp-card-header { padding: 18px 18px 0 18px; }
+        }
     </style>
 </head>
-<body>
+<body class="cmp-aurora">
 
-<div class="page">
-    <div class="top">
-        <div>
-            <div class="pill">🗂️ Admin • Edit Category</div>
+<div class="cmp-page">
+    <!-- Header -->
+    <div class="cmp-header" data-aos="fade-up">
+        <div class="cmp-header-left">
             <h1 th:text="'Edit: ' + ${category.categoryName}">Edit category</h1>
-            <p class="muted">Update the category name or description, then save.</p>
+            <p class="cmp-subtitle">Update the category name or description, then save.</p>
         </div>
-        <div class="back">
-            <a th:href="@{/admin/categories}">← Back to categories</a>
-        </div>
+        <a th:href="@{/admin/categories}" class="cmp-back-btn">
+            <i class="bi bi-arrow-left"></i> Back to Categories
+        </a>
     </div>
 
-    <div class="alert" th:if="${error != null}">
-        <b>Error:</b> <span th:text="${error}">Something went wrong</span>
+    <!-- Error Alert -->
+    <div class="cmp-alert" th:if="${error != null}" data-aos="fade-up">
+        <i class="bi bi-exclamation-triangle-fill cmp-alert-icon"></i>
+        <span><span class="cmp-alert-label">Error:</span> <span th:text="${error}">Something went wrong</span></span>
     </div>
 
-    <div class="card">
-        <div class="card-body">
+    <!-- Edit Card -->
+    <div class="cmp-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="cmp-card-bar"></div>
+        <div class="cmp-card-header">
+            <div class="cmp-card-icon">
+                <i class="bi bi-pencil-square"></i>
+            </div>
+            <div>
+                <h3>Edit Category</h3>
+                <p>Update details below and click save.</p>
+            </div>
+        </div>
+        <div class="cmp-card-body">
             <form th:action="@{'/admin/categories/' + ${category.categoryId} + '/update'}" method="post">
-                <label for="categoryName">Category name</label>
-                <input id="categoryName" name="categoryName" type="text" th:value="${category.categoryName}" required />
+                <div class="cmp-form-group">
+                    <label for="categoryName">Category name</label>
+                    <input id="categoryName" name="categoryName" type="text" class="cmp-input" th:value="${category.categoryName}" required />
+                </div>
 
-                <label for="description">Description</label>
-                <textarea id="description" name="description" th:text="${category.description}"></textarea>
+                <div class="cmp-form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" class="cmp-textarea" th:text="${category.description}"></textarea>
+                </div>
 
-                <div class="actions">
-                    <a class="btn btn-outline" th:href="@{/admin/categories}">Cancel</a>
-                    <button class="btn btn-primary" type="submit">💾 Save changes</button>
+                <div class="cmp-form-actions">
+                    <a class="cmp-btn cmp-btn-ghost" th:href="@{/admin/categories}">
+                        <i class="bi bi-x-lg"></i> Cancel
+                    </a>
+                    <button class="cmp-btn cmp-btn-gold" type="submit">
+                        <i class="bi bi-check-lg"></i> Save Changes
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+<!-- AOS Animation Library -->
+<script th:src="@{/lib/aos/aos.js}"></script>
+<script th:src="@{/js/cmp-enhance.js}"></script>
+<script>
+    AOS.init({ duration: 600, once: true, offset: 40 });
+</script>
+
 </body>
 </html>
-
