@@ -546,8 +546,8 @@
       <a th:href="@{/admin/seller/{id}/rejectReason(id=${seller.sellerId})}" class="sv-btn sv-btn-reject">
         <i class="bi bi-x-circle-fill"></i> Reject Application
       </a>
-      <form th:action="@{/admin/seller/{id}/approve(id=${seller.sellerId})}" method="post" th:object="${seller}" style="margin:0;">
-        <button type="submit" class="sv-btn sv-btn-approve">
+      <form th:action="@{/admin/seller/{id}/approve(id=${seller.sellerId})}" method="post" style="margin:0;" onsubmit="setApproveLoading(this)">
+        <button type="submit" class="sv-btn sv-btn-approve" id="approveBtn">
           <i class="bi bi-check-circle-fill"></i> Approve Seller
         </button>
       </form>
@@ -560,6 +560,19 @@
   <script th:src="@{/js/cmp-enhance.js}"></script>
   <script>
     AOS.init({ duration: 600, once: true, offset: 30 });
+
+    function setApproveLoading(form) {
+      var btn = document.getElementById('approveBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;">'
+          + '<svg style="animation:spin .8s linear infinite;width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>'
+          + 'Approving...</span>';
+      }
+    }
   </script>
+  <style>
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
 </body>
 </html>
