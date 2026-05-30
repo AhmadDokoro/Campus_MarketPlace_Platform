@@ -242,6 +242,32 @@
     </main>
   </div>
 
+  <!-- Approval success toast -->
+  <div th:if="${approvedMessage}" id="approveToast" style="
+      position:fixed; top:24px; right:24px; z-index:99999;
+      background: linear-gradient(135deg,#2d7a4f,#3fa86a);
+      color:#fff; border-radius:14px; padding:16px 22px;
+      box-shadow:0 8px 32px rgba(0,0,0,.22); font-family:'Inter',sans-serif;
+      display:flex; align-items:center; gap:12px; min-width:280px; max-width:400px;
+      animation: toastSlideIn .35s ease;">
+    <i class="bi bi-check-circle-fill" style="font-size:1.4rem;flex-shrink:0;"></i>
+    <div>
+      <div style="font-weight:700;font-size:.95rem;margin-bottom:2px;">Seller Approved</div>
+      <div style="font-size:.82rem;opacity:.9;" th:text="${approvedMessage}"></div>
+    </div>
+    <button onclick="document.getElementById('approveToast').remove()" style="
+        margin-left:auto; background:none; border:none; color:#fff;
+        font-size:1.1rem; cursor:pointer; opacity:.8; padding:0 0 0 8px;">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+  <style>
+    @keyframes toastSlideIn {
+      from { opacity:0; transform:translateY(-16px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+  </style>
+
   <script th:src="@{/lib/aos/aos.js}" defer></script>
   <script th:src="@{/js/cmp-enhance.js}" defer></script>
   <script>
@@ -253,6 +279,9 @@
       if (bd) bd.classList.toggle('show', isOpen);
       document.body.style.overflow = isOpen ? 'hidden' : '';
     }
+    // Auto-dismiss the toast after 5 s
+    var t = document.getElementById('approveToast');
+    if (t) setTimeout(function(){ t.style.transition='opacity .4s'; t.style.opacity='0'; setTimeout(function(){ t.remove(); }, 400); }, 5000);
   </script>
 </body>
 </html>

@@ -3,50 +3,49 @@ package com.ahsmart.campusmarket.helper;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.Properties;
 
-/**
- * This class is responsible for sending emails using Gmail's SMTP server.
- * It uses Jakarta Mail API to configure and send email messages securely.
- */
 @Component
 public class EmailHelper {
+
+    private static final Logger logger = LoggerFactory.getLogger(EmailHelper.class);
 
     private final String systemEmail = "campus.marketplace.umt@gmail.com";
     private final String appPassword = "lemj mynf vrye qlsg";
 
+    // Runs in a background thread so it never blocks the HTTP request.
+    @Async
     public void sendEmail(String recipientEmail, String subject, String body) {
-        // Set up properties for the email session
         Properties props = new Properties();
-        props.put("mail.smtp.auth", "true"); // Enable authentication
-        props.put("mail.smtp.starttls.enable", "true"); // Enable STARTTLS encryption
-        props.put("mail.smtp.host", "smtp.gmail.com"); // Gmail SMTP server
-        props.put("mail.smtp.port", "587"); // SMTP port for TLS
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.connectiontimeout", "20000"); // 20 s connect timeout
+        props.put("mail.smtp.timeout", "20000");           // 20 s read timeout
+        props.put("mail.smtp.writetimeout", "20000");      // 20 s write timeout
 
-        // Create a session with authentication
         Session session = Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                // Provide system email and app password for authentication
                 return new PasswordAuthentication(systemEmail, appPassword);
             }
         });
 
         try {
-            // Create a new email message
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(systemEmail)); // Set sender email
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail)); // Set recipient email
-            message.setSubject(subject); // Set email subject
-            message.setText(body); // Set email body
-
-            // Send the email
+            message.setFrom(new InternetAddress(systemEmail));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+            message.setSubject(subject);
+            message.setText(body);
             Transport.send(message);
         } catch (MessagingException e) {
-            // Handle any errors during the email sending process
-            throw new RuntimeException("Failed to send email", e);
+            logger.error("Failed to send email to {}: {}", recipientEmail, e.getMessage());
         }
     }
 }

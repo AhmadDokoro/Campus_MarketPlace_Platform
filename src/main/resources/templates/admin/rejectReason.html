@@ -298,7 +298,7 @@
       </div>
 
       <!-- Rejection Form -->
-      <form th:action="@{/admin/seller/{id}/reject(id=${seller.sellerId})}" method="post" data-aos="fade-up" data-aos-duration="500" data-aos-delay="300">
+      <form th:action="@{/admin/seller/{id}/reject(id=${seller.sellerId})}" method="post" data-aos="fade-up" data-aos-duration="500" data-aos-delay="300" onsubmit="setRejectLoading(this)">
         <label class="rr-label" for="rejectionReason">
           <i class="bi bi-chat-square-text-fill" style="color:#6B4EAF;margin-right:6px;"></i>
           Rejection Reason
@@ -316,7 +316,7 @@
           <a class="rr-btn rr-btn-cancel" th:href="@{/admin/getSellerDetailsForReview(sellerId=${seller.sellerId})}">
             <i class="bi bi-arrow-left"></i> Cancel
           </a>
-          <button type="submit" class="rr-btn rr-btn-reject">
+          <button type="submit" class="rr-btn rr-btn-reject" id="rejectBtn">
             <i class="bi bi-x-circle-fill"></i> Reject Seller
           </button>
         </div>
@@ -351,6 +351,17 @@
       textarea.addEventListener('input', updateCounter);
       updateCounter();
     })();
+
+    function setRejectLoading(form) {
+      var btn = document.getElementById('rejectBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;">'
+          + '<svg style="animation:spin .8s linear infinite;width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>'
+          + 'Rejecting...</span>';
+      }
+    }
   </script>
+  <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 </body>
 </html>

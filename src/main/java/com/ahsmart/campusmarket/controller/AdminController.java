@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
@@ -99,15 +100,17 @@ public class AdminController {
 
     // Approve seller
     @PostMapping("/seller/{id}/approve")
-    public String approveSeller(@PathVariable("id") Long sellerId, HttpSession session) {
+    public String approveSeller(@PathVariable("id") Long sellerId, HttpSession session, RedirectAttributes redirectAttrs) {
         if (!isAdmin(session)) {
             return "redirect:/signin";
         }
-        // get reviewer id from session
         Object userIdObj = session.getAttribute("userId");
         Long reviewerId = userIdObj == null ? null : (Long) userIdObj;
-        // perform review (also clears rejection reason)
-        adminService.reviewSeller(sellerId, SellerStatus.APPROVED, reviewerId);
+        Seller approved = adminService.reviewSeller(sellerId, SellerStatus.APPROVED, reviewerId);
+        String sellerName = approved.getUser() != null
+                ? approved.getUser().getFirstName() + " " + approved.getUser().getLastName()
+                : "Seller";
+        redirectAttrs.addFlashAttribute("approvedMessage", sellerName + " has been approved as a seller.");
         return "redirect:/admin/pendingSellers";
     }
 
