@@ -66,7 +66,7 @@ public class AdminReportService {
         return out.toByteArray();
     }
 
-    private void addHeader(Document doc) throws DocumentException {
+    private void addHeader(  Document doc) throws DocumentException {
         PdfPTable header = new PdfPTable(2);
         header.setWidthPercentage(100);
         header.setWidths(new float[]{65, 35});
