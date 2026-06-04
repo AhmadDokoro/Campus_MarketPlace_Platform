@@ -158,13 +158,13 @@ public class AdminReportService {
         long rejected = stats.getOrDefault("REJECTED", 0L);
         long total = approved + pending + rejected;
 
-        PdfPTable table = new PdfPTable(4);
+        PdfPTable table = new PdfPTable(3);
         table.setWidthPercentage(70);
         table.setHorizontalAlignment(Element.ALIGN_LEFT);
         table.setSpacingAfter(18);
-        table.setWidths(new float[]{35, 20, 20, 25});
+        table.setWidths(new float[]{40, 25, 35});
 
-        addTableHeader(table, "Status", "Count", "Percentage", "Trend");
+        addTableHeader(table, "Status", "Count", "Percentage");
 
         addVerificationRow(table, "Approved", approved, total, SUCCESS, 0);
         addVerificationRow(table, "Pending", pending, total, WARNING, 1);
@@ -180,9 +180,6 @@ public class AdminReportService {
         addCell(table, status, new Font(Font.HELVETICA, 9, Font.BOLD, color), bg, Element.ALIGN_LEFT);
         addCell(table, String.valueOf(count), new Font(Font.HELVETICA, 9, Font.NORMAL, TEXT_DARK), bg, Element.ALIGN_CENTER);
         addCell(table, pct, new Font(Font.HELVETICA, 9, Font.NORMAL, TEXT_DARK), bg, Element.ALIGN_CENTER);
-
-        String bar = buildBar(total > 0 ? (int) ((count * 20) / total) : 0);
-        addCell(table, bar, new Font(Font.HELVETICA, 9, Font.NORMAL, color), bg, Element.ALIGN_LEFT);
     }
 
     private String buildBar(int filled) {
@@ -263,7 +260,7 @@ public class AdminReportService {
             addCell(table, String.valueOf(row + 1), new Font(Font.HELVETICA, 9, Font.NORMAL, TEXT_MUTED), bg, Element.ALIGN_CENTER);
             addCell(table, s.getSellerName(), new Font(Font.HELVETICA, 9, Font.BOLD, TEXT_DARK), bg, Element.ALIGN_LEFT);
 
-            String date = s.getSubmittedAt() != null ? s.getSubmittedAt().format(DATE_FMT) : "—";
+            String date = s.getSubmittedAt() != null ? s.getSubmittedAt().format(DATE_FMT) : "N/A";
             addCell(table, date, new Font(Font.HELVETICA, 9, Font.NORMAL, TEXT_MUTED), bg, Element.ALIGN_LEFT);
 
             addCell(table, String.valueOf(s.getListingCount()), new Font(Font.HELVETICA, 9, Font.BOLD, PRIMARY_PURPLE), bg, Element.ALIGN_CENTER);
@@ -308,7 +305,7 @@ public class AdminReportService {
             addCell(table, p.getCategoryName(), new Font(Font.HELVETICA, 8, Font.NORMAL, TEXT_MUTED), bg, Element.ALIGN_LEFT);
             addCell(table, p.getPrice().toPlainString(), new Font(Font.HELVETICA, 9, Font.NORMAL, TEXT_DARK), bg, Element.ALIGN_RIGHT);
             addCell(table, p.getSellerName(), new Font(Font.HELVETICA, 8, Font.NORMAL, TEXT_DARK), bg, Element.ALIGN_LEFT);
-            String date = p.getCreatedAt() != null ? p.getCreatedAt().format(DATE_FMT) : "—";
+            String date = p.getCreatedAt() != null ? p.getCreatedAt().format(DATE_FMT) : "N/A";
             addCell(table, date, new Font(Font.HELVETICA, 8, Font.NORMAL, TEXT_MUTED), bg, Element.ALIGN_LEFT);
             row++;
         }
@@ -392,7 +389,7 @@ public class AdminReportService {
             PdfContentByte cb = writer.getDirectContent();
             Font footFont = new Font(Font.HELVETICA, 7, Font.NORMAL, new Color(107, 98, 128));
 
-            Phrase left = new Phrase("UMT Campus Marketplace — Confidential", footFont);
+            Phrase left = new Phrase("UMT Campus Marketplace - Confidential", footFont);
             Phrase right = new Phrase("Page " + writer.getPageNumber(), footFont);
 
             ColumnText.showTextAligned(cb, Element.ALIGN_LEFT, left,
