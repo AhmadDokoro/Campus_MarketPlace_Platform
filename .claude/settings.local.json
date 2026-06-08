@@ -71,7 +71,8 @@
       "PowerShell(Get-CimInstance *)",
       "PowerShell(.\\\\mvnw.cmd package -DskipTests 2>&1 | Select-Object -Last 5)",
       "PowerShell(Start-Process -FilePath \"java\" -ArgumentList \"-jar\", \"target\\\\campusmarket-0.0.1-SNAPSHOT.jar\" -WindowStyle Hidden)",
-      "PowerShell(Start-Sleep -Seconds 15; try { $r = Invoke-WebRequest -Uri \"http://localhost:8080\" -UseBasicParsing -TimeoutSec 5; \"Server is UP - Status: $\\($r.StatusCode\\)\" } catch { \"Server not ready: $\\($_.Exception.Message\\)\" })"
+      "PowerShell(Start-Sleep -Seconds 15; try { $r = Invoke-WebRequest -Uri \"http://localhost:8080\" -UseBasicParsing -TimeoutSec 5; \"Server is UP - Status: $\\($r.StatusCode\\)\" } catch { \"Server not ready: $\\($_.Exception.Message\\)\" })",
+      "WebFetch(domain:umtmarket.ahsmart.dev)"
     ]
   }
 }

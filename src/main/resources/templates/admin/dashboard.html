@@ -75,6 +75,8 @@
       position: relative;
       overflow: hidden;
       white-space: nowrap;
+      border: none;
+      cursor: pointer;
     }
     .btn-report-download:hover {
       transform: translateY(-2px);
@@ -93,8 +95,84 @@
     .btn-report-download:hover::after { left: 100%; }
     .btn-report-download i { font-size: 18px; }
 
+    .report-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(26, 10, 62, .55);
+      z-index: 1200;
+    }
+    .report-modal.show { display: flex; }
+    .report-modal-card {
+      width: min(100%, 460px);
+      background: #fff;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(26, 10, 62, .24);
+      border: 1px solid rgba(220, 210, 240, .9);
+    }
+    .report-modal-card h3 {
+      margin: 0 0 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 22px;
+      color: #1A0A3E;
+    }
+    .report-modal-card p {
+      margin: 0 0 18px;
+      color: #6B6280;
+      line-height: 1.5;
+    }
+    .report-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .report-field label {
+      font-weight: 700;
+      color: #2E2740;
+    }
+    .report-field select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(220, 210, 240, .95);
+      background: #fff;
+      color: #2E2740;
+      font-size: 14px;
+    }
+    .report-field select:focus {
+      outline: none;
+      border-color: #6B4EAF;
+      box-shadow: 0 0 0 3px rgba(107, 78, 175, .12);
+    }
+    .report-modal-error {
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(239, 68, 68, .1);
+      color: #B91C1C;
+      font-weight: 600;
+    }
+    .report-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .report-modal-actions .btn {
+      border: none;
+      cursor: pointer;
+    }
+
     @media (max-width: 575.98px) {
       .btn-report-download { width: 100%; justify-content: center; padding: 13px 20px; }
+      .report-modal-card { padding: 22px; }
+      .report-modal-actions { flex-direction: column-reverse; }
+      .report-modal-actions .btn { width: 100%; justify-content: center; }
     }
   </style>
 </head>
@@ -198,9 +276,9 @@
               <h1>Admin Dashboard</h1>
               <p class="muted">Live system overview — users, sellers, listings and sales.</p>
             </div>
-            <a th:href="@{/admin/report/download}" class="btn-report-download">
+            <button type="button" class="btn-report-download" onclick="openReportModal()">
               <i class="bi bi-file-earmark-pdf-fill"></i> Download Report
-            </a>
+            </button>
           </div>
 
           <div class="cards-grid">
@@ -418,6 +496,55 @@
   <!-- Modal placeholder -->
   <div id="modalRoot"></div>
 
+  <div id="reportModal" class="report-modal" th:classappend="${openReportModal} ? ' show' : ''" onclick="closeReportModal(event)">
+    <div class="report-modal-card" onclick="event.stopPropagation()">
+      <h3>Generate Report</h3>
+      <p>Select a year and, if needed, a specific month. You can review the report before exporting the PDF.</p>
+
+      <div th:if="${reportFilterError}" class="report-modal-error" th:text="${reportFilterError}">
+        Please select a valid report period.
+      </div>
+
+      <form th:action="@{/admin/report}" method="get" id="reportFilterForm">
+        <div class="report-field">
+          <label for="reportYear">Year</label>
+          <select id="reportYear" name="year" required>
+            <option th:each="reportYear : ${reportYears}"
+                    th:value="${reportYear}"
+                    th:text="${reportYear}"
+                    th:selected="${reportYearSelection == reportYear}">
+              2026
+            </option>
+          </select>
+        </div>
+
+        <div class="report-field">
+          <label for="reportMonth">Month</label>
+          <select id="reportMonth" name="month">
+            <option value="" th:selected="${reportMonthSelection == null}">All Months</option>
+            <option value="1" th:selected="${reportMonthSelection == 1}">January</option>
+            <option value="2" th:selected="${reportMonthSelection == 2}">February</option>
+            <option value="3" th:selected="${reportMonthSelection == 3}">March</option>
+            <option value="4" th:selected="${reportMonthSelection == 4}">April</option>
+            <option value="5" th:selected="${reportMonthSelection == 5}">May</option>
+            <option value="6" th:selected="${reportMonthSelection == 6}">June</option>
+            <option value="7" th:selected="${reportMonthSelection == 7}">July</option>
+            <option value="8" th:selected="${reportMonthSelection == 8}">August</option>
+            <option value="9" th:selected="${reportMonthSelection == 9}">September</option>
+            <option value="10" th:selected="${reportMonthSelection == 10}">October</option>
+            <option value="11" th:selected="${reportMonthSelection == 11}">November</option>
+            <option value="12" th:selected="${reportMonthSelection == 12}">December</option>
+          </select>
+        </div>
+
+        <div class="report-modal-actions">
+          <button type="button" class="btn outline" onclick="closeReportModal()">Cancel</button>
+          <button type="submit" class="btn">Generate Report</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Inject server data for Chart.js -->
   <script th:inline="javascript">
     /*<![CDATA[*/
@@ -448,6 +575,21 @@
   </script>
 
   <script>
+    function openReportModal() {
+      var modal = document.getElementById('reportModal');
+      if (!modal) return;
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeReportModal(event) {
+      if (event && event.target && event.target !== event.currentTarget) return;
+      var modal = document.getElementById('reportModal');
+      if (!modal) return;
+      modal.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       var form = document.getElementById('embeddingForm');
       if (form) {
@@ -458,6 +600,21 @@
             btn.textContent = 'Processing...';
           }, 50);
         });
+      }
+
+      var reportFilterForm = document.getElementById('reportFilterForm');
+      if (reportFilterForm) {
+        reportFilterForm.addEventListener('submit', function() {
+          var monthSelect = document.getElementById('reportMonth');
+          if (monthSelect && monthSelect.value === '') {
+            monthSelect.disabled = true;
+          }
+        });
+      }
+
+      var reportModal = document.getElementById('reportModal');
+      if (reportModal && reportModal.classList.contains('show')) {
+        document.body.style.overflow = 'hidden';
       }
     });
   </script>

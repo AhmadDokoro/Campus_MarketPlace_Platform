@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Report Preview - Campus Marketplace</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/admin.css(v=2)}">
+
+  <style>
+    .report-shell {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(255, 215, 0, .12), transparent 28%),
+        radial-gradient(circle at top right, rgba(107, 78, 175, .12), transparent 22%),
+        #f8f6fc;
+      padding: 32px 20px 48px;
+    }
+    .report-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .report-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .report-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(74, 44, 138, .08);
+      color: #4A2C8A;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .report-title {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(30px, 4vw, 42px);
+      line-height: 1.05;
+      color: #1A0A3E;
+    }
+    .report-subtitle {
+      margin: 10px 0 0;
+      color: #6B6280;
+      max-width: 700px;
+    }
+    .report-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .report-actions .btn {
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+    .report-card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    .report-card {
+      background: rgba(255,255,255,.88);
+      border: 1px solid rgba(232,224,245,.85);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 12px 36px rgba(45,27,105,.08);
+    }
+    .report-card .label {
+      margin-bottom: 8px;
+      color: #6B6280;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .report-card .value {
+      font-family: 'Poppins', sans-serif;
+      font-size: 34px;
+      color: #1A0A3E;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .report-card .desc {
+      color: #6B6280;
+      font-size: 13px;
+    }
+    .report-section {
+      background: rgba(255,255,255,.88);
+      border: 1px solid rgba(232,224,245,.85);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 12px 36px rgba(45,27,105,.08);
+      margin-bottom: 20px;
+    }
+    .report-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .report-section h2 {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      font-size: 22px;
+      color: #1A0A3E;
+    }
+    .report-section p {
+      margin: 6px 0 0;
+      color: #6B6280;
+    }
+    .report-empty {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(248, 246, 252, .95);
+      color: #6B6280;
+      font-weight: 600;
+    }
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 18px;
+    }
+    .report-table th,
+    .report-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(232,224,245,.85);
+      text-align: left;
+      vertical-align: middle;
+    }
+    .report-table th {
+      background: #231450;
+      color: #fff;
+      font-size: 12px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .report-table tbody tr:nth-child(even) td {
+      background: rgba(245, 243, 250, .75);
+    }
+    .report-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .pill-inline {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .pill-approved { background: rgba(34,197,94,.12); color: #15803D; }
+    .pill-pending { background: rgba(245,158,11,.14); color: #B45309; }
+    .pill-rejected { background: rgba(239,68,68,.12); color: #B91C1C; }
+    .report-meta {
+      color: #6B6280;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 900px) {
+      .report-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      .report-card-grid { grid-template-columns: 1fr; }
+      .report-shell { padding: 24px 14px 36px; }
+      .report-section { padding: 20px; }
+      .report-actions { width: 100%; }
+      .report-actions .btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="report-shell">
+    <div class="report-wrap">
+      <div class="report-topbar">
+        <div>
+          <div class="report-kicker">
+            <i class="bi bi-bar-chart-line-fill"></i>
+            Report Preview
+          </div>
+          <h1 class="report-title" th:text="${reportData.period.label}">Year 2026</h1>
+          <p class="report-subtitle">
+            Review the filtered report first, then export the same dataset as PDF.
+          </p>
+        </div>
+        <div class="report-actions">
+          <a class="btn outline" th:href="@{/admin/dashboard}">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+          </a>
+          <a class="btn"
+             th:if="${reportData.period.month != null}"
+             th:href="@{/admin/report/export(year=${reportData.period.year}, month=${reportData.period.month})}">
+            <i class="bi bi-file-earmark-pdf-fill"></i> Export Report
+          </a>
+          <a class="btn"
+             th:if="${reportData.period.month == null}"
+             th:href="@{/admin/report/export(year=${reportData.period.year})}">
+            <i class="bi bi-file-earmark-pdf-fill"></i> Export Report
+          </a>
+        </div>
+      </div>
+
+      <div class="report-card-grid">
+        <div class="report-card">
+          <div class="label">Users Registered</div>
+          <div class="value" th:text="${reportData.totalUsers}">0</div>
+          <div class="desc">New student accounts in the selected period.</div>
+        </div>
+        <div class="report-card">
+          <div class="label">Seller Requests</div>
+          <div class="value" th:text="${reportData.totalSellers}">0</div>
+          <div class="desc">Seller verification requests submitted in the period.</div>
+        </div>
+        <div class="report-card">
+          <div class="label">Approved Requests</div>
+          <div class="value" th:text="${reportData.verifiedSellers}">0</div>
+          <div class="desc">Selected-period requests that are currently approved.</div>
+        </div>
+        <div class="report-card">
+          <div class="label">Listings Added</div>
+          <div class="value" th:text="${reportData.activeListings}">0</div>
+          <div class="desc">Products created during the selected period.</div>
+        </div>
+        <div class="report-card">
+          <div class="label">Flagged Listings</div>
+          <div class="value" th:text="${reportData.flaggedListings}">0</div>
+          <div class="desc">Suspicious products created in the same period.</div>
+        </div>
+        <div class="report-card">
+          <div class="label">Completed Sales</div>
+          <div class="value" th:text="${reportData.totalSales}">0</div>
+          <div class="desc">Received order items tied to orders in the period.</div>
+        </div>
+      </div>
+
+      <div class="report-section" th:if="${reportData.empty}">
+        <div class="report-empty">
+          No report data was found for the selected period. You can go back and choose a different year or month.
+        </div>
+      </div>
+
+      <div class="report-section">
+        <div class="report-section-header">
+          <div>
+            <h2>Seller Request Status</h2>
+            <p>Current status breakdown for requests submitted in this period.</p>
+          </div>
+          <div class="report-meta" th:text="${#temporals.format(reportData.generatedAt, 'MMM d, yyyy hh:mm a')}">Jun 8, 2026 01:00 PM</div>
+        </div>
+
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Count</th>
+              <th>Share</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Approved</td>
+              <td th:text="${reportData.verificationStats['APPROVED']}">0</td>
+              <td th:text="${(reportData.totalSellers > 0 ? #numbers.formatDecimal((reportData.verificationStats['APPROVED'] * 100.0) / reportData.totalSellers, 1, 1) : '0.0') + '%'}">0.0%</td>
+            </tr>
+            <tr>
+              <td>Pending</td>
+              <td th:text="${reportData.verificationStats['PENDING']}">0</td>
+              <td th:text="${(reportData.totalSellers > 0 ? #numbers.formatDecimal((reportData.verificationStats['PENDING'] * 100.0) / reportData.totalSellers, 1, 1) : '0.0') + '%'}">0.0%</td>
+            </tr>
+            <tr>
+              <td>Rejected</td>
+              <td th:text="${reportData.verificationStats['REJECTED']}">0</td>
+              <td th:text="${(reportData.totalSellers > 0 ? #numbers.formatDecimal((reportData.verificationStats['REJECTED'] * 100.0) / reportData.totalSellers, 1, 1) : '0.0') + '%'}">0.0%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="report-section">
+        <div class="report-section-header">
+          <div>
+            <h2 th:text="${reportData.listingActivityLabel}">Monthly Listings</h2>
+            <p>Listing creation trend inside the selected report period.</p>
+          </div>
+        </div>
+
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th th:text="${reportData.period.month != null ? 'Day' : 'Month'}">Month</th>
+              <th>Listings</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="item : ${reportData.listingActivity}">
+              <td th:text="${item.weekLabel}">Jan</td>
+              <td th:text="${item.count}">0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="report-section">
+        <div class="report-section-header">
+          <div>
+            <h2>Top Categories</h2>
+            <p>Categories with the most new listings in this report period.</p>
+          </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(reportData.topCategories)}" class="report-empty">
+          No category activity was recorded in the selected period.
+        </div>
+        <table class="report-table" th:if="${!#lists.isEmpty(reportData.topCategories)}">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Category</th>
+              <th>Listings</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="category, stat : ${reportData.topCategories}">
+              <td th:text="${stat.index + 1}">1</td>
+              <td th:text="${category.categoryName}">Electronics</td>
+              <td th:text="${category.productCount}">12</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="report-section">
+        <div class="report-section-header">
+          <div>
+            <h2>Seller Applications</h2>
+            <p>Seller requests submitted in the selected period and their listing output in the same period.</p>
+          </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(reportData.sellerStats)}" class="report-empty">
+          No seller applications were submitted in the selected period.
+        </div>
+        <table class="report-table" th:if="${!#lists.isEmpty(reportData.sellerStats)}">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Seller</th>
+              <th>Submitted</th>
+              <th>Listings</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="seller, stat : ${reportData.sellerStats}">
+              <td th:text="${stat.index + 1}">1</td>
+              <td th:text="${seller.sellerName}">Seller Name</td>
+              <td th:text="${seller.submittedAt != null ? #temporals.format(seller.submittedAt, 'MMM d, yyyy') : '-'}">Jun 8, 2026</td>
+              <td th:text="${seller.listingCount}">0</td>
+              <td>
+                <span class="pill-inline pill-approved" th:if="${seller.statusName == 'APPROVED'}">Approved</span>
+                <span class="pill-inline pill-pending" th:if="${seller.statusName == 'PENDING'}">Pending</span>
+                <span class="pill-inline pill-rejected" th:if="${seller.statusName == 'REJECTED'}">Rejected</span>
+                <span th:if="${seller.statusName != 'APPROVED' and seller.statusName != 'PENDING' and seller.statusName != 'REJECTED'}"
+                      th:text="${seller.statusName}">Unknown</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="report-section">
+        <div class="report-section-header">
+          <div>
+            <h2>Flagged Products</h2>
+            <p>Suspicious products created in the selected period.</p>
+          </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(reportData.flaggedProducts)}" class="report-empty">
+          No flagged products were found in the selected period.
+        </div>
+        <table class="report-table" th:if="${!#lists.isEmpty(reportData.flaggedProducts)}">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Product</th>
+              <th>Category</th>
+              <th>Price (RM)</th>
+              <th>Seller</th>
+              <th>Listed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="product, stat : ${reportData.flaggedProducts}">
+              <td th:text="${stat.index + 1}">1</td>
+              <td th:text="${product.title}">Sample Product</td>
+              <td th:text="${product.categoryName}">Category</td>
+              <td th:text="${product.price}">10.00</td>
+              <td th:text="${product.sellerName}">Seller</td>
+              <td th:text="${product.createdAt != null ? #temporals.format(product.createdAt, 'MMM d, yyyy') : '-'}">Jun 8, 2026</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

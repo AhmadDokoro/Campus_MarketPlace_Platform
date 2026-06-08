@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     // Loads latest created products with related images/category for fallback featured list.
     @EntityGraph(attributePaths = {"images", "category"})
     List<Product> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+    long countByCreatedAtGreaterThanEqualAndCreatedAtLessThan(LocalDateTime start, LocalDateTime end);
+
+    long countByFlaggedStatusAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(
+            FlaggedStatus status,
+            LocalDateTime start,
+            LocalDateTime end
+    );
 
     // Loads a paginated product list with related images/category for explore page.
     @EntityGraph(attributePaths = {"images", "category"})
@@ -100,6 +109,20 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT c.categoryName, COUNT(p) FROM Product p JOIN p.category c GROUP BY c.categoryId, c.categoryName ORDER BY COUNT(p) DESC")
     List<Object[]> countProductsPerCategory();
 
+    @Query("SELECT c.categoryName, COUNT(p) FROM Product p " +
+            "JOIN p.category c " +
+            "WHERE p.createdAt >= :start AND p.createdAt < :end " +
+            "GROUP BY c.categoryId, c.categoryName " +
+            "ORDER BY COUNT(p) DESC")
+    List<Object[]> countProductsPerCategoryWithinPeriod(@Param("start") LocalDateTime start,
+                                                        @Param("end") LocalDateTime end);
+
+    @Query("SELECT p.createdAt FROM Product p " +
+            "WHERE p.createdAt >= :start AND p.createdAt < :end " +
+            "ORDER BY p.createdAt ASC")
+    List<LocalDateTime> findCreatedAtWithinPeriod(@Param("start") LocalDateTime start,
+                                                  @Param("end") LocalDateTime end);
+
     // Fetches all products matching the given flagged status with images, category, and seller eagerly loaded — admin flagged products page.
     @Query("SELECT DISTINCT p FROM Product p " +
             "LEFT JOIN FETCH p.images " +
@@ -109,4 +132,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "WHERE p.flaggedStatus = :status " +
             "ORDER BY p.createdAt DESC")
     List<Product> findByFlaggedStatusWithDetails(@Param("status") FlaggedStatus status);
+
+    @Query("SELECT DISTINCT p FROM Product p " +
+            "LEFT JOIN FETCH p.images " +
+            "LEFT JOIN FETCH p.category " +
+            "LEFT JOIN FETCH p.seller s " +
+            "LEFT JOIN FETCH s.user " +
+            "WHERE p.flaggedStatus = :status " +
+            "AND p.createdAt >= :start AND p.createdAt < :end " +
+            "ORDER BY p.createdAt DESC")
+    List<Product> findByFlaggedStatusWithDetailsWithinPeriod(@Param("status") FlaggedStatus status,
+                                                             @Param("start") LocalDateTime start,
+                                                             @Param("end") LocalDateTime end);
 }

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Embedding Feature Flow — Campus Marketplace</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #0d0d1a;
+    color: #fff;
+    min-height: 100vh;
+    padding: 40px 24px 60px;
+  }
+
+  .page-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+  .page-sub {
+    text-align: center;
+    font-size: 13px;
+    color: #6b6d88;
+    margin-bottom: 36px;
+  }
+
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .tab {
+    padding: 10px 28px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+  .tab.on  { background: #e53170; color: #fff; }
+  .tab.off { background: #1c1b2e; color: #888; }
+  .tab.off:hover { background: #26243d; color: #bbb; }
+
+  .flow { display: none; max-width: 780px; margin: 0 auto; }
+  .flow.on { display: block; }
+
+  /* ---- STEP CARD ---- */
+  .step-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    background: #14132a;
+    border: 1.5px solid #2a2845;
+    border-radius: 14px;
+    padding: 20px 22px;
+    position: relative;
+  }
+  .step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-body { flex: 1; }
+  .step-who {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 4px;
+  }
+  .step-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .step-desc {
+    font-size: 13px;
+    color: #9b9bb5;
+    line-height: 1.6;
+  }
+  .step-desc code {
+    background: #0a091a;
+    border: 1px solid #2a2845;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #c084fc;
+  }
+
+  /* ---- ARROW ---- */
+  .arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    padding: 4px 0;
+  }
+  .arrow-line { width: 2px; height: 28px; }
+  .arrow-head { font-size: 18px; line-height: 1; margin-top: -4px; }
+  .arrow-label {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin: 4px 0;
+    white-space: nowrap;
+  }
+
+  /* colours per actor */
+  .c-seller  { color: #60a5fa; }
+  .c-backend { color: #4ade80; }
+  .c-openai  { color: #c084fc; }
+  .c-db      { color: #fbbf24; }
+  .c-buyer   { color: #38bdf8; }
+
+  .bg-seller  { background: #1a2540; border-color: #3b5998; }
+  .bg-backend { background: #0f2a1a; border-color: #1a6b3a; }
+  .bg-openai  { background: #1e1030; border-color: #7c3aed; }
+  .bg-db      { background: #2a1f08; border-color: #b45309; }
+  .bg-buyer   { background: #0a1e2a; border-color: #0369a1; }
+
+  .num-seller  { background: #1d4ed8; color: #fff; }
+  .num-backend { background: #16a34a; color: #fff; }
+  .num-openai  { background: #7c3aed; color: #fff; }
+  .num-db      { background: #b45309; color: #fff; }
+  .num-buyer   { background: #0369a1; color: #fff; }
+
+  .arr-seller  { background: #1d4ed8; color: #fff; }
+  .arr-backend { background: #16a34a; color: #fff; }
+  .arr-openai  { background: #7c3aed; color: #fff; }
+  .arr-db      { background: #b45309; color: #fff; }
+  .arr-buyer   { background: #0369a1; color: #fff; }
+  .arr-line-seller  { background: #1d4ed8; }
+  .arr-line-backend { background: #16a34a; }
+  .arr-line-openai  { background: #7c3aed; }
+  .arr-line-db      { background: #b45309; }
+  .arr-line-buyer   { background: #0369a1; }
+
+  /* ---- CALLOUT BOX ---- */
+  .callout {
+    background: #1a1030;
+    border: 1.5px solid #7c3aed;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-top: 8px;
+  }
+  .callout p { font-size: 13px; color: #c4b5fd; line-height: 1.6; }
+  .callout strong { color: #e9d5ff; }
+
+  /* ---- LEGEND ---- */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  .leg { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #6b6d88; }
+  .leg-dot { width: 12px; height: 12px; border-radius: 50%; }
+</style>
+</head>
+<body>
+
+<p class="page-title">Embedding Feature — How It Works</p>
+<p class="page-sub">Campus Marketplace Platform · AI-Powered Product Recommendations</p>
+
+<div class="tabs">
+  <button class="tab on"  onclick="show('listing', this)">When a Product is Listed</button>
+  <button class="tab off" onclick="show('recommend', this)">When a Buyer Views a Product</button>
+</div>
+
+<!-- ===================== FLOW 1 ===================== -->
+<div class="flow on" id="flow-listing">
+
+  <!-- Step 1 -->
+  <div class="step-card bg-seller">
+    <div class="step-num num-seller">1</div>
+    <div class="step-body">
+      <div class="step-who c-seller">Seller</div>
+      <div class="step-title">Seller fills in the Add Product form</div>
+      <div class="step-desc">
+        The seller enters the product <strong>title</strong>, <strong>category</strong>, <strong>description</strong>, price, and image, then clicks <em>Submit</em>.
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-line arr-line-backend"></div>
+    <div class="arrow-label arr-backend">Backend receives the form</div>
+    <div class="arrow-line arr-line-backend"></div>
+    <div class="arrow-head c-backend">▼</div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step-card bg-backend">
+    <div class="step-num num-backend">2</div>
+    <div class="step-body">
+      <div class="step-who c-backend">Backend (Spring Boot)</div>
+      <div class="step-title">Builds a description text for the product</div>
+      <div class="step-desc">
+        The backend combines the product's title, category name, and description into one single piece of text.<br><br>
+        Example: <code>"iPhone 13 Electronics Great condition, barely used phone"</code>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-line arr-line-openai"></div>
+    <div class="arrow-label arr-openai">Sends text to OpenAI Embedding API</div>
+    <div class="arrow-line arr-line-openai"></div>
+    <div class="arrow-head c-openai">▼</div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step-card bg-openai">
+    <div class="step-num num-openai">3</div>
+    <div class="step-body">
+      <div class="step-who c-openai">OpenAI Embedding API</div>
+      <div class="step-title">Converts the text into a list of numbers (a vector)</div>
+      <div class="step-desc">
+        OpenAI reads the text and returns <strong>1,536 decimal numbers</strong> that together represent the "meaning" of that product — this is called an <strong>embedding vector</strong>.<br><br>
+        Example: <code>[0.023, -0.041, 0.117, 0.009, -0.082, ...]</code>
+      </div>
+      <div class="callout">
+        <p>
+          <strong>Think of it like GPS coordinates, but in 1,536 dimensions.</strong><br>
+          Every product gets its own unique coordinate. Products that are similar in meaning (e.g. two phones) end up at coordinates that are very close together. Products that are different (e.g. a phone vs a textbook) end up far apart.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-line arr-line-db"></div>
+    <div class="arrow-label arr-db">Backend stores the numbers</div>
+    <div class="arrow-line arr-line-db"></div>
+    <div class="arrow-head c-db">▼</div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="step-card bg-db">
+    <div class="step-num num-db">4</div>
+    <div class="step-body">
+      <div class="step-who c-db">Database (MySQL)</div>
+      <div class="step-title">The vector is saved alongside the product</div>
+      <div class="step-desc">
+        The 1,536 numbers are serialized to JSON and stored in the <code>embedding</code> column of the <code>products</code> table — right next to the product's title, price, and image.<br><br>
+        If the API call fails for any reason, the product is still saved normally — just without an embedding.
+      </div>
+    </div>
+  </div>
+
+</div><!-- end flow-listing -->
+
+<!-- ===================== FLOW 2 ===================== -->
+<div class="flow" id="flow-recommend">
+
+  <!-- Step 1 -->
+  <div class="step-card bg-buyer">
+    <div class="step-num num-buyer">1</div>
+    <div class="step-body">
+      <div class="step-who c-buyer">Buyer</div>
+      <div class="step-title">Buyer clicks on a product to view it</div>
+      <div class="step-desc">
+        The buyer opens a product detail page. At the bottom of that page, the system needs to show <strong>similar products</strong>.
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-line arr-line-backend"></div>
+    <div class="arrow-label arr-backend">Backend loads the product's stored embedding</div>
+    <div class="arrow-line arr-line-backend"></div>
+    <div class="arrow-head c-backend">▼</div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step-card bg-backend">
+    <div class="step-num num-backend">2</div>
+    <div class="step-body">
+      <div class="step-who c-backend">Backend</div>
+      <div class="step-title">Retrieves this product's embedding from the database</div>
+      <div class="step-desc">
+        The backend reads the <code>embedding</code> column for the product the buyer just opened — getting back its 1,536 numbers.
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-line arr-line-db"></div>
+    <div class="arrow-label arr-db">Fetches all other products' embeddings</div>
+    <div class="arrow-line arr-line-db"></div>
+    <div class="arrow-head c-db">▼</div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step-card bg-db">
+    <div class="step-num num-db">3</div>
+    <div class="step-body">
+      <div class="step-who c-db">Database</div>
+      <div class="step-title">Returns the embeddings of every other product</div>
+      <div class="step-desc">
+        All other products that have an embedding stored are returned — just their ID and their 1,536 numbers. No heavy data yet.
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-line arr-line-backend"></div>
+    <div class="arrow-label arr-backend">Compares using Cosine Similarity</div>
+    <div class="arrow-line arr-line-backend"></div>
+    <div class="arrow-head c-backend">▼</div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="step-card bg-backend">
+    <div class="step-num num-backend">4</div>
+    <div class="step-body">
+      <div class="step-who c-backend">Backend — Cosine Similarity</div>
+      <div class="step-title">Calculates how similar each product is to the current one</div>
+      <div class="step-desc">
+        For every other product, the backend runs a <strong>cosine similarity</strong> calculation — comparing its vector against the current product's vector. The result is a score from <strong>0.0</strong> (completely different) to <strong>1.0</strong> (identical meaning).
+      </div>
+      <div class="callout">
+        <p>
+          <strong>Cosine similarity = measuring the angle between two GPS coordinates.</strong><br><br>
+          If two products have coordinates that point in nearly the same direction → small angle → score close to 1.0 → very similar.<br><br>
+          If two products point in completely different directions → large angle → score close to 0.0 → not similar.<br><br>
+          <strong>Example:</strong> "iPhone 13 Electronics" vs "Samsung Galaxy Phone" → score ≈ 0.87 (very similar)<br>
+          <strong>Example:</strong> "iPhone 13 Electronics" vs "Calculus Textbook" → score ≈ 0.21 (not similar)
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-line arr-line-backend"></div>
+    <div class="arrow-label arr-backend">Sorts scores high → low, picks top 5</div>
+    <div class="arrow-line arr-line-backend"></div>
+    <div class="arrow-head c-backend">▼</div>
+  </div>
+
+  <!-- Step 5 -->
+  <div class="step-card bg-backend">
+    <div class="step-num num-backend">5</div>
+    <div class="step-body">
+      <div class="step-who c-backend">Backend</div>
+      <div class="step-title">Sorts all scores and picks the top 5</div>
+      <div class="step-desc">
+        All similarity scores are sorted from highest to lowest. The <strong>top 5 product IDs</strong> are taken — those are the most semantically similar products to the one the buyer is viewing.
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-line arr-line-db"></div>
+    <div class="arrow-label arr-db">Fetches full details for those 5 products</div>
+    <div class="arrow-line arr-line-db"></div>
+    <div class="arrow-head c-db">▼</div>
+  </div>
+
+  <!-- Step 6 -->
+  <div class="step-card bg-buyer">
+    <div class="step-num num-buyer">6</div>
+    <div class="step-body">
+      <div class="step-who c-buyer">Buyer sees the result</div>
+      <div class="step-title">Similar products are shown at the bottom of the page</div>
+      <div class="step-desc">
+        The backend fetches full product data (title, price, image) for the top 5 IDs, preserves the similarity order, and renders them as the <strong>"You may also like"</strong> section on the product detail page.
+      </div>
+    </div>
+  </div>
+
+</div><!-- end flow-recommend -->
+
+<!-- Legend -->
+<div class="legend">
+  <div class="leg"><div class="leg-dot" style="background:#1d4ed8;"></div> Seller</div>
+  <div class="leg"><div class="leg-dot" style="background:#16a34a;"></div> Backend (Spring Boot)</div>
+  <div class="leg"><div class="leg-dot" style="background:#7c3aed;"></div> OpenAI Embedding API</div>
+  <div class="leg"><div class="leg-dot" style="background:#b45309;"></div> Database (MySQL)</div>
+  <div class="leg"><div class="leg-dot" style="background:#0369a1;"></div> Buyer</div>
+</div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.flow').forEach(f => f.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t => { t.classList.remove('on'); t.classList.add('off'); });
+  document.getElementById('flow-' + id).classList.add('on');
+  btn.classList.add('on');
+  btn.classList.remove('off');
+}
+</script>
+
+</body>
+</html>

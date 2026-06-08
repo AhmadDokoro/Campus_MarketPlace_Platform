@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,12 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     // Counts order items with a specific delivery status — used for admin total-sales metric.
     long countByDeliveryStatus(DeliveryStatus deliveryStatus);
+
+    long countByDeliveryStatusAndOrder_CreatedAtGreaterThanEqualAndOrder_CreatedAtLessThan(
+            DeliveryStatus deliveryStatus,
+            LocalDateTime start,
+            LocalDateTime end
+    );
 
     boolean existsByProduct_ProductId(Long productId);
 
