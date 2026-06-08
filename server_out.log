@@ -1,0 +1,537 @@
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.4)
+
+2026-06-04T09:37:36.590+08:00  INFO 23412 --- [           main] c.a.c.CampusmarketApplication            : Starting CampusmarketApplication v0.0.1-SNAPSHOT using Java 21.0.1 with PID 23412 (C:\Users\PC\Desktop\Projects\Campus Marketplace Platform\campusmarket\target\campusmarket-0.0.1-SNAPSHOT.jar started by PC in C:\Users\PC\Desktop\Projects\Campus Marketplace Platform\campusmarket)
+2026-06-04T09:37:36.595+08:00 DEBUG 23412 --- [           main] c.a.c.CampusmarketApplication            : Running with Spring Boot v3.5.4, Spring v6.2.9
+2026-06-04T09:37:36.597+08:00  INFO 23412 --- [           main] c.a.c.CampusmarketApplication            : No active profile set, falling back to 1 default profile: "default"
+2026-06-04T09:37:39.881+08:00  INFO 23412 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-04T09:37:40.307+08:00  INFO 23412 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 391 ms. Found 15 JPA repository interfaces.
+2026-06-04T09:37:42.739+08:00  INFO 23412 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-04T09:37:42.777+08:00  INFO 23412 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-04T09:37:42.778+08:00  INFO 23412 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.43]
+2026-06-04T09:37:42.814+08:00  INFO 23412 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-04T09:37:42.830+08:00  INFO 23412 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 6035 ms
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+2026-06-04T09:37:43.327+08:00  INFO 23412 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-04T09:37:43.493+08:00  INFO 23412 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.22.Final
+2026-06-04T09:37:43.877+08:00  INFO 23412 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-04T09:37:44.874+08:00  INFO 23412 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-04T09:37:44.945+08:00  INFO 23412 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-04T09:37:45.877+08:00  INFO 23412 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2ceb68a1
+2026-06-04T09:37:45.877+08:00  INFO 23412 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-04T09:37:46.161+08:00  INFO 23412 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.41
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-04T09:37:49.621+08:00  INFO 23412 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: alter table products modify column `condition` enum ('NEW','USED')
+Hibernate: alter table products modify column flagged_status enum ('SUSPICIOUS','UNKNOWN','VERIFIED')
+2026-06-04T09:37:50.542+08:00  INFO 23412 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-04T09:37:52.012+08:00  INFO 23412 --- [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-04T09:37:59.403+08:00  WARN 23412 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-04T09:37:59.479+08:00  INFO 23412 --- [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-06-04T09:37:59.808+08:00 DEBUG 23412 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 68 mappings in 'requestMappingHandlerMapping'
+2026-06-04T09:38:00.045+08:00 DEBUG 23412 --- [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2026-06-04T09:38:00.154+08:00 DEBUG 23412 --- [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2026-06-04T09:38:00.428+08:00 DEBUG 23412 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2026-06-04T09:38:00.781+08:00  INFO 23412 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-04T09:38:00.944+08:00  INFO 23412 --- [           main] c.a.c.CampusmarketApplication            : Started CampusmarketApplication in 25.639 seconds (process running for 27.148)
+2026-06-04T09:38:58.676+08:00  INFO 23412 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-04T09:38:58.681+08:00  INFO 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-06-04T09:38:58.681+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2026-06-04T09:38:58.681+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2026-06-04T09:38:58.681+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2026-06-04T09:38:58.706+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@7223fd84
+2026-06-04T09:38:58.706+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@3b451dc9
+2026-06-04T09:38:58.706+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-06-04T09:38:58.711+08:00  INFO 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 30 ms
+2026-06-04T09:38:58.731+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/", parameters={}
+2026-06-04T09:38:58.779+08:00 DEBUG 23412 --- [nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ahsmart.campusmarket.controller.AuthenticationController#home(HttpSession)
+2026-06-04T09:38:59.091+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/avif, image/webp, image/apng, application/xml;q=0.9, */*;q=0.8, application/signed-exchange;v=b3;q=0.7]
+2026-06-04T09:39:00.131+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:00.208+08:00 DEBUG 23412 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/img/umtlogo.png", parameters={}
+2026-06-04T09:39:00.218+08:00 DEBUG 23412 --- [nio-8080-exec-2] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:00.251+08:00 DEBUG 23412 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:00.553+08:00 DEBUG 23412 --- [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/animation/Shopping%20bag.lottie", parameters={}
+2026-06-04T09:39:00.573+08:00 DEBUG 23412 --- [nio-8080-exec-3] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:00.630+08:00 DEBUG 23412 --- [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:01.197+08:00 DEBUG 23412 --- [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/favicon.ico", parameters={}
+2026-06-04T09:39:01.206+08:00 DEBUG 23412 --- [nio-8080-exec-4] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:01.211+08:00 DEBUG 23412 --- [nio-8080-exec-4] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2026-06-04T09:39:01.217+08:00 DEBUG 23412 --- [nio-8080-exec-4] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.ahsmart.campusmarket.config.GlobalExceptionHandler#handleAll(Throwable)
+2026-06-04T09:39:01.217+08:00 ERROR 23412 --- [nio-8080-exec-4] c.a.c.config.GlobalExceptionHandler      : Unhandled exception caught by GlobalExceptionHandler
+
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource favicon.ico.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:585) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:52) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1769) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1189) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:658) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+
+2026-06-04T09:39:01.265+08:00 DEBUG 23412 --- [nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'image/avif', given [image/avif, image/webp, image/apng, image/svg+xml, image/*, */*;q=0.8] and supported [text/plain, */*, application/json, application/*+json]
+2026-06-04T09:39:01.272+08:00 DEBUG 23412 --- [nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing ["Unhandled exception: No static resource favicon.ico.<EOL><EOL>org.springframework.web.servlet.resource.NoRes (truncated)..."]
+2026-06-04T09:39:01.278+08:00 DEBUG 23412 --- [nio-8080-exec-4] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource favicon.ico.]
+2026-06-04T09:39:01.279+08:00 DEBUG 23412 --- [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 500 INTERNAL_SERVER_ERROR
+2026-06-04T09:39:04.378+08:00 DEBUG 23412 --- [nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/index", parameters={}
+2026-06-04T09:39:04.382+08:00 DEBUG 23412 --- [nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ahsmart.campusmarket.controller.AuthenticationController#indexPage(Model, HttpSession)
+Hibernate: select c1_0.category_id,c1_0.category_name,c1_0.description from categories c1_0 order by c1_0.category_id desc limit ?
+Hibernate: select p1_0.category_id,count(p1_0.product_id) from products p1_0 group by p1_0.category_id
+Hibernate: select oi1_0.product_id from order_items oi1_0 join orders o1_0 on o1_0.order_id=oi1_0.order_id where o1_0.status not in (?,?) group by oi1_0.product_id order by sum(oi1_0.quantity) desc limit ?
+Hibernate: select distinct p1_0.product_id,p1_0.category_id,c1_0.category_id,c1_0.category_name,c1_0.description,p1_0.`condition`,p1_0.created_at,p1_0.description,p1_0.embedding,p1_0.flagged_status,i1_0.product_id,i1_0.image_id,i1_0.image_url,i1_0.is_primary,i1_0.public_id,i1_0.uploaded_at,p1_0.price,p1_0.quantity,p1_0.seller_id,p1_0.title from products p1_0 left join product_images i1_0 on p1_0.product_id=i1_0.product_id left join categories c1_0 on c1_0.category_id=p1_0.category_id where p1_0.product_id in (?,?,?,?,?,?,?,?,?,?)
+2026-06-04T09:39:05.136+08:00  WARN 23412 --- [nio-8080-exec-5] org.hibernate.orm.query                  : HHH90003004: firstResult/maxResults specified with collection fetch; applying in memory
+Hibernate: select p1_0.product_id,p1_0.category_id,c1_0.category_id,c1_0.category_name,c1_0.description,p1_0.`condition`,p1_0.created_at,p1_0.description,p1_0.embedding,p1_0.flagged_status,i1_0.product_id,i1_0.image_id,i1_0.image_url,i1_0.is_primary,i1_0.public_id,i1_0.uploaded_at,p1_0.price,p1_0.quantity,p1_0.seller_id,p1_0.title from products p1_0 join categories c1_0 on c1_0.category_id=p1_0.category_id left join product_images i1_0 on p1_0.product_id=i1_0.product_id order by p1_0.created_at desc
+2026-06-04T09:39:05.284+08:00 DEBUG 23412 --- [nio-8080-exec-5] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/avif, image/webp, image/apng, application/xml;q=0.9, */*;q=0.8, application/signed-exchange;v=b3;q=0.7]
+2026-06-04T09:39:05.802+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/header :: header" found in template index, line 428, col 6. Please use the complete syntax of fragment expressions instead ("~{fragments/header :: header}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+2026-06-04T09:39:05.842+08:00 DEBUG 23412 --- [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/lib/animate/animate.min.css", parameters={}
+2026-06-04T09:39:05.852+08:00 DEBUG 23412 --- [nio-8080-exec-6] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:05.857+08:00 DEBUG 23412 --- [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:05.869+08:00 DEBUG 23412 --- [nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/lib/owlcarousel/owl.carousel.min.css", parameters={}
+2026-06-04T09:39:05.869+08:00 DEBUG 23412 --- [nio-8080-exec-7] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:05.876+08:00 DEBUG 23412 --- [nio-8080-exec-7] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2026-06-04T09:39:05.876+08:00 DEBUG 23412 --- [nio-8080-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.ahsmart.campusmarket.config.GlobalExceptionHandler#handleAll(Throwable)
+2026-06-04T09:39:05.876+08:00 ERROR 23412 --- [nio-8080-exec-7] c.a.c.config.GlobalExceptionHandler      : Unhandled exception caught by GlobalExceptionHandler
+
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource lib/owlcarousel/owl.carousel.min.css.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:585) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:52) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1769) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1189) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:658) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+
+2026-06-04T09:39:05.887+08:00 DEBUG 23412 --- [nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'text/css', given [text/css, */*;q=0.1] and supported [text/plain, */*, application/json, application/*+json]
+2026-06-04T09:39:05.888+08:00 DEBUG 23412 --- [nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing ["Unhandled exception: No static resource lib/owlcarousel/owl.carousel.min.css.<EOL><EOL>org.springframework.w (truncated)..."]
+2026-06-04T09:39:05.890+08:00 DEBUG 23412 --- [nio-8080-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource lib/owlcarousel/owl.carousel.min.css.]
+2026-06-04T09:39:05.891+08:00 DEBUG 23412 --- [nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 500 INTERNAL_SERVER_ERROR
+2026-06-04T09:39:05.905+08:00 DEBUG 23412 --- [nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/css/style.css", parameters={}
+2026-06-04T09:39:05.915+08:00 DEBUG 23412 --- [nio-8080-exec-8] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:05.916+08:00 DEBUG 23412 --- [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/css/mobile.css", parameters={}
+2026-06-04T09:39:05.926+08:00 DEBUG 23412 --- [nio-8080-exec-9] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:05.941+08:00 DEBUG 23412 --- [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:05.926+08:00 DEBUG 23412 --- [nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:05.941+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/css/cmp-stunning.css", parameters={}
+2026-06-04T09:39:05.956+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/lib/aos/aos.css", parameters={}
+2026-06-04T09:39:05.966+08:00 DEBUG 23412 --- [nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/css/cmp-enhance.css", parameters={}
+2026-06-04T09:39:05.971+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:05.971+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:05.976+08:00 DEBUG 23412 --- [nio-8080-exec-8] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:05.992+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:05.992+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:05.998+08:00 DEBUG 23412 --- [nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:06.101+08:00 DEBUG 23412 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/img/umtlogo.png", parameters={}
+2026-06-04T09:39:06.101+08:00 DEBUG 23412 --- [nio-8080-exec-2] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:06.122+08:00 DEBUG 23412 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:06.157+08:00 DEBUG 23412 --- [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/img/main1.jpg", parameters={}
+2026-06-04T09:39:06.157+08:00 DEBUG 23412 --- [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/img/side.jpg", parameters={}
+2026-06-04T09:39:06.157+08:00 DEBUG 23412 --- [nio-8080-exec-3] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:06.157+08:00 DEBUG 23412 --- [nio-8080-exec-4] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:06.186+08:00 DEBUG 23412 --- [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:06.186+08:00 DEBUG 23412 --- [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:06.276+08:00 DEBUG 23412 --- [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/img/main3.jpg", parameters={}
+2026-06-04T09:39:06.281+08:00 DEBUG 23412 --- [nio-8080-exec-6] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:06.300+08:00 DEBUG 23412 --- [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:06.332+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 547, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.509+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 547, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.551+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 547, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.589+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 547, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.620+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 547, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.664+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 547, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.703+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 547, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.741+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 547, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.774+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 547, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.801+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 547, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.831+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 586, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.858+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 586, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.876+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 586, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.901+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 586, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.921+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 586, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.946+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 586, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.969+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 586, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:06.998+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 586, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:07.016+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 586, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:07.036+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/product-card :: card(${p})" found in template index, line 586, col 18. Please use the complete syntax of fragment expressions instead ("~{fragments/product-card :: card(${p})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: select avg(cast(r1_0.rating as decimal(53,20))) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+Hibernate: select count(r1_0.review_id) from reviews r1_0 join order_items oi1_0 on oi1_0.order_item_id=r1_0.order_item_id where (r1_0.order_item_id is not null and oi1_0.product_id=?) or (r1_0.order_item_id is null and exists(select oi2_0.order_item_id from order_items oi2_0 join sellers s1_0 on s1_0.seller_id=oi2_0.seller_id join users u1_0 on u1_0.user_id=s1_0.user_id where oi2_0.order_id=r1_0.order_id and oi2_0.product_id=? and u1_0.user_id=r1_0.target_seller_id))
+2026-06-04T09:39:07.056+08:00  WARN 23412 --- [nio-8080-exec-5] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-5][index] Deprecated unwrapped fragment expression "fragments/footer :: footer" found in template index, line 592, col 6. Please use the complete syntax of fragment expressions instead ("~{fragments/footer :: footer}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+2026-06-04T09:39:07.066+08:00 DEBUG 23412 --- [nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:07.086+08:00 DEBUG 23412 --- [nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/img/payments.png", parameters={}
+2026-06-04T09:39:07.086+08:00 DEBUG 23412 --- [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/lib/aos/aos.js", parameters={}
+2026-06-04T09:39:07.090+08:00 DEBUG 23412 --- [nio-8080-exec-7] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:07.086+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/js/cmp-enhance.js", parameters={}
+2026-06-04T09:39:07.092+08:00 DEBUG 23412 --- [nio-8080-exec-9] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:07.092+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:07.101+08:00 DEBUG 23412 --- [nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:07.106+08:00 DEBUG 23412 --- [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:07.106+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:07.131+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/js/cmp-stunning.js", parameters={}
+2026-06-04T09:39:07.131+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:07.141+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:07.408+08:00 DEBUG 23412 --- [nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/cart/count", parameters={}
+2026-06-04T09:39:07.408+08:00 DEBUG 23412 --- [nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ahsmart.campusmarket.controller.CartController#getCartCount(HttpSession)
+2026-06-04T09:39:07.431+08:00 DEBUG 23412 --- [nio-8080-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-06-04T09:39:07.431+08:00 DEBUG 23412 --- [nio-8080-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Writing [{count=0}]
+2026-06-04T09:39:07.466+08:00 DEBUG 23412 --- [nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:08.186+08:00 DEBUG 23412 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/img/favicon.ico", parameters={}
+2026-06-04T09:39:08.186+08:00 DEBUG 23412 --- [nio-8080-exec-2] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:08.191+08:00 DEBUG 23412 --- [nio-8080-exec-2] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2026-06-04T09:39:08.195+08:00 DEBUG 23412 --- [nio-8080-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.ahsmart.campusmarket.config.GlobalExceptionHandler#handleAll(Throwable)
+2026-06-04T09:39:08.196+08:00 ERROR 23412 --- [nio-8080-exec-2] c.a.c.config.GlobalExceptionHandler      : Unhandled exception caught by GlobalExceptionHandler
+
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource img/favicon.ico.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:585) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:52) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1769) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1189) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:658) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+
+2026-06-04T09:39:08.196+08:00 DEBUG 23412 --- [nio-8080-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'image/avif', given [image/avif, image/webp, image/apng, image/svg+xml, image/*, */*;q=0.8] and supported [text/plain, */*, application/json, application/*+json]
+2026-06-04T09:39:08.196+08:00 DEBUG 23412 --- [nio-8080-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing ["Unhandled exception: No static resource img/favicon.ico.<EOL><EOL>org.springframework.web.servlet.resource.N (truncated)..."]
+2026-06-04T09:39:08.201+08:00 DEBUG 23412 --- [nio-8080-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource img/favicon.ico.]
+2026-06-04T09:39:08.201+08:00 DEBUG 23412 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 500 INTERNAL_SERVER_ERROR
+2026-06-04T09:39:21.341+08:00 DEBUG 23412 --- [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/signin", parameters={}
+2026-06-04T09:39:21.341+08:00 DEBUG 23412 --- [nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ahsmart.campusmarket.controller.AuthenticationController#signinPage()
+2026-06-04T09:39:21.354+08:00 DEBUG 23412 --- [nio-8080-exec-3] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/avif, image/webp, image/apng, application/xml;q=0.9, */*;q=0.8, application/signed-exchange;v=b3;q=0.7]
+2026-06-04T09:39:21.436+08:00 DEBUG 23412 --- [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:21.495+08:00 DEBUG 23412 --- [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/css/authentication.css", parameters={}
+2026-06-04T09:39:21.513+08:00 DEBUG 23412 --- [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/css/mobile.css", parameters={}
+2026-06-04T09:39:21.518+08:00 DEBUG 23412 --- [nio-8080-exec-4] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:21.518+08:00 DEBUG 23412 --- [nio-8080-exec-6] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:21.549+08:00 DEBUG 23412 --- [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:21.558+08:00 DEBUG 23412 --- [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:21.577+08:00 DEBUG 23412 --- [nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/css/cmp-enhance.css", parameters={}
+2026-06-04T09:39:21.580+08:00 DEBUG 23412 --- [nio-8080-exec-5] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:21.584+08:00 DEBUG 23412 --- [nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:21.585+08:00 DEBUG 23412 --- [nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/css/cmp-stunning.css", parameters={}
+2026-06-04T09:39:21.585+08:00 DEBUG 23412 --- [nio-8080-exec-7] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:21.585+08:00 DEBUG 23412 --- [nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:21.608+08:00 DEBUG 23412 --- [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/img/umtlogo.png", parameters={}
+2026-06-04T09:39:21.610+08:00 DEBUG 23412 --- [nio-8080-exec-9] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:21.618+08:00 DEBUG 23412 --- [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:22.247+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/favicon.ico", parameters={}
+2026-06-04T09:39:22.247+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:22.259+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2026-06-04T09:39:22.259+08:00 DEBUG 23412 --- [io-8080-exec-10] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.ahsmart.campusmarket.config.GlobalExceptionHandler#handleAll(Throwable)
+2026-06-04T09:39:22.261+08:00 ERROR 23412 --- [io-8080-exec-10] c.a.c.config.GlobalExceptionHandler      : Unhandled exception caught by GlobalExceptionHandler
+
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource favicon.ico.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:585) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:52) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1769) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1189) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:658) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+
+2026-06-04T09:39:22.262+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'image/avif', given [image/avif, image/webp, image/apng, image/svg+xml, image/*, */*;q=0.8] and supported [text/plain, */*, application/json, application/*+json]
+2026-06-04T09:39:22.262+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing ["Unhandled exception: No static resource favicon.ico.<EOL><EOL>org.springframework.web.servlet.resource.NoRes (truncated)..."]
+2026-06-04T09:39:22.266+08:00 DEBUG 23412 --- [io-8080-exec-10] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource favicon.ico.]
+2026-06-04T09:39:22.266+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 500 INTERNAL_SERVER_ERROR
+2026-06-04T09:39:33.832+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : POST "/signin", parameters={masked}
+2026-06-04T09:39:33.832+08:00 DEBUG 23412 --- [nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ahsmart.campusmarket.controller.AuthenticationController#signin(String, String, Model, HttpSession)
+Hibernate: select u1_0.user_id,u1_0.academic_id,u1_0.created_at,u1_0.email,u1_0.first_name,u1_0.last_name,u1_0.level,u1_0.mentor_id,u1_0.user_password,u1_0.phone,u1_0.role from users u1_0 where u1_0.email=?
+2026-06-04T09:39:33.910+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.view.RedirectView        : View name [redirect:], model {}
+2026-06-04T09:39:33.924+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 302 FOUND
+2026-06-04T09:39:33.957+08:00 DEBUG 23412 --- [nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/admin/dashboard", parameters={}
+2026-06-04T09:39:33.957+08:00 DEBUG 23412 --- [nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ahsmart.campusmarket.controller.AdminController#dashboard(HttpSession, Model)
+Hibernate: select count(*) from users u1_0
+Hibernate: select count(*) from sellers s1_0
+Hibernate: select count(s1_0.seller_id) from sellers s1_0 where s1_0.status=?
+Hibernate: select count(*) from products p1_0
+Hibernate: select distinct p1_0.product_id,p1_0.category_id,c1_0.category_id,c1_0.category_name,c1_0.description,p1_0.`condition`,p1_0.created_at,p1_0.description,p1_0.embedding,p1_0.flagged_status,i1_0.product_id,i1_0.image_id,i1_0.image_url,i1_0.is_primary,i1_0.public_id,i1_0.uploaded_at,p1_0.price,p1_0.quantity,p1_0.seller_id,s1_0.seller_id,s1_0.id_card_image_url,s1_0.mynemo_profile_url,s1_0.rejection_reason,s1_0.reviewer_id,s1_0.status,s1_0.submitted_at,s1_0.user_id,u1_0.user_id,u1_0.academic_id,u1_0.created_at,u1_0.email,u1_0.first_name,u1_0.last_name,u1_0.level,u1_0.mentor_id,u1_0.user_password,u1_0.phone,u1_0.role,p1_0.title from products p1_0 left join product_images i1_0 on p1_0.product_id=i1_0.product_id left join categories c1_0 on c1_0.category_id=p1_0.category_id left join sellers s1_0 on s1_0.seller_id=p1_0.seller_id left join users u1_0 on u1_0.user_id=s1_0.user_id where p1_0.flagged_status=? order by p1_0.created_at desc
+Hibernate: select u1_0.user_id,u1_0.academic_id,u1_0.created_at,u1_0.email,u1_0.first_name,u1_0.last_name,u1_0.level,u1_0.mentor_id,u1_0.user_password,u1_0.phone,u1_0.role from users u1_0 where u1_0.user_id=?
+Hibernate: select count(oi1_0.order_item_id) from order_items oi1_0 where oi1_0.delivery_status=?
+Hibernate: SELECT YEARWEEK(created_at, 1) AS yw, COUNT(*) AS cnt FROM products WHERE created_at >= DATE_SUB(NOW(), INTERVAL 8 WEEK) GROUP BY YEARWEEK(created_at, 1) ORDER BY yw ASC
+Hibernate: select count(s1_0.seller_id) from sellers s1_0 where s1_0.status=?
+Hibernate: select count(s1_0.seller_id) from sellers s1_0 where s1_0.status=?
+Hibernate: select count(s1_0.seller_id) from sellers s1_0 where s1_0.status=?
+Hibernate: select c1_0.category_name,count(p1_0.product_id) from products p1_0 join categories c1_0 on c1_0.category_id=p1_0.category_id group by c1_0.category_id,c1_0.category_name order by count(p1_0.product_id) desc
+Hibernate: SELECT s.seller_id, u.first_name, u.last_name, s.submitted_at, s.status, COUNT(p.product_id) AS listing_count FROM sellers s JOIN users u ON s.user_id = u.user_id LEFT JOIN products p ON p.seller_id = s.seller_id GROUP BY s.seller_id, u.first_name, u.last_name, s.submitted_at, s.status ORDER BY listing_count DESC
+2026-06-04T09:39:34.361+08:00 DEBUG 23412 --- [nio-8080-exec-8] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/avif, image/webp, image/apng, application/xml;q=0.9, */*;q=0.8, application/signed-exchange;v=b3;q=0.7]
+2026-06-04T09:39:34.541+08:00 DEBUG 23412 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/css/admin.css?v=2", parameters={masked}
+2026-06-04T09:39:34.547+08:00 DEBUG 23412 --- [nio-8080-exec-2] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:34.568+08:00 DEBUG 23412 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:34.630+08:00 DEBUG 23412 --- [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/css/mobile.css", parameters={}
+2026-06-04T09:39:34.631+08:00 DEBUG 23412 --- [nio-8080-exec-3] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:34.633+08:00 DEBUG 23412 --- [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/css/cmp-enhance.css", parameters={}
+2026-06-04T09:39:34.636+08:00 DEBUG 23412 --- [nio-8080-exec-4] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:34.641+08:00 DEBUG 23412 --- [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:34.641+08:00 DEBUG 23412 --- [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:34.652+08:00 DEBUG 23412 --- [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/lib/aos/aos.css", parameters={}
+2026-06-04T09:39:34.652+08:00 DEBUG 23412 --- [nio-8080-exec-6] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:34.657+08:00 DEBUG 23412 --- [nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:34.769+08:00 DEBUG 23412 --- [nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:34.882+08:00 DEBUG 23412 --- [nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/js/admin.js?v=2", parameters={masked}
+2026-06-04T09:39:34.882+08:00 DEBUG 23412 --- [nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/lib/aos/aos.js", parameters={}
+2026-06-04T09:39:34.882+08:00 DEBUG 23412 --- [nio-8080-exec-5] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:34.890+08:00 DEBUG 23412 --- [nio-8080-exec-7] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:34.890+08:00 DEBUG 23412 --- [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/js/cmp-enhance.js", parameters={}
+2026-06-04T09:39:34.894+08:00 DEBUG 23412 --- [nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:34.899+08:00 DEBUG 23412 --- [nio-8080-exec-9] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:34.900+08:00 DEBUG 23412 --- [nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:34.915+08:00 DEBUG 23412 --- [nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-06-04T09:39:35.480+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/favicon.ico", parameters={}
+2026-06-04T09:39:35.483+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2026-06-04T09:39:35.483+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2026-06-04T09:39:35.483+08:00 DEBUG 23412 --- [io-8080-exec-10] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.ahsmart.campusmarket.config.GlobalExceptionHandler#handleAll(Throwable)
+2026-06-04T09:39:35.488+08:00 ERROR 23412 --- [io-8080-exec-10] c.a.c.config.GlobalExceptionHandler      : Unhandled exception caught by GlobalExceptionHandler
+
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource favicon.ico.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:585) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:52) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.9.jar!/:6.2.9]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.9.jar!/:6.2.9]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1769) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1189) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:658) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.43.jar!/:na]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+
+2026-06-04T09:39:35.492+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'image/avif', given [image/avif, image/webp, image/apng, image/svg+xml, image/*, */*;q=0.8] and supported [text/plain, */*, application/json, application/*+json]
+2026-06-04T09:39:35.493+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing ["Unhandled exception: No static resource favicon.ico.<EOL><EOL>org.springframework.web.servlet.resource.NoRes (truncated)..."]
+2026-06-04T09:39:35.498+08:00 DEBUG 23412 --- [io-8080-exec-10] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource favicon.ico.]
+2026-06-04T09:39:35.498+08:00 DEBUG 23412 --- [io-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 500 INTERNAL_SERVER_ERROR
+2026-06-04T09:39:37.077+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/admin/report/download", parameters={}
+2026-06-04T09:39:37.081+08:00 DEBUG 23412 --- [nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ahsmart.campusmarket.controller.AdminController#downloadReport(HttpSession, HttpServletResponse)
+Hibernate: select count(*) from users u1_0
+Hibernate: select count(*) from sellers s1_0
+Hibernate: select count(s1_0.seller_id) from sellers s1_0 where s1_0.status=?
+Hibernate: select count(*) from products p1_0
+Hibernate: select count(oi1_0.order_item_id) from order_items oi1_0 where oi1_0.delivery_status=?
+Hibernate: select distinct p1_0.product_id,p1_0.category_id,c1_0.category_id,c1_0.category_name,c1_0.description,p1_0.`condition`,p1_0.created_at,p1_0.description,p1_0.embedding,p1_0.flagged_status,i1_0.product_id,i1_0.image_id,i1_0.image_url,i1_0.is_primary,i1_0.public_id,i1_0.uploaded_at,p1_0.price,p1_0.quantity,p1_0.seller_id,s1_0.seller_id,s1_0.id_card_image_url,s1_0.mynemo_profile_url,s1_0.rejection_reason,s1_0.reviewer_id,s1_0.status,s1_0.submitted_at,s1_0.user_id,u1_0.user_id,u1_0.academic_id,u1_0.created_at,u1_0.email,u1_0.first_name,u1_0.last_name,u1_0.level,u1_0.mentor_id,u1_0.user_password,u1_0.phone,u1_0.role,p1_0.title from products p1_0 left join product_images i1_0 on p1_0.product_id=i1_0.product_id left join categories c1_0 on c1_0.category_id=p1_0.category_id left join sellers s1_0 on s1_0.seller_id=p1_0.seller_id left join users u1_0 on u1_0.user_id=s1_0.user_id where p1_0.flagged_status=? order by p1_0.created_at desc
+Hibernate: select u1_0.user_id,u1_0.academic_id,u1_0.created_at,u1_0.email,u1_0.first_name,u1_0.last_name,u1_0.level,u1_0.mentor_id,u1_0.user_password,u1_0.phone,u1_0.role from users u1_0 where u1_0.user_id=?
+Hibernate: select count(s1_0.seller_id) from sellers s1_0 where s1_0.status=?
+Hibernate: select count(s1_0.seller_id) from sellers s1_0 where s1_0.status=?
+Hibernate: select count(s1_0.seller_id) from sellers s1_0 where s1_0.status=?
+Hibernate: select c1_0.category_name,count(p1_0.product_id) from products p1_0 join categories c1_0 on c1_0.category_id=p1_0.category_id group by c1_0.category_id,c1_0.category_name order by count(p1_0.product_id) desc
+Hibernate: SELECT YEARWEEK(created_at, 1) AS yw, COUNT(*) AS cnt FROM products WHERE created_at >= DATE_SUB(NOW(), INTERVAL 8 WEEK) GROUP BY YEARWEEK(created_at, 1) ORDER BY yw ASC
+Hibernate: SELECT s.seller_id, u.first_name, u.last_name, s.submitted_at, s.status, COUNT(p.product_id) AS listing_count FROM sellers s JOIN users u ON s.user_id = u.user_id LEFT JOIN products p ON p.seller_id = s.seller_id GROUP BY s.seller_id, u.first_name, u.last_name, s.submitted_at, s.status ORDER BY listing_count DESC
+Hibernate: select distinct p1_0.product_id,p1_0.category_id,c1_0.category_id,c1_0.category_name,c1_0.description,p1_0.`condition`,p1_0.created_at,p1_0.description,p1_0.embedding,p1_0.flagged_status,i1_0.product_id,i1_0.image_id,i1_0.image_url,i1_0.is_primary,i1_0.public_id,i1_0.uploaded_at,p1_0.price,p1_0.quantity,p1_0.seller_id,s1_0.seller_id,s1_0.id_card_image_url,s1_0.mynemo_profile_url,s1_0.rejection_reason,s1_0.reviewer_id,s1_0.status,s1_0.submitted_at,s1_0.user_id,u1_0.user_id,u1_0.academic_id,u1_0.created_at,u1_0.email,u1_0.first_name,u1_0.last_name,u1_0.level,u1_0.mentor_id,u1_0.user_password,u1_0.phone,u1_0.role,p1_0.title from products p1_0 left join product_images i1_0 on p1_0.product_id=i1_0.product_id left join categories c1_0 on c1_0.category_id=p1_0.category_id left join sellers s1_0 on s1_0.seller_id=p1_0.seller_id left join users u1_0 on u1_0.user_id=s1_0.user_id where p1_0.flagged_status=? order by p1_0.created_at desc
+2026-06-04T09:39:37.730+08:00 DEBUG 23412 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK

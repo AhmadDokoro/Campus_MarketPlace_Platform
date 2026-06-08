@@ -8,6 +8,7 @@ import com.ahsmart.campusmarket.payloadDTOs.admin.WeeklyListingDTO;
 import com.ahsmart.campusmarket.service.admin.AdminService;
 import com.ahsmart.campusmarket.service.embedding.EmbeddingService;
 import com.ahsmart.campusmarket.service.mentor.MentorService;
+import com.ahsmart.campusmarket.service.report.AdminReportData;
 import com.ahsmart.campusmarket.service.report.AdminReportService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -18,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -66,6 +68,13 @@ public class AdminController {
 
         model.addAttribute("topCategories", adminService.getTopCategories());
         model.addAttribute("sellerStats",   adminService.getSellerStats());
+        model.addAttribute("reportYears", adminReportService.getSelectableYears());
+        model.addAttribute("reportYearSelection",
+                model.containsAttribute("reportYearSelection") ? model.asMap().get("reportYearSelection") : LocalDate.now().getYear());
+        model.addAttribute("reportMonthSelection",
+                model.containsAttribute("reportMonthSelection") ? model.asMap().get("reportMonthSelection") : null);
+        model.addAttribute("openReportModal",
+                model.containsAttribute("openReportModal") && Boolean.TRUE.equals(model.asMap().get("openReportModal")));
 
         return "admin/dashboard";
     }
@@ -249,26 +258,64 @@ public class AdminController {
         return "redirect:/admin/dashboard";
     }
 
-    // ------------------- PDF Report Download -------------------
+    // ------------------- Report Preview + PDF Export -------------------
 
-    @GetMapping("/report/download")
-    public void downloadReport(HttpSession session, HttpServletResponse response) {
+    @GetMapping("/report")
+    public String reportPreview(@RequestParam(value = "year", required = false) Integer year,
+                                @RequestParam(value = "month", required = false) Integer month,
+                                HttpSession session,
+                                Model model,
+                                RedirectAttributes redirectAttributes) {
+        if (!isAdmin(session)) {
+            return "redirect:/signin";
+        }
+        try {
+            AdminReportData reportData = adminReportService.buildReport(year, month);
+            model.addAttribute("reportData", reportData);
+            return "admin/report-preview";
+        } catch (IllegalArgumentException ex) {
+            redirectReportError(redirectAttributes, ex.getMessage(), year, month);
+            return "redirect:/admin/dashboard";
+        } catch (Exception ex) {
+            logger.error("Report preview generation failed", ex);
+            redirectReportError(redirectAttributes, "Unable to generate the report right now. Please try again.", year, month);
+            return "redirect:/admin/dashboard";
+        }
+    }
+
+    @GetMapping("/report/export")
+    public void exportReport(@RequestParam(value = "year", required = false) Integer year,
+                             @RequestParam(value = "month", required = false) Integer month,
+                             HttpSession session,
+                             HttpServletResponse response) {
         if (!isAdmin(session)) {
             try { response.sendRedirect("/signin"); } catch (Exception ignored) {}
             return;
         }
         try {
-            byte[] pdf = adminReportService.generateReport();
-            String filename = "CampusMarketplace_Report_" + java.time.LocalDate.now() + ".pdf";
+            AdminReportData reportData = adminReportService.buildReport(year, month);
+            byte[] pdf = adminReportService.generateReportPdf(reportData);
+            String filename = adminReportService.buildFilename(reportData.period());
             response.setContentType("application/pdf");
             response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
             response.setContentLength(pdf.length);
             response.getOutputStream().write(pdf);
             response.getOutputStream().flush();
+        } catch (IllegalArgumentException ex) {
+            try {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+            } catch (Exception ignored) {}
         } catch (Exception e) {
-            logger.error("Report generation failed", e);
-            try { response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Report generation failed"); }
+            logger.error("Report export failed", e);
+            try { response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Report export failed"); }
             catch (Exception ignored) {}
         }
+    }
+
+    private void redirectReportError(RedirectAttributes redirectAttributes, String message, Integer year, Integer month) {
+        redirectAttributes.addFlashAttribute("reportFilterError", message);
+        redirectAttributes.addFlashAttribute("reportYearSelection", year);
+        redirectAttributes.addFlashAttribute("reportMonthSelection", month);
+        redirectAttributes.addFlashAttribute("openReportModal", true);
     }
 }
