@@ -519,6 +519,17 @@
                     results.style.display = 'none';
                 }
 
+                function escapeHtml(text) {
+                    var map = {
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        '"': '&quot;',
+                        "'": '&#039;'
+                    };
+                    return (text || '').replace(/[&<>"']/g, function(m) { return map[m]; });
+                }
+
                 function renderResults(items){
                     if(!items || items.length === 0){
                         results.innerHTML = '<div class="search-empty">No products found.</div>';
@@ -532,7 +543,7 @@
                         return '<a class="search-item" href="' + href + '">' +
                             '<img class="search-thumb" src="' + image + '" alt="">' +
                             '<div>' +
-                            '<div class="search-title">' + (item.title || '') + '</div>' +
+                            '<div class="search-title">' + escapeHtml(item.title) + '</div>' +
                             '<div class="search-price">' + price + '</div>' +
                             '</div></a>';
                     }).join('');
