@@ -574,6 +574,14 @@
             var results = document.getElementById('mobile-search-results');
             if(!input || !results) return;
 
+            // Move the dropdown to <body> so it escapes the header's subtree and any
+            // ancestor stacking context (the homepage hero uses 3D transforms that would
+            // otherwise paint over suggestions 2+). Fixed positioning uses viewport
+            // coordinates, so relocating the node does not affect placement.
+            if(results.parentNode !== document.body){
+                document.body.appendChild(results);
+            }
+
             results.style.position = 'fixed';
             results.style.zIndex   = '99999';
             results.style.top      = 'auto';
