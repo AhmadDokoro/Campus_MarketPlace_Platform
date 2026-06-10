@@ -22,7 +22,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "products")
+@Table(name = "products", indexes = {
+    @Index(name = "idx_product_seller", columnList = "seller_id"),
+    @Index(name = "idx_product_category", columnList = "category_id"),
+    @Index(name = "idx_product_title", columnList = "title")
+})
 public class Product {
 
     @Id

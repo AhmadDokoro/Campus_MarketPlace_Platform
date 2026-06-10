@@ -484,6 +484,30 @@
     </style>
 
     <script>
+        /**
+         * Optimizes Cloudinary URLs by adding image transformation parameters.
+         * Converts: https://res.cloudinary.com/dg6e4oagz/image/upload/v1234/image.jpg
+         * To: https://res.cloudinary.com/dg6e4oagz/image/upload/w_150,h_150,c_fill,q_75,f_auto/v1234/image.jpg
+         */
+        function optimizeCloudinaryUrl(url) {
+            if (!url || typeof url !== 'string' || !url.includes('res.cloudinary.com')) {
+                return url;
+            }
+            var uploadIdx = url.indexOf('/upload/');
+            if (uploadIdx === -1) {
+                return url;
+            }
+            var insertAt = uploadIdx + '/upload/'.length;
+            // Check if transforms are already applied
+            var nextPart = url.substring(insertAt);
+            if (nextPart.match(/^(w_|h_|c_|q_|f_)/)) {
+                return url;
+            }
+            // Apply search optimization: w_150,h_150,c_fill,q_75,f_auto
+            var transforms = 'w_150,h_150,c_fill,q_75,f_auto/';
+            return url.substring(0, insertAt) + transforms + nextPart;
+        }
+
         function setupHeaderSearch(){
             function buildSearchHandler(inputId, resultsId){
                 var results = document.getElementById(resultsId);
@@ -495,6 +519,17 @@
                     results.style.display = 'none';
                 }
 
+                function escapeHtml(text) {
+                    var map = {
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        '"': '&quot;',
+                        "'": '&#039;'
+                    };
+                    return (text || '').replace(/[&<>"']/g, function(m) { return map[m]; });
+                }
+
                 function renderResults(items){
                     if(!items || items.length === 0){
                         results.innerHTML = '<div class="search-empty">No products found.</div>';
@@ -502,13 +537,13 @@
                         return;
                     }
                     results.innerHTML = items.map(function(item){
-                        var image = item.imageUrl ? item.imageUrl : '/img/productplaceholder.png';
+                        var image = item.imageUrl ? optimizeCloudinaryUrl(item.imageUrl) : '/img/productplaceholder.png';
                         var price = item.price != null ? ('RM ' + Number(item.price).toFixed(2)) : 'RM 0.00';
                         var href = '/products?searchText=' + encodeURIComponent(item.title || '');
                         return '<a class="search-item" href="' + href + '">' +
                             '<img class="search-thumb" src="' + image + '" alt="">' +
                             '<div>' +
-                            '<div class="search-title">' + (item.title || '') + '</div>' +
+                            '<div class="search-title">' + escapeHtml(item.title) + '</div>' +
                             '<div class="search-price">' + price + '</div>' +
                             '</div></a>';
                     }).join('');
@@ -573,6 +608,14 @@
             var input   = document.getElementById('mobile-search-input');
             var results = document.getElementById('mobile-search-results');
             if(!input || !results) return;
+
+            // Move the dropdown to <body> so it escapes the header's subtree and any
+            // ancestor stacking context (the homepage hero uses 3D transforms that would
+            // otherwise paint over suggestions 2+). Fixed positioning uses viewport
+            // coordinates, so relocating the node does not affect placement.
+            if(results.parentNode !== document.body){
+                document.body.appendChild(results);
+            }
 
             results.style.position = 'fixed';
             results.style.zIndex   = '99999';

@@ -115,8 +115,8 @@
                 <div th:each="item : ${order.orderItems}" class="od-item">
                     <div class="od-item-img">
                         <a th:href="@{/products/{id}(id=${item.product.productId})}">
-                            <img th:if="${item.product.images != null and !#lists.isEmpty(item.product.images)}" th:src="${item.product.images.get(0).imageUrl}" alt="">
-                            <img th:if="${item.product.images == null or #lists.isEmpty(item.product.images)}" th:src="@{/img/productplaceholder.png}" alt="">
+                            <img th:if="${item.product.images != null and !#lists.isEmpty(item.product.images)}" th:src="${@cloudinaryUrlHelper.thumbnail(item.product.images.get(0).imageUrl)}" alt="" loading="lazy">
+                            <img th:if="${item.product.images == null or #lists.isEmpty(item.product.images)}" th:src="@{/img/productplaceholder.png}" alt="" loading="lazy">
                         </a>
                     </div>
                     <div>

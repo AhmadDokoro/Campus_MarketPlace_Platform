@@ -938,11 +938,13 @@
             <div class="pd-image-col">
                 <div class="pd-image-frame">
                     <img th:if="${product.images != null and !#lists.isEmpty(product.images)}"
-                         th:src="${product.images.get(0).imageUrl}"
-                         th:alt="${product.title}">
+                         th:src="${@cloudinaryUrlHelper.display(product.images.get(0).imageUrl)}"
+                         th:alt="${product.title}"
+                         loading="lazy">
                     <img th:if="${product.images == null or #lists.isEmpty(product.images)}"
                          th:src="@{/img/productplaceholder.png}"
-                         alt="No image">
+                         alt="No image"
+                         loading="lazy">
                 </div>
 
                 <div class="pd-image-strip">

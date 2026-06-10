@@ -525,7 +525,7 @@
                     <div th:each="item : ${order.orderItems}" class="o-item">
                         <div class="o-img">
                             <img th:if="${item.product.images != null and !#lists.isEmpty(item.product.images)}"
-                                 th:src="${item.product.images.get(0).imageUrl}" alt="">
+                                 th:src="${@cloudinaryUrlHelper.thumbnail(item.product.images.get(0).imageUrl)}" alt="">
                             <img th:if="${item.product.images == null or #lists.isEmpty(item.product.images)}"
                                  th:src="@{/img/productplaceholder.png}" alt="">
                         </div>

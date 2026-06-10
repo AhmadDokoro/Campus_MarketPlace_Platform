@@ -695,7 +695,7 @@
                                     <span class="ep-image-label"><i class="fas fa-image"></i>Current image</span>
                                     <div class="ep-image-frame">
                                         <img th:if="${product.images != null and !#lists.isEmpty(product.images)}"
-                                             th:src="${product.images.get(0).imageUrl}" alt="Current product image">
+                                             th:src="${@cloudinaryUrlHelper.display(product.images.get(0).imageUrl)}" alt="Current product image">
                                         <div class="ep-empty" th:if="${product.images == null or #lists.isEmpty(product.images)}">
                                             <i class="far fa-image"></i>
                                             No image attached yet.
@@ -753,7 +753,7 @@
                     <div class="ap-preview-stage">
                         <img id="previewImage"
                              th:if="${product.images != null and !#lists.isEmpty(product.images)}"
-                             th:src="${product.images.get(0).imageUrl}"
+                             th:src="${@cloudinaryUrlHelper.display(product.images.get(0).imageUrl)}"
                              alt="Selected product preview">
                         <div class="ap-preview-empty" id="previewEmpty"
                              th:if="${product.images == null or #lists.isEmpty(product.images)}">
