@@ -100,8 +100,8 @@
                     <h5><i class="bi bi-box-seam"></i>Order Items <span style="font-size:13px;color:#999;font-weight:400" th:text="'(' + ${itemCount} + ' items)'"></span></h5>
                     <div th:each="item : ${cartItems}" class="checkout-item">
                         <div class="checkout-item-img mr-3">
-                            <img th:if="${item.product.images != null and !#lists.isEmpty(item.product.images)}" th:src="${item.product.images.get(0).imageUrl}" alt="">
-                            <img th:if="${item.product.images == null or #lists.isEmpty(item.product.images)}" th:src="@{/img/productplaceholder.png}" alt="">
+                            <img th:if="${item.product.images != null and !#lists.isEmpty(item.product.images)}" th:src="${@cloudinaryUrlHelper.thumbnail(item.product.images.get(0).imageUrl)}" alt="" loading="lazy">
+                            <img th:if="${item.product.images == null or #lists.isEmpty(item.product.images)}" th:src="@{/img/productplaceholder.png}" alt="" loading="lazy">
                         </div>
                         <div class="flex-grow-1">
                             <div class="checkout-item-title" th:text="${item.product.title}">Product</div>

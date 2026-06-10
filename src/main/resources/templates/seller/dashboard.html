@@ -1464,8 +1464,9 @@
                     <div class="product-cell">
                       <img class="product-thumb"
                            th:if="${p.images != null and !#lists.isEmpty(p.images)}"
-                           th:src="${p.images.get(0).imageUrl}"
-                           alt="Product image" />
+                           th:src="${@cloudinaryUrlHelper.thumbnail(p.images.get(0).imageUrl)}"
+                           alt="Product image"
+                           loading="lazy" />
                       <span class="product-thumb" th:if="${p.images == null or #lists.isEmpty(p.images)}"></span>
                       <div class="product-meta">
                         <strong th:text="${p.title}">Product</strong>

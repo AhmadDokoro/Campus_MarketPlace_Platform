@@ -484,6 +484,30 @@
     </style>
 
     <script>
+        /**
+         * Optimizes Cloudinary URLs by adding image transformation parameters.
+         * Converts: https://res.cloudinary.com/dg6e4oagz/image/upload/v1234/image.jpg
+         * To: https://res.cloudinary.com/dg6e4oagz/image/upload/w_150,h_150,c_fill,q_75,f_auto/v1234/image.jpg
+         */
+        function optimizeCloudinaryUrl(url) {
+            if (!url || typeof url !== 'string' || !url.includes('res.cloudinary.com')) {
+                return url;
+            }
+            var uploadIdx = url.indexOf('/upload/');
+            if (uploadIdx === -1) {
+                return url;
+            }
+            var insertAt = uploadIdx + '/upload/'.length;
+            // Check if transforms are already applied
+            var nextPart = url.substring(insertAt);
+            if (nextPart.match(/^(w_|h_|c_|q_|f_)/)) {
+                return url;
+            }
+            // Apply search optimization: w_150,h_150,c_fill,q_75,f_auto
+            var transforms = 'w_150,h_150,c_fill,q_75,f_auto/';
+            return url.substring(0, insertAt) + transforms + nextPart;
+        }
+
         function setupHeaderSearch(){
             function buildSearchHandler(inputId, resultsId){
                 var results = document.getElementById(resultsId);
@@ -502,7 +526,7 @@
                         return;
                     }
                     results.innerHTML = items.map(function(item){
-                        var image = item.imageUrl ? item.imageUrl : '/img/productplaceholder.png';
+                        var image = item.imageUrl ? optimizeCloudinaryUrl(item.imageUrl) : '/img/productplaceholder.png';
                         var price = item.price != null ? ('RM ' + Number(item.price).toFixed(2)) : 'RM 0.00';
                         var href = '/products?searchText=' + encodeURIComponent(item.title || '');
                         return '<a class="search-item" href="' + href + '">' +
