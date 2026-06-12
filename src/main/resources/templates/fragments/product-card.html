@@ -179,56 +179,73 @@
             color: var(--primary);
         }
 
+        /* Circular orange cart button (Shopee style) — same look as mobile, scaled up */
         .pc-card-new .cart-button {
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 0.4rem;
-            padding: 0.5rem 0.9rem;
-            background: linear-gradient(180deg, #9f4cf0 0%, #6b21c4 100%);
-            font-size: 0.8rem;
-            font-weight: 600;
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
+            padding: 0;
+            background: linear-gradient(135deg, #ff8c00 0%, #ff4e00 100%);
             color: #ffffff;
-            white-space: nowrap;
-            border: 2px solid #6b21c4;
-            border-radius: 1.5rem;
-            box-shadow:
-                inset 0 3px 5px rgba(255, 255, 255, 0.5),
-                inset 0 -2px 4px rgba(0, 0, 0, 0.2),
-                0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 3px 8px rgba(255, 78, 0, 0.35);
             transition: all 0.2s ease;
         }
 
         .pc-card-new .cart-button:hover {
-            background: linear-gradient(180deg, #a95df7 0%, #7629d6 100%);
-            box-shadow:
-                inset 0 3px 5px rgba(255, 255, 255, 0.6),
-                inset 0 -2px 4px rgba(0, 0, 0, 0.2),
-                0 6px 10px rgba(107, 33, 196, 0.3);
-            transform: translateY(-2px);
+            transform: scale(1.1);
+            box-shadow: 0 5px 14px rgba(255, 78, 0, 0.5);
         }
 
         .pc-card-new .cart-button:active {
-            transform: translateY(1px);
-            box-shadow:
-                inset 0 2px 4px rgba(0, 0, 0, 0.4),
-                inset 0 -1px 2px rgba(255, 255, 255, 0.1),
-                0 2px 3px rgba(0, 0, 0, 0.1);
+            transform: scale(0.95);
+            box-shadow: 0 2px 4px rgba(255, 78, 0, 0.3);
         }
 
         .pc-card-new .cart-button.added {
             background: linear-gradient(180deg, #10b981 0%, #059669 100%);
-            border-color: #047857;
-            box-shadow:
-                inset 0 3px 5px rgba(255, 255, 255, 0.4),
-                inset 0 -2px 4px rgba(0, 0, 0, 0.2),
-                0 4px 6px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 3px 8px rgba(16, 185, 129, 0.35);
+        }
+
+        .pc-card-new .cart-button span {
+            display: none;
         }
 
         .pc-card-new .cart-button .cart-icon {
-            width: 1.1rem;
-            height: 1.1rem;
+            width: 19px;
+            height: 19px;
+        }
+
+        /* Fly-to-cart ghost element */
+        .fly-to-cart-ghost {
+            position: fixed;
+            z-index: 1000000;
+            border-radius: 16px;
+            object-fit: cover;
+            pointer-events: none;
+            box-shadow:
+                0 0 0 4px rgba(255, 255, 255, 0.9),
+                0 0 30px 8px rgba(255, 140, 0, 0.85),
+                0 12px 35px rgba(0, 0, 0, 0.4);
+            border: 3px solid #ff8c00;
+            background: #fff;
+            will-change: transform, opacity;
+        }
+
+        /* Cart icon pulse when the flying product lands */
+        @keyframes cartLandPulse {
+            0%   { transform: scale(1); }
+            40%  { transform: scale(1.45); }
+            100% { transform: scale(1); }
+        }
+        .cart-land-pulse {
+            animation: cartLandPulse 0.45s ease-out;
+            display: inline-block;
         }
 
         /* ── Mobile Overrides (Shopee Style) ── */
@@ -416,8 +433,62 @@
     <script>
         if (!window._addToCartCardSetup) {
             window._addToCartCardSetup = true;
+
+            // Animates a small copy of the product image from the card to the header cart icon.
+            window.flyProductToCart = function(btn) {
+                var card = btn.closest('.pc-card-new');
+                if (!card) return;
+                var img = card.querySelector('.image_container img');
+                if (!img) return;
+
+                // Pick whichever cart icon is actually visible (desktop link or mobile icon).
+                var target = null;
+                var candidates = document.querySelectorAll('.header-cart-link .header-cart-icon, .mobile-always-cart i, .mob-bottom-nav a[href*="cart" i] i');
+                candidates.forEach(function(c) {
+                    if (!target && c.offsetParent !== null) target = c;
+                });
+                if (!target) return;
+
+                var from = img.getBoundingClientRect();
+                var to = target.getBoundingClientRect();
+
+                var ghost = document.createElement('img');
+                ghost.src = img.currentSrc || img.src;
+                ghost.className = 'fly-to-cart-ghost';
+                var size = Math.max(70, Math.min(120, from.width * 0.7));
+                ghost.style.left = (from.left + from.width / 2 - size / 2) + 'px';
+                ghost.style.top = (from.top + from.height / 2 - size / 2) + 'px';
+                ghost.style.width = size + 'px';
+                ghost.style.height = size + 'px';
+                document.body.appendChild(ghost);
+
+                var dx = (to.left + to.width / 2) - (from.left + from.width / 2);
+                var dy = (to.top + to.height / 2) - (from.top + from.height / 2);
+
+                // Web Animations API: pop up first, arc toward the cart, stay
+                // fully opaque almost the whole way so the flight is obvious.
+                var anim = ghost.animate([
+                    { transform: 'translate(0px, 0px) scale(1) rotate(0deg)',
+                      opacity: 1, offset: 0 },
+                    { transform: 'translate(' + (dx * 0.15) + 'px, ' + (dy * 0.15 - 60) + 'px) scale(1.15) rotate(-6deg)',
+                      opacity: 1, offset: 0.25 },
+                    { transform: 'translate(' + (dx * 0.6) + 'px, ' + (dy * 0.6 - 90) + 'px) scale(0.75) rotate(6deg)',
+                      opacity: 1, offset: 0.6 },
+                    { transform: 'translate(' + dx + 'px, ' + dy + 'px) scale(0.25) rotate(14deg)',
+                      opacity: 0.85, offset: 1 }
+                ], { duration: 1100, easing: 'cubic-bezier(0.45, 0, 0.55, 1)', fill: 'forwards' });
+
+                anim.onfinish = function() {
+                    ghost.remove();
+                    target.classList.remove('cart-land-pulse');
+                    void target.offsetWidth;
+                    target.classList.add('cart-land-pulse');
+                };
+            };
+
             window.addToCartFromCard = function(btn) {
                 var productId = btn.getAttribute('data-product-id');
+                window.flyProductToCart(btn);
                 // Disable button and show spinner.
                 btn.disabled = true;
                 var originalHTML = btn.innerHTML;

@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -84,37 +86,57 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
 
 
     @Override
+    @Transactional
     public Users registerUser(Users user) throws IllegalArgumentException {
+        // Normalize inputs first so the duplicate checks and the stored row agree
+        // (stray leading/trailing spaces must not bypass uniqueness checks).
+        String email = user.getEmail() == null ? null : user.getEmail().trim();
+        String academicId = user.getAcademicId() == null ? null : user.getAcademicId().trim();
+        user.setEmail(email);
+        user.setAcademicId(academicId);
+        if (user.getFirstName() != null) user.setFirstName(user.getFirstName().trim());
+        if (user.getLastName() != null) user.setLastName(user.getLastName().trim());
+
+        // ALL validations run BEFORE anything is persisted, and every failure is
+        // reported together — a failed attempt can never leave a partial row behind.
+        List<String> errors = new ArrayList<>();
+
         // Basic validations
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new IllegalArgumentException("Email is required");
+        if (email == null || email.isBlank()) {
+            errors.add("Email is required");
         }
         if (user.getPassword() == null || user.getPassword().isBlank()) {
-            throw new IllegalArgumentException("Password is required");
+            errors.add("Password is required");
         }
         if (user.getFirstName() == null || user.getFirstName().isBlank()) {
-            throw new IllegalArgumentException("First name is required");
+            errors.add("First name is required");
         }
-        if (user.getAcademicId() == null || user.getAcademicId().isBlank()) {
-            throw new IllegalArgumentException("Academic ID is required");
+        if (academicId == null || academicId.isBlank()) {
+            errors.add("Academic ID is required");
         }
 
-        // Uniqueness checks
-        if (usersRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Email already registered");
+        // Uniqueness checks (case-insensitive) — still before any save
+        if (email != null && !email.isBlank() && usersRepository.existsByEmailIgnoreCase(email)) {
+            errors.add("Email already registered");
         }
-        if (user.getAcademicId() != null && usersRepository.findByAcademicId(user.getAcademicId()).isPresent()) {
-            throw new IllegalArgumentException("Academic ID already registered");
+        if (academicId != null && !academicId.isBlank() && usersRepository.existsByAcademicIdIgnoreCase(academicId)) {
+            errors.add("Academic ID already registered");
         }
 
         // If mentorId selected from UI, resolve it to Mentor (mentor selection is nullable)
+        Mentor mentor = null;
         if (user.getMentorId() != null) {
-            Mentor mentor = mentorRepository.findById(user.getMentorId())
-                    .orElseThrow(() -> new IllegalArgumentException("Selected mentor not found"));
-            user.setMentor(mentor);
-        } else {
-            user.setMentor(null);
+            mentor = mentorRepository.findById(user.getMentorId()).orElse(null);
+            if (mentor == null) {
+                errors.add("Selected mentor not found");
+            }
         }
+
+        if (!errors.isEmpty()) {
+            throw new IllegalArgumentException(String.join(". ", errors));
+        }
+
+        user.setMentor(mentor);
         // Avoid accidentally persisting mentorId anywhere else
         user.setMentorId(null);
 
@@ -123,8 +145,15 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
         user.setRole(Role.BUYER);
         user.setCreatedAt(LocalDateTime.now());
 
-        // Save user (no password hashing per request)
-        return usersRepository.save(user);
+        // Save user (no password hashing per request).
+        // The DataIntegrityViolation catch covers the race where a concurrent request
+        // slips past the pre-checks; @Transactional rolls everything back so the DB
+        // is left untouched on any failure.
+        try {
+            return usersRepository.save(user);
+        } catch (DataIntegrityViolationException dive) {
+            throw new IllegalArgumentException("Email or Academic ID already registered");
+        }
     }
 
 

@@ -24,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.sql.Timestamp;
 import java.time.DayOfWeek;
@@ -100,10 +102,10 @@ public class AdminServiceImpl implements AdminService {
                 usersRepository.save(u);
             }
 
-            emailHelper.sendEmail(
-                seller.getUser().getEmail(),
+            sendEmailAfterCommit(
+                u == null ? null : u.getEmail(),
                 "Seller Verification Approved – Campus Marketplace Platform",
-                "Dear " + seller.getUser().getFirstName() + ",\n\n" +
+                "Dear " + (u == null ? "Seller" : u.getFirstName()) + ",\n\n" +
                 "Congratulations! Your seller verification request has been approved.\n" +
                 "You can now list products and start selling on the Campus Marketplace Platform.\n\n" +
                 "Best regards,\nCampus Marketplace Platform"
@@ -300,17 +302,41 @@ public class AdminServiceImpl implements AdminService {
             usersRepository.findById(reviewerId).ifPresent(seller::setReviewer);
         }
 
-        emailHelper.sendEmail(
-            seller.getUser().getEmail(),
+        Users rejectedUser = seller.getUser();
+        sendEmailAfterCommit(
+            rejectedUser == null ? null : rejectedUser.getEmail(),
             "Seller Verification Rejected – Campus Marketplace Platform",
-            "Dear " + seller.getUser().getFirstName() + ",\n\n" +
+            "Dear " + (rejectedUser == null ? "Seller" : rejectedUser.getFirstName()) + ",\n\n" +
             "Your seller verification request has been rejected for the following reason:\n" +
-            rejectionReason + "\n\n" +
+            trimmed + "\n\n" +
             "You may correct the issue and reapply.\n\n" +
             "Best regards,\nCampus Marketplace Platform"
         );
 
         return sellerRepository.save(seller);
+    }
+
+    /**
+     * Queues an email so it is dispatched only AFTER the surrounding transaction commits.
+     * - If the approval/rejection fails to persist, no email goes out.
+     * - The email itself is sent asynchronously (EmailHelper is @Async) and any mail
+     *   failure is logged there — it can never roll back the admin action.
+     */
+    private void sendEmailAfterCommit(String recipientEmail, String subject, String body) {
+        if (recipientEmail == null || recipientEmail.isBlank()) {
+            logger.error("Cannot send '{}': recipient email address is missing", subject);
+            return;
+        }
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    emailHelper.sendEmail(recipientEmail, subject, body);
+                }
+            });
+        } else {
+            emailHelper.sendEmail(recipientEmail, subject, body);
+        }
     }
 
     private void deleteImageFilesQuietly(List<String> imageUrls) {

@@ -51,7 +51,7 @@ Runs on `http://localhost:8080`. Default admin/test login: `ahmadkabirudokoro@gm
 - **Bottom nav** (`mob-bottom-nav`): `position: fixed; z-index: 999999; bottom: 0`. Uses `html body .mob-bottom-nav` high-specificity selector. Present in: `index.html`, `product-list.html`, `cart.html`, `profile.html`. Active item gets `.mob-nav-active`.
 - **Product grids on mobile**: `grid-template-columns: repeat(2, minmax(0,1fr)) !important` — enforced in `mobile.css` section 32. Never use a `1fr` override below it or it will revert to 1 column.
 - **AOS animations**: Use `data-aos="fade-up"` on grid items, NOT `zoom-in`. `zoom-in` applies `scale(0.6)` during init which causes a visual snap/flash.
-- **Profile page mobile** (`@media max-width: 767.98px`): Dark luxury theme — deep purple/black background, gold accents. Order tracker uses `flex:1` per step (not fixed `100px`) so all 5 status steps fit in one row without horizontal scroll.
+- **Profile page mobile** (`@media max-width: 767.98px`): Light theme matching desktop — white/light background, purple hero card, gold/orange accent buttons (the old dark luxury mobile theme was removed June 2026; do not reintroduce it). Order tracker uses `flex:1` per step (not fixed `100px`) so all 5 status steps fit in one row without horizontal scroll.
 - **Mobile search dropdown** (`#mobile-search-results`): `position: fixed; left: 10px; right: 10px; width: auto` — spans near-full viewport width. Background `#0f0625`, gold price text, white title text.
 - **Safe padding for bottom nav**: Pages need `padding-bottom: 90px` on `.page-wrap` at mobile to avoid content hiding behind the nav bar.
 
