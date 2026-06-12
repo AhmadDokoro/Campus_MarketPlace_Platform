@@ -5,7 +5,7 @@
             <!-- Mobile-only Brand (Top Left) -->
             <div class="col-6 d-block d-lg-none text-left" style="padding-left: 16px;">
                 <a th:href="@{/index}" class="text-decoration-none d-inline-block">
-                    <span class="font-weight-bold text-uppercase text-white" style="font-size: 15px; letter-spacing: 0.5px;">UMT</span>
+                    <span class="font-weight-bold text-uppercase text-white" style="font-size: 15px; letter-spacing: 0.5px;">Campus</span>
                     <span class="font-weight-bold text-uppercase text-warning" style="font-size: 15px; letter-spacing: 0.5px;">Market</span>
                 </a>
             </div>
@@ -71,11 +71,10 @@
                     <div id="header-search-results" class="search-results shadow-lg"></div>
                 </div>
                 <div class="col-lg-3 col-12 text-right d-flex align-items-center justify-content-end header-tools">
-                    <a th:href="@{/}" class="d-inline-flex align-items-center mr-4 text-decoration-none header-tool-link text-white">
-                        <i class="far fa-question-circle fa-lg mr-2 text-warning"></i>
-                        <span class="font-weight-bold">Help</span>
+                    <a th:href="@{/products}" class="d-inline-flex align-items-center justify-content-center mr-4 header-store-icon" title="Browse the marketplace" aria-label="Browse the marketplace">
+                        <i class="fas fa-store"></i>
                     </a>
-                    <a th:href="@{/index}" class="d-inline-block p-1 bg-white rounded" title="UMT Marketplace">
+                    <a th:href="@{/index}" class="d-inline-block p-1 bg-white rounded" title="Campus Market">
                         <img th:src="@{/img/umtlogo.png}" alt="UMT Logo" style="height:44px;width:auto;display:inline-block;object-fit:contain;"/>
                     </a>
                 </div>
@@ -86,16 +85,11 @@
 
     <div class="container-fluid bg-dark mb-30 header-nav-shell">
         <div class="row px-xl-5">
-            <div class="col-lg-3 d-none d-lg-block">
-                <select class="form-control d-flex align-items-center text-white header-category-select" id="categories-select" aria-label="Categories" style="height: 65px; padding: 0 30px; cursor: pointer; appearance: none; font-size: 18px; font-weight: 500;">
-                    <option value="">Category  ▼</option>
-                    <option value="smartphones">Smartphones</option>
-                    <option value="kitchen">Kitchen</option>
-                    <option value="garden">Garden</option>
-                    <option value="sports-equipment">Sports Equipment</option>
-                    <option value="outdoor-gear">Outdoor Gear</option>
-                    <option value="pet-supplies">Pet Supplies</option>
-                </select>
+            <div class="col-lg-3 d-none d-lg-flex align-items-stretch p-0" style="height: 65px;">
+                <span class="header-tagline-badge" aria-hidden="true">
+                    <i class="fas fa-gem header-tagline-gem"></i>
+                    <span class="header-tagline-text">UMT Student Marketplace</span>
+                </span>
             </div>
             <div class="col-lg-9">
                 <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-2 py-lg-0 px-2 px-lg-0 header-main-nav text-left">
@@ -310,25 +304,61 @@
             background: linear-gradient(90deg, #ff8c00 0%, #ff4e00 100%) !important; /* Fiery Orange Gradient */
             box-shadow: 0 6px 16px rgba(255, 78, 0, 0.35);
         }
-        .header-category-select{
-            background: rgba(26, 10, 62, 0.1) !important;
-            border: none !important;
-            border-right: 1px solid rgba(255,255,255,0.2) !important;
-            border-left: 1px solid rgba(255,255,255,0.2) !important;
-            border-radius: 0 !important;
-            color: #ffffff !important;
-            box-shadow: none !important;
-            font-weight: 700 !important;
-            letter-spacing: 0.5px;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        /* Decorative shimmer tagline (replaces the old category dropdown) — fills the whole slot */
+        .header-tagline-badge{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            height: 100%;
+            padding: 0 20px;
+            border-radius: 0;
+            background: linear-gradient(135deg, rgba(26, 10, 62, 0.92) 0%, rgba(45, 20, 90, 0.85) 50%, rgba(26, 10, 62, 0.92) 100%);
+            border-right: 1px solid rgba(255, 215, 0, 0.45);
+            box-shadow: inset 0 0 18px rgba(0,0,0,0.4), inset 0 -2px 0 rgba(255, 215, 0, 0.55);
+            white-space: nowrap;
         }
-        .header-category-select:focus {
-            outline: none;
-            box-shadow: none;
+        .header-tagline-gem{
+            color: #FFD700;
+            font-size: 17px;
+            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.7));
+            animation: headerGemPulse 2.8s ease-in-out infinite;
         }
-        .header-category-select option {
-            background: #1A0A3E; /* Dark dropdown items */
-            color: #ffffff;
+        .header-tagline-text{
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #FFD700 0%, #ffffff 25%, #FFD700 50%, #ffffff 75%, #FFD700 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: #FFD700; /* fallback */
+            animation: headerGradientFlow 6s linear infinite;
+        }
+        @keyframes headerGemPulse{
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.18); opacity: .75; }
+        }
+        /* Marketplace storefront icon beside the UMT logo */
+        .header-store-icon{
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            color: #FFD700 !important;
+            font-size: 18px;
+            background: rgba(255, 215, 0, 0.12);
+            border: 1px solid rgba(255, 215, 0, 0.45);
+            text-decoration: none !important;
+            transition: background .25s ease, color .25s ease, transform .25s ease, box-shadow .25s ease;
+        }
+        .header-store-icon:hover{
+            background: linear-gradient(135deg, #FFD700, #FF9900);
+            color: #1A0A3E !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 215, 0, 0.35);
         }
         .header-main-nav,
         .header-main-nav.bg-dark,

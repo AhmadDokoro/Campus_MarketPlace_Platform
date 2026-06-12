@@ -124,10 +124,9 @@
         /* Product Grid */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(5, minmax(0,1fr));
+            grid-template-columns: repeat(4, minmax(0,1fr));
             gap: 25px;
         }
-        @media (max-width: 1400px){.product-grid{grid-template-columns:repeat(4, minmax(0,1fr))}}
         @media (max-width: 1200px){.product-grid{grid-template-columns:repeat(3, minmax(0,1fr))}}
         @media (max-width: 992px) {.product-grid{grid-template-columns:repeat(2, minmax(0,1fr)) !important; gap:12px !important;}}
         @media (max-width: 767px) {.product-grid{grid-template-columns:repeat(2, minmax(0,1fr)) !important; gap:10px !important;}}

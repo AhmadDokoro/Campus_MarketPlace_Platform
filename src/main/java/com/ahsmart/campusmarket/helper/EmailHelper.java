@@ -21,6 +21,11 @@ public class EmailHelper {
     // Runs in a background thread so it never blocks the HTTP request.
     @Async
     public void sendEmail(String recipientEmail, String subject, String body) {
+        if (recipientEmail == null || recipientEmail.isBlank()) {
+            logger.error("Cannot send email '{}': recipient address is missing", subject);
+            return;
+        }
+
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -44,8 +49,12 @@ public class EmailHelper {
             message.setSubject(subject);
             message.setText(body);
             Transport.send(message);
-        } catch (MessagingException e) {
-            logger.error("Failed to send email to {}: {}", recipientEmail, e.getMessage());
+            logger.info("Email '{}' sent to {}", subject, recipientEmail);
+        } catch (Exception e) {
+            // Catch everything (not just MessagingException): this runs on a background
+            // thread, so this log line is the only visible signal when an email fails.
+            // Log the full stack trace instead of swallowing the cause.
+            logger.error("Failed to send email '{}' to {}", subject, recipientEmail, e);
         }
     }
 }

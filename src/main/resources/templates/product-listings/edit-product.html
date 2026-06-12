@@ -429,6 +429,18 @@
             box-shadow: 0 18px 38px rgba(255,193,7,.55);
         }
         .ap-btn-publish:hover::after{ transform: translateX(120%); }
+        /* Guard: the submit button is always active — never let global button or
+           :disabled styles from shared stylesheets dim it into a "disabled" look. */
+        .ap-btn-publish,
+        .ap-btn-publish:focus{
+            opacity: 1 !important;
+            filter: none !important;
+            cursor: pointer !important;
+        }
+        .ap-btn-publish:focus-visible{
+            outline: 3px solid #6B4EAF;
+            outline-offset: 2px;
+        }
 
         /* ── Alerts ─────────────────────────────────────────────── */
         .ap-alert{
@@ -658,10 +670,13 @@
                                 <div class="col-md-4">
                                     <div class="ap-field">
                                         <label class="ap-label" for="quantity">Quantity <span class="req">*</span></label>
-                                        <input type="number" min="1" class="form-control"
+                                        <input type="number" min="1" step="1" class="form-control"
                                                id="quantity" name="quantity"
                                                th:value="${product.quantity}"
-                                               placeholder="1" required>
+                                               placeholder="1" required
+                                               oninvalid="this.setCustomValidity('Quantity must be at least 1.')"
+                                               oninput="this.setCustomValidity('')">
+                                        <span class="ap-help">Minimum quantity is 1.</span>
                                     </div>
                                 </div>
                                 <div class="col-md-4">

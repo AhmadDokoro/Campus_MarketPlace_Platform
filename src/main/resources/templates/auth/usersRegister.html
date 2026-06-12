@@ -690,6 +690,19 @@
             currentStep = 0;
             showStep(currentStep);
             confirmPasswordInput.focus();
+            return;
+        }
+        // Guard against double submission — a duplicate POST could race the
+        // server-side uniqueness checks and create a conflicting account row.
+        const submitButton = form.querySelector('button[type="submit"]');
+        if (submitButton) {
+            if (submitButton.dataset.submitting === "1") {
+                event.preventDefault();
+                return;
+            }
+            submitButton.dataset.submitting = "1";
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="bi bi-hourglass-split"></i> Creating account...';
         }
     });
 
