@@ -1136,10 +1136,10 @@
             }
             .utility-logout:hover{ background: #ef4444 !important; color: #fff !important; }
 
-            /* === Nav pills — 2-column grid, white cards (desktop look) === */
+            /* === Nav pills — single full-width gold CTA === */
             .account-actions-nav{
                 display: grid !important;
-                grid-template-columns: 1fr 1fr !important;
+                grid-template-columns: 1fr !important;
                 gap: 10px !important;
                 margin: 0 !important;
                 padding: 0 !important;
@@ -1444,9 +1444,6 @@
             </div>
 
             <div class="account-actions-nav">
-                <a class="nav-pill" th:href="@{/orders/history}">
-                    <i class="bi bi-receipt"></i> Full Order History
-                </a>
                 <a class="nav-pill nav-pill-seller" th:href="@{/user/start-selling}">
                     <i class="bi bi-shop-window"></i> Sell on Campus
                 </a>
@@ -1460,7 +1457,7 @@
                         <div class="panel-title">
                             <h3><i class="bi bi-box-seam" style="color:var(--accent);margin-right:6px"></i>Order Tracking</h3>
                         </div>
-                        <div class="panel-copy">Follow each product state from payment to review without changing the current order flow.</div>
+                        <div class="panel-copy">Follow each order from payment to review.</div>
                     </div>
                     <a th:href="@{/orders/history}" class="panel-link">View all orders <i class="bi bi-arrow-right"></i></a>
                 </div>
@@ -1540,7 +1537,7 @@
                         <div class="panel-title">
                             <h3><i class="bi bi-chat-dots" style="color:var(--accent);margin-right:6px"></i>Tracked Products</h3>
                         </div>
-                        <div class="panel-copy">Keep the current buyer-side order actions, chat access, and review flow exactly as they are.</div>
+                        <div class="panel-copy">Chat with sellers and rate items once they're delivered.</div>
                     </div>
                     <a th:href="@{/orders/history}" class="panel-link">Open full order history <i class="bi bi-arrow-right"></i></a>
                 </div>
@@ -1548,7 +1545,7 @@
                 <div class="products-state" data-profile-state="pending_payment">
                     <div class="empty-products">
                         <div class="fw-bold mb-2">Pending payment items</div>
-                        <p class="mb-3">Use your current checkout and payment flow before chat becomes available for each product.</p>
+                        <p class="mb-3">Chat unlocks after your payment is confirmed.</p>
                         <a class="btn btn-sm btn-outline-primary" th:href="@{/orders/history(filter='pending_payment')}">
                             <i class="bi bi-credit-card mr-1"></i> View Pending Payment Orders
                         </a>
@@ -1687,7 +1684,7 @@
 
             <div class="foot-note">
                 <i class="bi bi-info-circle" style="margin-right:4px"></i>
-                Seller access still follows the same verification flow. This page changes only the interface.
+                Want to sell on campus? Seller accounts are verified before you can start listing items.
             </div>
         </div>
     </div>

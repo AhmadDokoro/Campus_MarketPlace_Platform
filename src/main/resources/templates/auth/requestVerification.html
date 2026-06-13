@@ -4,6 +4,44 @@
     <meta charset="UTF-8">
     <title>Request Verification</title>
     <link th:href="@{/css/authentication.css}" rel="stylesheet" />
+    <style>
+        /* "file chosen" feedback chip (same pattern as add-product's ap-file-chosen) */
+        .rv-file-chosen{
+            display: none;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: rgba(34,197,94,.12);
+            color: #166534;
+            border: 1px solid rgba(34,197,94,.3);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: .85rem;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .rv-file-chosen.show{ display: inline-block; }
+
+        /* Uploading state: spinner + disabled button */
+        .rv-spinner{
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(0,0,0,.25);
+            border-top-color: currentColor;
+            border-radius: 50%;
+            vertical-align: -2px;
+            margin-right: 7px;
+            animation: rv-spin .7s linear infinite;
+        }
+        @keyframes rv-spin{ to{ transform: rotate(360deg); } }
+        .btn-primary:disabled{
+            opacity: .65;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
 </head>
 <body class="signup-body">
 
@@ -22,17 +60,19 @@
 
         <p style="font-size:0.95rem;color:#6b7280;margin-bottom:10px">Each file must be 5MB or smaller. Accepted formats: JPG, PNG.</p>
 
-        <form th:action="@{/auth/requestVerification}" method="post" enctype="multipart/form-data">
+        <form id="rv-form" th:action="@{/auth/requestVerification}" method="post" enctype="multipart/form-data">
 
             <div class="form-grid two-col">
                 <div class="form-field">
                     <label class="form-label" for="idCardFile">Student ID card image (front)</label>
                     <input id="idCardFile" name="idCardFile" type="file" accept="image/*" class="form-input" required />
+                    <span class="rv-file-chosen" id="idCardFileChosen"></span>
                 </div>
 
                 <div class="form-field">
                     <label class="form-label" for="mynemoFile">Mynemo profile image</label>
                     <input id="mynemoFile" name="mynemoFile" type="file" accept="image/*" class="form-input" required />
+                    <span class="rv-file-chosen" id="mynemoFileChosen"></span>
                     <div style="margin-top:6px;font-size:0.9rem;color:#6b7280;">
                         Need an example? <a th:href="@{/img/sample.png}" target="_blank" rel="noopener" style="color:#2563eb;">View sample</a>
                     </div>
@@ -41,9 +81,34 @@
 
             <div style="margin-top:16px;display:flex;gap:12px;justify-content:flex-end;">
                 <a th:href="@{/index}" class="btn btn-light">Cancel</a>
-                <button type="submit" class="btn btn-primary">Submit for verification</button>
+                <button type="submit" id="rv-submit-btn" class="btn btn-primary">Submit for verification</button>
             </div>
         </form>
+
+        <script>
+            // Show the chosen file name under each upload input.
+            ['idCardFile', 'mynemoFile'].forEach(function(id) {
+                var input = document.getElementById(id);
+                var chip = document.getElementById(id + 'Chosen');
+                input.addEventListener('change', function() {
+                    if (input.files && input.files.length > 0) {
+                        chip.textContent = '✓ ' + input.files[0].name;
+                        chip.classList.add('show');
+                    } else {
+                        chip.textContent = '';
+                        chip.classList.remove('show');
+                    }
+                });
+            });
+
+            // Double-submit guard: only disable AFTER native validation passes
+            // (the submit event fires only when the form is valid).
+            document.getElementById('rv-form').addEventListener('submit', function() {
+                var btn = document.getElementById('rv-submit-btn');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="rv-spinner"></span>Uploading…';
+            });
+        </script>
     </div>
 </div>
 

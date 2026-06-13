@@ -25,8 +25,13 @@
                 <div th:if="${session.userId != null}" class="d-inline-flex align-items-center">
                     <a th:href="@{/user/profile}" class="btn btn-sm btn-primary d-inline-flex align-items-center mr-2 header-profile-chip">
                         <span class="d-inline-flex align-items-center">
-                            <img th:src="@{https://i.pravatar.cc/150}" alt="User avatar" class="rounded-circle"
-                                 style="width:24px;height:24px;object-fit:cover;margin-right:6px;">
+                            <span class="header-avatar-initial rounded-circle"
+                                  th:if="${session.userName != null and !#strings.isEmpty(session.userName)}"
+                                  th:text="${#strings.toUpperCase(#strings.substring(session.userName, 0, 1))}">U</span>
+                            <span class="header-avatar-initial rounded-circle"
+                                  th:unless="${session.userName != null and !#strings.isEmpty(session.userName)}">
+                                <i class="fas fa-user" style="font-size:11px;"></i>
+                            </span>
                             <span th:text="${session.userName}" style="font-size: 13px; font-weight: 600;">User</span>
                         </span>
                     </a>
@@ -182,6 +187,23 @@
             background: rgba(255, 170, 0, 0.15) !important;
             border-color: #ffaa00 !important;
             color: #ffaa00 !important;
+        }
+        /* Initials avatar in the profile chip — replaces the old external pravatar image */
+        .header-avatar-initial{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            margin-right: 6px;
+            background: linear-gradient(135deg, #4B2E83 0%, #2D1B69 100%);
+            border: 1px solid rgba(255, 215, 0, 0.55);
+            color: #FFD700;
+            font-size: 12px;
+            font-weight: 800;
+            line-height: 1;
+            text-transform: uppercase;
         }
         .header-logout-chip{
             color: #ffaa00 !important;

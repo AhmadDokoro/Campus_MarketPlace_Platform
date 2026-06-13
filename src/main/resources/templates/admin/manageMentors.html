@@ -310,7 +310,8 @@
                 </td>
                 <td class="mentor-email" th:text="${mentor.mentorEmail}"></td>
                 <td style="text-align:right;">
-                  <form th:action="@{/admin/mentors/{id}/delete(id=${mentor.mentorId})}" method="post" style="margin:0;display:inline;">
+                  <form th:action="@{/admin/mentors/{id}/delete(id=${mentor.mentorId})}" method="post" style="margin:0;display:inline;"
+                        class="mentor-delete-form" th:data-mentor-name="${mentor.mentorName}">
                     <button class="btn-delete" type="submit"><i class="bi bi-trash3" style="margin-right:4px;"></i> Delete</button>
                   </form>
                 </td>
@@ -345,6 +346,16 @@
       if (bd) bd.classList.toggle('show', isOpen);
       document.body.style.overflow = isOpen ? 'hidden' : '';
     }
+
+    // Confirm before deleting a mentor (Thymeleaf 3.1 forbids string expressions in on* attributes).
+    document.querySelectorAll('.mentor-delete-form').forEach(function(form) {
+      form.addEventListener('submit', function(e) {
+        var name = form.getAttribute('data-mentor-name') || 'this mentor';
+        if (!confirm('Delete mentor ' + name + '? This cannot be undone.')) {
+          e.preventDefault();
+        }
+      });
+    });
   </script>
 </body>
 </html>
