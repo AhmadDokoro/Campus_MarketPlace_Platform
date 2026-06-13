@@ -22,7 +22,7 @@
         .btn-back-profile:hover{color:#4B2E83;text-decoration:none}
 
         .order-card{background:#fff;border-radius:16px;padding:22px 26px;box-shadow:0 6px 22px rgba(17,24,39,0.06);
-            margin-bottom:16px;transition:transform .2s ease,box-shadow .2s ease;cursor:pointer;text-decoration:none;display:block;color:inherit}
+            margin-bottom:16px;transition:transform .2s ease,box-shadow .2s ease;text-decoration:none;display:block;color:inherit}
         .order-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(75,46,131,0.12);text-decoration:none;color:inherit}
 
         .order-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
@@ -42,7 +42,18 @@
         .order-total{font-weight:800;color:#4B2E83;font-size:18px}
         .order-items-count{font-size:13px;color:#888}
         .order-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid rgba(75,46,131,0.05)}
-        .order-view-link{font-size:13px;font-weight:600;color:#4B2E83}
+        .order-view-link{font-size:13px;font-weight:600;color:#4B2E83;text-decoration:none}
+        .order-view-link:hover{color:#4B2E83;text-decoration:none}
+        .order-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+        .btn-pay-now{display:inline-flex;align-items:center;background:linear-gradient(135deg,#ff9500,#e6930a);color:#fff;
+            padding:6px 18px;border-radius:999px;font-size:12px;font-weight:700;text-decoration:none;
+            box-shadow:0 4px 12px rgba(255,149,0,0.3);transition:transform .2s,box-shadow .2s}
+        .btn-pay-now:hover{color:#fff;text-decoration:none;transform:translateY(-2px);box-shadow:0 6px 16px rgba(255,149,0,0.4)}
+
+        /* Keep content clear of the fixed mobile bottom nav */
+        @media (max-width: 991px){
+            .page-shell{padding-bottom:90px}
+        }
 
         .empty-orders{text-align:center;padding:80px 20px}
         .empty-orders-icon{font-size:80px;color:rgba(75,46,131,0.15);margin-bottom:20px}
@@ -54,6 +65,9 @@
     </style>
 </head>
 <body>
+
+<!-- ── Header Fragment ── -->
+<div th:replace="fragments/header :: header"></div>
 
 <div class="page-shell">
     <div class="page-top">
@@ -87,7 +101,7 @@
     </div>
 
     <div th:unless="${#lists.isEmpty(orders)}">
-        <div th:each="order : ${orders}" class="order-card" style="position:relative">
+        <div th:each="order : ${orders}" class="order-card">
             <a th:href="@{/orders/{id}(id=${order.orderId})}" style="text-decoration:none;color:inherit;display:block">
 
                 <div class="order-top">
@@ -106,31 +120,56 @@
                     </div>
                 </div>
 
-                <div class="order-bottom">
-                    <div>
-                        <span class="order-total" th:text="'RM ' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}">RM 0.00</span>
-                        <span class="order-items-count ml-2" th:text="'(' + ${#lists.size(order.orderItems)} + ' items)'"></span>
-                        <div class="order-items-count mt-1"
-                             th:text="${order.pendingItemCount} + ' pending • ' + ${order.inCampusItemCount} + ' in campus • ' + ${order.deliveredItemCount} + ' delivered'">
-                            Delivery item summary
-                        </div>
-                    </div>
-                    <span class="order-view-link">View Details <i class="bi bi-arrow-right"></i></span>
-                </div>
             </a>
 
-            <a th:if="${order.status.name() == 'PENDING_PAYMENT'}"
-               th:href="@{/orders/pay/{id}(id=${order.orderId})}"
-               style="position:absolute;bottom:18px;right:18px;background:linear-gradient(135deg,#ff9500,#e6930a);color:#fff;
-                      padding:6px 18px;border-radius:999px;font-size:12px;font-weight:700;text-decoration:none;
-                      box-shadow:0 4px 12px rgba(255,149,0,0.3);transition:transform .2s,box-shadow .2s;z-index:5"
-               onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 16px rgba(255,149,0,0.4)'"
-               onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 12px rgba(255,149,0,0.3)'">
-                <i class="bi bi-credit-card mr-1"></i>Pay Now
-            </a>
+            <div class="order-bottom">
+                <div>
+                    <span class="order-total" th:text="'RM ' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}">RM 0.00</span>
+                    <span class="order-items-count ml-2" th:text="'(' + ${#lists.size(order.orderItems)} + ' items)'"></span>
+                    <div class="order-items-count mt-1"
+                         th:text="${order.pendingItemCount} + ' pending • ' + ${order.inCampusItemCount} + ' in campus • ' + ${order.deliveredItemCount} + ' delivered'">
+                        Delivery item summary
+                    </div>
+                </div>
+                <div class="order-actions">
+                    <a th:if="${order.status.name() == 'PENDING_PAYMENT'}"
+                       th:href="@{/orders/pay/{id}(id=${order.orderId})}" class="btn-pay-now">
+                        <i class="bi bi-credit-card mr-1"></i>Pay Now
+                    </a>
+                    <a th:href="@{/orders/{id}(id=${order.orderId})}" class="order-view-link">
+                        View Details <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- ══ Mobile Bottom Navigation Bar ══ -->
+<nav class="mob-bottom-nav d-lg-none" id="mobBottomNav" aria-label="Mobile navigation">
+    <a th:href="@{/index}" class="mob-nav-item">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+    </a>
+    <a th:href="@{/products}" class="mob-nav-item">
+        <i class="fas fa-search"></i>
+        <span>Browse</span>
+    </a>
+    <a th:href="@{/products}" class="mob-nav-item mob-nav-center">
+        <span class="mob-nav-center-btn"><i class="fas fa-store"></i></span>
+        <span>Shop</span>
+    </a>
+    <a th:href="@{/cart}" class="mob-nav-item">
+        <i class="fas fa-shopping-cart"></i>
+        <span>Cart</span>
+    </a>
+    <a th:href="@{/user/profile}" class="mob-nav-item mob-nav-active">
+        <i class="fas fa-user-circle"></i>
+        <span>Profile</span>
+    </a>
+</nav>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>

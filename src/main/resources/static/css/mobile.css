@@ -1830,51 +1830,6 @@
     .icon { color: #4A2C8A !important; background: rgba(74,46,131,0.1) !important; }
 }
 @media (max-width: 767px) {
-    /* 2 Items per row product grid */
-    .row.pb-3 { 
-        display: grid !important; 
-        grid-template-columns: 1fr 1fr !important; 
-        gap: 10px !important; 
-        padding: 0 10px !important; 
-    }
-    .row.pb-3 > [class*="col-"] {
-        width: 100% !important;
-        max-width: 100% !important;
-        flex: none !important;
-        padding: 0 !important;
-        margin-bottom: 0 !important;
-    }
-    .product-item {
-        background: #111 !important; 
-        color: #fff !important;
-        border-radius: 0 !important;
-        padding: 8px !important;
-        border: 1px solid #222 !important;
-    }
-    .product-item .product-img img {
-        height: 140px !important;
-        object-fit: cover !important;
-    }
-    .product-item .text-body h6 {
-        font-size: 0.8rem !important;
-        font-weight: 800 !important;
-        color: #fff !important;
-        margin-bottom: 5px !important;
-    }
-    .product-item .text-body h5 {
-        font-size: 1rem !important;
-        font-weight: 900 !important;
-        color: #ff4e00 !important;
-    }
-    .product-action a.btn {
-        width: 100% !important;
-        clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%) !important;
-        background: #ff4e00 !important;
-        color: #fff !important;
-        font-weight: 900 !important;
-        border-radius: 0 !important;
-        margin: 5px 0 0 0 !important;
-    }
     /* Index Mobile hero / aggr-offer overrides */
     .hero-fade-overlay { display: none !important; }
     #header-carousel.carousel { height: 60vh !important; min-height: 400px !important; }
@@ -3095,5 +3050,25 @@
 
     .banner-subtitle {
         font-size: 0.82rem !important;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   33. FOOTER — extend dark purple over the body's bottom-nav
+   padding strip so no white band shows under the footer
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 991px) {
+    footer {
+        margin-bottom: -62px !important;
+        padding-bottom: 70px !important;
+        background: #0B051D !important;
+    }
+}
+
+@media (max-width: 575px) {
+    footer {
+        margin-bottom: -58px !important;
+        padding-bottom: 66px !important;
     }
 }

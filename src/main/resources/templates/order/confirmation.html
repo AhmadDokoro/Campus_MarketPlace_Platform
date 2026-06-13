@@ -550,8 +550,8 @@
 
     <!-- ── ACTIONS ── -->
     <div class="actions">
-        <a th:href="@{/orders/history}" class="btn-primary">
-            <i class="bi bi-list-check"></i> View My Orders
+        <a th:href="@{/orders/{id}(id=${order.orderId})}" class="btn-primary">
+            <i class="bi bi-box-seam"></i> Track This Order
         </a>
         <a th:href="@{/products}" class="btn-secondary">
             <i class="bi bi-arrow-left"></i> Continue Shopping

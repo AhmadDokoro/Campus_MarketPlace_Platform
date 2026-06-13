@@ -1072,14 +1072,14 @@
 
   /* ═══════════════════════════════════════════════════════════════
      SELLER DASHBOARD — NATIVE MOBILE LAYER  (≤450px ONLY)
-     All rules scoped inside @media (max-width: 450px).
+     All rules scoped inside @media (max-width: 767px).
      Desktop / tablet layouts are completely untouched.
      ═══════════════════════════════════════════════════════════════ */
 
-  /* Mobile-only elements: hidden above 450px */
+  /* Mobile-only elements: hidden above 767px */
   .seller-mob-nav, .seller-fab { display: none; }
 
-  @media (max-width: 450px) {
+  @media (max-width: 767px) {
 
     /* ─── Layout ──────────────────────────────────────────────── */
     .seller-page { padding: 0 !important; }
@@ -1107,18 +1107,26 @@
     /* FAB replaces Add Product; bottom nav replaces quick links */
     .main-head .head-tools { display: none !important; }
 
-    /* ─── Signal Strip — 2×2 compact grid ────────────────────── */
+    /* ─── Signal Strip — ONE horizontal swipeable row ─────────── */
     /* NOTE: mobile.css @767px forces display:flex on .signal-strip and hides
        .signal-sub. Both must be explicitly overridden here with !important. */
     .signal-strip {
-      display: grid !important;
-      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      display: flex !important;
+      flex-direction: row !important;   /* mobile.css forces column — must override */
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      grid-template-columns: none !important;
       gap: 10px !important;
       padding: 14px !important;
       border-bottom: 1px solid rgba(107,78,175,.1) !important;
     }
+    .signal-strip::-webkit-scrollbar { display: none !important; }
     .signal {
       display: block !important;          /* mobile.css sets flex + flex-direction:row */
+      flex: 0 0 44% !important;           /* ~2.2 cards visible — hints there's more to swipe */
+      min-width: 150px !important;
       padding: 14px !important;
       border-radius: 14px !important;
       border-right: none !important;
@@ -1168,6 +1176,10 @@
     }
     .table-responsive { overflow: visible !important; }
     .table { display: block !important; width: 100% !important; max-width: 100% !important; }
+    /* mobile.css sets .table-shell .table { min-width: 680px } which forces
+       horizontal overflow — must be beaten at the same specificity. */
+    .table-shell .table { min-width: 0 !important; }
+    .table-shell .table tbody td { padding: 0 !important; border: none !important; }
     .table thead { display: none !important; }
     .table tbody {
       display: flex !important;
@@ -1339,7 +1351,7 @@
     }
     .seller-fab:active { transform: scale(.93); }
 
-  } /* end @media (max-width: 450px) */
+  } /* end @media (max-width: 767px) */
   </style>
 </head>
 <body class="cmp-aurora">
