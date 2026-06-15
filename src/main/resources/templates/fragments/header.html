@@ -133,14 +133,14 @@
 
                         <!-- Logged-in nav: common links for all authenticated users -->
                         <div class="navbar-nav mr-auto py-0" th:if="${session.userId != null}">
-                            <a th:href="@{/index}" class="nav-item nav-link active">Home</a>
+                            <a th:href="@{/index}" class="nav-item nav-link">Home</a>
                             <a th:href="@{/products}" class="nav-item nav-link">Explore</a>
                             <a th:href="@{/user/profile}" class="nav-item nav-link">Profile</a>
                         </div>
 
                         <!-- Public nav: when no user logged in, show generic public links -->
                         <div class="navbar-nav mr-auto py-0" th:if="${session.userId == null}">
-                            <a th:href="@{/index}" class="nav-item nav-link active">Home</a>
+                            <a th:href="@{/index}" class="nav-item nav-link">Home</a>
                             <a th:href="@{/products}" class="nav-item nav-link">Explore</a>
                         </div>
 
@@ -157,6 +157,32 @@
                 </nav>
             </div>
         </div>
+    </div>
+
+    <!-- ── Floating Menu (desktop/laptop only) — appears on scroll, opens a compact nav drawer ── -->
+    <button type="button" class="floating-menu-btn" id="floatingMenuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="floatingMenuPanel">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="floating-menu-panel" id="floatingMenuPanel" role="menu" aria-label="Site navigation">
+        <div class="fmp-header">
+            <i class="fas fa-gem"></i>
+            <span>Campus Market</span>
+        </div>
+
+        <!-- Logged-in links -->
+        <th:block th:if="${session.userId != null}">
+            <a th:href="@{/index}" class="fmp-link" role="menuitem"><i class="fas fa-home"></i> Home</a>
+            <a th:href="@{/products}" class="fmp-link" role="menuitem"><i class="fas fa-store"></i> Explore</a>
+            <a th:href="@{/user/profile}" class="fmp-link" role="menuitem"><i class="fas fa-user"></i> Profile</a>
+            <a th:href="@{/cart}" class="fmp-link" role="menuitem"><i class="fas fa-shopping-cart"></i> Cart</a>
+        </th:block>
+
+        <!-- Public links -->
+        <th:block th:if="${session.userId == null}">
+            <a th:href="@{/index}" class="fmp-link" role="menuitem"><i class="fas fa-home"></i> Home</a>
+            <a th:href="@{/products}" class="fmp-link" role="menuitem"><i class="fas fa-store"></i> Explore</a>
+        </th:block>
     </div>
 
 
@@ -513,24 +539,127 @@
             100%{background-position:0% 50%}
         }
 
-        .sticky-header-active {
+        /* ── Floating Menu Button + Drawer (desktop/laptop only, > 991px) ── */
+        .floating-menu-btn{
+            /* !important: some pages use `body.cmp-aurora > * { position:relative; z-index:1 }`
+               which (after we reparent this to <body>) would otherwise force it into normal flow
+               and behind page content. Lock it to the viewport, above everything. */
             position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            z-index: 1030 !important;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.12) !important;
-            animation: stickySlideDownSmooth 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+            top: 18px;
+            left: 18px;
+            z-index: 100000 !important;
+            width: 50px;
+            height: 50px;
+            display: none;            /* shown by JS only on desktop after scroll */
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            color: #FFD700;
+            font-size: 20px;
+            background: linear-gradient(135deg, #1A0A3E 0%, #2D1B69 100%);
+            box-shadow: 0 8px 22px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,215,0,0.45);
+            opacity: 0;
+            transform: translateY(-12px);
+            transition: opacity .3s ease, transform .3s ease, box-shadow .25s ease, background .25s ease;
+            pointer-events: none;
+        }
+        .floating-menu-btn.fmb-visible{
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .floating-menu-btn:hover{
+            background: linear-gradient(135deg, #2D1B69 0%, #4B2E83 100%);
+            color: #ffffff;
+            box-shadow: 0 10px 28px rgba(255, 153, 0, 0.4), inset 0 0 0 1px rgba(255,215,0,0.75);
+        }
+        .floating-menu-btn:focus{
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.25), 0 8px 22px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,215,0,0.6);
         }
 
-        @keyframes stickySlideDownSmooth {
-            from {
-                transform: translateY(-100%);
-                opacity: 0.5;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
+        .floating-menu-panel{
+            position: fixed !important;
+            top: 78px;
+            left: 18px;
+            z-index: 99999 !important;
+            width: 240px;
+            padding: 10px;
+            border-radius: 16px;
+            background: linear-gradient(160deg, #1A0A3E 0%, #100b1a 100%);
+            box-shadow: 0 18px 44px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,215,0,0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px) scale(0.98);
+            transform-origin: top left;
+            transition: opacity .25s ease, transform .25s ease, visibility .25s;
+        }
+        .floating-menu-panel.fmp-open{
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+        .floating-menu-panel .fmp-header{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px 10px;
+            margin-bottom: 6px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.18);
+        }
+        .floating-menu-panel .fmp-header i{
+            color: #FFD700;
+            font-size: 15px;
+            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.6));
+        }
+        .floating-menu-panel .fmp-header span{
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #FFD700;
+        }
+        .floating-menu-panel .fmp-link{
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            border-radius: 10px;
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none !important;
+            transition: background .2s ease, color .2s ease, transform .15s ease;
+        }
+        .floating-menu-panel .fmp-link i{
+            width: 18px;
+            text-align: center;
+            color: #FFC107;
+            font-size: 14px;
+            transition: color .2s ease;
+        }
+        .floating-menu-panel .fmp-link:hover{
+            background: linear-gradient(135deg, rgba(255,215,0,0.16), rgba(255,78,0,0.16));
+            color: #ffffff !important;
+            transform: translateX(2px);
+        }
+        .floating-menu-panel .fmp-link.active{
+            background: linear-gradient(135deg, #FFD700, #FF9900);
+            color: #100b1a !important;
+        }
+        .floating-menu-panel .fmp-link.active i{
+            color: #100b1a;
+        }
+
+        /* Hard-disable the floating feature on mobile/tablet (≤991px) */
+        @media (max-width: 991px){
+            .floating-menu-btn,
+            .floating-menu-panel{
+                display: none !important;
             }
         }
     </style>
@@ -713,52 +842,121 @@
             loadCartBadge();
         }
 
-        // Sticky Header Logic (Shows after 1 second of no scrolling when scrolled down)
-        document.addEventListener('DOMContentLoaded', function() {
-            var header = document.querySelector('header');
-            if(!header) return;
+        /* ── Active nav state: move the underline to the link matching the current page ── */
+        function syncActiveNav(){
+            var path = window.location.pathname || '/';
 
-            var scrollTimer;
-            var isSticky = false;
-            var headerPlaceholder = document.createElement('div');
-            headerPlaceholder.style.display = 'none';
-            header.parentNode.insertBefore(headerPlaceholder, header);
+            // Resolve which logical section the current path belongs to.
+            function sectionOf(p){
+                if (p === '/' || p.indexOf('/index') === 0) return 'home';
+                if (p.indexOf('/products') === 0) return 'explore';
+                if (p.indexOf('/user/profile') === 0) return 'profile';
+                return '';
+            }
+            var section = sectionOf(path);
 
-            window.addEventListener('scroll', function() {
-                if (window.innerWidth <= 767) return; // disabled on mobile
-                var currentScrollY = window.scrollY;
-                var threshold = 250; // Distance to scroll down before logic applies
+            // Map an href's pathname to a section so we can match links generically.
+            function linkSection(href){
+                try {
+                    var p = new URL(href, window.location.origin).pathname;
+                    return sectionOf(p);
+                } catch (e){ return ''; }
+            }
 
-                if (currentScrollY > threshold) {
-                    // Start or restart the scroll timer
-                    clearTimeout(scrollTimer);
+            // Desktop header nav links
+            document.querySelectorAll('.header-main-nav .nav-link').forEach(function(a){
+                a.classList.toggle('active', section !== '' && linkSection(a.getAttribute('href')) === section);
+            });
 
-                    // While scrolling, make sure it's not sticky
-                    if (isSticky) {
-                        header.classList.remove('sticky-header-active');
-                        headerPlaceholder.style.display = 'none';
-                        isSticky = false;
-                    }
+            // Floating menu panel links (keep consistent with the header)
+            document.querySelectorAll('.floating-menu-panel .fmp-link').forEach(function(a){
+                a.classList.toggle('active', section !== '' && linkSection(a.getAttribute('href')) === section);
+            });
+        }
 
-                    scrollTimer = setTimeout(function() {
-                        // After 1 second of stopping, show the header
-                        var hHeight = header.offsetHeight;
-                        headerPlaceholder.style.height = hHeight + 'px';
-                        headerPlaceholder.style.display = 'block';
+        /* ── Floating Menu Button + Drawer (desktop/laptop only, > 991px) ── */
+        function setupFloatingMenu(){
+            var btn   = document.getElementById('floatingMenuBtn');
+            var panel = document.getElementById('floatingMenuPanel');
+            if(!btn || !panel) return;
 
-                        header.classList.add('sticky-header-active');
-                        isSticky = true;
-                    }, 1000);
+            // The <header> establishes its own stacking context (position:relative; z-index:1020),
+            // which traps these fixed overlays behind page content (cards, grids). Reparent them to
+            // <body> so their z-index competes at the top level — same trick used for the mobile
+            // search dropdown above.
+            if(btn.parentNode !== document.body){ document.body.appendChild(btn); }
+            if(panel.parentNode !== document.body){ document.body.appendChild(panel); }
+
+            var DESKTOP_MIN = 992;   // > 991px = desktop/laptop
+            var THRESHOLD   = 250;   // px scrolled before the button appears
+            var isOpen = false;
+
+            function isDesktop(){ return window.innerWidth >= DESKTOP_MIN; }
+
+            function closePanel(){
+                if(!isOpen) return;
+                isOpen = false;
+                panel.classList.remove('fmp-open');
+                btn.setAttribute('aria-expanded', 'false');
+            }
+            function openPanel(){
+                if(isOpen) return;
+                isOpen = true;
+                panel.classList.add('fmp-open');
+                btn.setAttribute('aria-expanded', 'true');
+            }
+
+            function updateButtonVisibility(){
+                if(!isDesktop()){
+                    // Never show on mobile/tablet; ensure everything is reset.
+                    btn.classList.remove('fmb-visible');
+                    closePanel();
+                    return;
+                }
+                if(window.scrollY > THRESHOLD){
+                    btn.classList.add('fmb-visible');
                 } else {
-                    // When near the top, reset everything
-                    clearTimeout(scrollTimer);
-                    if (isSticky) {
-                        header.classList.remove('sticky-header-active');
-                        headerPlaceholder.style.display = 'none';
-                        isSticky = false;
-                    }
+                    btn.classList.remove('fmb-visible');
+                    closePanel(); // back near top — hide the drawer too
+                }
+            }
+
+            btn.addEventListener('click', function(e){
+                e.stopPropagation();
+                if(!isDesktop()) return;
+                if(isOpen){ closePanel(); } else { openPanel(); }
+            });
+
+            // Close when a link is clicked (navigation happens anyway)
+            panel.addEventListener('click', function(e){
+                if(e.target.closest('.fmp-link')){ closePanel(); }
+            });
+
+            // Close on outside click
+            document.addEventListener('click', function(e){
+                if(isOpen && !panel.contains(e.target) && e.target !== btn && !btn.contains(e.target)){
+                    closePanel();
                 }
             });
-        });
+
+            // Close on Escape
+            document.addEventListener('keydown', function(e){
+                if(e.key === 'Escape' || e.keyCode === 27){ closePanel(); }
+            });
+
+            window.addEventListener('scroll', updateButtonVisibility, { passive: true });
+            window.addEventListener('resize', updateButtonVisibility);
+            updateButtonVisibility();
+        }
+
+        if(document.readyState === 'loading'){
+            document.addEventListener('DOMContentLoaded', function(){
+                syncActiveNav();
+                setupFloatingMenu();
+            });
+        } else {
+            syncActiveNav();
+            setupFloatingMenu();
+        }
     </script>
 </header>

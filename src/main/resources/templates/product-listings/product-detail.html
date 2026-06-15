@@ -880,8 +880,16 @@
             .pd-reco-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
             .review-preview-list{ grid-template-columns: 1fr; }
         }
+        /* Mobile-only trust badges (moved to bottom of info col on phones) */
+        .pd-mobile-trust{ display: none; }
+
         @media (max-width: 767.98px){
             .pd-shell{ padding: 8px 0 40px; }
+            /* Move trust chips + eyebrow to the bottom on mobile:
+               hide them in place, show the mobile-only copy after the seller card. */
+            .pd-image-strip{ display: none; }
+            .pd-eyebrow{ display: none; }
+            .pd-mobile-trust{ display: flex; gap: 10px; flex-wrap: wrap; margin-top: 0; }
             .pd-purchase-panel{ padding: 22px 20px; border-radius: 20px; }
             .pd-card{ padding: 18px 20px; border-radius: 18px; }
             .pd-stat-strip{ grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -1060,6 +1068,17 @@
                             Seller Name
                         </span>
                     </div>
+                </div>
+
+                <!-- Mobile-only: trust badges + listing eyebrow moved to bottom -->
+                <div class="pd-mobile-trust">
+                    <span class="pd-meta-chip">
+                        <i class="fas fa-shield-alt"></i> Verified seller
+                    </span>
+                    <span class="pd-meta-chip">
+                        <i class="fas fa-bolt"></i> Buyer protected
+                    </span>
+                    <span class="pd-eyebrow" style="display:inline-flex;"><i class="fas fa-tag"></i>Listing detail</span>
                 </div>
             </div>
         </div>

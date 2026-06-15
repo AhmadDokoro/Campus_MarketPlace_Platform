@@ -21,7 +21,6 @@ public class MockToyyibPayService {
     private static final String CARD_SUCCESS       = "4242424242424242";
     private static final String CARD_DECLINED      = "4000000000000002";
     private static final String CARD_INSUFFICIENT  = "4000000000009995";
-    private static final String CARD_EXPIRED       = "4000000000000069";
 
     // Validates card details just like a real gateway would.
     public Map<String, Object> validateCard(String cardNumber, String expiryMonth,
@@ -38,17 +37,11 @@ public class MockToyyibPayService {
         // Strip ALL non-digit characters from card number (spaces, dashes, any encoding quirks).
         String cleanCard = cardNumber == null ? "" : cardNumber.replaceAll("\\D", "");
 
-        // Card number must be 16 digits.
+        // Card number must be exactly 16 digits (all numeric). No Luhn checksum —
+        // this is a mock gateway, so any reasonable 16-digit card is accepted.
         if (cleanCard.length() != 16 || !cleanCard.matches("\\d+")) {
             result.put("valid", false);
             result.put("error", "Card number must be 16 digits.");
-            return result;
-        }
-
-        // Luhn algorithm check — standard card number validation.
-        if (!passesLuhnCheck(cleanCard)) {
-            result.put("valid", false);
-            result.put("error", "Invalid card number.");
             return result;
         }
 
@@ -115,13 +108,8 @@ public class MockToyyibPayService {
                 result.put("message", "Insufficient funds on card.");
                 result.put("code", "INSUFFICIENT_FUNDS");
                 return result;
-            case CARD_EXPIRED:
-                result.put("success", false);
-                result.put("message", "Card has expired.");
-                result.put("code", "EXPIRED_CARD");
-                return result;
             default:
-                // All other valid Luhn cards succeed.
+                // Any other valid card succeeds.
                 result.put("success", true);
                 result.put("message", "Payment processed successfully.");
                 result.put("code", "SUCCESS");
@@ -134,23 +122,6 @@ public class MockToyyibPayService {
         String datePart = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String uniquePart = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         return "TBP-" + datePart + "-" + uniquePart;
-    }
-
-    // Standard Luhn algorithm — validates credit card numbers.
-    private boolean passesLuhnCheck(String number) {
-        int sum = 0;
-        boolean alternate = false;
-        // Process digits from right to left.
-        for (int i = number.length() - 1; i >= 0; i--) {
-            int digit = Character.getNumericValue(number.charAt(i));
-            if (alternate) {
-                digit *= 2;
-                if (digit > 9) digit -= 9;
-            }
-            sum += digit;
-            alternate = !alternate;
-        }
-        return (sum % 10 == 0);
     }
 }
 
