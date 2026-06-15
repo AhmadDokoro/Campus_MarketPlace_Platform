@@ -221,10 +221,14 @@
             height: 19px;
         }
 
-        /* Fly-to-cart ghost element */
+        /* Fly-to-cart ghost element.
+           !important: pages with `body.cmp-aurora > * { position:relative; z-index:1 }`
+           (e.g. the home page) would otherwise drop this body-appended ghost into normal
+           flow at the bottom of the page, so the animation never appears. Lock it to the
+           viewport, above everything. */
         .fly-to-cart-ghost {
-            position: fixed;
-            z-index: 1000000;
+            position: fixed !important;
+            z-index: 1000000 !important;
             border-radius: 16px;
             object-fit: cover;
             pointer-events: none;
