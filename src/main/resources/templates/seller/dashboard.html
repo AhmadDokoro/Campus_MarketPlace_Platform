@@ -1217,8 +1217,8 @@
       color: #2E2740 !important;
     }
 
-    /* Product cell — right padding leaves room for the action icons */
-    .table tbody tr td:nth-child(1) { padding-right: 92px !important; margin-bottom: 10px !important; }
+    /* Product cell — right padding leaves room for the (now vertical) action icons */
+    .table tbody tr td:nth-child(1) { padding-right: 50px !important; margin-bottom: 10px !important; }
     .product-cell { gap: 10px !important; min-width: 0 !important; }
     .product-thumb { width: 50px !important; height: 50px !important; border-radius: 10px !important; flex-shrink: 0 !important; }
     .product-meta strong {
@@ -1226,7 +1226,7 @@
       white-space: nowrap !important;
       overflow: hidden !important;
       text-overflow: ellipsis !important;
-      max-width: 160px !important;
+      max-width: 200px !important;
       text-transform: none !important;    /* mobile.css uppercases this */
       color: #2D1B69 !important;
     }
@@ -1262,8 +1262,17 @@
       top: 14px !important;
       right: 14px !important;
     }
-    .action-stack { gap: 7px !important; flex-wrap: nowrap !important; justify-content: flex-end !important; }
-    .table-action { width: 38px !important; height: 38px !important; border-radius: 10px !important; font-size: 15px !important; }
+    /* Stack edit/delete vertically and shrink them so long titles aren't crowded.
+       Use .action-stack .table-action (0,2,0) so it beats the global
+       `button[type="submit"] { width:100%; padding:20px }` rule (0,1,1) that would
+       otherwise blow up the delete <button>. Reset its padding/min-width too. */
+    .action-stack { flex-direction: column !important; align-items: flex-end !important; gap: 6px !important; flex-wrap: nowrap !important; }
+    .action-stack .table-action {
+      width: 30px !important; height: 30px !important;
+      min-width: 0 !important; padding: 0 !important;
+      border-radius: 8px !important; font-size: 13px !important;
+    }
+    .action-stack form { display: inline-flex !important; width: auto !important; }
 
     /* Show-more row */
     .show-more-row {
