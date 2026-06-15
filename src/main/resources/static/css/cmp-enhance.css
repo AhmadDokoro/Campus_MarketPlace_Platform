@@ -1,3 +1,7 @@
+/* Global app scale — render at 80% on >=830px so every page matches the
+   preferred zoomed-out look. Mirrored across all stylesheets; idempotent. */
+@media (min-width: 830px){ html { zoom: 0.8; } }
+
 /* ===========================================================
    Campus Marketplace — Enhancement Layer
    Design tokens, animations, hover effects, responsive helpers.

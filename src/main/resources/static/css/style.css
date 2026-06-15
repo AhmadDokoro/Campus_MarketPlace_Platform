@@ -1,5 +1,20 @@
 /* Copied from templates/css/style.css (trimmed for brevity)  style.css */
 /* Core layout and utility rules used across the site. */
+
+/* ── Global app scale ──────────────────────────────────────────────────
+   Render the app at 80% on screens >= 830px (iPad and up) so every visitor
+   sees the preferred "zoomed-out" look the project was built/tuned at,
+   regardless of their own browser zoom. Browsers don't allow JS to change
+   the real browser zoom, so we use the CSS `zoom` property (same visual
+   result). Kept off below 830px so small phones keep native sizing.
+   This same rule is mirrored in every stylesheet (and inlined on the few
+   pages that load no shared CSS) so it applies on EVERY page. Idempotent:
+   html{zoom:0.8} from multiple sheets resolves to 0.8, never compounds.
+--------------------------------------------------------------------------- */
+@media (min-width: 830px){
+    html { zoom: 0.8; }
+}
+
 /* ...existing code...*/
 .root-replacements { /* only replacing color values to UMT palette */ }
 :root{--primary:#4B2E83;--secondary:#F5F5F5}

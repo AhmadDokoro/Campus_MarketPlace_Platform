@@ -4,14 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Chat</title>
+    <!-- Match the rest of the site exactly so the shared header renders correctly
+         (it is built for Bootstrap 4.6 + FontAwesome, not Bootstrap 5). -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css">
     <link th:href="@{/css/style.css}" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/mobile.css}" rel="stylesheet" />
+    <link th:href="@{/css/cmp-enhance.css}" rel="stylesheet" />
+    <link th:href="@{/css/cmp-stunning.css}" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body{background:#f5f6fb}
         .chat-shell{max-width:980px;margin:24px auto;padding:0 12px}
         .chat-card{background:#fff;border-radius:18px;box-shadow:0 12px 24px rgba(15,23,42,0.08);border:1px solid rgba(15,23,42,0.06)}
-        .chat-header{padding:18px 20px;border-bottom:1px solid rgba(15,23,42,0.06)}
+        .chat-header{padding:18px 20px;border-bottom:1px solid rgba(15,23,42,0.06);gap:12px}
         .chat-body{padding:18px 20px;min-height:420px;max-height:60vh;overflow:auto;background:linear-gradient(180deg,#ffffff 0%,#f8f9ff 100%)}
         .message-row{display:flex;margin-bottom:14px}
         .message-row.mine{justify-content:flex-end}
@@ -27,7 +36,7 @@
 
 <div class="chat-shell">
     <div class="chat-card">
-        <div class="chat-header d-flex justify-content-between align-items-start gap-3 flex-wrap">
+        <div class="chat-header d-flex justify-content-between align-items-start flex-wrap">
             <div>
                 <h4 class="mb-1">Product Chat</h4>
                 <div class="text-muted">
@@ -55,13 +64,13 @@
 
         <div class="chat-form">
             <div class="alert alert-danger d-none" id="chatError"></div>
-            <form id="chatSendForm" class="row g-2" th:attr="data-send-url=@{/chat/send}">
+            <form id="chatSendForm" class="row" th:attr="data-send-url=@{/chat/send}">
                 <input type="hidden" name="chatId" th:value="${chat.chatId}" />
                 <div class="col-12 col-md-9">
                     <input type="text" name="message" class="form-control" maxlength="1000" placeholder="Type your message..." required />
                 </div>
-                <div class="col-12 col-md-3 d-grid">
-                    <button type="submit" class="btn btn-primary">Send</button>
+                <div class="col-12 col-md-3 mt-2 mt-md-0">
+                    <button type="submit" class="btn btn-primary btn-block">Send</button>
                 </div>
             </form>
         </div>
@@ -119,5 +128,11 @@
         });
     })();
 </script>
+
+<!-- Same JS stack as the rest of the site (Bootstrap 4.6) so the shared header's
+     mobile collapse / interactions work consistently. -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
 </body>
 </html>
