@@ -19,6 +19,8 @@
   <link rel="stylesheet" th:href="@{/css/mobile.css}">
   <link rel="stylesheet" th:href="@{/css/cmp-enhance.css}">
   <link rel="stylesheet" th:href="@{/lib/aos/aos.css}">
+  <!-- Admin mobile redesign (mobile-only; loads last so it wins) -->
+  <link rel="stylesheet" th:href="@{/css/admin-mobile.css}">
 
   <style>
     /* Dashboard-specific overrides */
@@ -50,6 +52,15 @@
     .stat-flagged .stat-icon { background: rgba(245,158,11,.12); color: #F59E0B; }
     .stat-sales .stat-icon { background: rgba(34,197,94,.12); color: #22C55E; }
     #chartListings { max-height: 260px; }
+
+    /* ── Show More / Show Less (Top Categories + Manage Sellers) ──
+       Default: extra items hidden. When the container gets .show-all
+       (toggled by JS), they reveal. Class-based so it survives the
+       mobile card-ification (!important rules) in admin-mobile.css. */
+    #topCategories .extra-category { display: none; }
+    #topCategories.show-all .extra-category { display: flex; }
+    #sellersTable tr.extra-seller { display: none; }
+    #sellersTable.show-all tr.extra-seller { display: table-row; }
 
     .overview-header {
       display: flex;
@@ -415,16 +426,15 @@
               <div class="panel-body">
                 <ul class="category-list" id="topCategories">
                   <li th:each="cat, stat : ${topCategories}" class="cat-row"
-                      th:classappend="${stat.index >= 5 ? 'extra-category' : ''}"
-                      th:style="${stat.index >= 5 ? 'display: none;' : ''}">
+                      th:classappend="${stat.index >= 3 ? 'extra-category' : ''}">
                     <span class="cat-rank" th:text="${stat.index + 1}">1</span>
                     <span class="cat-name" th:text="${cat.categoryName}">Category</span>
                     <span class="cat-count pill approved" th:text="${cat.productCount} + ' listings'">0 listings</span>
                   </li>
                   <li th:if="${#lists.isEmpty(topCategories)}" class="muted small">No category data yet.</li>
                 </ul>
-                <div th:if="${#lists.size(topCategories) > 5}" style="text-align: center; margin-top: 12px;">
-                  <button class="btn small outline" onclick="showExtraCategories(this)">Show More</button>
+                <div th:if="${#lists.size(topCategories) > 3}" style="text-align: center; margin-top: 12px;">
+                  <button class="btn small outline" id="categoriesToggleBtn" onclick="toggleCategories(this)">Show More</button>
                 </div>
               </div>
             </div>
@@ -455,8 +465,7 @@
                 </thead>
                 <tbody>
                   <tr th:each="s, stat : ${sellerStats}"
-                      th:classappend="${stat.index >= 5 ? 'extra-seller' : ''}"
-                      th:style="${stat.index >= 5 ? 'display:none;' : ''}">
+                      th:classappend="${stat.index >= 3 ? 'extra-seller' : ''}">
                     <td class="muted" th:text="${stat.index + 1}">1</td>
                     <td>
                       <div class="seller-name-cell">
@@ -485,7 +494,7 @@
                   </tr>
                 </tbody>
               </table>
-              <div th:if="${#lists.size(sellerStats) > 5}" style="text-align:center;margin-top:14px">
+              <div th:if="${#lists.size(sellerStats) > 3}" style="text-align:center;margin-top:14px">
                 <button class="btn small outline" id="sellersToggleBtn" onclick="toggleSellers(this)">Show More</button>
               </div>
             </div>
@@ -560,20 +569,21 @@
         verificationRejected:  /*[[${verificationRejected}]]*/ 0
     };
 
-    function showExtraCategories(btn) {
-        document.querySelectorAll('.extra-category').forEach(function(el) {
-            el.style.display = '';
-        });
-        btn.style.display = 'none';
+    /* Toggle the 'show-all' class on the container; CSS decides which rows
+       are visible. Works on desktop AND mobile (card view) because the
+       hide/show rules carry matching specificity in both layers. */
+    function toggleCategories(btn) {
+        var list = document.getElementById('topCategories');
+        if (!list) return;
+        var expanded = list.classList.toggle('show-all');
+        btn.textContent = expanded ? 'Show Less' : 'Show More';
     }
 
     function toggleSellers(btn) {
-        var rows = document.querySelectorAll('#sellersTable .extra-seller');
-        var expanded = btn.textContent.trim() === 'Show Less';
-        rows.forEach(function(row) {
-            row.style.display = expanded ? 'none' : '';
-        });
-        btn.textContent = expanded ? 'Show More' : 'Show Less';
+        var table = document.getElementById('sellersTable');
+        if (!table) return;
+        var expanded = table.classList.toggle('show-all');
+        btn.textContent = expanded ? 'Show Less' : 'Show More';
     }
     /*]]>*/
   </script>

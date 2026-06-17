@@ -41,7 +41,8 @@ Runs on `http://localhost:8080`. Default admin/test login: `ahmadkabirudokoro@gm
 | `cmp-enhance.css` | AOS animation enhancements; includes `html:not(.aos-init) [data-aos]` visibility guard |
 | `cmp-stunning.css` | Visual polish / luxury theme effects |
 | `seller-shell.css` | Seller dashboard styles |
-| `admin.css` | Admin dashboard styles |
+| `admin.css` | Admin dashboard styles (desktop + baseline responsive) |
+| `admin-mobile.css` | **All admin mobile redesign** — linked LAST on every admin page so its `!important` rules win. Every rule is scoped inside a `max-width` media query (991/767/575/480px, mirroring the seller breakpoints) so desktop is never touched. Covers the 4 shell pages (tables→cards, stat/panel grids, flagged accordion, mentor form) and the 5 standalone `cmp-*`/`sv-*`/`rr-*`/`report-*` pages. The slide-out admin sidebar/topbar scaffolding still lives in `mobile.css` §7. |
 | `authentication.css` | Login / signup pages |
 
 ---
