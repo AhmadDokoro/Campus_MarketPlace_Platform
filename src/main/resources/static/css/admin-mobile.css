@@ -1,0 +1,1094 @@
+/* Global app scale — render at 80% on >=830px so every page matches the
+   preferred zoomed-out look. Mirrored across all stylesheets; idempotent. */
+@media (min-width: 830px){ html { zoom: 0.8; } }
+
+/* ======================================================================
+   admin-mobile.css — ADMIN MOBILE LAYER
+   ----------------------------------------------------------------------
+   Makes the admin side mobile-friendly, mirroring the buyer/seller
+   approach. Loaded LAST on every admin page so it overrides admin.css
+   and each page's inline <style>.
+
+   SCOPE: every rule lives inside a max-width media query — desktop
+   (>=992px) is never affected.
+
+   BREAKPOINTS (same as the seller side):
+     <= 991px  layout shift (sidebar already slides out via mobile.css §7)
+     <= 767px  card-ification / main mobile redesign
+     <= 575px / <= 480px  small-phone tweaks
+
+   The slide-out sidebar / topbar / backdrop scaffolding for the four
+   shell pages (dashboard, manageMentors, pendingSellerList,
+   flaggedProducts) is handled in mobile.css §7 and is NOT duplicated
+   here — this file only styles page CONTENT.
+
+   Sections:
+     1. DASHBOARD            (admin/dashboard.html)
+     2. MANAGE MENTORS       (admin/manageMentors.html)
+     3. PENDING SELLERS      (admin/pendingSellerList.html)
+     4. FLAGGED PRODUCTS     (admin/flaggedProducts.html)
+     5. STANDALONE PAGES     (categories, edit-category,
+                              seller-verification, rejectReason,
+                              report-preview)
+   ====================================================================== */
+
+
+/* ===== DASHBOARD ===== */
+
+/* ════════════════════════════════════════════════════════════
+   ADMIN DASHBOARD — content refinements (admin/dashboard.html)
+   Scaffolding (sidebar/topbar/backdrop) handled elsewhere in
+   mobile.css §7 — this block only refines the .content area.
+   ════════════════════════════════════════════════════════════ */
+
+/* ── LAYOUT TWEAKS — @media (max-width: 991px) ── */
+@media (max-width: 991px) {
+
+  /* Panels — trim chrome so charts/tables get more room */
+  .content .panel {
+    padding: 16px !important;
+  }
+
+  /* Panel header can wrap (title + actions) instead of squashing */
+  .content .panel-header {
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+
+  /* Panel actions wrap and don't force overflow */
+  .content .panel-actions {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  /* Charts never overflow their panel; keep a sane fixed height */
+  #chartListings,
+  .panel-body canvas {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 230px !important;
+    max-height: 230px !important;
+  }
+  /* The fixed-height wrapper around #chartListings (inline 260px) */
+  .panel-body > div[style*="height"] {
+    height: 230px !important;
+    min-height: 230px !important;
+  }
+}
+
+/* ── CARD-IFICATION + CONTENT POLISH — @media (max-width: 767px) ── */
+@media (max-width: 767px) {
+
+  /* 1. Overview header: stack, left-aligned, full-width CTA */
+  .overview-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+  .overview-header > div {
+    width: 100% !important;
+  }
+  .btn-report-download {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* 1b. Stat cards → ONE horizontal swipeable ROW (like the seller
+        dashboard signal-strip). Overrides mobile.css §7 which stacks
+        them into a 1/2-column grid on phones. */
+  .content .cards-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    grid-template-columns: none !important;   /* kill the grid */
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-snap-type: x proximity !important;
+    gap: 12px !important;
+    padding-bottom: 4px !important;           /* breathing room under cards */
+    scrollbar-width: none !important;          /* Firefox: hide scrollbar */
+  }
+  .content .cards-grid::-webkit-scrollbar {
+    display: none !important;                   /* WebKit: hide scrollbar */
+  }
+  /* Each card: compact block, ~2.2 visible so the row reads as swipeable */
+  .content .cards-grid .stat-card {
+    display: block !important;
+    flex: 0 0 44% !important;
+    min-width: 150px !important;
+    margin: 0 !important;
+    padding: 14px !important;
+    scroll-snap-align: start !important;
+  }
+  .content .cards-grid .stat-card .stat-icon {
+    margin-bottom: 10px !important;
+    flex-shrink: 0 !important;
+  }
+  .content .cards-grid .stat-card .stat-title {
+    font-size: 11px !important;
+    margin-bottom: 6px !important;
+  }
+  .content .cards-grid .stat-card .stat-value {
+    font-size: 24px !important;
+    line-height: 1 !important;
+  }
+  .content .cards-grid .stat-card .stat-sub {
+    font-size: 11px !important;
+    margin-top: 4px !important;
+    white-space: normal !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  /* 5. Panel header / actions wrap nicely */
+  .content .panel-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  .content .panel-actions {
+    width: 100% !important;
+  }
+
+  /* 6. Category list — tidy each row, allow wrap */
+  .category-list .cat-row {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    padding: 8px 10px !important;
+  }
+  .category-list .cat-row .cat-name {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+  }
+  .category-list .cat-row .cat-count {
+    flex: 0 0 auto !important;
+  }
+
+  /* Show More / Show Less on mobile — the card-ification rules below set
+     tr{display:block!important} / cat-row{display:flex!important}, which
+     would force the extra items visible. Re-hide them when collapsed and
+     reveal on .show-all. Higher specificity (class added) wins. */
+  #topCategories .cat-row.extra-category { display: none !important; }
+  #topCategories.show-all .cat-row.extra-category { display: flex !important; }
+  #sellersTable tbody tr.extra-seller { display: none !important; }
+  #sellersTable.show-all tbody tr.extra-seller { display: block !important; }
+
+  /* 2. #sellersTable → STACKED CARDS
+        Columns: # | Seller | Joined | Listings | Status | Action
+        Label-free pattern (thead hidden, each tr = a card). */
+  #sellersTable {
+    display: block !important;
+    width: 100% !important;
+    border: none !important;
+    background: transparent !important;
+  }
+  #sellersTable thead {
+    display: none !important;
+  }
+  #sellersTable tbody {
+    display: block !important;
+    width: 100% !important;
+  }
+  #sellersTable tbody tr {
+    display: block !important;
+    width: 100% !important;
+    background: #fff !important;
+    border-radius: 14px !important;
+    padding: 14px !important;
+    margin-bottom: 12px !important;
+    box-shadow: 0 3px 14px rgba(45, 27, 105, .09) !important;
+    border: 1px solid rgba(107, 78, 175, .12) !important;
+  }
+  #sellersTable tbody td {
+    display: block !important;
+    width: 100% !important;
+    padding: 0 !important;
+    border: none !important;
+    text-align: left !important;
+  }
+  /* Col 1 (#) — hide the row index inside the card */
+  #sellersTable tbody td:nth-child(1) {
+    display: none !important;
+  }
+  /* Col 2 (Seller) — the prominent block */
+  #sellersTable tbody td:nth-child(2) {
+    margin-bottom: 10px !important;
+  }
+  #sellersTable tbody td:nth-child(2) .seller-name-cell {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+  #sellersTable tbody td:nth-child(2) .seller-avatar-sm {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 14px !important;
+    flex-shrink: 0 !important;
+  }
+  #sellersTable tbody td:nth-child(2) span {
+    font-weight: 700 !important;
+    font-size: 15px !important;
+    color: #2E2740 !important;
+    line-height: 1.2 !important;
+  }
+  /* Cols 3 & 4 (Joined / Listings) — small inline tags */
+  #sellersTable tbody td:nth-child(3),
+  #sellersTable tbody td:nth-child(4) {
+    display: inline-block !important;
+    width: auto !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    color: #4A2C8A !important;
+    background: rgba(107, 78, 175, .08) !important;
+    border-radius: 6px !important;
+    padding: 3px 8px !important;
+    margin: 0 5px 5px 0 !important;
+  }
+  #sellersTable tbody td:nth-child(3)::before {
+    content: "Joined: ";
+    font-weight: 700 !important;
+    color: #6B6280 !important;
+  }
+  #sellersTable tbody td:nth-child(4)::before {
+    content: "Listings: ";
+    font-weight: 700 !important;
+    color: #6B6280 !important;
+  }
+  /* Col 5 (Status) — pill sits inline on its own line */
+  #sellersTable tbody td:nth-child(5) {
+    display: block !important;
+    margin: 4px 0 12px 0 !important;
+  }
+  #sellersTable tbody td:nth-child(5) .pill {
+    display: inline-block !important;
+  }
+  /* Col 6 (Action) — full-width tidy button */
+  #sellersTable tbody td:nth-child(6) {
+    margin-top: 2px !important;
+  }
+  #sellersTable tbody td:nth-child(6) .btn {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+    padding: 10px 14px !important;
+  }
+  /* Empty-state row (th:if -> single colspan=6 cell) */
+  #sellersTable tbody tr td[colspan] {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+    padding: 20px !important;
+    margin: 0 !important;
+  }
+  #sellersTable tbody tr td[colspan]::before {
+    content: none !important;
+  }
+}
+
+/* ── SINGLE-COLUMN TWEAKS — @media (max-width: 575px) ── */
+@media (max-width: 575px) {
+
+  /* Charts a touch shorter to fit narrow viewports cleanly */
+  #chartListings,
+  .panel-body canvas {
+    height: 210px !important;
+    max-height: 210px !important;
+  }
+  .panel-body > div[style*="height"] {
+    height: 210px !important;
+    min-height: 210px !important;
+  }
+
+  /* Report modal: reduce padding on very small screens */
+  .report-modal-card {
+    padding: 18px !important;
+  }
+}
+
+
+/* ===== MANAGE MENTORS ===== */
+/* Mobile-only styles for admin/manageMentors.html .content. */
+
+/* ---------- 991px: layout tightening ---------- */
+@media (max-width: 991px) {
+  .content .mentor-panel {
+    padding: 18px !important;
+    border-radius: 18px !important;
+    margin-bottom: 16px !important;
+  }
+  .content .mentor-panel h3 {
+    font-size: 15px !important;
+  }
+}
+
+/* ---------- 767px: card-ify the content ---------- */
+@media (max-width: 767px) {
+
+  .content .overview-header h1 {
+    font-size: 20px !important;
+  }
+
+  /* Add-mentor panel */
+  .content .mentor-panel {
+    padding: 16px !important;
+    border-radius: 16px !important;
+  }
+
+  /* Form: stack name / email / button vertically, each full-width */
+  .content .form-row {
+    flex-direction: column !important;
+    gap: 12px !important;
+    align-items: stretch !important;
+  }
+  .content .form-group {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+  .content .form-row > div[style] {
+    display: block !important;
+    width: 100% !important;
+  }
+  .content .btn-add {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 13px 18px !important;
+  }
+
+  /* Messages / empty / note tidy */
+  .content .msg {
+    padding: 12px 14px !important;
+    font-size: 13px !important;
+    border-radius: 12px !important;
+  }
+  .content .msg-success { color: #166534 !important; }
+  .content .msg-error   { color: #991B1B !important; }
+  .content .empty-msg {
+    padding: 24px 14px !important;
+    font-size: 13px !important;
+  }
+  .content .mentor-note {
+    font-size: 12px !important;
+    margin-top: 14px !important;
+  }
+
+  /* Mentor table -> stacked cards (label-free) */
+  .content .mentor-table {
+    display: block !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+  }
+  .content .mentor-table thead {
+    display: none !important;
+  }
+  .content .mentor-table tbody {
+    display: block !important;
+    width: 100% !important;
+  }
+  .content .mentor-table tbody tr {
+    display: block !important;
+    width: 100% !important;
+    background: #fff !important;
+    border: 1px solid rgba(107,78,175,.12) !important;
+    border-radius: 14px !important;
+    padding: 14px !important;
+    margin-bottom: 12px !important;
+    box-shadow: 0 3px 14px rgba(45,27,105,.09) !important;
+  }
+  .content .mentor-table tbody td {
+    display: block !important;
+    width: 100% !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    text-align: left !important;
+  }
+  /* 1st cell = row number (#) — hidden on cards */
+  .content .mentor-table tbody td:first-child {
+    display: none !important;
+  }
+  /* Mentor name + avatar — prominent at the top of the card */
+  .content .mentor-table tbody .mentor-name-cell {
+    gap: 10px !important;
+    margin-bottom: 8px !important;
+  }
+  .content .mentor-table tbody .mentor-name-cell span {
+    font-size: 14.5px !important;
+    color: #2E2740 !important;
+  }
+  .content .mentor-table tbody .mentor-avatar {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 13px !important;
+  }
+  /* Email — small line that wraps long addresses */
+  .content .mentor-table tbody td.mentor-email {
+    font-size: 11.5px !important;
+    color: #6B6280 !important;
+    word-break: break-all !important;
+    margin-bottom: 12px !important;
+  }
+  /* Action cell — keep the delete button tidy */
+  .content .mentor-table tbody td:last-child {
+    text-align: left !important;
+  }
+  .content .mentor-table tbody td:last-child .mentor-delete-form {
+    display: inline-block !important;
+    margin: 0 !important;
+  }
+  .content .mentor-table tbody .btn-delete {
+    width: auto !important;
+    padding: 8px 16px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* ---------- 575px: very small phones ---------- */
+@media (max-width: 575px) {
+  .content .mentor-panel {
+    padding: 14px !important;
+    border-radius: 14px !important;
+  }
+  .content .mentor-table tbody td:last-child .mentor-delete-form {
+    display: block !important;
+  }
+  .content .mentor-table tbody .btn-delete {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+}
+
+
+/* ===== PENDING SELLERS ===== */
+/* Mobile content for admin/pendingSellerList.html (.content only). */
+
+/* ===== <=991px : ease the header + card padding ===== */
+@media (max-width: 991px) {
+  .pending-table-wrap {
+    padding: 16px !important;
+    border-radius: 18px !important;
+  }
+  .overview-header h1 {
+    font-size: 22px !important;
+  }
+  .overview-header .muted {
+    font-size: 0.9rem !important;
+  }
+  .pending-count {
+    font-size: 0.7rem !important;
+  }
+}
+
+/* ===== <=767px : CARD-IFY the pending table (label-free) ===== */
+@media (max-width: 767px) {
+
+  .pending-table-wrap {
+    padding: 12px !important;
+    border-radius: 16px !important;
+  }
+
+  .pending-table-wrap table,
+  .pending-table-wrap tbody,
+  .pending-table-wrap tr {
+    display: block !important;
+    width: 100% !important;
+    border-collapse: separate !important;
+  }
+  .pending-table-wrap thead {
+    display: none !important;
+  }
+
+  /* Each seller row becomes a tappable white card */
+  .pending-table-wrap tr.seller-row {
+    background: #fff !important;
+    border: 1px solid rgba(107,78,175,.12) !important;
+    border-radius: 14px !important;
+    padding: 14px !important;
+    margin-bottom: 12px !important;
+    box-shadow: 0 3px 14px rgba(45,27,105,.09) !important;
+    cursor: pointer !important;
+    transform: none !important;
+    transition: transform .12s ease, box-shadow .12s ease !important;
+  }
+  .pending-table-wrap tr.seller-row:hover {
+    background: #fff !important;
+    transform: none !important;
+  }
+  .pending-table-wrap tr.seller-row:active {
+    transform: scale(.985) !important;
+    box-shadow: 0 2px 8px rgba(45,27,105,.14) !important;
+  }
+
+  .pending-table-wrap tbody td {
+    display: block !important;
+    width: 100% !important;
+    border: none !important;
+    padding: 0 !important;
+    font-size: 0.9rem !important;
+    color: #6B6280 !important;
+  }
+  /* Hide the # column (1st cell) */
+  .pending-table-wrap tbody td:nth-child(1) {
+    display: none !important;
+  }
+  /* Seller cell (2nd) — prominent header of the card */
+  .pending-table-wrap tbody td:nth-child(2) {
+    margin-bottom: 12px !important;
+    padding-bottom: 12px !important;
+    border-bottom: 1px solid rgba(232,224,245,.7) !important;
+  }
+  .pending-table-wrap td .seller-name-cell {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+  .pending-table-wrap td .seller-avatar {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 16px !important;
+    border-radius: 13px !important;
+  }
+  .pending-table-wrap td .seller-name-cell .name {
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    color: #2E2740 !important;
+  }
+  .pending-table-wrap td .seller-name-cell .level {
+    font-size: 0.8rem !important;
+    color: #6B6280 !important;
+    margin-top: 2px !important;
+  }
+  /* Email (3rd) — plain line, must wrap, never overflow */
+  .pending-table-wrap tbody td:nth-child(3) {
+    margin-bottom: 8px !important;
+    word-break: break-all !important;
+    overflow-wrap: anywhere !important;
+    color: #6B6280 !important;
+  }
+  .pending-table-wrap tbody td:nth-child(3)::before {
+    content: "\F32F"; /* bi-envelope */
+    font-family: "bootstrap-icons";
+    margin-right: 7px !important;
+    color: #6B4EAF !important;
+    font-size: 0.85rem !important;
+  }
+  /* Academic ID (4th) — tag chip */
+  .pending-table-wrap tbody td:nth-child(4) {
+    margin-bottom: 8px !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    color: #4A2C8A !important;
+    background: rgba(107,78,175,.08) !important;
+    border-radius: 6px !important;
+    padding: 3px 8px !important;
+    display: inline-block !important;
+    width: auto !important;
+    max-width: 100% !important;
+    word-break: break-all !important;
+  }
+  /* Submitted (5th) — re-show it (inline @720 hid it) as a small line */
+  .pending-table-wrap tbody td:nth-child(5) {
+    display: block !important;
+    font-size: 0.8rem !important;
+    color: #6B6280 !important;
+    margin-bottom: 10px !important;
+  }
+  .pending-table-wrap tbody td:nth-child(5)::before {
+    content: "\F293"; /* bi-clock-history */
+    font-family: "bootstrap-icons";
+    margin-right: 7px !important;
+    color: #6B4EAF !important;
+    font-size: 0.78rem !important;
+  }
+  /* Status (6th) — badge inline at the foot of the card */
+  .pending-table-wrap tbody td:nth-child(6) {
+    display: block !important;
+  }
+  .pending-table-wrap td .badge-pending {
+    display: inline-flex !important;
+  }
+  /* Empty-state row spans the card, no borders */
+  .pending-table-wrap tbody tr:not(.seller-row) {
+    display: block !important;
+    width: 100% !important;
+  }
+  .pending-table-wrap tbody tr:not(.seller-row) td {
+    display: block !important;
+    width: 100% !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+  .empty-state {
+    padding: 36px 16px !important;
+  }
+  .empty-state i {
+    font-size: 40px !important;
+  }
+  /* Error alert tidy */
+  .error-alert {
+    padding: 11px 13px !important;
+    font-size: 0.85rem !important;
+    border-radius: 12px !important;
+    word-break: break-word !important;
+  }
+  /* Toast — span near-full width so it isn't clipped on phones */
+  #approveToast {
+    left: 10px !important;
+    right: 10px !important;
+    top: 14px !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    padding: 13px 16px !important;
+    border-radius: 13px !important;
+  }
+}
+
+/* ===== <=575px : final tightening on tiny phones ===== */
+@media (max-width: 575px) {
+  .overview-header h1 {
+    font-size: 20px !important;
+  }
+  .pending-table-wrap td .seller-avatar {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 15px !important;
+  }
+  .pending-table-wrap td .seller-name-cell .name {
+    font-size: 0.95rem !important;
+  }
+  .pending-table-wrap tbody td:nth-child(3) {
+    font-size: 0.82rem !important;
+  }
+  .empty-state {
+    padding: 30px 12px !important;
+  }
+}
+
+
+/* ===== FLAGGED PRODUCTS ===== */
+/* Mobile content for admin/flaggedProducts.html (.fp-* accordion). */
+
+/* ── Layout pass: tablets & phones ── */
+@media (max-width: 991px) {
+  .content .overview-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px;
+  }
+  .content .alerts .alert {
+    width: 100% !important;
+    padding: 12px 14px !important;
+    border-radius: 14px !important;
+    font-size: 13px;
+  }
+}
+
+/* ── Main stacking pass: phones ── */
+@media (max-width: 767px) {
+  .content .overview-header h1 { font-size: 22px !important; }
+
+  /* Summary row: keep thumb + title + chevron readable */
+  .content .fp-summary {
+    gap: 10px !important;
+    padding: 12px 12px !important;
+    flex-wrap: wrap;
+  }
+  .content .fp-thumb,
+  .content .fp-thumb-placeholder {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 10px !important;
+  }
+  .content .fp-thumb-placeholder { font-size: 18px !important; }
+  .content .fp-summary-info {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+  .content .fp-title {
+    font-size: 13.5px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .content .fp-meta {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  .content .fp-summary-right {
+    gap: 8px !important;
+    flex-shrink: 0 !important;
+  }
+  .content .fp-price { font-size: 13.5px !important; }
+  .content .fp-summary-right .pill.suspicious { font-size: 10.5px !important; }
+
+  /* Detail panel: stack image over meta */
+  .content .fp-detail { padding: 16px 14px !important; }
+  .content .fp-detail-inner {
+    flex-direction: column !important;
+    gap: 14px !important;
+    margin-bottom: 14px !important;
+  }
+  .content .fp-detail-img-col { width: 100% !important; }
+  .content .fp-detail-img,
+  .content .fp-img-placeholder {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 220px !important;
+    object-fit: cover !important;
+    border-radius: 14px !important;
+  }
+  .content .fp-img-placeholder {
+    height: 180px !important;
+    font-size: 40px !important;
+  }
+  .content .fp-detail-meta { width: 100% !important; }
+  .content .fp-detail-row {
+    flex-direction: column !important;
+    gap: 2px !important;
+    font-size: 13px !important;
+  }
+  .content .fp-label { min-width: 0 !important; }
+  .content .fp-value {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* Actions: full-width stacked buttons */
+  .content .fp-actions {
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding-top: 12px !important;
+  }
+  .content .fp-actions form {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+  .content .fp-actions .btn,
+  .content .fp-actions form .btn,
+  .content .fp-actions button[type="submit"] {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px;
+    padding: 13px 14px !important;
+    font-size: 14px !important;
+  }
+
+  /* Empty state: lighter padding on phones */
+  .content .fp-empty { padding: 36px 18px !important; }
+  .content .fp-empty-icon { font-size: 44px !important; }
+  .content .fp-empty-text { font-size: 15px !important; }
+}
+
+/* ── Small-phone tweaks ── */
+@media (max-width: 575px) {
+  /* Drop the price out of the summary cluster to save width;
+     it's repeated inside the detail panel anyway */
+  .content .fp-summary-right .fp-price { display: none !important; }
+
+  .content .fp-summary { padding: 11px 10px !important; gap: 9px !important; }
+  .content .fp-thumb,
+  .content .fp-thumb-placeholder {
+    width: 44px !important;
+    height: 44px !important;
+  }
+  .content .fp-detail-img,
+  .content .fp-img-placeholder { max-height: 190px !important; }
+}
+
+
+/* =========================================================================
+   5. STANDALONE ADMIN PAGES — MOBILE LAYER
+   Custom single-column / centered layouts (no admin sidebar). Loads AFTER
+   each page's inline <style>. Phone-only (<=767px / <=480px).
+   Layout/spacing only — colors & desktop (>=992px) untouched.
+   ========================================================================= */
+
+
+/* ===== STANDALONE: CATEGORIES ===== */
+@media (max-width: 767px) {
+  body.cmp-aurora .cmp-page {
+    padding: 16px 14px !important;
+  }
+  body.cmp-aurora .cmp-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    margin-bottom: 20px !important;
+  }
+  body.cmp-aurora .cmp-header-left h1 {
+    font-size: 22px !important;
+  }
+  body.cmp-aurora .cmp-back-btn {
+    justify-content: center !important;
+    width: 100% !important;
+  }
+
+  /* 2-col form+table grid -> single column */
+  body.cmp-aurora .cmp-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  body.cmp-aurora .cmp-card-header {
+    padding: 18px 16px 0 16px !important;
+  }
+  body.cmp-aurora .cmp-card-body {
+    padding: 16px 16px 20px 16px !important;
+  }
+
+  /* Inputs full width + >=16px to stop iOS zoom */
+  body.cmp-aurora .cmp-input,
+  body.cmp-aurora .cmp-textarea {
+    width: 100% !important;
+    font-size: 16px !important;
+  }
+
+  /* Create button full width */
+  body.cmp-aurora .cmp-form-actions {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  body.cmp-aurora .cmp-form-actions .cmp-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* Table: horizontal scroll so it never overflows the card */
+  body.cmp-aurora .cmp-table-wrap {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  body.cmp-aurora .cmp-table {
+    min-width: 480px !important;
+  }
+  body.cmp-aurora .cmp-table thead th {
+    font-size: 10px !important;
+    padding: 10px 10px !important;
+  }
+  body.cmp-aurora .cmp-table tbody td {
+    padding: 10px 10px !important;
+    font-size: 13px !important;
+  }
+  body.cmp-aurora .cmp-cat-desc {
+    max-width: 160px !important;
+  }
+  body.cmp-aurora .cmp-row-actions {
+    justify-content: flex-end !important;
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+  }
+  body.cmp-aurora .cmp-row-actions .cmp-btn {
+    min-height: 36px !important;
+    padding: 8px 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body.cmp-aurora .cmp-page {
+    padding: 14px 10px !important;
+  }
+  body.cmp-aurora .cmp-cat-desc {
+    max-width: 120px !important;
+  }
+}
+
+
+/* ===== STANDALONE: EDIT CATEGORY ===== */
+@media (max-width: 767px) {
+  body.cmp-aurora .cmp-card-header {
+    padding: 18px 16px 0 16px !important;
+  }
+  body.cmp-aurora .cmp-card-body {
+    padding: 16px 16px 20px 16px !important;
+  }
+  /* Cancel / Save -> full-width vertical */
+  body.cmp-aurora .cmp-form-actions {
+    flex-direction: column !important;
+    gap: 10px !important;
+    margin-top: 18px !important;
+  }
+  body.cmp-aurora .cmp-form-actions .cmp-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+/* (shared cmp-page / cmp-header / cmp-input rules above also apply here) */
+
+
+/* ===== STANDALONE: SELLER VERIFICATION ===== */
+@media (max-width: 767px) {
+  body.cmp-aurora .sv-container {
+    padding: 16px 14px !important;
+  }
+  body.cmp-aurora .sv-back-link {
+    margin-bottom: 20px !important;
+  }
+  /* Header card: avatar + info stack, centered */
+  body.cmp-aurora .sv-header-content {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 16px !important;
+    padding: 20px 16px !important;
+  }
+  body.cmp-aurora .sv-header-info h1 {
+    font-size: 22px !important;
+  }
+  body.cmp-aurora .sv-header-badge {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  /* Info + docs grids -> single column */
+  body.cmp-aurora .sv-info-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    margin-bottom: 24px !important;
+  }
+  body.cmp-aurora .sv-docs-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  /* Doc images full width, shorter on phone */
+  body.cmp-aurora .sv-doc-card img {
+    width: 100% !important;
+    height: 200px !important;
+  }
+  body.cmp-aurora .sv-section-title {
+    font-size: 18px !important;
+  }
+  /* Reject / Approve -> full-width vertical */
+  body.cmp-aurora .sv-actions {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  body.cmp-aurora .sv-actions .sv-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  body.cmp-aurora .sv-actions form {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body.cmp-aurora .sv-container {
+    padding: 14px 10px !important;
+  }
+  body.cmp-aurora .sv-doc-card img {
+    height: 180px !important;
+  }
+}
+
+
+/* ===== STANDALONE: REJECT REASON ===== */
+@media (max-width: 767px) {
+  body.cmp-aurora .rr-body {
+    padding: 24px 18px 24px !important;
+  }
+  body.cmp-aurora .rr-title {
+    font-size: 20px !important;
+  }
+  /* Pills wrap cleanly */
+  body.cmp-aurora .rr-seller-info {
+    gap: 8px !important;
+  }
+  body.cmp-aurora .rr-pill {
+    max-width: 100% !important;
+  }
+  /* Textarea full width + >=16px */
+  body.cmp-aurora .rr-textarea {
+    width: 100% !important;
+    font-size: 16px !important;
+  }
+  /* Cancel / Reject -> full-width vertical (Reject on top) */
+  body.cmp-aurora .rr-actions {
+    flex-direction: column-reverse !important;
+    gap: 10px !important;
+  }
+  body.cmp-aurora .rr-actions .rr-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+
+/* ===== STANDALONE: REPORT PREVIEW ===== */
+@media (max-width: 767px) {
+  .report-shell {
+    padding: 20px 12px 32px !important;
+  }
+  /* Topbar: title block + actions stack */
+  .report-topbar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 16px !important;
+  }
+  .report-title {
+    font-size: clamp(24px, 7vw, 30px) !important;
+  }
+  /* Action buttons -> full-width vertical */
+  .report-actions {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+  .report-actions .btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  /* Stat cards -> single column */
+  .report-card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+  .report-card {
+    padding: 18px !important;
+  }
+  .report-card .value {
+    font-size: 28px !important;
+  }
+  .report-section {
+    padding: 16px !important;
+    border-radius: 18px !important;
+  }
+  .report-section h2 {
+    font-size: 19px !important;
+  }
+  /* Wrap each table in a horizontal scroll so wide tables don't overflow */
+  .report-section .report-table {
+    display: block !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    white-space: nowrap !important;
+  }
+  .report-table th,
+  .report-table td {
+    padding: 10px 12px !important;
+    font-size: 13px !important;
+  }
+  .pill-inline {
+    white-space: nowrap !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .report-shell {
+    padding: 16px 10px 28px !important;
+  }
+  .report-card .value {
+    font-size: 26px !important;
+  }
+}
