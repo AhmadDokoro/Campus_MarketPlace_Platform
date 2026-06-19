@@ -2,6 +2,7 @@ package com.ahsmart.campusmarket.service.admin;
 
 import com.ahsmart.campusmarket.helper.EmailHelper;
 import com.ahsmart.campusmarket.model.Product;
+import com.ahsmart.campusmarket.model.ProductAiAnalysis;
 import com.ahsmart.campusmarket.model.ProductImage;
 import com.ahsmart.campusmarket.model.Seller;
 import com.ahsmart.campusmarket.model.Users;
@@ -15,6 +16,7 @@ import com.ahsmart.campusmarket.payloadDTOs.admin.SellerStatDTO;
 import com.ahsmart.campusmarket.payloadDTOs.admin.WeeklyListingDTO;
 import com.ahsmart.campusmarket.repositories.CartItemRepository;
 import com.ahsmart.campusmarket.repositories.OrderItemRepository;
+import com.ahsmart.campusmarket.service.ai.ProductAiAnalysisService;
 import com.ahsmart.campusmarket.repositories.ProductImageRepository;
 import com.ahsmart.campusmarket.repositories.ProductRepository;
 import com.ahsmart.campusmarket.repositories.SellerRepository;
@@ -48,6 +50,7 @@ public class AdminServiceImpl implements AdminService {
     private final EmailHelper emailHelper;
     private final ProductImageRepository productImageRepository;
     private final FileService fileService;
+    private final ProductAiAnalysisService productAiAnalysisService;
 
     public AdminServiceImpl(SellerRepository sellerRepository,
                             UsersRepository usersRepository,
@@ -56,7 +59,8 @@ public class AdminServiceImpl implements AdminService {
                             OrderItemRepository orderItemRepository,
                             EmailHelper emailHelper,
                             ProductImageRepository productImageRepository,
-                            FileService fileService) {
+                            FileService fileService,
+                            ProductAiAnalysisService productAiAnalysisService) {
         this.sellerRepository = sellerRepository;
         this.usersRepository = usersRepository;
         this.productRepository = productRepository;
@@ -65,6 +69,7 @@ public class AdminServiceImpl implements AdminService {
         this.emailHelper = emailHelper;
         this.productImageRepository = productImageRepository;
         this.fileService = fileService;
+        this.productAiAnalysisService = productAiAnalysisService;
     }
 
     @Override
@@ -223,6 +228,12 @@ public class AdminServiceImpl implements AdminService {
     @Transactional(readOnly = true)
     public List<FlaggedProductDTO> getSuspiciousProducts() {
         List<Product> products = productRepository.findByFlaggedStatusWithDetails(FlaggedStatus.SUSPICIOUS);
+
+        // Bulk-load the AI analysis rows for all flagged products in one query (no N+1), then
+        // attach confidence + reasons to each DTO. Products with no analysis row simply get nulls.
+        List<Long> productIds = products.stream().map(Product::getProductId).toList();
+        Map<Long, ProductAiAnalysis> analysisByProductId = productAiAnalysisService.getByProductIds(productIds);
+
         List<FlaggedProductDTO> result = new ArrayList<>();
         for (Product p : products) {
             String primaryImageUrl = p.getImages().stream()
@@ -235,6 +246,11 @@ public class AdminServiceImpl implements AdminService {
                     : "Unknown";
             String categoryName = p.getCategory() != null ? p.getCategory().getCategoryName() : "—";
             String conditionName = p.getCondition() != null ? p.getCondition().name() : "—";
+
+            ProductAiAnalysis analysis = analysisByProductId.get(p.getProductId());
+            Integer aiConfidence = analysis != null ? analysis.getConfidenceScore() : null;
+            List<String> aiReasons = analysis != null ? analysis.getReasons() : Collections.emptyList();
+
             result.add(new FlaggedProductDTO(
                     p.getProductId(),
                     p.getTitle(),
@@ -245,7 +261,9 @@ public class AdminServiceImpl implements AdminService {
                     categoryName,
                     sellerName,
                     primaryImageUrl,
-                    p.getCreatedAt()
+                    p.getCreatedAt(),
+                    aiConfidence,
+                    aiReasons
             ));
         }
         return result;
