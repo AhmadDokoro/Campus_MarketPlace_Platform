@@ -1,0 +1,709 @@
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- AI Marketplace Analyst — floating buyer-facing shopping companion.           -->
+<!-- Self-contained fragment (markup + CSS + JS). Included on the 5 buyer pages.  -->
+<!-- Shown on the 5 buyer storefront pages to every visitor (guests + logged-in).   -->
+<!-- The admin/seller dashboards never include this fragment, so they stay clean.   -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<div th:fragment="widget">
+
+    <!-- ── Floating action button (the glowing gold orb) ───────────────────────── -->
+    <button type="button" id="aiAnalystFab" class="ai-analyst-fab" aria-label="Open the AI Marketplace Analyst" aria-haspopup="dialog">
+        <span class="ai-fab-smoke" aria-hidden="true">
+            <span class="ai-smoke s1"></span>
+            <span class="ai-smoke s2"></span>
+            <span class="ai-smoke s3"></span>
+            <span class="ai-smoke s4"></span>
+            <span class="ai-smoke s5"></span>
+            <span class="ai-smoke s6"></span>
+        </span>
+        <span class="ai-fab-halo" aria-hidden="true"></span>
+        <span class="ai-fab-ring" aria-hidden="true"></span>
+        <span class="ai-fab-core" aria-hidden="true">
+            <svg class="ai-fab-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M12 2.5l1.9 4.6 4.6 1.9-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.9L12 2.5z" fill="currentColor"/>
+                <path d="M18.5 14.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9.9-2.1z" fill="currentColor" opacity="0.9"/>
+                <path d="M5 15l.7 1.6L7.3 17.3 5.7 18l-.7 1.6L4.3 18l-1.6-.7L4.3 16.6 5 15z" fill="currentColor" opacity="0.75"/>
+            </svg>
+        </span>
+        <span class="ai-fab-particles" aria-hidden="true">
+            <span class="ai-particle"></span>
+            <span class="ai-particle"></span>
+            <span class="ai-particle"></span>
+            <span class="ai-particle"></span>
+        </span>
+        <span class="ai-fab-pill">Ask AI ✨</span>
+    </button>
+
+    <!-- ── Analyst panel ───────────────────────────────────────────────────────── -->
+    <div id="aiAnalystPanel" class="ai-analyst-panel" role="dialog" aria-modal="false" aria-hidden="true" aria-label="AI Marketplace Analyst">
+
+        <div class="ai-panel-header">
+            <div class="ai-panel-heading">
+                <div class="ai-panel-title">✨ AI Marketplace Analyst</div>
+                <div class="ai-panel-sub">Your smart shopping companion</div>
+            </div>
+            <button type="button" id="aiAnalystClose" class="ai-panel-close" aria-label="Close analyst">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="ai-panel-body" id="aiAnalystBody">
+
+            <!-- Greeting + suggestion chips (initial state) -->
+            <div id="aiAnalystIntro" class="ai-intro">
+                <div class="ai-intro-orb" aria-hidden="true"><i class="fas fa-magic"></i></div>
+                <div class="ai-intro-greeting">What are you looking for today?</div>
+                <div class="ai-intro-hint">Pick a suggestion or describe what you need — I'll analyse the whole marketplace and bring back the best matches.</div>
+                <div class="ai-chips">
+                    <button type="button" class="ai-chip" data-q="I need books for my course">📚 I need books</button>
+                    <button type="button" class="ai-chip" data-q="Looking for a scientific calculator">🖩 Looking for a calculator</button>
+                    <button type="button" class="ai-chip" data-q="I need a laptop for studies">💻 I need a laptop</button>
+                    <button type="button" class="ai-chip" data-q="Show me affordable food">🍔 Show me affordable food</button>
+                    <button type="button" class="ai-chip" data-q="Gaming accessories like keyboard and mouse">🎮 Gaming accessories</button>
+                    <button type="button" class="ai-chip" data-q="Best deals under RM100">💰 Best deals under RM100</button>
+                </div>
+            </div>
+
+            <!-- Results / loading / messages render here -->
+            <div id="aiAnalystResults" class="ai-results" hidden></div>
+        </div>
+
+        <div class="ai-panel-footer">
+            <div class="ai-input-wrap">
+                <input type="text" id="aiAnalystInput" class="ai-input" autocomplete="off"
+                       placeholder="e.g. a calculator for engineering" aria-label="Describe what you are looking for">
+                <button type="button" id="aiAnalystSend" class="ai-send" aria-label="Ask the analyst">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="ai-footer-note">AI suggestions are drawn only from real listings in this marketplace.</div>
+        </div>
+    </div>
+
+    <!-- ── Styles (scoped with .ai-* prefixes) ─────────────────────────────────── -->
+    <style>
+        :root { --ai-gold: #FFD700; --ai-gold-2: #FFA500; --ai-purple: #1A0A3E; --ai-purple-2: #2D1B69; }
+
+        /* ── Floating button: glossy gold orb, strong glow, rotating sheen + colored smoke ── */
+        .ai-analyst-fab{
+            position: fixed;
+            right: 28px;
+            bottom: 104px;            /* sits above the back-to-top button (bottom:30px) */
+            z-index: 99990;
+            width: 72px;
+            height: 72px;
+            padding: 0;
+            border: none;
+            background: transparent;
+            cursor: grab;
+            color: #5a2d00;
+            animation: aiHeartbeat 2.6s ease-in-out infinite, aiFloat 5.5s ease-in-out infinite;
+            transition: transform .25s ease, opacity .3s ease;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: none;             /* let us own touch drags (no page scroll) */
+            user-select: none; -webkit-user-select: none;
+        }
+        .ai-analyst-fab:hover{ transform: scale(1.09); }
+        .ai-analyst-fab:focus{ outline: none; }
+        .ai-analyst-fab:focus-visible{ outline: 3px solid rgba(255,215,0,0.7); outline-offset: 5px; border-radius: 50%; }
+        .ai-analyst-fab.ai-hidden{ opacity: 0; transform: scale(0.3); pointer-events: none; }
+        /* While being dragged: freeze animations/scale so it tracks the pointer cleanly */
+        .ai-analyst-fab.ai-dragging{ cursor: grabbing; animation: none !important; transition: none !important; transform: none !important; margin-top: 0 !important; }
+
+        /* The shiny gold ball */
+        .ai-fab-core{
+            position: absolute; inset: 0; z-index: 3; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(circle at 32% 26%, #FFFDF2 0%, #FFE680 24%, #FFC400 54%, #FF9E00 78%, #F57C00 100%);
+            animation: aiCoreGlow 2.6s ease-in-out infinite;
+        }
+        /* glossy top highlight for a polished, 3D look */
+        .ai-fab-core::before{
+            content:""; position:absolute; top:13%; left:20%; width:44%; height:34%;
+            border-radius:50%;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.95), rgba(255,255,255,0) 70%);
+            filter: blur(1px);
+        }
+        .ai-fab-icon{ position: relative; z-index: 4; width: 33px; height: 33px; color:#5a2d00; filter: drop-shadow(0 1px 1px rgba(255,255,255,0.55)); }
+
+        /* Big soft pulsing halo (the strong glow) */
+        .ai-fab-halo{
+            position:absolute; inset:-26px; z-index:0; border-radius:50%; pointer-events:none;
+            background: radial-gradient(circle, rgba(255,205,50,0.6) 0%, rgba(255,140,0,0.32) 42%, rgba(255,80,0,0) 72%);
+            animation: aiHaloPulse 2.6s ease-in-out infinite;
+        }
+
+        /* Rotating shiny ring sweep around the orb */
+        .ai-fab-ring{
+            position:absolute; inset:-5px; z-index:1; border-radius:50%; pointer-events:none;
+            background: conic-gradient(from 0deg,
+                rgba(255,255,255,0) 0deg, rgba(255,255,255,0) 200deg,
+                rgba(255,243,176,0.95) 300deg, #FFD700 332deg, rgba(255,255,255,0) 360deg);
+            filter: blur(1px);
+            animation: aiRingSpin 3.2s linear infinite;
+        }
+
+        /* Colored smoke plumes rising off the orb (gold + warm + rose + violet) */
+        .ai-fab-smoke{ position:absolute; inset:0; z-index:0; pointer-events:none; }
+        .ai-smoke{
+            position:absolute; left:50%; bottom:20px; width:36px; height:36px; border-radius:50%;
+            transform: translate(-50%,0) scale(0.45); opacity:0;
+            filter: blur(8px); will-change: transform, opacity;
+        }
+        .ai-smoke.s1{ background: radial-gradient(circle, rgba(255,215,0,0.85), rgba(255,215,0,0)); animation: aiSmokeL 4.2s ease-out infinite 0s; }
+        .ai-smoke.s2{ background: radial-gradient(circle, rgba(255,150,0,0.8),  rgba(255,150,0,0)); animation: aiSmokeR 4.8s ease-out infinite .7s; }
+        .ai-smoke.s3{ background: radial-gradient(circle, rgba(255,120,180,0.72),rgba(255,120,180,0)); animation: aiSmokeL 5.0s ease-out infinite 1.3s; }
+        .ai-smoke.s4{ background: radial-gradient(circle, rgba(165,92,255,0.7),  rgba(165,92,255,0)); animation: aiSmokeR 4.6s ease-out infinite 1.9s; }
+        .ai-smoke.s5{ background: radial-gradient(circle, rgba(255,243,176,0.9), rgba(255,243,176,0)); animation: aiSmokeL 5.4s ease-out infinite 2.5s; }
+        .ai-smoke.s6{ background: radial-gradient(circle, rgba(255,90,0,0.62),   rgba(255,90,0,0)); animation: aiSmokeR 4.4s ease-out infinite 3.1s; }
+
+        /* Hover label pill */
+        .ai-fab-pill{
+            position: absolute;
+            right: 80px;
+            top: 50%;
+            z-index: 5;
+            transform: translateY(-50%) translateX(8px);
+            background: linear-gradient(135deg, var(--ai-purple) 0%, var(--ai-purple-2) 100%);
+            color: var(--ai-gold);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 7px 12px;
+            border-radius: 10px;
+            white-space: nowrap;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,215,0,0.3) inset;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s ease, transform .25s ease;
+        }
+        .ai-analyst-fab:hover .ai-fab-pill{ opacity: 1; transform: translateY(-50%) translateX(0); }
+
+        /* Sparkle particles */
+        .ai-fab-particles{ position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+        .ai-particle{
+            position: absolute; top: 50%; left: 50%;
+            width: 5px; height: 5px; border-radius: 50%;
+            background: #FFF6C9;
+            box-shadow: 0 0 6px 1px rgba(255,215,0,0.9);
+            opacity: 0;
+        }
+        .ai-particle:nth-child(1){ animation: aiDrift1 4.2s ease-in-out infinite; }
+        .ai-particle:nth-child(2){ animation: aiDrift2 5.0s ease-in-out infinite .6s; }
+        .ai-particle:nth-child(3){ animation: aiDrift3 4.6s ease-in-out infinite 1.1s; }
+        .ai-particle:nth-child(4){ animation: aiDrift4 5.4s ease-in-out infinite 1.7s; }
+
+        @keyframes aiHeartbeat{
+            0%, 100% { transform: scale(1); }
+            18% { transform: scale(1.08); }
+            32% { transform: scale(1.0); }
+            46% { transform: scale(1.05); }
+            60% { transform: scale(1); }
+        }
+        @keyframes aiFloat{ 0%,100%{ margin-top: 0; } 50%{ margin-top: -7px; } }
+        @keyframes aiGlowPulse{ 0%,100%{ opacity: .55; transform: scale(1); } 50%{ opacity: 1; transform: scale(1.12); } }
+        @keyframes aiHaloPulse{ 0%,100%{ opacity: .6; transform: scale(1); } 50%{ opacity: 1; transform: scale(1.2); } }
+        @keyframes aiRingSpin{ to{ transform: rotate(360deg); } }
+        @keyframes aiCoreGlow{
+            0%,100%{ box-shadow: 0 0 20px 4px rgba(255,200,40,0.8), 0 0 44px 11px rgba(255,150,0,0.5), 0 0 78px 24px rgba(255,90,0,0.26), inset 0 -4px 10px rgba(180,80,0,0.45), inset 0 3px 8px rgba(255,255,255,0.8); }
+            50% { box-shadow: 0 0 30px 7px rgba(255,212,60,0.96), 0 0 60px 17px rgba(255,160,0,0.66), 0 0 100px 32px rgba(255,90,0,0.36), inset 0 -4px 10px rgba(180,80,0,0.45), inset 0 3px 8px rgba(255,255,255,0.85); }
+        }
+        /* Smoke rising left-drift / right-drift variants */
+        @keyframes aiSmokeL{ 0%{ opacity:0; transform: translate(-50%,0) scale(0.4); } 18%{ opacity:.85; } 55%{ opacity:.45; } 100%{ opacity:0; transform: translate(-135%,-70px) scale(1.8); } }
+        @keyframes aiSmokeR{ 0%{ opacity:0; transform: translate(-50%,0) scale(0.4); } 18%{ opacity:.85; } 55%{ opacity:.45; } 100%{ opacity:0; transform: translate(40%,-76px) scale(1.9); } }
+        @keyframes aiDrift1{ 0%,100%{ opacity:0; transform: translate(-50%,-50%); } 25%{ opacity:1; } 60%{ opacity:0; transform: translate(-260%,-320%); } }
+        @keyframes aiDrift2{ 0%,100%{ opacity:0; transform: translate(-50%,-50%); } 25%{ opacity:1; } 60%{ opacity:0; transform: translate(210%,-300%); } }
+        @keyframes aiDrift3{ 0%,100%{ opacity:0; transform: translate(-50%,-50%); } 25%{ opacity:1; } 60%{ opacity:0; transform: translate(-300%,180%); } }
+        @keyframes aiDrift4{ 0%,100%{ opacity:0; transform: translate(-50%,-50%); } 25%{ opacity:1; } 60%{ opacity:0; transform: translate(260%,220%); } }
+
+        /* Panel */
+        .ai-analyst-panel{
+            position: fixed;
+            right: 24px;
+            bottom: 28px;
+            z-index: 99995;
+            width: 760px;
+            max-width: calc(100vw - 40px);
+            max-height: 88vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(165deg, #1d0c47 0%, #150931 55%, #100b1a 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.28);
+            box-shadow: 0 26px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04) inset;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(16px) scale(0.96);
+            transform-origin: bottom right;
+            transition: opacity .28s ease, transform .28s cubic-bezier(0.2, 0.8, 0.2, 1), visibility .28s;
+            overflow: hidden;
+        }
+        .ai-analyst-panel.ai-open{ opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+
+        .ai-panel-header{
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 18px;
+            background: linear-gradient(135deg, rgba(255,215,0,0.12), rgba(255,170,0,0.05));
+            border-bottom: 1px solid rgba(255, 215, 0, 0.18);
+        }
+        .ai-panel-title{ font-size: 15.5px; font-weight: 800; color: #fff; letter-spacing: 0.3px; }
+        .ai-panel-sub{ font-size: 11.5px; color: rgba(255,215,0,0.8); margin-top: 2px; font-weight: 600; letter-spacing: 0.4px; }
+        .ai-panel-close{
+            width: 34px; height: 34px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(255,255,255,0.06); color: #fff; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background .2s ease, color .2s ease, transform .2s ease;
+        }
+        .ai-panel-close:hover{ background: var(--ai-gold); color: var(--ai-purple); transform: rotate(90deg); }
+
+        .ai-panel-body{ padding: 16px 16px 6px; overflow-y: auto; flex: 1 1 auto; }
+        .ai-panel-body::-webkit-scrollbar{ width: 7px; }
+        .ai-panel-body::-webkit-scrollbar-thumb{ background: rgba(255,215,0,0.3); border-radius: 8px; }
+
+        /* Intro */
+        .ai-intro{ text-align: center; padding: 6px 4px 2px; }
+        .ai-intro-orb{
+            width: 56px; height: 56px; margin: 4px auto 12px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--ai-purple); font-size: 22px;
+            background: radial-gradient(circle at 30% 30%, #FFF3B0, var(--ai-gold) 60%, var(--ai-gold-2));
+            box-shadow: 0 0 0 6px rgba(255,215,0,0.12), 0 8px 20px rgba(255,170,0,0.4);
+            animation: aiGlowPulse 2.8s ease-in-out infinite;
+        }
+        .ai-intro-greeting{ font-size: 17px; font-weight: 800; color: #fff; }
+        .ai-intro-hint{ font-size: 12.5px; line-height: 1.55; color: rgba(255,255,255,0.66); margin: 8px auto 14px; max-width: 300px; }
+
+        .ai-chips{ display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .ai-chip{
+            border: 1px solid rgba(255, 215, 0, 0.35);
+            background: rgba(255, 215, 0, 0.06);
+            color: #fde7b8;
+            font-size: 12.5px; font-weight: 600;
+            padding: 8px 13px; border-radius: 999px; cursor: pointer;
+            transition: background .2s ease, transform .15s ease, border-color .2s ease, color .2s ease;
+        }
+        .ai-chip:hover{ background: linear-gradient(135deg, var(--ai-gold), var(--ai-gold-2)); color: var(--ai-purple); border-color: transparent; transform: translateY(-2px); }
+
+        /* Results */
+        .ai-results-head{
+            display: flex; align-items: center; justify-content: space-between; gap: 8px;
+            margin-bottom: 12px;
+        }
+        .ai-results-intro{ font-size: 13px; line-height: 1.5; color: #fff; font-weight: 600; }
+        .ai-restart{
+            flex: 0 0 auto; font-size: 11.5px; font-weight: 700; color: var(--ai-gold);
+            background: rgba(255,215,0,0.08); border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 999px; padding: 5px 10px; cursor: pointer; white-space: nowrap;
+            transition: background .2s ease, color .2s ease;
+        }
+        .ai-restart:hover{ background: var(--ai-gold); color: var(--ai-purple); }
+
+        .ai-rec-card{
+            position: relative;
+            background: linear-gradient(160deg, #ffffff 0%, #fffdf5 100%);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 13px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.28);
+            border: 1px solid rgba(255,215,0,0.5);
+            animation: aiCardIn .4s ease both;
+        }
+        @keyframes aiCardIn{ from{ opacity: 0; transform: translateY(10px); } to{ opacity: 1; transform: translateY(0); } }
+
+        .ai-rec-badge{
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px;
+            color: var(--ai-purple);
+            background: linear-gradient(135deg, var(--ai-gold), var(--ai-gold-2));
+            padding: 4px 10px; border-radius: 999px; margin-bottom: 10px;
+            box-shadow: 0 3px 8px rgba(255,170,0,0.4);
+        }
+        .ai-rec-main{ display: flex; gap: 12px; align-items: flex-start; }
+        .ai-rec-img{
+            width: 76px; height: 76px; flex: 0 0 76px;
+            object-fit: cover; border-radius: 10px; background: #f1edf9;
+            border: 1px solid rgba(75,46,131,0.15);
+        }
+        .ai-rec-info{ min-width: 0; flex: 1 1 auto; }
+        .ai-rec-title{
+            font-size: 14px; font-weight: 700; color: #1f1340; line-height: 1.3;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .ai-rec-cat{ font-size: 11px; color: #7a5cc0; font-weight: 600; text-transform: uppercase; margin-top: 3px; }
+        .ai-rec-price{ font-size: 17px; font-weight: 800; color: #6b21c4; margin-top: 5px; }
+        .ai-rec-price small{ font-size: 11px; font-weight: 700; color: #8a6df0; }
+
+        .ai-rec-why{ margin-top: 11px; background: #f6f2ff; border-radius: 10px; padding: 10px 12px; }
+        .ai-rec-why-label{ font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; color: #6b21c4; margin-bottom: 5px; }
+        .ai-rec-why ul{ margin: 0; padding-left: 16px; }
+        .ai-rec-why li{ font-size: 12.5px; color: #3a3357; line-height: 1.5; margin-bottom: 2px; }
+
+        .ai-rec-btn{
+            display: block; text-align: center; margin-top: 12px;
+            background: linear-gradient(135deg, #ff8c00 0%, #ff4e00 100%);
+            color: #fff !important; font-weight: 800; font-size: 13px; letter-spacing: 0.3px;
+            padding: 10px; border-radius: 10px; text-decoration: none !important;
+            box-shadow: 0 4px 12px rgba(255,78,0,0.35);
+            transition: transform .18s ease, box-shadow .2s ease;
+        }
+        .ai-rec-btn:hover{ transform: translateY(-2px); box-shadow: 0 7px 18px rgba(255,78,0,0.5); color: #fff !important; }
+
+        /* Loading + messages */
+        .ai-loading{ text-align: center; padding: 14px 6px; }
+        .ai-loading-orb{
+            width: 50px; height: 50px; margin: 4px auto 12px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #FFF3B0, var(--ai-gold) 60%, var(--ai-gold-2));
+            box-shadow: 0 0 0 0 rgba(255,215,0,0.5);
+            animation: aiLoadingPulse 1.3s ease-in-out infinite;
+        }
+        @keyframes aiLoadingPulse{ 0%{ box-shadow: 0 0 0 0 rgba(255,215,0,0.5);} 70%{ box-shadow: 0 0 0 16px rgba(255,215,0,0);} 100%{ box-shadow: 0 0 0 0 rgba(255,215,0,0);} }
+        .ai-loading-text{ color: #fff; font-size: 13.5px; font-weight: 700; }
+        .ai-loading-sub{ color: rgba(255,255,255,0.6); font-size: 12px; margin-top: 4px; }
+        .ai-skeleton{ height: 64px; border-radius: 12px; margin-top: 12px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.12) 37%, rgba(255,255,255,0.05) 63%);
+            background-size: 400% 100%; animation: aiShimmer 1.3s ease infinite; }
+        @keyframes aiShimmer{ 0%{ background-position: 100% 0; } 100%{ background-position: -100% 0; } }
+
+        .ai-message{ text-align: center; color: rgba(255,255,255,0.82); font-size: 13.5px; line-height: 1.6; padding: 22px 14px; }
+        .ai-message i{ display: block; font-size: 26px; color: var(--ai-gold); margin-bottom: 10px; opacity: 0.9; }
+        .ai-message .ai-restart{ margin-top: 14px; display: inline-block; }
+
+        /* Footer */
+        .ai-panel-footer{ padding: 12px 14px 14px; border-top: 1px solid rgba(255,215,0,0.16); background: rgba(0,0,0,0.18); }
+        .ai-input-wrap{ display: flex; gap: 8px; align-items: center; }
+        .ai-input{
+            flex: 1 1 auto; height: 42px; border-radius: 12px;
+            border: 1px solid rgba(255,215,0,0.3); background: rgba(255,255,255,0.07);
+            color: #fff; font-size: 13.5px; padding: 0 14px; outline: none;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+        .ai-input::placeholder{ color: rgba(255,255,255,0.45); }
+        .ai-input:focus{ border-color: var(--ai-gold); box-shadow: 0 0 0 3px rgba(255,215,0,0.15); }
+        .ai-send{
+            flex: 0 0 auto; width: 42px; height: 42px; border-radius: 12px; border: none; cursor: pointer;
+            color: var(--ai-purple); font-size: 15px;
+            background: radial-gradient(circle at 30% 30%, #FFF3B0, var(--ai-gold) 60%, var(--ai-gold-2));
+            box-shadow: 0 4px 12px rgba(255,170,0,0.4);
+            transition: transform .18s ease, box-shadow .2s ease;
+        }
+        .ai-send:hover{ transform: translateY(-2px) scale(1.04); box-shadow: 0 7px 16px rgba(255,170,0,0.55); }
+        .ai-send:disabled{ opacity: 0.6; cursor: default; transform: none; }
+        .ai-footer-note{ font-size: 10.5px; color: rgba(255,255,255,0.42); text-align: center; margin-top: 9px; }
+
+        /* Mobile: lift the fab above the bottom nav (62px) + back-to-top, and widen the panel */
+        /* Laptop / desktop: scale up the panel content to fill the larger ~2x panel */
+        @media (min-width: 992px){
+            .ai-panel-header{ padding: 20px 24px; }
+            .ai-panel-title{ font-size: 19px; }
+            .ai-panel-sub{ font-size: 13px; }
+            .ai-panel-close{ width: 40px; height: 40px; font-size: 16px; }
+            .ai-panel-body{ padding: 22px 24px 8px; }
+
+            .ai-intro-orb{ width: 70px; height: 70px; font-size: 28px; margin-bottom: 16px; }
+            .ai-intro-greeting{ font-size: 22px; }
+            .ai-intro-hint{ font-size: 14.5px; max-width: 460px; margin: 10px auto 20px; }
+            .ai-chips{ gap: 10px; }
+            .ai-chip{ font-size: 14px; padding: 10px 16px; }
+
+            .ai-results-head{ margin-bottom: 16px; }
+            .ai-results-intro{ font-size: 15px; }
+            .ai-restart{ font-size: 13px; padding: 7px 13px; }
+
+            /* Two-up recommendation grid so the wide panel is well used */
+            .ai-results-cards{ display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+            .ai-rec-card{ margin-bottom: 0; padding: 18px; border-radius: 16px; }
+            .ai-rec-badge{ font-size: 12px; padding: 5px 12px; }
+            .ai-rec-img{ width: 96px; height: 96px; flex-basis: 96px; border-radius: 12px; }
+            .ai-rec-title{ font-size: 16px; }
+            .ai-rec-cat{ font-size: 12px; }
+            .ai-rec-price{ font-size: 21px; }
+            .ai-rec-why{ padding: 12px 15px; }
+            .ai-rec-why li{ font-size: 13.5px; }
+            .ai-rec-btn{ font-size: 15px; padding: 12px; border-radius: 12px; }
+
+            .ai-panel-footer{ padding: 16px 22px 18px; }
+            .ai-input{ height: 50px; font-size: 15px; border-radius: 14px; padding: 0 18px; }
+            .ai-send{ width: 50px; height: 50px; border-radius: 14px; font-size: 18px; }
+            .ai-footer-note{ font-size: 12px; }
+        }
+
+        @media (max-width: 991px){
+            .ai-analyst-fab{ right: 15px; bottom: 92px; width: 52px; height: 52px; }
+            .ai-fab-icon{ width: 25px; height: 25px; }
+            .ai-fab-pill{ display: none; }
+            .ai-analyst-panel{ right: 10px; left: 10px; bottom: 84px; width: auto; max-width: none; max-height: 74vh; }
+        }
+
+        /* Respect reduced-motion preferences */
+        @media (prefers-reduced-motion: reduce){
+            .ai-analyst-fab, .ai-fab-halo, .ai-fab-ring, .ai-fab-core, .ai-smoke,
+            .ai-particle, .ai-intro-orb, .ai-loading-orb{ animation: none !important; }
+            .ai-smoke{ display: none; }
+        }
+    </style>
+
+    <!-- ── Behaviour ───────────────────────────────────────────────────────────── -->
+    <script>
+        (function(){
+            if (window.__aiAnalystInit) return;   // guard against accidental double-include
+            window.__aiAnalystInit = true;
+
+            function init(){
+                var fab     = document.getElementById('aiAnalystFab');
+                var panel   = document.getElementById('aiAnalystPanel');
+                var closeEl = document.getElementById('aiAnalystClose');
+                var intro   = document.getElementById('aiAnalystIntro');
+                var results = document.getElementById('aiAnalystResults');
+                var input   = document.getElementById('aiAnalystInput');
+                var sendBtn = document.getElementById('aiAnalystSend');
+                if (!fab || !panel) return;
+
+                var BADGES = ['⭐', '💡', '💰', '✨'];
+
+                function escapeHtml(text){
+                    var map = { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' };
+                    return String(text == null ? '' : text).replace(/[&<>"']/g, function(m){ return map[m]; });
+                }
+                function formatPrice(p){
+                    var n = Number(p);
+                    return isNaN(n) ? '' : n.toFixed(2);
+                }
+
+                function openPanel(){
+                    panel.classList.add('ai-open');
+                    panel.setAttribute('aria-hidden', 'false');
+                    fab.classList.add('ai-hidden');
+                    setTimeout(function(){ try { input.focus(); } catch(e){} }, 280);
+                }
+                function closePanel(){
+                    panel.classList.remove('ai-open');
+                    panel.setAttribute('aria-hidden', 'true');
+                    fab.classList.remove('ai-hidden');
+                }
+
+                function showIntro(){
+                    results.hidden = true;
+                    results.innerHTML = '';
+                    intro.hidden = false;
+                    input.value = '';
+                }
+
+                function showLoading(query){
+                    intro.hidden = true;
+                    results.hidden = false;
+                    results.innerHTML =
+                        '<div class="ai-loading">' +
+                            '<div class="ai-loading-orb"></div>' +
+                            '<div class="ai-loading-text">Analysing the marketplace…</div>' +
+                            '<div class="ai-loading-sub">Matching "' + escapeHtml(query) + '" against real listings</div>' +
+                            '<div class="ai-skeleton"></div>' +
+                            '<div class="ai-skeleton"></div>' +
+                        '</div>';
+                }
+
+                function restartButton(){
+                    return '<button type="button" class="ai-restart" data-ai-restart>↺ New search</button>';
+                }
+
+                function showMessage(msg, icon){
+                    intro.hidden = true;
+                    results.hidden = false;
+                    results.innerHTML =
+                        '<div class="ai-message">' +
+                            '<i class="fas ' + (icon || 'fa-search') + '"></i>' +
+                            '<div>' + escapeHtml(msg) + '</div>' +
+                            restartButton() +
+                        '</div>';
+                }
+
+                function renderResults(query, data){
+                    if (!data || !data.success){
+                        showMessage((data && data.message) || 'The analyst is unavailable right now. Please try again.', 'fa-triangle-exclamation');
+                        return;
+                    }
+                    var recs = data.recommendations || [];
+                    if (recs.length === 0){
+                        showMessage(data.message || "I couldn't find a good match for that. Try describing the item differently.", 'fa-magnifying-glass');
+                        return;
+                    }
+
+                    var html = '<div class="ai-results-head">' +
+                        '<div class="ai-results-intro">' + escapeHtml(data.intro || 'Here is what I found for you:') + '</div>' +
+                        restartButton() +
+                    '</div>';
+
+                    html += '<div class="ai-results-cards">';
+                    recs.forEach(function(rec, i){
+                        var badge = BADGES[i] || '✨';
+                        var img = rec.imageUrl ? escapeHtml(rec.imageUrl) : '/img/productplaceholder.png';
+                        var reasons = (rec.reasons || []).map(function(r){
+                            return '<li>' + escapeHtml(r) + '</li>';
+                        }).join('');
+                        if (!reasons) reasons = '<li>Closely matches your request</li>';
+
+                        html +=
+                        '<div class="ai-rec-card">' +
+                            '<span class="ai-rec-badge">' + badge + ' ' + escapeHtml(rec.label || 'Recommended') + '</span>' +
+                            '<div class="ai-rec-main">' +
+                                '<img class="ai-rec-img" src="' + img + '" alt="" loading="lazy" ' +
+                                     'onerror="this.onerror=null;this.src=\'/img/productplaceholder.png\'">' +
+                                '<div class="ai-rec-info">' +
+                                    '<div class="ai-rec-title">' + escapeHtml(rec.title || 'Product') + '</div>' +
+                                    (rec.categoryName ? '<div class="ai-rec-cat">' + escapeHtml(rec.categoryName) + '</div>' : '') +
+                                    '<div class="ai-rec-price"><small>RM</small> ' + formatPrice(rec.price) + '</div>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="ai-rec-why">' +
+                                '<div class="ai-rec-why-label">Why I selected this</div>' +
+                                '<ul>' + reasons + '</ul>' +
+                            '</div>' +
+                            '<a class="ai-rec-btn" href="/products/' + encodeURIComponent(rec.productId) + '">View Product</a>' +
+                        '</div>';
+                    });
+
+                    html += '</div>';
+                    intro.hidden = true;
+                    results.hidden = false;
+                    results.innerHTML = html;
+                }
+
+                var inFlight = false;
+                function submitQuery(query){
+                    query = (query || '').trim();
+                    if (query.length < 2 || inFlight) return;
+                    inFlight = true;
+                    sendBtn.disabled = true;
+                    input.value = '';        // clear the box once the message is sent
+                    showLoading(query);
+
+                    fetch('/api/analyst/recommend', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ query: query })
+                    })
+                    .then(function(res){ return res.json(); })
+                    .then(function(data){ renderResults(query, data); })
+                    .catch(function(){
+                        showMessage('Something went wrong reaching the analyst. Please try again.', 'fa-triangle-exclamation');
+                    })
+                    .then(function(){ inFlight = false; sendBtn.disabled = false; });
+                }
+
+                // ── Drag-to-reposition the orb (pointer based, zoom-aware, position persisted) ──
+                function getZoom(){
+                    var z = parseFloat(getComputedStyle(document.documentElement).zoom);
+                    return (z && !isNaN(z)) ? z : 1;
+                }
+                function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+
+                // Place the orb using viewport-client coordinates, then convert to CSS px (÷ zoom).
+                function placeFabClient(leftClient, topClient){
+                    var zoom = getZoom();
+                    var w = fab.offsetWidth * zoom, h = fab.offsetHeight * zoom;
+                    leftClient = clamp(leftClient, 6, window.innerWidth  - w - 6);
+                    topClient  = clamp(topClient,  6, window.innerHeight - h - 6);
+                    fab.style.left = (leftClient / zoom) + 'px';
+                    fab.style.top  = (topClient  / zoom) + 'px';
+                    fab.style.right = 'auto';
+                    fab.style.bottom = 'auto';
+                }
+
+                function restoreFabPosition(){
+                    try{
+                        var s = JSON.parse(localStorage.getItem('aiAnalystFabPos') || 'null');
+                        if(s && typeof s.left === 'number' && typeof s.top === 'number'){
+                            placeFabClient(s.left * getZoom(), s.top * getZoom());
+                        }
+                    }catch(e){}
+                }
+
+                var suppressClick = false;
+                (function setupDrag(){
+                    var startX = 0, startY = 0, offX = 0, offY = 0, moved = false, dragging = false;
+
+                    fab.addEventListener('pointerdown', function(e){
+                        if(e.button && e.button !== 0) return;     // primary button / touch only
+                        var rect = fab.getBoundingClientRect();
+                        startX = e.clientX; startY = e.clientY;
+                        offX = e.clientX - rect.left; offY = e.clientY - rect.top;
+                        moved = false; dragging = true;
+                        try{ fab.setPointerCapture(e.pointerId); }catch(_){}
+                    });
+
+                    document.addEventListener('pointermove', function(e){
+                        if(!dragging) return;
+                        if(!moved && Math.hypot(e.clientX - startX, e.clientY - startY) < 5) return;
+                        moved = true;
+                        fab.classList.add('ai-dragging');
+                        placeFabClient(e.clientX - offX, e.clientY - offY);
+                    });
+
+                    function endDrag(e){
+                        if(!dragging) return;
+                        dragging = false;
+                        try{ fab.releasePointerCapture(e.pointerId); }catch(_){}
+                        if(moved){
+                            suppressClick = true;                  // don't open the panel after a drag
+                            fab.classList.remove('ai-dragging');
+                            try{
+                                localStorage.setItem('aiAnalystFabPos', JSON.stringify({
+                                    left: parseFloat(fab.style.left) || 0,
+                                    top:  parseFloat(fab.style.top)  || 0
+                                }));
+                            }catch(_){}
+                        }
+                    }
+                    document.addEventListener('pointerup', endDrag);
+                    document.addEventListener('pointercancel', endDrag);
+
+                    // Keep the orb on-screen if the window is resized.
+                    window.addEventListener('resize', function(){
+                        if(fab.style.left){ placeFabClient(parseFloat(fab.style.left) * getZoom(), parseFloat(fab.style.top) * getZoom()); }
+                    });
+                })();
+                restoreFabPosition();
+
+                // Wiring — a real click (no drag) opens the panel; a drag is swallowed.
+                fab.addEventListener('click', function(e){
+                    if(suppressClick){ suppressClick = false; e.preventDefault(); e.stopImmediatePropagation(); return; }
+                    openPanel();
+                });
+                closeEl.addEventListener('click', closePanel);
+                sendBtn.addEventListener('click', function(){ submitQuery(input.value); });
+                input.addEventListener('keydown', function(e){
+                    if (e.key === 'Enter'){ e.preventDefault(); submitQuery(input.value); }
+                });
+
+                // Suggestion chips
+                intro.addEventListener('click', function(e){
+                    var chip = e.target.closest('.ai-chip');
+                    if (chip){ submitQuery(chip.getAttribute('data-q') || chip.textContent); }
+                });
+
+                // "New search" delegation (present in results / messages)
+                results.addEventListener('click', function(e){
+                    if (e.target.closest('[data-ai-restart]')){ showIntro(); input.focus(); }
+                });
+
+                // Close on Escape; close on outside click
+                document.addEventListener('keydown', function(e){
+                    if ((e.key === 'Escape' || e.keyCode === 27) && panel.classList.contains('ai-open')) closePanel();
+                });
+                document.addEventListener('click', function(e){
+                    if (!panel.classList.contains('ai-open')) return;
+                    if (panel.contains(e.target) || fab.contains(e.target)) return;
+                    closePanel();
+                });
+            }
+
+            if (document.readyState === 'loading'){
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
+    </script>
+</div>

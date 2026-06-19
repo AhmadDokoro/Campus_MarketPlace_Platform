@@ -32,7 +32,22 @@ public class RecommendationServiceImpl implements RecommendationService {
         List<Double> currentEmbedding = embeddingService.fromJson(currentProduct.getEmbedding());
 
         List<Object[]> candidates = productRepository.findAllEmbeddings(productId);
-        if (candidates.isEmpty()) {
+        return rankAndFetch(currentEmbedding, candidates, limit);
+    }
+
+    @Override
+    public List<Product> searchByEmbedding(List<Double> queryEmbedding, int limit) {
+        if (queryEmbedding == null || queryEmbedding.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Object[]> candidates = productRepository.findAllProductEmbeddings();
+        return rankAndFetch(queryEmbedding, candidates, limit);
+    }
+
+    // Shared ranking: score each candidate by cosine similarity to the reference embedding, keep
+    // the top {@code limit}, then load those products (with images/category) preserving rank order.
+    private List<Product> rankAndFetch(List<Double> referenceEmbedding, List<Object[]> candidates, int limit) {
+        if (candidates == null || candidates.isEmpty()) {
             return Collections.emptyList();
         }
 
@@ -42,7 +57,7 @@ public class RecommendationServiceImpl implements RecommendationService {
             String embeddingJson = (String) row[1];
             try {
                 List<Double> candidateEmbedding = embeddingService.fromJson(embeddingJson);
-                double similarity = cosineSimilarity(currentEmbedding, candidateEmbedding);
+                double similarity = cosineSimilarity(referenceEmbedding, candidateEmbedding);
                 scored.add(new ScoredProduct(candidateId, similarity));
             } catch (Exception e) {
                 log.warn("Skipping product {} due to invalid embedding: {}", candidateId, e.getMessage());

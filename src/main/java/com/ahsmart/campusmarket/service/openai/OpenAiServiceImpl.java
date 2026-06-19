@@ -83,6 +83,52 @@ public class OpenAiServiceImpl implements OpenAiService {
         }
     }
 
+    // Generic JSON chat completion. Mirrors the request shape used by detectFraud (same model,
+    // same json_object response_format) but lets callers supply their own prompts and limits.
+    // Returns the raw assistant content string, or null when the call fails for any reason.
+    @Override
+    public String chatJson(String systemPrompt, String userPrompt, double temperature, int maxTokens) {
+        try {
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("model",       OpenAiConfig.MODEL);
+            body.put("temperature", temperature);
+            body.put("max_tokens",  maxTokens);
+            body.put("response_format", Map.of("type", "json_object"));
+            body.put("messages", List.of(
+                    Map.of("role", "system", "content", systemPrompt),
+                    Map.of("role", "user",   "content", userPrompt)
+            ));
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(openAiConfig.getApiKey());
+
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+
+            ResponseEntity<Map> response = restTemplate.postForEntity(
+                    OpenAiConfig.API_URL, request, Map.class
+            );
+
+            return extractContent(response.getBody());
+
+        } catch (Exception e) {
+            log.warn("OpenAI chatJson call failed: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    // Pulls choices[0].message.content out of the chat-completion envelope; null on any surprise.
+    @SuppressWarnings("unchecked")
+    private String extractContent(Map<?, ?> body) {
+        if (body == null) return null;
+        List<Map<String, Object>> choices = (List<Map<String, Object>>) body.get("choices");
+        if (choices == null || choices.isEmpty()) return null;
+        Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
+        if (message == null) return null;
+        Object content = message.get("content");
+        return content == null ? null : String.valueOf(content);
+    }
+
     private String buildUserMessage(String title, String description, BigDecimal price) {
         String desc = (description != null && !description.isBlank())
                 ? description
