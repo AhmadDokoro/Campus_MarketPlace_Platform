@@ -7,6 +7,7 @@ import com.ahsmart.campusmarket.payloadDTOs.ai.AnalystRecommendation;
 import com.ahsmart.campusmarket.payloadDTOs.ai.AnalystResponse;
 import com.ahsmart.campusmarket.service.embedding.EmbeddingService;
 import com.ahsmart.campusmarket.service.openai.OpenAiService;
+import com.ahsmart.campusmarket.service.recommendation.ProductMatch;
 import com.ahsmart.campusmarket.service.recommendation.RecommendationService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,8 +46,10 @@ public class MarketplaceAnalystServiceImpl implements MarketplaceAnalystService 
             "- Select the best " + MAX_RECOMMENDATIONS + " products (fewer if fewer are genuinely relevant). " +
             "Order them best-first.\n" +
             "- Use ONLY the productId values from the list to refer to products.\n" +
-            "- For each pick, give 2-3 short, specific reasons explaining WHY it suits the request " +
-            "(fit for purpose, value for the budget, condition, features). Be factual, not promotional.\n" +
+            "- For each pick, give 2-3 SHORT, scannable reasons (max ~8 words each) explaining WHY it " +
+            "suits the request. Lead with the benefit and vary the angle across reasons: fit for the " +
+            "stated purpose, value for the budget, condition/quality, and relevance to the request. " +
+            "Be factual and specific, never promotional or generic.\n" +
             "- If the request is NOT about shopping for products (e.g. general knowledge, chit-chat), or none " +
             "of the products are relevant, return an empty \"recommendations\" array and a short polite " +
             "\"intro\" explaining you can only help find products in this marketplace.\n\n" +
@@ -73,11 +76,18 @@ public class MarketplaceAnalystServiceImpl implements MarketplaceAnalystService 
             query = query.substring(0, MAX_QUERY_CHARS);
         }
 
-        // 2. Embed the request and 3-4. retrieve the most semantically relevant products.
+        // 2. Embed the request and 3-4. retrieve the most semantically relevant products, keeping
+        //    each product's cosine-similarity score so we can show real "match strength" later.
         List<Product> candidates;
+        Map<Long, Double> similarityById = new LinkedHashMap<>();
         try {
             List<Double> queryEmbedding = embeddingService.generateEmbedding(query);
-            candidates = recommendationService.searchByEmbedding(queryEmbedding, CANDIDATE_POOL);
+            List<ProductMatch> matches = recommendationService.searchByEmbeddingScored(queryEmbedding, CANDIDATE_POOL);
+            candidates = new ArrayList<>(matches.size());
+            for (ProductMatch m : matches) {
+                candidates.add(m.product());
+                similarityById.put(m.product().getProductId(), m.similarity());
+            }
         } catch (Exception e) {
             log.warn("Analyst embedding search failed: {}", e.getMessage());
             return AnalystResponse.error("The analyst is taking a short break. Please try again in a moment.");
@@ -99,7 +109,7 @@ public class MarketplaceAnalystServiceImpl implements MarketplaceAnalystService 
         String aiContent = openAiService.chatJson(SYSTEM_PROMPT, userPrompt, 0.3, 700);
 
         // 7. Parse + validate the AI verdict against the real candidate set.
-        Curation curation = parseCuration(aiContent, candidatesById);
+        Curation curation = parseCuration(aiContent, candidatesById, similarityById);
 
         // 8. Decide how to respond when the curation produced no cards.
         if (curation.recommendations.isEmpty()) {
@@ -112,7 +122,7 @@ public class MarketplaceAnalystServiceImpl implements MarketplaceAnalystService 
             }
             // AI unavailable, unparseable, or its picks were all invalid — fall back to the top
             // embedding matches so the buyer still gets a real, useful result.
-            return buildFallback(candidates);
+            return buildFallback(candidates, similarityById);
         }
 
         String intro = (curation.intro != null && !curation.intro.isBlank())
@@ -153,7 +163,7 @@ public class MarketplaceAnalystServiceImpl implements MarketplaceAnalystService 
 
     // ── AI response parsing ─────────────────────────────────────────────────────────────────────
 
-    private Curation parseCuration(String content, Map<Long, Product> candidatesById) {
+    private Curation parseCuration(String content, Map<Long, Product> candidatesById, Map<Long, Double> similarityById) {
         Curation curation = new Curation();
         if (content == null || content.isBlank()) {
             return curation; // triggers fallback
@@ -179,7 +189,7 @@ public class MarketplaceAnalystServiceImpl implements MarketplaceAnalystService 
                         label = DEFAULT_LABELS[Math.min(idx, DEFAULT_LABELS.length - 1)];
                     }
                     List<String> reasons = parseReasons(rec.path("reasons"));
-                    curation.recommendations.add(toRecommendation(product, label, reasons));
+                    curation.recommendations.add(toRecommendation(product, label, reasons, similarityById));
                     idx++;
                 }
             }
@@ -227,7 +237,7 @@ public class MarketplaceAnalystServiceImpl implements MarketplaceAnalystService 
 
     // Used when the AI is unavailable or unparseable: present the top embedding matches directly so
     // the buyer still gets a useful, real, semantically-ranked result.
-    private AnalystResponse buildFallback(List<Product> candidates) {
+    private AnalystResponse buildFallback(List<Product> candidates, Map<Long, Double> similarityById) {
         List<AnalystRecommendation> recs = new ArrayList<>();
         int count = Math.min(MAX_RECOMMENDATIONS, candidates.size());
         for (int i = 0; i < count; i++) {
@@ -235,12 +245,13 @@ public class MarketplaceAnalystServiceImpl implements MarketplaceAnalystService 
             List<String> reasons = new ArrayList<>();
             reasons.add("Closely matches what you searched for");
             reasons.add("Available now in the campus marketplace");
-            recs.add(toRecommendation(p, DEFAULT_LABELS[Math.min(i, DEFAULT_LABELS.length - 1)], reasons));
+            recs.add(toRecommendation(p, DEFAULT_LABELS[Math.min(i, DEFAULT_LABELS.length - 1)], reasons, similarityById));
         }
         return AnalystResponse.of("Here are the closest matches I found in the marketplace:", recs);
     }
 
-    private AnalystRecommendation toRecommendation(Product p, String label, List<String> reasons) {
+    private AnalystRecommendation toRecommendation(Product p, String label, List<String> reasons,
+                                                   Map<Long, Double> similarityById) {
         return new AnalystRecommendation(
                 p.getProductId(),
                 p.getTitle(),
@@ -248,8 +259,20 @@ public class MarketplaceAnalystServiceImpl implements MarketplaceAnalystService 
                 resolveImageUrl(p),
                 categoryName(p),
                 label,
-                reasons
+                reasons,
+                toMatchScore(similarityById.getOrDefault(p.getProductId(), 0.0))
         );
+    }
+
+    // Maps a raw cosine similarity (text-embedding-3-small typically lands ~0.15–0.60 for real
+    // query↔product matches) onto a 0–100 relevance reading for the "match strength" meter. Spans
+    // 40–99 so a genuinely strong match reads high while a weak/tangential one reads honestly low —
+    // the meter stays trustworthy even on the fallback path where top matches are shown regardless.
+    private int toMatchScore(double cosine) {
+        double lo = 0.15, hi = 0.58;
+        double t = (cosine - lo) / (hi - lo);
+        t = Math.max(0.0, Math.min(1.0, t));
+        return (int) Math.round(40 + t * 59); // 40–99
     }
 
     // Primary image first, then first non-empty image, optimised to a thumbnail; null when none.

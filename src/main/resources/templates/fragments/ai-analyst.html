@@ -393,6 +393,113 @@
         .ai-send:disabled{ opacity: 0.6; cursor: default; transform: none; }
         .ai-footer-note{ font-size: 10.5px; color: rgba(255,255,255,0.42); text-align: center; margin-top: 9px; }
 
+        /* ── AI thinking sequence (Upgrade 1) ─────────────────────────────────────── */
+        .ai-think{ padding: 8px 2px 6px; animation: aiViewIn .4s ease both; }
+        .ai-think-orb{
+            position: relative; width: 54px; height: 54px; margin: 2px auto 15px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(circle at 30% 30%, #FFF3B0, var(--ai-gold) 58%, var(--ai-gold-2));
+            box-shadow: 0 0 0 6px rgba(255,215,0,0.10), 0 8px 22px rgba(255,170,0,0.45);
+            animation: aiThinkOrb 1.5s ease-in-out infinite;
+        }
+        .ai-think-orb span{
+            position: absolute; inset: 0; border-radius: 50%;
+            border: 2px solid rgba(255,215,0,0.55); opacity: 0;
+            animation: aiThinkRipple 1.8s ease-out infinite;
+        }
+        .ai-think-orb span:nth-child(2){ animation-delay: .6s; }
+        .ai-think-orb span:nth-child(3){ animation-delay: 1.2s; }
+        @keyframes aiThinkOrb{ 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.07); } }
+        @keyframes aiThinkRipple{ 0%{ transform: scale(.7); opacity: .6; } 100%{ transform: scale(1.75); opacity: 0; } }
+        @keyframes aiViewIn{ from{ opacity: 0; transform: translateY(8px); } to{ opacity: 1; transform: translateY(0); } }
+
+        .ai-think-caption{ text-align: center; color: #fff; font-size: 13.5px; font-weight: 700; line-height: 1.45; margin-bottom: 16px; }
+        .ai-think-stages{ max-width: 320px; margin: 0 auto; display: flex; flex-direction: column; gap: 9px; }
+        .ai-think-stage{
+            display: flex; align-items: center; gap: 11px;
+            padding: 9px 13px; border-radius: 12px;
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.45); font-size: 13px; font-weight: 600;
+            opacity: 0; transform: translateY(6px);
+            transition: opacity .4s ease, transform .4s ease, color .3s ease, background .3s ease, border-color .3s ease;
+        }
+        .ai-think-stage.is-active{
+            opacity: 1; transform: translateY(0); color: #fff;
+            background: linear-gradient(135deg, rgba(255,215,0,0.14), rgba(255,170,0,0.05));
+            border-color: rgba(255,215,0,0.4); box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+        }
+        .ai-think-stage.is-done{ color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.03); border-color: rgba(120,230,150,0.28); }
+        .ai-think-ic{ font-size: 15px; flex: 0 0 auto; width: 20px; text-align: center; }
+        .ai-think-tx{ flex: 1 1 auto; }
+        .ai-think-stage.is-active:not(.is-done) .ai-think-ic{ animation: aiThinkPulse 1s ease-in-out infinite; }
+        @keyframes aiThinkPulse{ 0%,100%{ transform: scale(1); opacity: 1; } 50%{ transform: scale(1.18); opacity: .65; } }
+        .ai-think-check{
+            flex: 0 0 auto; width: 18px; height: 18px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 9px; color: #06351d;
+            background: linear-gradient(135deg, #7be58c, #34c759);
+            transform: scale(0); transition: transform .3s cubic-bezier(.2,1.3,.4,1);
+        }
+        .ai-think-stage.is-done .ai-think-check{ transform: scale(1); }
+
+        /* ── Follow-up clarification (Upgrade 7) ──────────────────────────────────── */
+        .ai-clarify{ text-align: center; padding: 8px 4px 6px; animation: aiViewIn .42s ease both; }
+        .ai-clarify-orb{
+            width: 50px; height: 50px; margin: 2px auto 12px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 24px;
+            background: radial-gradient(circle at 30% 30%, #FFF3B0, var(--ai-gold) 60%, var(--ai-gold-2));
+            box-shadow: 0 6px 18px rgba(255,170,0,0.4);
+        }
+        .ai-clarify-q{ font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+        .ai-clarify-sub{ font-size: 12px; color: rgba(255,255,255,0.6); margin: 0 auto 14px; max-width: 300px; line-height: 1.5; }
+        .ai-clarify-opts{ display: flex; flex-wrap: wrap; gap: 9px; justify-content: center; }
+        .ai-clarify-opt{
+            border: 1px solid rgba(255,215,0,0.4); background: rgba(255,215,0,0.07);
+            color: #fde7b8; font-size: 13px; font-weight: 700;
+            padding: 10px 16px; border-radius: 12px; cursor: pointer;
+            transition: background .2s ease, transform .15s ease, color .2s ease, border-color .2s ease;
+        }
+        .ai-clarify-opt:hover{ background: linear-gradient(135deg, var(--ai-gold), var(--ai-gold-2)); color: var(--ai-purple); border-color: transparent; transform: translateY(-2px); }
+        .ai-clarify-skip{
+            display: inline-block; margin-top: 14px; background: none; border: none;
+            color: rgba(255,255,255,0.5); font-size: 11.5px; font-weight: 600;
+            text-decoration: underline; cursor: pointer; transition: color .2s ease;
+        }
+        .ai-clarify-skip:hover{ color: var(--ai-gold); }
+
+        /* ── Quality indicators — tinted per tier (Upgrade 4) ─────────────────────── */
+        .ai-rec-badge.q-excellent{ background: linear-gradient(135deg, #FFD700, #FF9E00); color: #5a2d00; box-shadow: 0 3px 8px rgba(255,170,0,0.45); }
+        .ai-rec-badge.q-strong{ background: linear-gradient(135deg, #56d97a, #2bb673); color: #06351d; box-shadow: 0 3px 8px rgba(43,182,115,0.4); }
+        .ai-rec-badge.q-alt{ background: linear-gradient(135deg, #b79bff, #7a5cf0); color: #fff; box-shadow: 0 3px 8px rgba(122,92,240,0.4); }
+        .ai-rec-badge.q-budget{ background: linear-gradient(135deg, #3fd0c9, #18a89b); color: #03302d; box-shadow: 0 3px 8px rgba(24,168,155,0.4); }
+
+        /* ── Match-strength meter — exposes the semantic match, no jargon (Upgrade 6) ── */
+        .ai-rec-match{ margin-top: 11px; }
+        .ai-rec-match-top{
+            display: flex; align-items: center; justify-content: space-between; gap: 8px;
+            font-size: 10.5px; font-weight: 700; letter-spacing: 0.3px; text-transform: uppercase;
+            color: #6b21c4; margin-bottom: 5px;
+        }
+        .ai-rec-match-top i{ margin-right: 4px; opacity: 0.8; }
+        .ai-rec-match-pct{ flex: 0 0 auto; color: #ff7a00; }
+        .ai-rec-match-bar{ position: relative; height: 7px; border-radius: 99px; background: rgba(107,33,196,0.12); overflow: hidden; }
+        .ai-rec-match-bar > i{
+            position: absolute; left: 0; top: 0; height: 100%; width: 0; border-radius: 99px;
+            background: linear-gradient(90deg, #ffb300, #ff7a00 60%, #ff4e00);
+            transition: width 1s cubic-bezier(.2,.8,.2,1);
+        }
+
+        /* ── Enhanced explainability bullets (Upgrade 5) ──────────────────────────── */
+        .ai-rec-why ul{ list-style: none; padding-left: 0; margin: 0; }
+        .ai-rec-why li{ display: flex; align-items: flex-start; gap: 8px; padding-left: 0; margin-bottom: 4px; }
+        .ai-why-dot{
+            flex: 0 0 auto; margin-top: 6px; width: 6px; height: 6px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--ai-gold), var(--ai-gold-2));
+            box-shadow: 0 0 0 3px rgba(255,170,0,0.15);
+        }
+
+        /* Results header eases in; cards stagger via inline animation-delay (Upgrade 3) */
+        .ai-results-head{ animation: aiViewIn .42s ease both; }
+
         /* Mobile: lift the fab above the bottom nav (62px) + back-to-top, and widen the panel */
         /* Laptop / desktop: scale up the panel content to fill the larger ~2x panel */
         @media (min-width: 992px){
@@ -428,6 +535,20 @@
             .ai-input{ height: 50px; font-size: 15px; border-radius: 14px; padding: 0 18px; }
             .ai-send{ width: 50px; height: 50px; border-radius: 14px; font-size: 18px; }
             .ai-footer-note{ font-size: 12px; }
+
+            /* Scale the thinking sequence + clarify + meter to the wider panel */
+            .ai-think-orb{ width: 64px; height: 64px; margin-bottom: 18px; }
+            .ai-think-caption{ font-size: 15px; margin-bottom: 18px; }
+            .ai-think-stages{ max-width: 400px; gap: 11px; }
+            .ai-think-stage{ font-size: 14px; padding: 11px 16px; }
+            .ai-clarify-orb{ width: 58px; height: 58px; font-size: 28px; }
+            .ai-clarify-q{ font-size: 17.5px; }
+            .ai-clarify-sub{ font-size: 13px; max-width: 380px; }
+            .ai-clarify-opt{ font-size: 14px; padding: 11px 18px; }
+            .ai-rec-match{ margin-top: 13px; }
+            .ai-rec-match-top{ font-size: 11.5px; }
+            .ai-rec-match-bar{ height: 8px; }
+            .ai-why-dot{ width: 7px; height: 7px; margin-top: 7px; }
         }
 
         @media (max-width: 991px){
@@ -435,13 +556,25 @@
             .ai-fab-icon{ width: 25px; height: 25px; }
             .ai-fab-pill{ display: none; }
             .ai-analyst-panel{ right: 10px; left: 10px; bottom: 84px; width: auto; max-width: none; max-height: 74vh; }
+
+            /* Premium + readable on phones: full-width stages, comfy tap targets (Upgrade 8) */
+            .ai-think-stages{ max-width: 100%; }
+            .ai-think-stage{ padding: 11px 14px; font-size: 13px; }
+            .ai-clarify-opts{ gap: 10px; }
+            .ai-clarify-opt{ padding: 12px 16px; font-size: 13.5px; }
+            .ai-clarify-skip{ padding: 6px 8px; }   /* easier to tap */
+            .ai-rec-match-bar{ height: 8px; }
         }
 
         /* Respect reduced-motion preferences */
         @media (prefers-reduced-motion: reduce){
             .ai-analyst-fab, .ai-fab-halo, .ai-fab-ring, .ai-fab-core, .ai-smoke,
-            .ai-particle, .ai-intro-orb, .ai-loading-orb{ animation: none !important; }
+            .ai-particle, .ai-intro-orb, .ai-loading-orb,
+            .ai-think, .ai-think-orb, .ai-think-orb span, .ai-results-head, .ai-clarify, .ai-rec-card{ animation: none !important; }
             .ai-smoke{ display: none; }
+            .ai-think-stage{ opacity: 1 !important; transform: none !important; transition: none !important; }
+            .ai-think-check, .ai-rec-match-bar > i{ transition: none !important; }
+            .ai-rec-card{ opacity: 1 !important; transform: none !important; }
         }
     </style>
 
@@ -461,7 +594,42 @@
                 var sendBtn = document.getElementById('aiAnalystSend');
                 if (!fab || !panel) return;
 
-                var BADGES = ['⭐', '💡', '💰', '✨'];
+                var prefersReduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+                // Staged "thinking" sequence — shown while the marketplace is genuinely analysed.
+                var THINK_STAGES = [
+                    { ic: '✨', tx: 'Understanding your request' },
+                    { ic: '🔍', tx: 'Searching marketplace listings' },
+                    { ic: '🧠', tx: 'Analysing product relevance' },
+                    { ic: '⭐', tx: 'Preparing your recommendations' }
+                ];
+                var THINK_STEP_MS = 700;   // cadence for the first stages; the last one waits for data
+
+                // Smoothly grows/shrinks an element to fit its new content (Upgrade 2). Animating the
+                // results element lets the whole panel expand premium-smoothly instead of snapping.
+                function animateHeight(el, mutate, startOverride){
+                    if (prefersReduced){ mutate(); return; }
+                    // Cancel any in-flight height animation on this element so rapid swaps don't snap.
+                    if (el.__ahClear){ el.__ahClear(); }
+                    var startH = (typeof startOverride === 'number') ? startOverride : el.offsetHeight;
+                    mutate();
+                    var endH = el.scrollHeight;
+                    if (Math.abs(endH - startH) < 4){ return; }
+                    el.style.overflow = 'hidden';
+                    el.style.height = startH + 'px';
+                    void el.offsetHeight;   // force reflow so the start height takes hold
+                    el.style.transition = 'height .42s cubic-bezier(.2,.8,.2,1)';
+                    el.style.height = endH + 'px';
+                    var clear = function(){
+                        if (el.__ahTimer){ clearTimeout(el.__ahTimer); el.__ahTimer = null; }
+                        el.style.transition = ''; el.style.height = ''; el.style.overflow = '';
+                        el.removeEventListener('transitionend', clear);
+                        el.__ahClear = null;
+                    };
+                    el.__ahClear = clear;
+                    el.addEventListener('transitionend', clear);
+                    el.__ahTimer = setTimeout(clear, 650);   // safety net if transitionend is missed
+                }
 
                 function escapeHtml(text){
                     var map = { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' };
@@ -491,17 +659,64 @@
                     input.value = '';
                 }
 
-                function showLoading(query){
+                // Upgrade 1: a genuine, staged "thinking" sequence. The stages advance on a ~2.2s
+                // cadence while the real API call runs in parallel; results only reveal once BOTH the
+                // data has arrived and the sequence has played, so it always feels intentional.
+                function startThinking(query){
+                    var seedH = (!intro.hidden) ? intro.offsetHeight : results.offsetHeight;
                     intro.hidden = true;
                     results.hidden = false;
-                    results.innerHTML =
-                        '<div class="ai-loading">' +
-                            '<div class="ai-loading-orb"></div>' +
-                            '<div class="ai-loading-text">Analysing the marketplace…</div>' +
-                            '<div class="ai-loading-sub">Matching "' + escapeHtml(query) + '" against real listings</div>' +
-                            '<div class="ai-skeleton"></div>' +
-                            '<div class="ai-skeleton"></div>' +
-                        '</div>';
+
+                    var rows = '';
+                    for (var i = 0; i < THINK_STAGES.length; i++){
+                        rows +=
+                            '<div class="ai-think-stage" data-stage="' + i + '">' +
+                                '<span class="ai-think-ic">' + THINK_STAGES[i].ic + '</span>' +
+                                '<span class="ai-think-tx">' + escapeHtml(THINK_STAGES[i].tx) + '</span>' +
+                                '<span class="ai-think-check"><i class="fas fa-check"></i></span>' +
+                            '</div>';
+                    }
+                    animateHeight(results, function(){
+                        results.innerHTML =
+                            '<div class="ai-think">' +
+                                '<div class="ai-think-orb" aria-hidden="true"><span></span><span></span><span></span></div>' +
+                                '<div class="ai-think-caption">Analysing the marketplace for “' + escapeHtml(query) + '”</div>' +
+                                '<div class="ai-think-stages">' + rows + '</div>' +
+                            '</div>';
+                    }, seedH);
+
+                    var stageEls = results.querySelectorAll('.ai-think-stage');
+                    var last = stageEls.length - 1;
+                    var timers = [];
+                    // March through the stages on a timed cadence so it reads as genuine, step-by-step
+                    // analysis. The reduced-motion path runs the SAME sequence (the CSS just strips the
+                    // fades/pulse), so it never collapses into an instant flash. The final stage is left
+                    // "working" — it only completes when the real products are ready (see finish()).
+                    for (var j = 0; j < stageEls.length; j++){
+                        (function(el, idx){
+                            timers.push(setTimeout(function(){ el.classList.add('is-active'); }, idx * THINK_STEP_MS));
+                            if (idx < last){
+                                timers.push(setTimeout(function(){ el.classList.add('is-done'); }, (idx + 1) * THINK_STEP_MS));
+                            }
+                        })(stageEls[j], j);
+                    }
+
+                    return {
+                        // Minimum run: reach the final ("Preparing…") stage and dwell on it one beat.
+                        minMs: THINK_STAGES.length * THINK_STEP_MS,
+                        // Called once the products are ready AND minMs has elapsed: finish every stage,
+                        // tick the last one, hold a short beat, then reveal — so the animation's end and
+                        // the product reveal are the exact same moment, never out of step.
+                        finish: function(done){
+                            for (var t = 0; t < timers.length; t++){ clearTimeout(timers[t]); }
+                            for (var s = 0; s < stageEls.length; s++){
+                                stageEls[s].classList.add('is-active');
+                                if (s < last) stageEls[s].classList.add('is-done');
+                            }
+                            if (stageEls[last]) stageEls[last].classList.add('is-done');
+                            setTimeout(done, prefersReduced ? 150 : 420);
+                        }
+                    };
                 }
 
                 function restartButton(){
@@ -509,14 +724,36 @@
                 }
 
                 function showMessage(msg, icon){
+                    var seedH = (!intro.hidden) ? intro.offsetHeight : results.offsetHeight;
                     intro.hidden = true;
                     results.hidden = false;
-                    results.innerHTML =
-                        '<div class="ai-message">' +
-                            '<i class="fas ' + (icon || 'fa-search') + '"></i>' +
-                            '<div>' + escapeHtml(msg) + '</div>' +
-                            restartButton() +
-                        '</div>';
+                    animateHeight(results, function(){
+                        results.innerHTML =
+                            '<div class="ai-message">' +
+                                '<i class="fas ' + (icon || 'fa-search') + '"></i>' +
+                                '<div>' + escapeHtml(msg) + '</div>' +
+                                restartButton() +
+                            '</div>';
+                    }, seedH);
+                }
+
+                // Upgrade 4: tier is derived from the SAME relevance score the meter shows, so the
+                // badge, the meter and the card's position can never contradict one another. The
+                // cheapest genuinely-good pick is flagged budget-friendly (a price signal, not a
+                // match-quality claim, so it sits happily next to any relevance reading).
+                function qualityFor(pct, isCheapest){
+                    if (isCheapest && pct >= 78) return { key: 'budget', icon: '💰', text: 'Budget Friendly' };
+                    if (pct >= 90) return { key: 'excellent', icon: '⭐', text: 'Excellent Match' };
+                    if (pct >= 78) return { key: 'strong', icon: '✅', text: 'Strong Match' };
+                    if (pct >= 66) return { key: 'alt', icon: '💡', text: 'Good Match' };
+                    return { key: 'alt', icon: '💡', text: 'Fair Match' };
+                }
+                // Upgrade 6: real relevance from the embedding similarity (backend matchScore); falls
+                // back to a sensible rank-based reading if the score is ever missing.
+                function matchPct(rec, i){
+                    var s = Number(rec && rec.matchScore);
+                    if (!isNaN(s) && s > 0) return Math.max(1, Math.min(100, Math.round(s)));
+                    return [95, 88, 82][i] || 80;
                 }
 
                 function renderResults(query, data){
@@ -524,11 +761,19 @@
                         showMessage((data && data.message) || 'The analyst is unavailable right now. Please try again.', 'fa-triangle-exclamation');
                         return;
                     }
-                    var recs = data.recommendations || [];
+                    var recs = (data.recommendations || []).slice();
                     if (recs.length === 0){
                         showMessage(data.message || "I couldn't find a good match for that. Try describing the item differently.", 'fa-magnifying-glass');
                         return;
                     }
+                    // Present in true relevance order so the strongest match always leads (Upgrades 3 & 6)
+                    // and the colour-coded tier agrees with the meter on every card.
+                    recs.sort(function(a, b){ return matchPct(b) - matchPct(a); });
+                    var minPrice = Infinity, cheapestIdx = -1;
+                    recs.forEach(function(rec, i){
+                        var pr = Number(rec.price);
+                        if (!isNaN(pr) && pr < minPrice){ minPrice = pr; cheapestIdx = i; }
+                    });
 
                     var html = '<div class="ai-results-head">' +
                         '<div class="ai-results-intro">' + escapeHtml(data.intro || 'Here is what I found for you:') + '</div>' +
@@ -537,16 +782,18 @@
 
                     html += '<div class="ai-results-cards">';
                     recs.forEach(function(rec, i){
-                        var badge = BADGES[i] || '✨';
+                        var pct = matchPct(rec, i);
+                        var q = qualityFor(pct, i === cheapestIdx);
                         var img = rec.imageUrl ? escapeHtml(rec.imageUrl) : '/img/productplaceholder.png';
-                        var reasons = (rec.reasons || []).map(function(r){
-                            return '<li>' + escapeHtml(r) + '</li>';
+                        var reasons = (rec.reasons || []).slice(0, 3).map(function(r){
+                            return '<li><span class="ai-why-dot"></span><span>' + escapeHtml(r) + '</span></li>';
                         }).join('');
-                        if (!reasons) reasons = '<li>Closely matches your request</li>';
+                        if (!reasons) reasons = '<li><span class="ai-why-dot"></span><span>Closely matches your request</span></li>';
+                        var delay = prefersReduced ? 0 : (i * 130);
 
                         html +=
-                        '<div class="ai-rec-card">' +
-                            '<span class="ai-rec-badge">' + badge + ' ' + escapeHtml(rec.label || 'Recommended') + '</span>' +
+                        '<div class="ai-rec-card" style="animation-delay:' + delay + 'ms">' +
+                            '<span class="ai-rec-badge q-' + q.key + '">' + q.icon + ' ' + escapeHtml(q.text) + '</span>' +
                             '<div class="ai-rec-main">' +
                                 '<img class="ai-rec-img" src="' + img + '" alt="" loading="lazy" ' +
                                      'onerror="this.onerror=null;this.src=\'/img/productplaceholder.png\'">' +
@@ -556,40 +803,76 @@
                                     '<div class="ai-rec-price"><small>RM</small> ' + formatPrice(rec.price) + '</div>' +
                                 '</div>' +
                             '</div>' +
+                            '<div class="ai-rec-match" title="How closely this fits your request, by semantic relevance">' +
+                                '<div class="ai-rec-match-top">' +
+                                    '<span><i class="fas fa-wand-magic-sparkles"></i>Relevance to your request</span>' +
+                                    '<span class="ai-rec-match-pct">' + pct + '% match</span>' +
+                                '</div>' +
+                                '<div class="ai-rec-match-bar"><i data-pct="' + pct + '"></i></div>' +
+                            '</div>' +
                             '<div class="ai-rec-why">' +
-                                '<div class="ai-rec-why-label">Why I selected this</div>' +
+                                '<div class="ai-rec-why-label">Why this matches</div>' +
                                 '<ul>' + reasons + '</ul>' +
                             '</div>' +
                             '<a class="ai-rec-btn" href="/products/' + encodeURIComponent(rec.productId) + '">View Product</a>' +
                         '</div>';
                     });
-
                     html += '</div>';
+
+                    var seedH = (!intro.hidden) ? intro.offsetHeight : results.offsetHeight;
                     intro.hidden = true;
                     results.hidden = false;
-                    results.innerHTML = html;
+                    animateHeight(results, function(){ results.innerHTML = html; }, seedH);
+
+                    // Fill the match-strength meters, staggered to ride in with each card.
+                    var bars = results.querySelectorAll('.ai-rec-match-bar > i');
+                    for (var b = 0; b < bars.length; b++){
+                        (function(bar, idx){
+                            var target = (bar.getAttribute('data-pct') || 0) + '%';
+                            if (prefersReduced){ bar.style.width = target; return; }
+                            setTimeout(function(){
+                                requestAnimationFrame(function(){ bar.style.width = target; });
+                            }, idx * 130 + 240);
+                        })(bars[b], b);
+                    }
                 }
 
                 var inFlight = false;
                 function submitQuery(query){
                     query = (query || '').trim();
                     if (query.length < 2 || inFlight) return;
+
                     inFlight = true;
                     sendBtn.disabled = true;
-                    input.value = '';        // clear the box once the message is sent
-                    showLoading(query);
+                    input.value = '';
 
-                    fetch('/api/analyst/recommend', {
+                    var display = query;   // what the user typed, for friendly copy
+                    var think = startThinking(display);
+                    var minWait = new Promise(function(resolve){ setTimeout(resolve, think.minMs); });
+                    var request = fetch('/api/analyst/recommend', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ query: query })
                     })
                     .then(function(res){ return res.json(); })
-                    .then(function(data){ renderResults(query, data); })
-                    .catch(function(){
-                        showMessage('Something went wrong reaching the analyst. Please try again.', 'fa-triangle-exclamation');
-                    })
-                    .then(function(){ inFlight = false; sendBtn.disabled = false; });
+                    .then(function(data){ return { ok: true, data: data }; })
+                    .catch(function(){ return { ok: false }; });
+
+                    // Reveal only once BOTH the products have arrived AND the staged thinking has run
+                    // its minimum. finish() ticks the final stage and reveals on a short beat, so the
+                    // products are already in hand the instant the animation completes — perfectly synced.
+                    Promise.all([request, minWait]).then(function(arr){
+                        var r = arr[0];
+                        think.finish(function(){
+                            if (!r.ok){
+                                showMessage('Something went wrong reaching the analyst. Please try again.', 'fa-triangle-exclamation');
+                            } else {
+                                renderResults(display, r.data);
+                            }
+                            inFlight = false;
+                            sendBtn.disabled = false;
+                        });
+                    });
                 }
 
                 // ── Drag-to-reposition the orb (pointer based, zoom-aware, position persisted) ──
@@ -683,7 +966,7 @@
                     if (chip){ submitQuery(chip.getAttribute('data-q') || chip.textContent); }
                 });
 
-                // "New search" delegation (present in results / messages)
+                // "New search" delegation (present in results / messages).
                 results.addEventListener('click', function(e){
                     if (e.target.closest('[data-ai-restart]')){ showIntro(); input.focus(); }
                 });
@@ -694,7 +977,14 @@
                 });
                 document.addEventListener('click', function(e){
                     if (!panel.classList.contains('ai-open')) return;
-                    if (panel.contains(e.target) || fab.contains(e.target)) return;
+                    // Use the dispatch-time event path so a control that replaces its own container
+                    // (e.g. "New search") isn't misread as an outside click once its node detaches.
+                    var path = (typeof e.composedPath === 'function') ? e.composedPath() : null;
+                    if (path){
+                        if (path.indexOf(panel) !== -1 || path.indexOf(fab) !== -1) return;
+                    } else if (panel.contains(e.target) || fab.contains(e.target)){
+                        return;
+                    }
                     closePanel();
                 });
             }
