@@ -93,6 +93,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p.productId, p.embedding FROM Product p WHERE p.embedding IS NOT NULL AND p.productId <> :excludeId")
     List<Object[]> findAllEmbeddings(@Param("excludeId") Long excludeId);
 
+    // Fetches every (productId, embedding) pair for similarity search against a free-text query
+    // embedding (AI Marketplace Analyst). No exclusion — the buyer's query is not itself a product.
+    @Query("SELECT p.productId, p.embedding FROM Product p WHERE p.embedding IS NOT NULL")
+    List<Object[]> findAllProductEmbeddings();
+
     // Returns products that have no embedding yet, with category eagerly loaded for text generation.
     @Query("SELECT p FROM Product p LEFT JOIN FETCH p.category WHERE p.embedding IS NULL")
     List<Product> findAllWithoutEmbedding();

@@ -32,7 +32,32 @@ public class RecommendationServiceImpl implements RecommendationService {
         List<Double> currentEmbedding = embeddingService.fromJson(currentProduct.getEmbedding());
 
         List<Object[]> candidates = productRepository.findAllEmbeddings(productId);
-        if (candidates.isEmpty()) {
+        return rankAndFetch(currentEmbedding, candidates, limit).stream()
+                .map(ProductMatch::product)
+                .toList();
+    }
+
+    @Override
+    public List<Product> searchByEmbedding(List<Double> queryEmbedding, int limit) {
+        return searchByEmbeddingScored(queryEmbedding, limit).stream()
+                .map(ProductMatch::product)
+                .toList();
+    }
+
+    @Override
+    public List<ProductMatch> searchByEmbeddingScored(List<Double> queryEmbedding, int limit) {
+        if (queryEmbedding == null || queryEmbedding.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Object[]> candidates = productRepository.findAllProductEmbeddings();
+        return rankAndFetch(queryEmbedding, candidates, limit);
+    }
+
+    // Shared ranking: score each candidate by cosine similarity to the reference embedding, keep
+    // the top {@code limit}, then load those products (with images/category) preserving rank order.
+    // Each result keeps its similarity score so callers can expose match strength when useful.
+    private List<ProductMatch> rankAndFetch(List<Double> referenceEmbedding, List<Object[]> candidates, int limit) {
+        if (candidates == null || candidates.isEmpty()) {
             return Collections.emptyList();
         }
 
@@ -42,7 +67,7 @@ public class RecommendationServiceImpl implements RecommendationService {
             String embeddingJson = (String) row[1];
             try {
                 List<Double> candidateEmbedding = embeddingService.fromJson(embeddingJson);
-                double similarity = cosineSimilarity(currentEmbedding, candidateEmbedding);
+                double similarity = cosineSimilarity(referenceEmbedding, candidateEmbedding);
                 scored.add(new ScoredProduct(candidateId, similarity));
             } catch (Exception e) {
                 log.warn("Skipping product {} due to invalid embedding: {}", candidateId, e.getMessage());
@@ -51,25 +76,22 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         scored.sort(Comparator.comparingDouble(ScoredProduct::score).reversed());
 
-        List<Long> topIds = scored.stream()
-                .limit(limit)
-                .map(ScoredProduct::productId)
-                .toList();
-
-        if (topIds.isEmpty()) {
+        List<ScoredProduct> top = scored.stream().limit(limit).toList();
+        if (top.isEmpty()) {
             return Collections.emptyList();
         }
 
+        List<Long> topIds = top.stream().map(ScoredProduct::productId).toList();
         List<Product> products = productRepository.findByProductIdInWithImages(topIds);
 
         Map<Long, Product> byId = new HashMap<>();
         for (Product p : products) {
             byId.put(p.getProductId(), p);
         }
-        List<Product> ordered = new ArrayList<>();
-        for (Long id : topIds) {
-            Product p = byId.get(id);
-            if (p != null) ordered.add(p);
+        List<ProductMatch> ordered = new ArrayList<>();
+        for (ScoredProduct s : top) {
+            Product p = byId.get(s.productId());
+            if (p != null) ordered.add(new ProductMatch(p, s.score()));
         }
         return ordered;
     }

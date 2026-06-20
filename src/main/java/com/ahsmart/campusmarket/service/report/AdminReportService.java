@@ -221,7 +221,9 @@ public class AdminReportService {
                     categoryName,
                     sellerName,
                     primaryImageUrl,
-                    product.getCreatedAt()
+                    product.getCreatedAt(),
+                    null,           // AI confidence not surfaced in periodic reports
+                    List.of()       // AI reasons not surfaced in periodic reports
             ));
         }
         return result;

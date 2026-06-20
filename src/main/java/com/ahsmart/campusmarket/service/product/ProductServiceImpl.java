@@ -7,7 +7,6 @@ import com.ahsmart.campusmarket.model.ProductImage;
 import com.ahsmart.campusmarket.model.Seller;
 import com.ahsmart.campusmarket.model.Users;
 import com.ahsmart.campusmarket.model.enums.Condition;
-import com.ahsmart.campusmarket.model.enums.FlaggedStatus;
 import com.ahsmart.campusmarket.model.enums.OrderStatus;
 import com.ahsmart.campusmarket.model.enums.SellerStatus;
 import com.ahsmart.campusmarket.repositories.CartItemRepository;
@@ -17,6 +16,8 @@ import com.ahsmart.campusmarket.repositories.ProductImageRepository;
 import com.ahsmart.campusmarket.repositories.ProductRepository;
 import com.ahsmart.campusmarket.repositories.SellerRepository;
 import com.ahsmart.campusmarket.repositories.UsersRepository;
+import com.ahsmart.campusmarket.payloadDTOs.ai.FraudAnalysisResult;
+import com.ahsmart.campusmarket.service.ai.ProductAiAnalysisService;
 import com.ahsmart.campusmarket.service.embedding.EmbeddingService;
 import com.ahsmart.campusmarket.service.openai.OpenAiService;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +51,7 @@ public class ProductServiceImpl implements ProductService {
     private final FileService fileService;
     private final OrderItemRepository orderItemRepository;
     private final OpenAiService openAiService;
+    private final ProductAiAnalysisService productAiAnalysisService;
     private final EmbeddingService embeddingService;
 
     // Validates input, uploads the image, and persists product + primary image.
@@ -114,12 +116,21 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(price);
         product.setQuantity(quantity);
         product.setCondition(condition);
-        FlaggedStatus flaggedStatus = openAiService.detectFraud(normalizedTitle, description, price);
-        product.setFlaggedStatus(flaggedStatus);
+        // AI scam analysis: the status drives products.flagged_status (unchanged behaviour); the
+        // confidence + reasons are persisted alongside in product_ai_analysis below. On API failure
+        // this falls back to UNKNOWN with no analysis metadata, exactly as before.
+        FraudAnalysisResult aiResult = openAiService.detectFraud(normalizedTitle, description, price);
+        product.setFlaggedStatus(aiResult.getStatus());
 
         generateAndSetEmbedding(product, normalizedTitle, category.getCategoryName(), description);
 
         Product savedProduct = productRepository.save(product);
+
+        // Persist the AI confidence/reasons in the same transaction so flagged_status and its
+        // supporting analysis are always written together (or rolled back together).
+        if (aiResult.isAnalysisAvailable()) {
+            productAiAnalysisService.saveAnalysis(savedProduct, aiResult.getConfidence(), aiResult.getReasons());
+        }
 
         String uploadedUrl = hasFile
                 ? fileService.uploadImage(imageFile)
