@@ -54,6 +54,22 @@
       border: 1px solid rgba(255,215,0,.3);
       letter-spacing: .04em; text-transform: uppercase;
     }
+    /* Clickable admin profile in topbar */
+    .profile-link { transition: opacity .18s ease, transform .18s ease; }
+    .profile-link:hover { opacity: .82; transform: translateY(-1px); }
+    /* "View Details" action pill — purple-tinted by default, fully purple on row hover */
+    .view-details-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 999px;
+      font-weight: 700; font-size: 12px; white-space: nowrap;
+      background: rgba(107,78,175,.12); color: #4A2C8A;
+      border: 1px solid rgba(107,78,175,.28);
+      transition: background .2s ease, color .2s ease, border-color .2s ease;
+    }
+    .seller-row:hover .view-details-btn {
+      background: #4A2C8A; color: #fff;
+      border-color: #4A2C8A;
+    }
     .overview-header h1 {
       font-family: 'Poppins', sans-serif;
       font-weight: 900; font-size: 26px;
@@ -134,9 +150,11 @@
     <nav class="nav">
       <a class="nav-item" th:href="@{/admin/dashboard}"><span class="icon"><i class="bi bi-house-fill"></i></span> Overview</a>
       <a class="nav-item" th:href="@{/admin/dashboard#analytics}"><span class="icon"><i class="bi bi-graph-up"></i></span> Analytics</a>
-      <a class="nav-item active" th:href="@{/admin/pendingSellers}"><span class="icon"><i class="bi bi-person-badge"></i></span> Seller Verification</a>
+      <a class="nav-item active" th:href="@{/admin/pendingSellers}"><span class="icon"><i class="bi bi-person-badge"></i></span> Seller Verification
+        <span class="nav-count-badge" th:classappend="${verificationPending == null or verificationPending == 0} ? 'zero'" th:text="${verificationPending ?: 0}">0</span></a>
       <a class="nav-item" th:href="@{/admin/mentors}"><span class="icon"><i class="bi bi-people"></i></span> Manage Mentors</a>
-      <a class="nav-item" th:href="@{/admin/flaggedProducts}"><span class="icon"><i class="bi bi-flag-fill"></i></span> Flagged Products</a>
+      <a class="nav-item" th:href="@{/admin/flaggedProducts}"><span class="icon"><i class="bi bi-flag-fill"></i></span> Flagged Products
+        <span class="nav-count-badge" th:classappend="${flaggedListings == null or flaggedListings == 0} ? 'zero'" th:text="${flaggedListings ?: 0}">0</span></a>
       <a class="nav-item" th:href="@{/admin/categories}"><span class="icon"><i class="bi bi-folder2-open"></i></span> Categories</a>
       <a class="nav-item danger" th:href="@{/logout}"><span class="icon"><i class="bi bi-box-arrow-right"></i></span> Logout</a>
     </nav>
@@ -151,9 +169,11 @@
       <nav class="nav">
         <a class="nav-item" th:href="@{/admin/dashboard}"><span class="icon"><i class="bi bi-house-fill"></i></span> Overview</a>
         <a class="nav-item" th:href="@{/admin/dashboard#analytics}"><span class="icon"><i class="bi bi-graph-up"></i></span> Analytics</a>
-        <a class="nav-item active" th:href="@{/admin/pendingSellers}"><span class="icon"><i class="bi bi-person-badge"></i></span> Seller Verification</a>
+        <a class="nav-item active" th:href="@{/admin/pendingSellers}"><span class="icon"><i class="bi bi-person-badge"></i></span> Seller Verification
+          <span class="nav-count-badge" th:classappend="${verificationPending == null or verificationPending == 0} ? 'zero'" th:text="${verificationPending ?: 0}">0</span></a>
         <a class="nav-item" th:href="@{/admin/mentors}"><span class="icon"><i class="bi bi-people"></i></span> Manage Mentors</a>
-        <a class="nav-item" th:href="@{/admin/flaggedProducts}"><span class="icon"><i class="bi bi-flag-fill"></i></span> Flagged Products</a>
+        <a class="nav-item" th:href="@{/admin/flaggedProducts}"><span class="icon"><i class="bi bi-flag-fill"></i></span> Flagged Products
+          <span class="nav-count-badge" th:classappend="${flaggedListings == null or flaggedListings == 0} ? 'zero'" th:text="${flaggedListings ?: 0}">0</span></a>
         <a class="nav-item" th:href="@{/admin/categories}"><span class="icon"><i class="bi bi-folder2-open"></i></span> Categories</a>
         <div class="nav-spacer"></div>
         <a class="nav-item danger" th:href="@{/logout}"><span class="icon"><i class="bi bi-box-arrow-right"></i></span> Logout</a>
@@ -176,13 +196,13 @@
           </div>
         </div>
         <div class="topbar-actions">
-          <div class="profile">
-            <div class="admin-avatar">A</div>
+          <a th:href="@{/admin/profile}" class="profile profile-link" style="text-decoration:none;color:inherit;cursor:pointer;">
+            <div class="admin-avatar" th:text="${adminInitial ?: 'A'}">A</div>
             <div class="admin-meta">
-              <div class="admin-name">SEO Admin</div>
-              <div class="admin-role">Student Entrepreneurship Officer</div>
+              <div class="admin-name" th:text="${adminName ?: 'Admin'}">Admin</div>
+              <div class="admin-role" th:text="${adminRole ?: 'Administrator'}">Administrator</div>
             </div>
-          </div>
+          </a>
         </div>
       </header>
 
@@ -207,7 +227,7 @@
                   <th>Email</th>
                   <th>Academic ID</th>
                   <th>Submitted</th>
-                  <th>Status</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -225,7 +245,7 @@
                   <td th:text="${seller.user != null ? seller.user.email : '---'}"></td>
                   <td th:text="${seller.user != null ? seller.user.academicId : '---'}"></td>
                   <td th:text="${seller.submittedAt != null ? #temporals.format(seller.submittedAt, 'dd MMM yyyy HH:mm') : '---'}"></td>
-                  <td><span class="badge-pending"><i class="bi bi-clock-history"></i> Pending</span></td>
+                  <td><span class="view-details-btn"><i class="bi bi-chevron-right"></i> View Details</span></td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(sellers)}">
                   <td colspan="6">

@@ -50,19 +50,35 @@ body {
   min-height: 100vh;
 }
 
+/* Desktop: a fixed full-height rail painted with the sidebar gradient.
+   Anchored with top:0/bottom:0 (no vh math) so it always fills the column
+   edge-to-edge regardless of content length or the global zoom — one
+   continuous colour, no seam, always reaching the bottom. The sidebar
+   itself is transparent and just holds the nav on top of this rail. */
+@media (min-width: 992px) {
+  .admin-app::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 270px;
+    background: linear-gradient(160deg, #1A0A3E 0%, #2D1B69 60%, #4A2C8A 100%);
+    box-shadow: 6px 0 24px rgba(26,10,62,.14), inset 0 0 0 1px rgba(255,215,0,.18);
+    z-index: 0;
+  }
+}
+
 /* ── Sidebar ────────────────────────────────────────────────────── */
 .sidebar {
   width: 270px;
-  background: linear-gradient(160deg, #1A0A3E 0%, #2D1B69 60%, #4A2C8A 100%);
+  background: transparent;
   padding: 26px 18px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
-  box-shadow: 0 18px 44px rgba(26,10,62,.28), inset 0 0 0 1px rgba(255,215,0,.18);
+  position: relative;
+  z-index: 1;
 }
 .sidebar::before {
   content: "";
@@ -112,26 +128,43 @@ body {
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-top: 10px;
+  gap: 6px;
+  margin-top: 12px;
 }
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
-  border-radius: 16px;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 14px;
   color: rgba(255,255,255,.72);
   text-decoration: none;
   font-weight: 600;
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: .01em;
   position: relative;
   overflow: hidden;
   transition: all .28s cubic-bezier(.22,1,.36,1);
 }
 .nav-item .icon {
   width: 22px;
-  text-align: center;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1;
   transition: transform .28s cubic-bezier(.22,1,.36,1);
+}
+/* Label sits between icon and badge, takes remaining space */
+.nav-item > span:not(.icon):not(.nav-count-badge),
+.nav-item .nav-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .nav-item:hover {
   background: rgba(255,215,0,.08);
@@ -185,6 +218,8 @@ body {
 /* ── Nav count badge (pending requests indicator) ───────────────── */
 .nav-count-badge {
   margin-left: auto;
+  align-self: center;
+  flex-shrink: 0;
   min-width: 22px;
   height: 22px;
   padding: 0 7px;
@@ -194,6 +229,7 @@ body {
   justify-content: center;
   font-size: 11px;
   font-weight: 800;
+  line-height: 1;
   background: linear-gradient(135deg, #ef4444, #dc2626);
   color: #fff;
   box-shadow: 0 0 10px rgba(239,68,68,.55);
@@ -218,6 +254,8 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Topbar ──────────────────────────────────────────────────────── */
@@ -320,9 +358,7 @@ body {
 
 /* ── Content ────────────────────────────────────────────────────── */
 .content {
-  padding: 28px 40px;
-  max-width: 1180px;
-  margin: 0 auto;
+  padding: 28px 26px;
   width: 100%;
 }
 .section { margin-bottom: 28px; }
