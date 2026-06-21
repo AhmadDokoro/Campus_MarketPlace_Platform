@@ -2,9 +2,11 @@ package com.ahsmart.campusmarket.controller;
 
 import com.ahsmart.campusmarket.model.Mentor;
 import com.ahsmart.campusmarket.model.Seller;
+import com.ahsmart.campusmarket.model.Users;
 import com.ahsmart.campusmarket.model.enums.SellerStatus;
 import com.ahsmart.campusmarket.model.enums.Role;
 import com.ahsmart.campusmarket.payloadDTOs.admin.WeeklyListingDTO;
+import com.ahsmart.campusmarket.repositories.UsersRepository;
 import com.ahsmart.campusmarket.service.admin.AdminService;
 import com.ahsmart.campusmarket.service.embedding.EmbeddingService;
 import com.ahsmart.campusmarket.service.mentor.MentorService;
@@ -34,6 +36,7 @@ public class AdminController {
     private final MentorService mentorService;
     private final EmbeddingService embeddingService;
     private final AdminReportService adminReportService;
+    private final UsersRepository usersRepository;
 
     private boolean isAdmin(HttpSession session) {
         Object roleObj = session.getAttribute("role");
@@ -51,7 +54,7 @@ public class AdminController {
         model.addAttribute("totalSellers",   adminService.getTotalSellers());
         model.addAttribute("verifiedSellers",adminService.getVerifiedSellers());
         model.addAttribute("activeListings", adminService.getActiveListings());
-        model.addAttribute("flaggedListings",adminService.getSuspiciousProducts().size());
+        // flaggedListings is provided globally by AdminGlobalModelAdvice
         model.addAttribute("totalSales",     adminService.getTotalSales());
 
         // Split weekly listings into parallel label + count arrays for Chart.js
@@ -61,8 +64,8 @@ public class AdminController {
         model.addAttribute("weeklyLabels", weeklyLabels);
         model.addAttribute("weeklyCounts", weeklyCounts);
 
+        // verificationPending is provided globally by AdminGlobalModelAdvice
         Map<String, Long> vStats = adminService.getVerificationStatusStats();
-        model.addAttribute("verificationPending",  vStats.getOrDefault("PENDING",  0L));
         model.addAttribute("verificationApproved", vStats.getOrDefault("APPROVED", 0L));
         model.addAttribute("verificationRejected", vStats.getOrDefault("REJECTED", 0L));
 
@@ -317,5 +320,119 @@ public class AdminController {
         redirectAttributes.addFlashAttribute("reportYearSelection", year);
         redirectAttributes.addFlashAttribute("reportMonthSelection", month);
         redirectAttributes.addFlashAttribute("openReportModal", true);
+    }
+
+    // ------------------- Admin Profile (view + edit) -------------------
+
+    // Resolves the logged-in admin Users entity from the session userId, or null.
+    private Users currentAdmin(HttpSession session) {
+        Object userIdObj = session.getAttribute("userId");
+        if (!(userIdObj instanceof Long userId)) {
+            return null;
+        }
+        return usersRepository.findById(userId).orElse(null);
+    }
+
+    // Very lenient email sanity check (login stores plaintext; we just guard obvious junk).
+    private boolean looksLikeEmail(String email) {
+        return email != null && email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
+    }
+
+    @GetMapping("/profile")
+    public String profilePage(HttpSession session, Model model) {
+        if (!isAdmin(session)) {
+            return "redirect:/signin";
+        }
+        Users admin = currentAdmin(session);
+        if (admin == null) {
+            return "redirect:/signin";
+        }
+        model.addAttribute("profileUser", admin);
+        return "admin/profile";
+    }
+
+    @PostMapping("/profile")
+    public String updateProfile(@RequestParam(value = "firstName", required = false) String firstName,
+                                @RequestParam(value = "lastName", required = false) String lastName,
+                                @RequestParam(value = "phone", required = false) String phone,
+                                @RequestParam(value = "email", required = false) String email,
+                                HttpSession session,
+                                RedirectAttributes redirectAttrs) {
+        if (!isAdmin(session)) {
+            return "redirect:/signin";
+        }
+        Users admin = currentAdmin(session);
+        if (admin == null) {
+            return "redirect:/signin";
+        }
+
+        String fName = firstName == null ? "" : firstName.trim();
+        String lName = lastName == null ? "" : lastName.trim();
+        String mail  = email == null ? "" : email.trim();
+        String tel   = phone == null ? null : phone.trim();
+
+        // Validation
+        if (fName.isBlank() || lName.isBlank()) {
+            redirectAttrs.addFlashAttribute("profileError", "First name and last name are required.");
+            return "redirect:/admin/profile";
+        }
+        if (mail.isBlank() || !looksLikeEmail(mail)) {
+            redirectAttrs.addFlashAttribute("profileError", "Please enter a valid email address.");
+            return "redirect:/admin/profile";
+        }
+
+        boolean emailChanged = !mail.equalsIgnoreCase(admin.getEmail() == null ? "" : admin.getEmail());
+        if (emailChanged && usersRepository.existsByEmailAndUserIdNot(mail, admin.getUserId())) {
+            redirectAttrs.addFlashAttribute("profileError", "That email is already used by another account.");
+            return "redirect:/admin/profile";
+        }
+
+        admin.setFirstName(fName);
+        admin.setLastName(lName);
+        admin.setPhone(tel);
+        admin.setEmail(mail);
+        usersRepository.save(admin);
+
+        // Keep the cached greeting name in session fresh (login stored "userName").
+        session.setAttribute("userName", fName);
+
+        redirectAttrs.addFlashAttribute("profileSuccess", "Your profile has been updated.");
+        return "redirect:/admin/profile";
+    }
+
+    @PostMapping("/profile/password")
+    public String updatePassword(@RequestParam(value = "currentPassword", required = false) String currentPassword,
+                                 @RequestParam(value = "newPassword", required = false) String newPassword,
+                                 @RequestParam(value = "confirmPassword", required = false) String confirmPassword,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttrs) {
+        if (!isAdmin(session)) {
+            return "redirect:/signin";
+        }
+        Users admin = currentAdmin(session);
+        if (admin == null) {
+            return "redirect:/signin";
+        }
+
+        // Passwords are stored in PLAINTEXT (matches AuthenticationServiceImpl.userLogin).
+        String stored = admin.getPassword() == null ? "" : admin.getPassword();
+        if (currentPassword == null || !stored.equals(currentPassword)) {
+            redirectAttrs.addFlashAttribute("profileError", "Your current password is incorrect.");
+            return "redirect:/admin/profile";
+        }
+        if (newPassword == null || newPassword.length() < 4) {
+            redirectAttrs.addFlashAttribute("profileError", "New password must be at least 4 characters.");
+            return "redirect:/admin/profile";
+        }
+        if (!newPassword.equals(confirmPassword)) {
+            redirectAttrs.addFlashAttribute("profileError", "New password and confirmation do not match.");
+            return "redirect:/admin/profile";
+        }
+
+        admin.setPassword(newPassword);
+        usersRepository.save(admin);
+
+        redirectAttrs.addFlashAttribute("profileSuccess", "Your password has been changed.");
+        return "redirect:/admin/profile";
     }
 }
